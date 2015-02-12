@@ -1,6 +1,6 @@
 package com.example.examplemod;
 
-import com.example.examplemod.Blocks.NavigatorBlock;
+import com.example.examplemod.blocks.NavigatorBlock;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
