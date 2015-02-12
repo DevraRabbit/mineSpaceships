@@ -10,3 +10,17 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/.gradle/
+/.metadata/
+/.settings/
+/bin/
+/build/
+/eclipse/
+/gradle/
+/gradlew.bat
+/gradlew
+/fml-1.8-8.0.20.1023-1.8-changelog.txt
+/CREDITS-fml.txt
+/build.gradle
+/.project
+*.classpath
