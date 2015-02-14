@@ -1,5 +1,7 @@
 package com.example.examplemod.blocks;
 
+import com.example.examplemod.ExampleMod;
+import com.example.examplemod.overhead.ChatGuiHandler;
 import com.example.examplemod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
@@ -19,6 +21,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class NavigatorBlock extends Block implements ITileEntityProvider{
 
@@ -38,7 +42,13 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
          {
         	 ChatComponentText text = new ChatComponentText("Opening Console");
 			 playerIn.addChatComponentMessage(text);
-			 Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
+			 FMLCommonHandler handler = FMLCommonHandler.instance();
+			 if(handler.getSide().equals(Side.CLIENT)){
+				handler.showGuiScreen(new GuiChat());
+			 }
+			 
+			 //playerIn.openGui(ExampleMod.instance(), ChatGuiHandler.ChatGuiID, worldIn,	pos.getX(), pos.getY(), pos.getZ());
+			 
 			 TileEntity entity = worldIn.getTileEntity(pos);
 			 if(entity instanceof ChatRegisterEntity){
 				 ((ChatRegisterEntity)entity).registerChat(worldIn.getPlayerEntityByUUID(playerIn.getUniqueID()));

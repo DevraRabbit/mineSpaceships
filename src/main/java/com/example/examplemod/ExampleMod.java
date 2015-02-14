@@ -2,6 +2,7 @@ package com.example.examplemod;
 
 import com.example.examplemod.blocks.NavigatorBlock;
 import com.example.examplemod.overhead.BlockChatHandler;
+import com.example.examplemod.overhead.ChatGuiHandler;
 import com.example.examplemod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
@@ -13,11 +14,13 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = ExampleMod.MODID, version = ExampleMod.VERSION)
 public class ExampleMod
 {
+	private static ExampleMod Singleton;
     public static final String MODID = "examplemod";
     public static final String VERSION = "1.0";
     
@@ -26,22 +29,28 @@ public class ExampleMod
     public static Block commandBlock = new NavigatorBlock(navigatorBlockId, "NavigatorBlock");
     
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) {   	
+    	Singleton = this;    	
+    	
     	GameRegistry.registerBlock(commandBlock, "NavigatorBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
     	
     	MinecraftForge.EVENT_BUS.register(new BlockChatHandler());
+    	
     }
     
     @EventHandler
-    public void init(FMLInitializationEvent event)
+    public void init(FMLInitializationEvent event)    
     {
-		// some example code
-        System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
+    	NetworkRegistry.INSTANCE.registerGuiHandler(this, new ChatGuiHandler());
     }
     
     @EventHandler
     public void postInit(FMLPostInitializationEvent event){
     	
+    }
+    
+    public static ExampleMod instance(){
+    	return Singleton;
     }
 }
