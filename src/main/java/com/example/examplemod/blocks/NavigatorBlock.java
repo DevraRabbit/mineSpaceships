@@ -1,9 +1,13 @@
 package com.example.examplemod.blocks;
 
+import com.example.examplemod.overhead.ChatRegisterEntity;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,15 +20,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
-public class NavigatorBlock extends Block {
+public class NavigatorBlock extends Block implements ITileEntityProvider{
 
     public NavigatorBlock(int par1, String text) {
     	super(Material.sponge);
     	this.setUnlocalizedName(text);
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
-
-
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -34,9 +36,19 @@ public class NavigatorBlock extends Block {
          }
          else
          {
-        	 ChatComponentText text = new ChatComponentText("Yay, you clicked our block!");
+        	 ChatComponentText text = new ChatComponentText("Opening Console");
 			 playerIn.addChatComponentMessage(text);
+			 Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
+			 TileEntity entity = worldIn.getTileEntity(pos);
+			 if(entity instanceof ChatRegisterEntity){
+				 ((ChatRegisterEntity)entity).registerChat(worldIn.getPlayerEntityByUUID(playerIn.getUniqueID()));
+			 }
         	 return true;
          }
-    }    
+    }
+
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new ChatRegisterEntity();
+	}    
 }

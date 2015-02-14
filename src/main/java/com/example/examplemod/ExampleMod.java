@@ -1,10 +1,13 @@
 package com.example.examplemod;
 
 import com.example.examplemod.blocks.NavigatorBlock;
+import com.example.examplemod.overhead.BlockChatHandler;
+import com.example.examplemod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -25,6 +28,9 @@ public class ExampleMod
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
     	GameRegistry.registerBlock(commandBlock, "NavigatorBlock");
+    	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
+    	
+    	MinecraftForge.EVENT_BUS.register(new BlockChatHandler());
     }
     
     @EventHandler
