@@ -40,17 +40,13 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
          else
          {
         	 ChatComponentText text = new ChatComponentText("Opening Console");
-			 playerIn.addChatComponentMessage(text);
-			 FMLCommonHandler handler = FMLCommonHandler.instance();
-			 if(handler.getSide().equals(Side.CLIENT)){
-				handler.showGuiScreen(new GuiChat());
-			 }
+			 playerIn.addChatComponentMessage(text);			 
 			 
 			 //playerIn.openGui(ExampleMod.instance(), ChatGuiHandler.ChatGuiID, worldIn,	pos.getX(), pos.getY(), pos.getZ());
 			 
 			 TileEntity entity = worldIn.getTileEntity(pos);
 			 if(entity instanceof ChatRegisterEntity){
-				 ((ChatRegisterEntity)entity).registerChat(worldIn.getPlayerEntityByUUID(playerIn.getUniqueID()));
+				 ((ChatRegisterEntity)entity).Activate(playerIn);
 			 }
         	 return true;
          }
