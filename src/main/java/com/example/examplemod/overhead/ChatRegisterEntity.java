@@ -11,17 +11,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class ChatRegisterEntity extends TileEntity {
-	CustomGuiChat oldChat;
-	public void registerChat(EntityPlayer player){
-		BlockChatHandler.registerChatlock(player, this);		
-	}
 	public void Activate(EntityPlayer player){
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){					
-			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player));
-			registerChat(player);
+			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, this));
 		}
 	}
 	public void onCommand(String command){
+		
 	}
 	public void onCommand(String command, EntityPlayer player){
 		if(command.equals("hello")){

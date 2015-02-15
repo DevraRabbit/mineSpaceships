@@ -10,13 +10,11 @@ import net.minecraft.util.ChatComponentText;
 
 public class CustomGuiChat extends GuiChat{
 	private EntityPlayer player;
-	private boolean isClosing = true;
-	public CustomGuiChat(EntityPlayer player) {
+	private ChatRegisterEntity entity;
+	public CustomGuiChat(EntityPlayer player, ChatRegisterEntity entity) {
 		super();
 		this.player = player;
-	}
-	public void preventReopening(){
-		isClosing = false;
+		this.entity = entity;
 	}
 	
 	@Override
@@ -25,10 +23,11 @@ public class CustomGuiChat extends GuiChat{
 			super.keyTyped(typedChar, keyCode);
 		} else {
 			if(keyCode == 1){
-				BlockChatHandler.removeChatlock(player);
 				this.mc.displayGuiScreen((GuiScreen)null);
 			} else {
-				BlockChatHandler.onChat(this.inputField.getText().trim(), player);
+				String command = this.inputField.getText().trim();
+				entity.onCommand(command);
+				entity.onCommand(command, player);
 				this.inputField.setText("");
 			}
 		}

@@ -33,10 +33,9 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {    	 
-    	 if(worldIn.isRemote){
+    	 if(!worldIn.isRemote){
 			 ChatComponentText text = new ChatComponentText("Opening Console");
-			 playerIn.addChatComponentMessage(text);
-			 System.out.println("Test for opening a Console.");		 
+			 playerIn.addChatComponentMessage(text);	 
 			 TileEntity entity = worldIn.getTileEntity(pos);
 			 if(entity instanceof ChatRegisterEntity){
 				 ((ChatRegisterEntity)entity).Activate(playerIn);

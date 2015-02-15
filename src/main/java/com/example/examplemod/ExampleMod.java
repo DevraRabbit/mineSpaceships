@@ -1,7 +1,6 @@
 package com.example.examplemod;
 
 import com.example.examplemod.blocks.NavigatorBlock;
-import com.example.examplemod.overhead.BlockChatHandler;
 import com.example.examplemod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
