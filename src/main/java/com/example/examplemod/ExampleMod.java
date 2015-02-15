@@ -2,7 +2,6 @@ package com.example.examplemod;
 
 import com.example.examplemod.blocks.NavigatorBlock;
 import com.example.examplemod.overhead.BlockChatHandler;
-import com.example.examplemod.overhead.ChatGuiHandler;
 import com.example.examplemod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
@@ -42,7 +41,7 @@ public class ExampleMod
     @EventHandler
     public void init(FMLInitializationEvent event)    
     {
-    	NetworkRegistry.INSTANCE.registerGuiHandler(this, new ChatGuiHandler());
+    	
     }
     
     @EventHandler
