@@ -20,7 +20,6 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class BlockChatHandler {
 	private static Map<EntityPlayer, ChatRegisterEntity> lockedChats = new HashMap<EntityPlayer, ChatRegisterEntity>();
-	private boolean ChatOpened; 
 	private static BlockChatHandler singleton;
 	
 	private BlockChatHandler(){

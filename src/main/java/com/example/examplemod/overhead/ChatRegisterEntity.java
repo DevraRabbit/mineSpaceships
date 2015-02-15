@@ -10,13 +10,19 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class ChatRegisterEntity extends TileEntity {
+	CustomGuiChat oldChat;
 	public void registerChat(EntityPlayer player){
 		BlockChatHandler.registerChatlock(player, this);		
 	}
 	public void Activate(EntityPlayer player){
-		registerChat(player);
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
-			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player));
+			if(oldChat != null){
+				//oldChat.preventReopening();
+			}
+			CustomGuiChat newChat = new CustomGuiChat(player);			
+			Minecraft.getMinecraft().displayGuiScreen(newChat);
+			oldChat = newChat;
+			registerChat(player);
 		}
 	}
 }
