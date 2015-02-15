@@ -1,7 +1,10 @@
 package com.example.examplemod.overhead;
 
+import java.io.IOException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
@@ -17,12 +20,17 @@ public class CustomGuiChat extends GuiChat{
 	}
 	
 	@Override
-	public void onGuiClosed(){	
-		if(isClosing){		
-			String message = super.inputField.getText();
-			super.onGuiClosed();
-			isClosing = false;
-			BlockChatHandler.instance().onChat(message, player);
+	protected void keyTyped(char typedChar, int keyCode) throws IOException{
+		if(keyCode != 28 && keyCode != 156 && keyCode != 1){
+			super.keyTyped(typedChar, keyCode);
+		} else {
+			if(keyCode == 1){
+				BlockChatHandler.removeChatlock(player);
+				this.mc.displayGuiScreen((GuiScreen)null);
+			} else {
+				BlockChatHandler.onChat(this.inputField.getText().trim(), player);
+				this.inputField.setText("");
+			}
 		}
 	}
 }

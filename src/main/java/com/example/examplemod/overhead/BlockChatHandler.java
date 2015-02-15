@@ -39,7 +39,7 @@ public class BlockChatHandler {
 	}
 	public static void onChat(String message, EntityPlayer player){
 		if(lockedChats.containsKey(player)){
-			lockedChats.get(player).Activate(player);
+			System.out.println(message);
 		}
 	}
 }
