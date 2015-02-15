@@ -12,7 +12,7 @@ public class CustomGuiChat extends GuiChat{
 	private EntityPlayer player;
 	private ChatRegisterEntity entity;
 	/**
-	 * Creates a custom gui that opens a steady interface for the player to communicate with the entity
+	 * Creates a custom GUI that opens a steady interface for the player to communicate with the entity
 	 * @param player
 	 * @param entity
 	 */
@@ -26,9 +26,12 @@ public class CustomGuiChat extends GuiChat{
 	 */
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException{
-		//check wether we haven't pressed one of the two enters or excape on our keyboard
+		//check if the keycode matches ESC or one of the two Enter-keys...
+		
+		//if not, run the default code
 		if(keyCode != 28 && keyCode != 156 && keyCode != 1){
 			super.keyTyped(typedChar, keyCode);
+		//else, run custom code
 		} else {
 			//on Escape
 			if(keyCode == 1){
@@ -37,7 +40,7 @@ public class CustomGuiChat extends GuiChat{
 			}
 			//on Enter
 			else if(keyCode == 28 || keyCode == 156) {
-				//if we committed a command we send it to the entity and clear the input
+				//to commit a command, we send it to the entity and clear the input
 				String command = this.inputField.getText().trim();
 				entity.onCommand(command);
 				entity.onCommand(command, player);
