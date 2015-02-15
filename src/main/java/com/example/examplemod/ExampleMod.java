@@ -34,8 +34,6 @@ public class ExampleMod
     	GameRegistry.registerBlock(commandBlock, "NavigatorBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
     	
-    	MinecraftForge.EVENT_BUS.register(new BlockChatHandler());
-    	
     }
     
     @EventHandler

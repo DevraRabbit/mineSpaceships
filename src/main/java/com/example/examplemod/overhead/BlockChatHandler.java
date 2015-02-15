@@ -19,41 +19,28 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class BlockChatHandler {
-	private static Map<EntityPlayer, ChatRegisterEntity> lockedChats;
+	private static Map<EntityPlayer, ChatRegisterEntity> lockedChats = new HashMap<EntityPlayer, ChatRegisterEntity>();
 	private boolean ChatOpened; 
+	private static BlockChatHandler singleton;
 	
-	public BlockChatHandler(){
-		lockedChats = new HashMap<EntityPlayer, ChatRegisterEntity>();
+	private BlockChatHandler(){
+	}
+	public static BlockChatHandler instance(){
+		if(singleton == null){
+			singleton = new BlockChatHandler();
+		}
+		return singleton;
 	}
 	
 	public static void registerChatlock(EntityPlayer playerIn, ChatRegisterEntity entity){
 		lockedChats.put(playerIn, entity);
 	}
-	@SubscribeEvent
-	public void onChat(ServerChatEvent event){
-		if(lockedChats.containsKey(event.player)){
-			String message = event.message;	
-			ChatRegisterEntity entity = lockedChats.get(event.player);
-			lockedChats.remove(event.player);
-			if(!message.isEmpty()){
-				entity.Activate(event.player);
-			}
-		}
+	public static void removeChatlock(EntityPlayer playerIn){
+		lockedChats.remove(playerIn);
 	}
-	@SubscribeEvent
-	public void onChatOpen(GuiOpenEvent event){
-		if(event.gui instanceof GuiChat){
-			ChatOpened = true;
-		} else if(ChatOpened) {
-			ChatOpened = false;
-			Minecraft mc = Minecraft.getMinecraft();
-			if(mc.ingameGUI != null &&
-					(mc.ingameGUI.getChatGUI().getChatComponent(0, 0) == null ||
-					(mc.ingameGUI.getChatGUI().getChatComponent(0, 0) != null &&
-					mc.ingameGUI.getChatGUI().getChatComponent(0, 0).getFormattedText().isEmpty()))){
-				mc.thePlayer.sendChatMessage("closed Console");
-				lockedChats.remove(mc.thePlayer);			
-			}
+	public static void onChat(String message, EntityPlayer player){
+		if(lockedChats.containsKey(player)){
+			lockedChats.get(player).Activate(player);
 		}
 	}
 }
