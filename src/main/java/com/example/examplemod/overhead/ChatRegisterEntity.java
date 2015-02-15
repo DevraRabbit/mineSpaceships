@@ -16,7 +16,7 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void Activate(EntityPlayer player){
-		//check wether the player is our local player, so one cannot open a console for another player
+		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){		
 			//open our console. 
@@ -36,9 +36,9 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
-		//making a very first command to see wether it works.
+		//define a very first command to see if it works.
 		if(command.equals("hello")){
-			//send something to the player to see wether we get a feedback from our command.
+			//send something to the player to see if we get a feedback from our command.
 			player.addChatComponentMessage(new ChatComponentText("I love you!"));
 		}
 	}
