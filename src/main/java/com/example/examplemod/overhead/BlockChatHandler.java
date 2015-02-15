@@ -39,7 +39,8 @@ public class BlockChatHandler {
 	}
 	public static void onChat(String message, EntityPlayer player){
 		if(lockedChats.containsKey(player)){
-			System.out.println(message);
+			lockedChats.get(player).onCommand(message);
+			lockedChats.get(player).onCommand(message, player);
 		}
 	}
 }
