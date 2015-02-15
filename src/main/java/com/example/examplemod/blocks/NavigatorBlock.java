@@ -24,28 +24,46 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class NavigatorBlock extends Block implements ITileEntityProvider{
-
-    public NavigatorBlock(int par1, String text) {
+	/**
+	 * Block to implement an interface for the Spaceships
+	 * @param name
+	 */
+    public NavigatorBlock(String name) {
+    	//Make a Block with certain attributes. Sponge for example is a quite soft block. Does not affect
+    	//the texture of the block.
     	super(Material.sponge);
-    	this.setUnlocalizedName(text);
+    	this.setUnlocalizedName(name);
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
-    
+    /**
+     * Method that is called when the block is rightclicked
+     */
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {    	 
-    	 if(worldIn.isRemote){
+    	//Check wether this code is executed on the client. It is sometimes important to check wether
+    	//we do things locally or on the server. In this case we act on the client.
+    	if(worldIn.isRemote){
+    		//Send the player a message. This is the common way of sending texts to a single player.
 			 ChatComponentText text = new ChatComponentText("Opening Console");
 			 playerIn.addChatComponentMessage(text);	 
+			 //Get the tileentity from the world, meaning we get the object that is associated to the position
+			 //of our block and that can execute extra code. In our example this is opening a console.
 			 TileEntity entity = worldIn.getTileEntity(pos);
 			 if(entity instanceof ChatRegisterEntity){
+				 //Activate the entity
 				 ((ChatRegisterEntity)entity).Activate(playerIn);
 			 }			 
     	 }
-    	 return false;  
+    	 //returns wether a block will not be placed next to it when clicked
+    	 return true;  
     }
-
+    /**
+     * This gives the TileEntity associated with this block. This way Minecraft can register it into the world
+     */
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
+		//the Block is placed.
 		return new ChatRegisterEntity();
 	}    
 }

@@ -23,13 +23,17 @@ public class ExampleMod
     public static final String VERSION = "1.0";
     
     private static int navigatorBlockId = 1000;
+    //initializing a block for registration (see below)
+    public static Block commandBlock = new NavigatorBlock("NavigatorBlock");
     
-    public static Block commandBlock = new NavigatorBlock(navigatorBlockId, "NavigatorBlock");
-    
+    /**
+     * Event that gets called in an early initialization state of Minecraft
+     * @param event
+     */
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {   	
     	Singleton = this;    	
-    	
+    	//register our game objects so Minecraft knows how to use them.
     	GameRegistry.registerBlock(commandBlock, "NavigatorBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
     	

@@ -11,20 +11,33 @@ import net.minecraft.util.ChatComponentText;
 public class CustomGuiChat extends GuiChat{
 	private EntityPlayer player;
 	private ChatRegisterEntity entity;
+	/**
+	 * Creates a custom gui that opens a steady interface for the player to communicate with the entity
+	 * @param player
+	 * @param entity
+	 */
 	public CustomGuiChat(EntityPlayer player, ChatRegisterEntity entity) {
 		super();
 		this.player = player;
 		this.entity = entity;
 	}
-	
+	/**
+	 * Override the keyTyped method to prevent the chat from closing when we hit enter or escape
+	 */
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException{
+		//check wether we haven't pressed one of the two enters or excape on our keyboard
 		if(keyCode != 28 && keyCode != 156 && keyCode != 1){
 			super.keyTyped(typedChar, keyCode);
 		} else {
+			//on Escape
 			if(keyCode == 1){
+				//kill the Gui-screen and let minecraft display the normal game
 				this.mc.displayGuiScreen((GuiScreen)null);
-			} else {
+			}
+			//on Enter
+			else if(keyCode == 28 || keyCode == 156) {
+				//if we committed a command we send it to the entity and clear the input
 				String command = this.inputField.getText().trim();
 				entity.onCommand(command);
 				entity.onCommand(command, player);
