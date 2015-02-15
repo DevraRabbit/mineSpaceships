@@ -40,7 +40,7 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
      */
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {    	 
-    	//Check whether this code is executed on the client. It is sometimes important to check whether
+    	//Check if this code is executed on the client. It is sometimes important to check if
     	//we do things locally or on the server. In this case we act on the client.
     	if(worldIn.isRemote){
     		//Send the player a message. This is the common way of sending texts to a single player using the chat.
