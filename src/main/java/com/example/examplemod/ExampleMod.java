@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -35,14 +36,15 @@ public class ExampleMod
     	GameRegistry.registerBlock(commandBlock, "NavigatorBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
     	
-    	MinecraftForge.EVENT_BUS.register(new BlockChatHandler());
-    	
+    	BlockChatHandler handler = new BlockChatHandler();
+    	MinecraftForge.EVENT_BUS.register(handler);
+    	FMLCommonHandler.instance().bus().register(handler);
     }
     
     @EventHandler
     public void init(FMLInitializationEvent event)    
     {
-    	NetworkRegistry.INSTANCE.registerGuiHandler(this, new ChatGuiHandler());
+    	//NetworkRegistry.INSTANCE.registerGuiHandler(this, new ChatGuiHandler());
     }
     
     @EventHandler
