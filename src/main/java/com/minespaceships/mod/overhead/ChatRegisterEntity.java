@@ -67,6 +67,9 @@ public class ChatRegisterEntity extends TileEntity {
 				
 				Spaceship s = new Spaceship(new BlockPos(5, 5, 5), this.pos, new BlockPos(-5, -5, -5), worldObj);
 				s.copyTo(vec_move);
+				player.addChatComponentMessage(new ChatComponentText("Moving by " + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3)));
+			} else {
+				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
 			}
 		}
 	}
