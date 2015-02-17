@@ -20,8 +20,29 @@ import net.minecraft.world.World;
  */
 public class SpaceshipCommands {
 
+	public static void init(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
+		command = command.substring("init".length()).replaceAll("\\s", "");
+
+		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)to([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
+		Matcher moffset = poffset.matcher(command);
+		if(moffset.matches()) {
+			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
+			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
+			commandBlock.setShip(new Spaceship(from, commandBlock.getPos(), to, worldObj));
+			
+			player.addChatComponentMessage(new ChatComponentText("Moving by " + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3)));
+		} else {
+			player.addChatComponentMessage(new ChatComponentText("init: Error processing intput"));
+			player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;#"));
+		}
+	}
+	
 	public static void move(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
 		command = command.substring("move".length()).replaceAll("\\s", "");
+		
+		if(ship == null) {
+			player.addChatComponentMessage(new ChatComponentText("move: Please initialize the Spaceship first"));
+		}
 
 		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
 		Matcher moffset = poffset.matcher(command);
@@ -36,20 +57,4 @@ public class SpaceshipCommands {
 		}
 	}
 
-	public static void init(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
-		command = command.substring("init".length()).replaceAll("\\s", "");
-
-		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)to([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
-		Matcher moffset = poffset.matcher(command);
-		if(moffset.matches()) {
-			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
-			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
-			commandBlock.setShip(new Spaceship(from, commandBlock.getPos(), to, worldObj));
-			
-			player.addChatComponentMessage(new ChatComponentText("Moving by " + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3)));
-		} else {
-			player.addChatComponentMessage(new ChatComponentText("move: Error processing intput"));
-			player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;#"));
-		}
-	}
 }
