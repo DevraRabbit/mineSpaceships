@@ -9,9 +9,9 @@ import net.minecraft.world.World;
 public class BlockCopier {
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target){
 		worldIn.setBlockState(target, worldIn.getBlockState(origin));
-		TileEntity ent = worldIn.getTileEntity(origin);
+		TileEntity ent = worldIn.getTileEntity(origin);	
 		if(ent != null){
-			ent.setPos(target);
+			worldIn.setTileEntity(target, ent);
 		}
 	}
 	public static void removeBlock(World worldIn, BlockPos target){
