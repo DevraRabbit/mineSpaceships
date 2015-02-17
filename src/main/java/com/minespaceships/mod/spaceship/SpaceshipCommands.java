@@ -30,7 +30,7 @@ public class SpaceshipCommands {
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
 			commandBlock.setShip(new Spaceship(from, commandBlock.getPos(), to, worldObj));
 			
-			player.addChatComponentMessage(new ChatComponentText("Moving by " + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3)));
+			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
 		} else {
 			player.addChatComponentMessage(new ChatComponentText("init: Error processing intput"));
 			player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;#"));
@@ -50,7 +50,7 @@ public class SpaceshipCommands {
 			BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			ship.copyTo(vec_move);
 			
-			player.addChatComponentMessage(new ChatComponentText("Moving by " + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3)));
+			player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
 		} else {
 			player.addChatComponentMessage(new ChatComponentText("move: Error processing intput"));
 			player.addChatComponentMessage(new ChatComponentText("usage: move #;#;#"));
