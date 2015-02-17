@@ -10,7 +10,8 @@ import net.minecraft.world.World;
 public class BlockCopier {
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target){
 		worldIn.setBlockState(target, worldIn.getBlockState(origin));
-		removeBlock(worldIn, origin);
+		//worldIn.markBlockForUpdate(target);
+		worldIn.scheduleUpdate(target, worldIn.getBlockState(target).getBlock(), 0);
 	}
 	public static void removeBlock(World worldIn, BlockPos target){
 		worldIn.setBlockToAir(target);
