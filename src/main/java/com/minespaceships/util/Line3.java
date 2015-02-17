@@ -9,9 +9,9 @@ import net.minecraft.util.Vec3i;
  * Created by kevin on 17.02.15.
  * This class models a simple straight line in a 3 dimensional room with (x,y,z) values
  */
-public class Line {
-    private Vec3i originVec; // The origin vector of the line
-    private Vec3i directionVec; // The direction vector of the line
+public class Line3 {
+    private Vec3 originVec; // The origin vector of the line
+    private Vec3 directionVec; // The direction vector of the line
 
     /**
      * Checks if a vector is in this line
@@ -20,9 +20,9 @@ public class Line {
      */
     public boolean hitsVec3(final Vec3 pVec) {
         if(!(pVec instanceof Vec3)) throw new IllegalArgumentException("The parameter vector was not in Vec");
-        final double lambdaX = (pVec.xCoord - originVec.getX()) / directionVec.getX();
-        final double lamdadY = (pVec.yCoord - originVec.getY()) / directionVec.getY();
-        final double lambdaZ = (pVec.zCoord - originVec.getZ()) / directionVec.getZ();
+        final double lambdaX = (pVec.xCoord - originVec.xCoord) / directionVec.xCoord;
+        final double lamdadY = (pVec.yCoord - originVec.yCoord) / directionVec.yCoord;
+        final double lambdaZ = (pVec.zCoord - originVec.zCoord) / directionVec.zCoord;
         return ((lambdaX == lamdadY) && (lamdadY == lambdaZ));
     }
 
@@ -33,12 +33,11 @@ public class Line {
      */
     public boolean hitsVec3i(final Vec3i pVec) {
         if(!(pVec instanceof Vec3i)) throw new IllegalArgumentException("The parameter vector was not in Vec3i");
-        final double lambdaX = (pVec.getX() - originVec.getX()) / directionVec.getX();
-        final double lambdaY = (pVec.getY() - originVec.getY()) / directionVec.getY();
-        final double lambdaZ = (pVec.getZ() - originVec.getZ()) / directionVec.getZ();
+        final double lambdaX = (pVec.getX() - originVec.xCoord) / directionVec.xCoord;
+        final double lambdaY = (pVec.getY() - originVec.yCoord) / directionVec.yCoord;
+        final double lambdaZ = (pVec.getZ() - originVec.zCoord) / directionVec.zCoord;
         return ((lambdaX == lambdaY) && (lambdaY == lambdaZ));
     }
-
 
     /**
      * Checks if a block position is in this line
@@ -51,19 +50,19 @@ public class Line {
     }
 
     //Getters and Setters
-    public Vec3i getOriginVector() {
+    public Vec3 getOriginVector() {
         return originVec;
     }
 
-    public void setOriginVector(final Vec3i pOriginVec) {
+    public void setOriginVector(final Vec3 pOriginVec) {
         this.originVec = pOriginVec;
     }
 
-    public void setDirectionVector(final Vec3i pDirectionVec) {
+    public void setDirectionVector(final Vec3 pDirectionVec) {
         this.directionVec = pDirectionVec;
     }
 
-    public Vec3i getDirectionVector() {
+    public Vec3 getDirectionVector() {
         return directionVec;
     }
 
@@ -73,7 +72,7 @@ public class Line {
      */
     @Override
     public String toString() {
-        return "Origin vector: x: " + originVec.getX() + ", y:  "  + originVec.getY() + ", z: " + originVec.getZ()
-                + "; Direction vector: x: " + directionVec.getX() + ", y:  "  + directionVec.getY() + ", z: " + directionVec.getZ();
+        return "Origin vector: x: " + originVec.xCoord + ", y:  "  + originVec.yCoord + ", z: " + originVec.zCoord
+                + "; Direction vector: x: " + directionVec.xCoord + ", y:  "  + directionVec.yCoord + ", z: " + directionVec.zCoord;
     }
 }
