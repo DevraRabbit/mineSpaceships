@@ -19,7 +19,7 @@ public class Plane3 {
     public Plane3(final Vec3 pOriginVec, final Vec3 pDirectionVec1, final Vec3 pDirectionVec2) {
         if(!(pOriginVec instanceof Vec3)) throw new IllegalArgumentException("The origin vector was not Vec3i");
         if(!(pDirectionVec1 instanceof Vec3)) throw new IllegalArgumentException("The direction vector 1 was not Vec3");
-        if(!(pDirectionVec1 instanceof Vec3)) throw new IllegalArgumentException("The direction vector 1 was not Vec3");
+        if(!(pDirectionVec1 instanceof Vec3)) throw new IllegalArgumentException("The direction vector 2 was not Vec3");
 
         originVec = pOriginVec;
         directionVec1 = pDirectionVec1;
