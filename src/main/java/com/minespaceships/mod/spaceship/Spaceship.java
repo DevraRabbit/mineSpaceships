@@ -11,28 +11,28 @@ import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
 public class Spaceship {
-	private Vec3i minPosition;
-	private Vec3i maxPosition;
-	private Vec3i span;
-	private Vec3i origin;
+	private BlockPos minPosition;
+	private BlockPos maxPosition;
+	private BlockPos span;
+	private BlockPos origin;
 	private World world;
 	
-	public Spaceship(final Vec3i minPosition,final Vec3i maxPosition, World world){
+	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, World world){
 		setMeasurements(minPosition, maxPosition);
 		this.world = world;
 	}
-	public Spaceship(final Vec3i minPosition, int dimX, int dimY, int dimZ, World world){
-		Vec3i recSpan = new Vec3i(dimX, dimY, dimZ);
+	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, World world){
+		BlockPos recSpan = new BlockPos(dimX, dimY, dimZ);
 		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
 		this.world = world;
 	}
-	public Spaceship(final Vec3i minSpan, final Vec3i origin, final Vec3i maxSpan, World world){
+	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World world){
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
 		this.world = world;
 	}
 	
-	private void setMeasurements(final Vec3i minPos, final Vec3i maxPos){
+	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
 		minPosition = minPos;
 		maxPosition = maxPos;
 		span = ((BlockPos) maxPos).subtract(minPos);
