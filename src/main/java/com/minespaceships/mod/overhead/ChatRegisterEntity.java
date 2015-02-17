@@ -2,6 +2,7 @@ package com.minespaceships.mod.overhead;
 
 import java.util.regex.*;
 
+import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.util.BlockCopier;
 
 import net.minecraft.client.Minecraft;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.Vec3i;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -54,15 +56,16 @@ public class ChatRegisterEntity extends TileEntity {
 			} catch (Exception ex) {
 				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
 			}
-		} else if (command.startsWith("liftoff")) {
-			command = command.substring("liftoff".length()).replaceAll("\\s", "");
+		} else if (command.startsWith("move")) {
+			command = command.substring("move".length()).replaceAll("\\s", "");
 
-			Pattern poffset = Pattern.compile("([\\-\\+]?[0-9\\.]+);([\\-\\+]?[0-9\\.]+);([\\-\\+]?[0-9\\.]+)");
+			Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
 			Matcher moffset = poffset.matcher(command);
 			if(moffset.matches()) {
-				Vec3 vec = new Vec3(Double.valueOf(moffset.group(1)), Double.valueOf(moffset.group(2)), Double.valueOf(moffset.group(3)));
-				BlockCopier bc = new BlockCopier();
-				bc.copyTo(vec);
+				Vec3i vec_move = new Vec3i(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
+				
+				Spaceship s = new Spaceship(new Vec3i(5, 5, 5), this.pos, new Vec3i(-5, -5, -5));
+				s.copyTo(vec_move);
 			}
 		}
 	}
