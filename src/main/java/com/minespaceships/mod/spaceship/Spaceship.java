@@ -39,7 +39,7 @@ public class Spaceship {
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	
-	public void copyTo(Vec3 addDirection){
+	public void copyTo(Vec3i addDirection){
 		BlockPos add = new BlockPos(addDirection);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){

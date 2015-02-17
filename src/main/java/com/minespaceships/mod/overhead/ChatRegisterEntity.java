@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
@@ -64,7 +65,7 @@ public class ChatRegisterEntity extends TileEntity {
 			if(moffset.matches()) {
 				Vec3i vec_move = new Vec3i(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 				
-				Spaceship s = new Spaceship(new Vec3i(5, 5, 5), this.pos, new Vec3i(-5, -5, -5));
+				Spaceship s = new Spaceship(new Vec3i(5, 5, 5), (Vec3i)this.pos, new Vec3i(-5, -5, -5), worldObj);
 				s.copyTo(vec_move);
 			}
 		}
