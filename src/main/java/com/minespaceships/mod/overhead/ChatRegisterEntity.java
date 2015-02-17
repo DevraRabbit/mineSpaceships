@@ -55,7 +55,7 @@ public class ChatRegisterEntity extends TileEntity {
 			try {
 				player.addChatComponentMessage(new ChatComponentText(command + " = " + solve(command)));
 			} catch (Exception ex) {
-				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
+				player.addChatComponentMessage(new ChatComponentText("calc: Error processing intput"));
 			}
 		} else if (command.startsWith("move")) {
 			command = command.substring("move".length()).replaceAll("\\s", "");
@@ -69,7 +69,7 @@ public class ChatRegisterEntity extends TileEntity {
 				s.copyTo(vec_move);
 				player.addChatComponentMessage(new ChatComponentText("Moving by " + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3)));
 			} else {
-				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
+				player.addChatComponentMessage(new ChatComponentText("move: Error processing intput"));
 			}
 		}
 	}
