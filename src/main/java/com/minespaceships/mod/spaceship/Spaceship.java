@@ -2,6 +2,8 @@ package com.minespaceships.mod.spaceship;
 
 import javax.vecmath.Vector3d;
 
+import com.minspaceships.util.Vec3Op;
+
 import net.minecraft.util.Vec3;
 
 public class Spaceship {
@@ -26,10 +28,7 @@ public class Spaceship {
 		minPosition = minPos;
 		maxPosition = maxPos;
 		span = maxPos.subtract(minPos);
-		origin = ;
-		Vector3d halfDist = (Vector3d)span.clone();
-		halfDist.scale(1/2);
-		origin.add(halfDist);
+		origin = Vec3Op.scale(span, 0.5);
 	}
 	
 	
