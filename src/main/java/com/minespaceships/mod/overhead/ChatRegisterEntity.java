@@ -2,6 +2,8 @@ package com.minespaceships.mod.overhead;
 
 import java.util.regex.*;
 
+import com.minespaceships.util.BlockCopier;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
@@ -9,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -45,11 +48,21 @@ public class ChatRegisterEntity extends TileEntity {
 		//Define the 'calc' command, which parses a math expression
 		} else if(command.startsWith("calc")) {
 			//prepare the math expression
-			command = command.substring(4).trim(); 
+			command = command.substring("calc".length()).replaceAll("\\s", ""); 
 			try {
-				player.addChatComponentMessage(new ChatComponentText(command + " = " + solve(command.replaceAll("\\s", ""))));
+				player.addChatComponentMessage(new ChatComponentText(command + " = " + solve(command)));
 			} catch (Exception ex) {
 				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
+			}
+		} else if (command.startsWith("liftoff")) {
+			command = command.substring("liftoff".length()).replaceAll("\\s", "");
+
+			Pattern poffset = Pattern.compile("([\\-\\+]?[0-9\\.]+);([\\-\\+]?[0-9\\.]+);([\\-\\+]?[0-9\\.]+)");
+			Matcher moffset = poffset.matcher(command);
+			if(moffset.matches()) {
+				Vec3 vec = new Vec3(Double.valueOf(moffset.group(1)), Double.valueOf(moffset.group(2)), Double.valueOf(moffset.group(3)));
+				BlockCopier bc = new BlockCopier();
+				bc.copyTo(vec);
 			}
 		}
 	}
