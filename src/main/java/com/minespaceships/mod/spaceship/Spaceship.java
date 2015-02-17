@@ -45,6 +45,7 @@ public class Spaceship {
 			for(int y = 0; y < span.getY(); y++){
 				for(int z = 0; z < span.getZ(); z++){
 					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
 					BlockCopier.copyBlock(world, Pos, Pos.add(add));
 				}
 			}
