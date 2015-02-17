@@ -1,4 +1,4 @@
-package com.minspaceships.util;
+package com.minespaceships.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
