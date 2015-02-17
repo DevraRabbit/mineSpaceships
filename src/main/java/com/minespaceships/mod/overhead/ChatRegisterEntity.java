@@ -65,7 +65,7 @@ public class ChatRegisterEntity extends TileEntity {
 			if(moffset.matches()) {
 				BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 				
-				Spaceship s = new Spaceship(new BlockPos(5, 5, 5), this.pos, new BlockPos(-5, -5, -5), worldObj);
+				Spaceship s = new Spaceship(new BlockPos(-5, -5, -5), this.pos, new BlockPos(5, 5, 5), worldObj);
 				s.copyTo(vec_move);
 				player.addChatComponentMessage(new ChatComponentText("Moving by " + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3)));
 			} else {
