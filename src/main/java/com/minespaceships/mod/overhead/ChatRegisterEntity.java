@@ -63,9 +63,9 @@ public class ChatRegisterEntity extends TileEntity {
 			Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
 			Matcher moffset = poffset.matcher(command);
 			if(moffset.matches()) {
-				Vec3i vec_move = new Vec3i(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
+				BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 				
-				Spaceship s = new Spaceship(new Vec3i(5, 5, 5), (Vec3i)this.pos, new Vec3i(-5, -5, -5), worldObj);
+				Spaceship s = new Spaceship(new BlockPos(5, 5, 5), this.pos, new BlockPos(-5, -5, -5), worldObj);
 				s.copyTo(vec_move);
 			}
 		}
