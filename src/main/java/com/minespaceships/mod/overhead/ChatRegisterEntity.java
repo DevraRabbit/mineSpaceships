@@ -61,6 +61,9 @@ public class ChatRegisterEntity extends TileEntity {
 			SpaceshipCommands.init(command, worldObj, this, player, ship);
 		} else if (command.startsWith("move")) {
 			SpaceshipCommands.move(command, worldObj, this, player, ship);
+		} else if (command.equals("test1")) {
+			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", worldObj, this, player, ship);
+			SpaceshipCommands.move("move 0;20;0", worldObj, this, player, ship);
 		}
 	}
 
