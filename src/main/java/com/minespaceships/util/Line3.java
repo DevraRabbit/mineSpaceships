@@ -14,6 +14,18 @@ public class Line3 {
     private Vec3 directionVec; // The direction vector of the line
 
     /**
+     * Constructor of Line3 objects
+     * @param pOriginVec The origin (null) vector of a line (fixed point in the cord system)
+     * @param pDirectionVec The direction vector of a line (the direction by which the line travels in the cord system)
+     */
+    public Line3(final Vec3 pOriginVec, final Vec3 pDirectionVec) {
+        if(!(pOriginVec instanceof Vec3)) throw new IllegalArgumentException("The origin vector was not Vec3");
+        if(!(pDirectionVec instanceof Vec3)) throw new IllegalArgumentException("The direction vector was not Vec3");
+        this.originVec = pOriginVec;
+        this.directionVec = pDirectionVec;
+    }
+
+    /**
      * Checks if a vector is in this line
      * @param pVec The vector which should be checked
      * @return True if the vector is in this line, false otherwise
@@ -21,9 +33,9 @@ public class Line3 {
     public boolean hitsVec3(final Vec3 pVec) {
         if(!(pVec instanceof Vec3)) throw new IllegalArgumentException("The parameter vector was not in Vec");
         final double lambdaX = (pVec.xCoord - originVec.xCoord) / directionVec.xCoord;
-        final double lamdadY = (pVec.yCoord - originVec.yCoord) / directionVec.yCoord;
+        final double lambdaY = (pVec.yCoord - originVec.yCoord) / directionVec.yCoord;
         final double lambdaZ = (pVec.zCoord - originVec.zCoord) / directionVec.zCoord;
-        return ((lambdaX == lamdadY) && (lamdadY == lambdaZ));
+        return ((lambdaX == lambdaY) && (lambdaY == lambdaZ));
     }
 
     /**
@@ -38,6 +50,8 @@ public class Line3 {
         final double lambdaZ = (pVec.getZ() - originVec.zCoord) / directionVec.zCoord;
         return ((lambdaX == lambdaY) && (lambdaY == lambdaZ));
     }
+
+    //TODO Implement function to see if a line hits a plane
 
     /**
      * Checks if a block position is in this line
@@ -72,7 +86,7 @@ public class Line3 {
      */
     @Override
     public String toString() {
-        return "Origin vector: x: " + originVec.xCoord + ", y:  "  + originVec.yCoord + ", z: " + originVec.zCoord
-                + "; Direction vector: x: " + directionVec.xCoord + ", y:  "  + directionVec.yCoord + ", z: " + directionVec.zCoord;
+        return "Origin vector: x: " + originVec.xCoord + ", y:  " + originVec.yCoord + ", z: " + originVec.zCoord
+                + "; Direction vector: x: " + directionVec.xCoord + ", y:  " + directionVec.yCoord + ", z: " + directionVec.zCoord;
     }
 }
