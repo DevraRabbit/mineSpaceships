@@ -50,5 +50,6 @@ public class Spaceship {
 				}
 			}
 		}
+		world.markBlockRangeForRenderUpdate(minPosition, maxPosition);
 	}
 }

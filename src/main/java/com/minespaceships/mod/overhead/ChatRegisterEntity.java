@@ -17,6 +17,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -24,7 +25,7 @@ public class ChatRegisterEntity extends TileEntity {
 	
 	//Attributes
 	private Spaceship ship;
-	
+	private World remoteWorld;	
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
@@ -36,6 +37,9 @@ public class ChatRegisterEntity extends TileEntity {
 			//open our console. 
 			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, this));
 		}
+	}
+	public void setRemoteWorld(World world){
+		remoteWorld = world;
 	}
 	/**
 	 * Executes the given command, regardless who committed it.
@@ -58,7 +62,7 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
 		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, worldObj, this, player, ship);
+			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
 		} else if (command.startsWith("move")) {
 			SpaceshipCommands.move(command, worldObj, this, player, ship);
 		} else if (command.equals("test1")) {
