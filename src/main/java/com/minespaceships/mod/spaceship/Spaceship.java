@@ -2,8 +2,8 @@ package com.minespaceships.mod.spaceship;
 
 import javax.vecmath.Vector3d;
 
-import com.minspaceships.util.BlockCopier;
-import com.minspaceships.util.Vec3Op;
+import com.minespaceships.util.BlockCopier;
+import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
