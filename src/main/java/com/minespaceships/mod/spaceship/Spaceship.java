@@ -5,6 +5,7 @@ import javax.vecmath.Vector3d;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -40,11 +41,11 @@ public class Spaceship {
 		span = ((BlockPos) maxPos).subtract(minPos);
 		origin = Vec3Op.scale(span, 0.5);
 	}
-	public void copyTo(BlockPos addDirection){
+	public void MoveTo(BlockPos addDirection){
 		//copyTo(addDirection, worldC);
-		copyTo(addDirection, worldS);
+		MoveTo(addDirection, worldS);
 	}
-	public void copyTo(BlockPos addDirection, World world){
+	public void MoveTo(BlockPos addDirection, World world){
 		BlockPos add = new BlockPos(addDirection);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
@@ -52,6 +53,7 @@ public class Spaceship {
 					BlockPos Pos = new BlockPos(x,y,z);
 					Pos = Pos.add(minPosition);
 					BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					BlockCopier.removeBlock(world, Pos);
 				}
 			}
 		}
