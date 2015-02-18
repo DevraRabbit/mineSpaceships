@@ -51,8 +51,8 @@ public class terminalMenu {
 	
 	
 	/**
-	 * Erstellt einen String aus Zeilenumbrüchen.
-	 * @return String aus Zeilenumbrüchen
+	 * Creates a String with 20 new lines
+	 * @return string
 	 */
 	private static String clear(){
 		String s = "";
