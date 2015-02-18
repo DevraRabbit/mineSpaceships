@@ -55,6 +55,12 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void onCommand(String command, EntityPlayer player){
 		//define a very first command to see if it works.
+		
+		if(remoteWorld == null) {
+			player.addChatComponentMessage(new ChatComponentText("Remote World not registered yet..."));
+			return;
+		}
+		
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
 			player.addChatComponentMessage(new ChatComponentText("I love you!"));
@@ -64,10 +70,10 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if (command.startsWith("init")) {
 			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
 		} else if (command.startsWith("move")) {
-			SpaceshipCommands.move(command, worldObj, this, player, ship);
+			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", worldObj, this, player, ship);
-			SpaceshipCommands.move("move 0;20;0", worldObj, this, player, ship);
+			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", remoteWorld, this, player, ship);
+			SpaceshipCommands.move("move 0;20;0", remoteWorld, this, player, ship);
 		}
 	}
 
