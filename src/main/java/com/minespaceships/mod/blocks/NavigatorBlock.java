@@ -42,7 +42,7 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {    	 
     	//Check if this code is executed on the client. It is sometimes important to check if
     	//we do things locally or on the server. In this case we act on the client.
-    	if(!worldIn.isRemote){
+    	if(worldIn.isRemote){
     		//Send the player a message. This is the common way of sending texts to a single player using the chat.
 			 ChatComponentText text = new ChatComponentText("Opening Console");
 			 playerIn.addChatComponentMessage(text);	 
@@ -57,7 +57,6 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
     		 TileEntity entity = worldIn.getTileEntity(pos);
 			 if(entity instanceof ChatRegisterEntity){
 				 //Activate the entity
-				 ((ChatRegisterEntity)entity).setRemoteWorld(worldIn);
 			 }			
     	 }
     	 //returns true to prevent placing a block (which would be the default behavior for rightclicking)
