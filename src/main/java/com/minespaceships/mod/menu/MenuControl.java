@@ -1,4 +1,4 @@
-package com.example.examplemod.own;
+package com.minespaceships.mod.menu;
 
 /*
  * Passes through the structure of the menu.

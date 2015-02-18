@@ -2,7 +2,7 @@ package com.minespaceships.mod.overhead;
 
 import java.util.regex.*;
 
-import com.example.examplemod.own.terminalMenu;
+import com.example.examplemod.ovae.terminalMenu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;

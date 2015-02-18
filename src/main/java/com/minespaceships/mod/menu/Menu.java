@@ -1,4 +1,4 @@
-package menu;
+package com.minespaceships.mod.menu;
 
 import java.util.ArrayList;
 
@@ -30,6 +30,7 @@ public class Menu
 		{
 			out+= menuID + ". " + getChildrenList().get(i) + "\n";
 		}
+		
 		return out;
 	}
 	

@@ -1,4 +1,4 @@
-package com.example.examplemod.own;
+package com.example.examplemod.ovae;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
