@@ -41,11 +41,11 @@ public class Spaceship {
 		span = ((BlockPos) maxPos).subtract(minPos);
 		origin = Vec3Op.scale(span, 0.5);
 	}
-	public void MoveTo(BlockPos addDirection){
+	public void moveTo(BlockPos addDirection){
 		//copyTo(addDirection, worldC);
-		MoveTo(addDirection, worldS);
+		moveTo(addDirection, worldS);
 	}
-	public void MoveTo(BlockPos addDirection, World world){
+	private void moveTo(BlockPos addDirection, World world){
 		BlockPos add = new BlockPos(addDirection);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
@@ -58,5 +58,12 @@ public class Spaceship {
 			}
 		}
 		world.markBlockRangeForRenderUpdate(minPosition, maxPosition);  
+		
+		moveMeasurements(addDirection);
+	}
+	private void moveMeasurements(BlockPos addDirection){
+		minPosition = minPosition.add(addDirection);
+		maxPosition = maxPosition.add(addDirection);
+		origin = origin.add(addDirection);
 	}
 }
