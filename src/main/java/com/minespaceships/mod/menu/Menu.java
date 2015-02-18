@@ -8,7 +8,7 @@ public class Menu
 	private final ArrayList<Menu> childrenList;
 	private final String menuName;
 	private static Menu selectedMenu;
-	private static int menuIDcounter = 0;
+	private static int menuIDcounter;
 	private final int menuID;
 	
 	public Menu(final String s)
@@ -17,7 +17,7 @@ public class Menu
 		childrenList=new ArrayList<Menu>();
 		this.menuID = menuIDcounter;
 		menuIDcounter++;
-
+		
 	}
 
 	/**
@@ -26,9 +26,9 @@ public class Menu
 	public String display()
 	{
 		String out = "";
-		for(int i = 0; i < getChildrenList().size(); i++)
-		{
-			out+= menuID + ". " + getChildrenList().get(i) + "\n";
+		out += getMenuName() + "["+getMenuID()+"] \n";
+		for(Menu child: childrenList){
+			out+= "\t"+child.getMenuName()+ " [" +child.getMenuID()+"]\n";
 		}
 		
 		return out;
@@ -46,7 +46,7 @@ public class Menu
 			n = Integer.parseInt(name);
 			if(n < 0 || n > menuIDcounter)
 			{
-				throw new Exception("ungültige ID");
+				throw new Exception("ungï¿½ltige ID");
 			}
 			
 			for(Menu m : childrenList)
@@ -54,6 +54,7 @@ public class Menu
 				if(m.getMenuID() == n)
 				{
 					selectedMenu = m;
+					System.out.println(m.display());
 				}
 			}
 			return true;
