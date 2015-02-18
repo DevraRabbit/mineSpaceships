@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,6 +21,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -52,12 +54,15 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 			 if(entity instanceof ChatRegisterEntity){
 				 //Activate the entity
 				 ((ChatRegisterEntity)entity).Activate(playerIn);
+				 ((ChatRegisterEntity)entity).setClientWorld((WorldClient)worldIn);
 			 }			 
-    	 } else {
-    		 TileEntity entity = worldIn.getTileEntity(pos);
-			 if(entity instanceof ChatRegisterEntity){
-				 //Activate the entity
-			 }			
+    	 } else if(!worldIn.isRemote) {
+    		 if(Minecraft.getMinecraft().thePlayer.equals(playerIn)){
+				 TileEntity entity = Minecraft.getMinecraft().theWorld.getTileEntity(pos);
+				 if(entity instanceof ChatRegisterEntity){
+					 ((ChatRegisterEntity)entity).setRemoteWorld((WorldServer)worldIn);
+				 }			
+    		 }
     	 }
     	 //returns true to prevent placing a block (which would be the default behavior for rightclicking)
     	 return true;  

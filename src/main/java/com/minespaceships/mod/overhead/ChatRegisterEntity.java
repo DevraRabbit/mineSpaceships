@@ -10,6 +10,7 @@ import com.minespaceships.util.Calculator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +19,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -25,7 +27,8 @@ public class ChatRegisterEntity extends TileEntity {
 	
 	//Attributes
 	private Spaceship ship;
-	private World remoteWorld;	
+	private WorldServer remoteWorld;
+	private WorldClient clientWorld;
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
@@ -38,8 +41,11 @@ public class ChatRegisterEntity extends TileEntity {
 			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, this));
 		}
 	}
-	public void setRemoteWorld(World world){
+	public void setRemoteWorld(WorldServer world){
 		remoteWorld = world;
+	}
+	public void setClientWorld(WorldClient world){
+		clientWorld = world;
 	}
 	/**
 	 * Executes the given command, regardless who committed it.
@@ -62,12 +68,12 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
 		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
+			SpaceshipCommands.init(command, clientWorld, remoteWorld, this, player, ship);
 		} else if (command.startsWith("move")) {
-			SpaceshipCommands.move(command, worldObj, this, player, ship);
+			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", worldObj, this, player, ship);
-			SpaceshipCommands.move("move 0;20;0", worldObj, this, player, ship);
+			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", clientWorld, remoteWorld, this, player, ship);
+			SpaceshipCommands.move("move 0;20;0", remoteWorld, this, player, ship);
 		}
 	}
 

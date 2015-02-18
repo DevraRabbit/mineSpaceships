@@ -8,11 +8,13 @@ import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 /**
  * @author jannes
@@ -20,7 +22,7 @@ import net.minecraft.world.World;
  */
 public class SpaceshipCommands {
 
-	public static void init(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
+	public static void init(String command, final WorldClient worldObj, final WorldServer worldServ, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
 		command = command.substring("init".length()).replaceAll("\\s", "");
 
 		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)to([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
@@ -28,7 +30,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
-			commandBlock.setShip(new Spaceship(from, commandBlock.getPos(), to, worldObj));
+			commandBlock.setShip(new Spaceship(from, commandBlock.getPos(), to, worldObj, worldServ));
 			
 			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
 		} else {
