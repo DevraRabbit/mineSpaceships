@@ -1,5 +1,6 @@
 package com.minespaceships.util;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -18,7 +19,7 @@ public class BlockCopier {
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, boolean copyEntity){
 		worldIn.setBlockState(target, worldIn.getBlockState(origin), 2);	
 		if(worldIn.getTileEntity(origin) != null){
-			moveEntityInformation(worldIn.getTileEntity(origin), worldIn.getTileEntity(target));
+			moveEntityInformationByReference(worldIn.getTileEntity(origin), worldIn.getTileEntity(target));
 		}
 	}
 	public static void moveEntityInformation(TileEntity entOrigin, TileEntity entTarget){
@@ -35,6 +36,19 @@ public class BlockCopier {
 			}			
 		} else {
 			throw new IllegalArgumentException("Not the same entity types!");
+		}
+	}
+	public static void moveEntityInformationByReference(TileEntity entOrigin, TileEntity entTarget){
+		if(entTarget.getClass() == entOrigin.getClass()){
+			Field[] originFields = entOrigin.getClass().getDeclaredFields();
+			for(Field field : originFields){
+				field.setAccessible(true);
+				try {
+					field.set(entTarget, field.get(entOrigin));
+				} 
+				catch (IllegalArgumentException e) {}
+				catch (IllegalAccessException e) {}
+			}
 		}
 	}
 	public static void removeBlock(World worldIn, BlockPos target){
