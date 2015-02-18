@@ -18,23 +18,19 @@ public class Spaceship {
 	private BlockPos span;
 	private BlockPos origin;
 	private WorldServer worldS;
-	private WorldClient worldC;
 	
-	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldClient worldC, WorldServer worldS){
+	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
-		this.worldC = worldC;
 		this.worldS = worldS;
 	}
-	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, WorldClient worldC, WorldServer worldS){
+	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
 		BlockPos recSpan = new BlockPos(dimX, dimY, dimZ);
 		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
-		this.worldC = worldC;
 		this.worldS = worldS;
 	}
-	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldClient worldC, WorldServer worldS){
+	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
-		this.worldC = worldC;
 		this.worldS = worldS;
 	}
 	

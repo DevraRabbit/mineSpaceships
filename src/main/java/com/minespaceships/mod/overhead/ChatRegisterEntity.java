@@ -24,12 +24,11 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ChatRegisterEntity extends TileEntity implements IMoveable {
+public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	
 	//Attributes
 	private Spaceship ship;
-	private WorldServer remoteWorld;
-	private WorldClient clientWorld;
+	private WorldServer remoteWorld;	
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
@@ -45,9 +44,6 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable {
 	public void setRemoteWorld(WorldServer world){
 		remoteWorld = world;
 	}
-	public void setClientWorld(WorldClient world){
-		clientWorld = world;
-	}
 	/**
 	 * Executes the given command, regardless who committed it.
 	 * @param command
@@ -62,6 +58,12 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable {
 	 */
 	public void onCommand(String command, EntityPlayer player){
 		//define a very first command to see if it works.
+		
+		if(remoteWorld == null) {
+			player.addChatComponentMessage(new ChatComponentText("Remote World not registered yet..."));
+			return;
+		}
+		
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
 			player.addChatComponentMessage(new ChatComponentText("I love you!"));
@@ -69,11 +71,11 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable {
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
 		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, clientWorld, remoteWorld, this, player, ship);
+			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
 		} else if (command.startsWith("move")) {
 			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", clientWorld, remoteWorld, this, player, ship);
+			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", remoteWorld, this, player, ship);
 			SpaceshipCommands.move("move 0;20;0", remoteWorld, this, player, ship);
 		}
 	}
@@ -90,7 +92,6 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable {
 		if(target instanceof ChatRegisterEntity){
 			ChatRegisterEntity targetEntity = (ChatRegisterEntity)target;
 			targetEntity.ship = ship;
-			targetEntity.clientWorld = clientWorld;
 			targetEntity.remoteWorld = remoteWorld;
 		}
 	}
