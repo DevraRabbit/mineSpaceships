@@ -23,13 +23,16 @@ public class BlockCopier {
 	}
 	public static void moveEntityInformation(TileEntity entOrigin, TileEntity entTarget){
 		if(entTarget.getClass() == entOrigin.getClass()){
-			if(entTarget instanceof IInventory){
+			if(entOrigin instanceof IMoveable){
+				((IMoveable)entOrigin).moveInformation((IMoveable)entTarget);
+			} 
+			else if(entTarget instanceof IInventory){
 				IInventory invOrigin = (IInventory)entOrigin;
 				IInventory invTarget = (IInventory)entTarget;
 				for(int i = 0; i < invOrigin.getSizeInventory(); i++){
 					invTarget.setInventorySlotContents(i, invOrigin.getStackInSlot(i));
 				}
-			}
+			}			
 		} else {
 			throw new IllegalArgumentException("Not the same entity types!");
 		}

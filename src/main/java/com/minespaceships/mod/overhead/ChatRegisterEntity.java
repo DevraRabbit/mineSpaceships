@@ -6,6 +6,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Calculator;
+import com.minespaceships.util.IMoveable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -23,7 +24,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ChatRegisterEntity extends TileEntity {
+public class ChatRegisterEntity extends TileEntity implements IMoveable {
 	
 	//Attributes
 	private Spaceship ship;
@@ -83,5 +84,14 @@ public class ChatRegisterEntity extends TileEntity {
 	
 	public Spaceship getShip() {
 		return ship;
+	}
+	@Override
+	public void moveInformation(IMoveable target) {
+		if(target instanceof ChatRegisterEntity){
+			ChatRegisterEntity targetEntity = (ChatRegisterEntity)target;
+			targetEntity.ship = ship;
+			targetEntity.clientWorld = clientWorld;
+			targetEntity.remoteWorld = remoteWorld;
+		}
 	}
 }
