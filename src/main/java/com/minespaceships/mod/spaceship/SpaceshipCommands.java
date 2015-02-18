@@ -52,7 +52,7 @@ public class SpaceshipCommands {
 		Matcher moffset = poffset.matcher(command);
 		if(moffset.matches()) {
 			BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
-			ship.MoveTo(vec_move);
+			ship.moveTo(vec_move);
 			
 			player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
 		} else {
