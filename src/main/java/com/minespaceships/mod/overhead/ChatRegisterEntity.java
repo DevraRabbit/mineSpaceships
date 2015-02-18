@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
@@ -61,6 +62,8 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		
 		if(remoteWorld == null) {
 			player.addChatComponentMessage(new ChatComponentText("Remote World not registered yet..."));
+			remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+			player.addChatComponentMessage(new ChatComponentText("Remote World successfully registered!"));
 			return;
 		}
 		
@@ -75,8 +78,8 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		} else if (command.startsWith("move")) {
 			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -5;-5;-5 to 5;5;5", remoteWorld, this, player, ship);
-			SpaceshipCommands.move("move 0;20;0", remoteWorld, this, player, ship);
+			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
+			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
 		}
 	}
 
