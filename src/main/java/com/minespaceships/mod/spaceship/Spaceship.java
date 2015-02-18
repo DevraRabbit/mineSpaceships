@@ -45,7 +45,7 @@ public class Spaceship {
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void copyTo(BlockPos addDirection){
-		copyTo(addDirection, worldC);
+		//copyTo(addDirection, worldC);
 		copyTo(addDirection, worldS);
 	}
 	public void copyTo(BlockPos addDirection, World world){
