@@ -11,6 +11,7 @@ import net.minecraft.util.ChatComponentText;
 public class CustomGuiChat extends GuiChat{
 	private EntityPlayer player;
 	private ChatRegisterEntity entity;
+	
 	/**
 	 * Creates a custom GUI that opens a steady interface for the player to communicate with the entity
 	 * @param player

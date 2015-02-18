@@ -2,6 +2,8 @@ package com.minespaceships.mod.overhead;
 
 import java.util.regex.*;
 
+import com.example.examplemod.own.terminalMenu;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
@@ -52,6 +54,7 @@ public class ChatRegisterEntity extends TileEntity {
 				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
 			}
 		}
+		terminalMenu.onCommand(command, player);
 	}
 
 	
