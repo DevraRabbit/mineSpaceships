@@ -40,7 +40,7 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
-			terminalMenu.onCommand(command, player);
+		terminalMenu.onCommand(command, player);
 	}
 
 }
