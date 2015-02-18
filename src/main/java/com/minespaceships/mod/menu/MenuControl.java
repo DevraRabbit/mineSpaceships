@@ -1,4 +1,4 @@
-package com.example.examplemod.own;
+package com.minespaceships.mod.menu;
 
 /*
  * Passes through the structure of the menu.
@@ -43,22 +43,11 @@ public class MenuControl {
 	 * @param command
 	 */
 	public void control(String command){
+		menuRoot.switchMenu(command);
+		
 		if(command.equals("up")){
-			switchToParentMenu();
 			currentMenu.display();
 		}
-		if(currentMenu.contains(command)){
-		}
-		
 	}
-	
-	/**
-	 * Switch from the current menu into it's parent menu.
-	 */
-	private void switchToParentMenu(){
-		if(command.length()-1 > 1){
-			command = command.substring(0, (command.length()-1));
-		}
-	}
-	
+
 }
