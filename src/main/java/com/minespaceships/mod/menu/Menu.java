@@ -6,14 +6,17 @@ import java.util.ArrayList;
 public class Menu 
 {
 	private final ArrayList<Menu> childrenList;
+	private final static ArrayList<Menu> menuList= new ArrayList<Menu>();
 	private final String menuName;
 	private static Menu selectedMenu;
 	private static int menuIDcounter;
 	private final int menuID;
+	private Menu motherMenu;
 	
 	public Menu(final String s)
 	{
-		menuName = s;
+		menuName = s;	
+		motherMenu=null;
 		childrenList=new ArrayList<Menu>();
 		this.menuID = menuIDcounter;
 		menuIDcounter++;
@@ -28,7 +31,7 @@ public class Menu
 		String out = "";
 		out += getMenuName() + "["+getMenuID()+"] \n";
 		for(Menu child: childrenList){
-			out+= "\t"+child.getMenuName()+ " [" +child.getMenuID()+"]\n";
+			out+= "\t"+child.getMenuName()+ " [" +child.getMenuID() +"]\n" ;
 		}
 		
 		return out;
@@ -42,14 +45,21 @@ public class Menu
 	{
 		int n;
 		try
-		{
+		{	if(name=="m"){
+			
+			selectedMenu = motherMenu;
+			System.out.println(selectedMenu.display());
+			return true;
+		
+		}
+			
 			n = Integer.parseInt(name);
 			if(n < 0 || n > menuIDcounter)
 			{
 				throw new Exception("ung�ltige ID");
 			}
 			
-			for(Menu m : childrenList)
+			for(Menu m : menuList)
 			{
 				if(m.getMenuID() == n)
 				{
@@ -69,6 +79,16 @@ public class Menu
 	public void addSubMenu(Menu m)
 	{
 		childrenList.add(m);
+		menuList.add(m);
+		m.setMotherMenu(this);
+	}
+	
+	private void setMotherMenu(Menu m){
+		motherMenu=m;
+	}
+	
+	private Menu getMother(){
+		return motherMenu;
 	}
 	
 	public int getMenuID()

@@ -8,14 +8,19 @@ public class TestMain {
 	private static Scanner scanner = new Scanner(System.in);
 	private static String input;
 	
+	
 	public static void main(String[] args){
 		
 		Menu menu1 = new Menu("Root 0");
 		Menu menu2 = new Menu("Hauptmenu 1");
+		
 		menu1.addSubMenu(menu2);
 		menu1.addSubMenu(new Menu("untermenu2"));
-		menu2.addSubMenu(new Menu("untermenu3"));
+		Menu menu3= new Menu("Untermenu3 mit Untermenu");
+		menu2.addSubMenu(menu3);
 		menu2.addSubMenu(new Menu("untermenu4"));
+		menu3.addSubMenu(new Menu("untermenu 5"));
+		menu3.addSubMenu(new Menu("untermenu6"));
 
 		System.out.println(menu1.display());
 		
@@ -23,6 +28,9 @@ public class TestMain {
 		input = scanner.next();
 		menu1.switchMenu(input);
 		
+		System.out.print("> ");
+		input = scanner.next();
+		menu3.switchMenu(input);
 	}
 	
 
