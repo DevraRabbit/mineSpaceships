@@ -6,10 +6,12 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Calculator;
+import com.minespaceships.util.IMoveable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -18,14 +20,15 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ChatRegisterEntity extends TileEntity {
+public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	
 	//Attributes
 	private Spaceship ship;
-	private World remoteWorld;	
+	private WorldServer remoteWorld;	
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
@@ -38,7 +41,7 @@ public class ChatRegisterEntity extends TileEntity {
 			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, this));
 		}
 	}
-	public void setRemoteWorld(World world){
+	public void setRemoteWorld(WorldServer world){
 		remoteWorld = world;
 	}
 	/**
@@ -83,5 +86,13 @@ public class ChatRegisterEntity extends TileEntity {
 	
 	public Spaceship getShip() {
 		return ship;
+	}
+	@Override
+	public void moveInformation(IMoveable target) {
+		if(target instanceof ChatRegisterEntity){
+			ChatRegisterEntity targetEntity = (ChatRegisterEntity)target;
+			targetEntity.ship = ship;
+			targetEntity.remoteWorld = remoteWorld;
+		}
 	}
 }

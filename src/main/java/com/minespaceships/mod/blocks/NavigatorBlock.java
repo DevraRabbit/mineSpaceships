@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,11 +21,12 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class NavigatorBlock extends Block implements ITileEntityProvider{
-	private World remoteWorld;
+	private WorldServer remoteWorld;
 	
 	/**
 	 * Block to implement an interface for the Spaceships
@@ -68,9 +70,8 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
 		//the Block is placed.
 		if(!worldIn.isRemote){ //If we're on the server
-			remoteWorld = worldIn;
+			remoteWorld = (WorldServer)worldIn;
 		}
 		return new ChatRegisterEntity();
-		
 	}    
 }
