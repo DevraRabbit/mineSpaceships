@@ -1,7 +1,7 @@
-package com.example.examplemod;
+package com.minespaceships.mod;
 
-import com.example.examplemod.blocks.NavigatorBlock;
-import com.example.examplemod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.blocks.NavigatorBlock;
+import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

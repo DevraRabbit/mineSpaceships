@@ -1,4 +1,4 @@
-package com.example.examplemod.overhead;
+package com.minespaceships.mod.overhead;
 
 import java.io.IOException;
 
