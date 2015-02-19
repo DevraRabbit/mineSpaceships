@@ -26,7 +26,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class NavigatorBlock extends Block implements ITileEntityProvider{
-	private WorldServer remoteWorld;
 	
 	/**
 	 * Block to implement an interface for the Spaceships
@@ -55,7 +54,6 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 			TileEntity entity = worldIn.getTileEntity(pos);
 			if(entity instanceof ChatRegisterEntity){
 				//Activate the entity
-				((ChatRegisterEntity)entity).setRemoteWorld(remoteWorld);
 				((ChatRegisterEntity)entity).Activate(playerIn);
 			}
     	}
@@ -69,9 +67,6 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
 		//the Block is placed.
-		if(!worldIn.isRemote){ //If we're on the server
-			remoteWorld = (WorldServer)worldIn;
-		}
 		return new ChatRegisterEntity();
 	}    
 }

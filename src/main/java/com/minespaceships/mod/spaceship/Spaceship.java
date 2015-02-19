@@ -83,4 +83,15 @@ public class Spaceship {
 			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 		}
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("minPosition: " + minPosition.toString());
+		sb.append("\nmaxPosition: " + maxPosition.toString());
+		sb.append("\nspan: " + span.toString());
+		sb.append("\norigin: " + origin.toString());
+		sb.append("\nworldServer: " + worldS == null ? "Not Known.\n" : "Known\n");
+		return sb.toString();
+	}
 }

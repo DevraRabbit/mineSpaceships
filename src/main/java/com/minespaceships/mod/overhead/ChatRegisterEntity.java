@@ -60,11 +60,8 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public void onCommand(String command, EntityPlayer player){
 		//define a very first command to see if it works.
 		
-		if(remoteWorld == null) {
-			player.addChatComponentMessage(new ChatComponentText("Remote World not registered yet..."));
-			remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-			player.addChatComponentMessage(new ChatComponentText("Remote World successfully registered!"));
-		}
+		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		
 		
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
@@ -79,6 +76,8 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		} else if (command.equals("test1")) {
 			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
 			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
+		} else if(command.equals("status")) {
+			SpaceshipCommands.status(remoteWorld, this, player, ship);
 		}
 	}
 
