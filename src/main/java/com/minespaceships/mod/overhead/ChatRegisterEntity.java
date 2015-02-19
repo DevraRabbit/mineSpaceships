@@ -30,6 +30,9 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	//Attributes
 	private Spaceship ship;
 	private WorldServer remoteWorld;	
+	public ChatRegisterEntity() {
+		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+	}
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
@@ -39,7 +42,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){		
 			//open our console. 
-			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, this));
+			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos)));
 		}
 	}
 	public void setRemoteWorld(WorldServer world){
@@ -57,14 +60,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	 * @param command
 	 * @param player
 	 */
-	public void onCommand(String command, EntityPlayer player){
-		//define a very first command to see if it works.
-		
-		if(remoteWorld == null) {
-			player.addChatComponentMessage(new ChatComponentText("Remote World not registered yet..."));
-			remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-			player.addChatComponentMessage(new ChatComponentText("Remote World successfully registered!"));
-		}
+	public void onCommand(String command, EntityPlayer player){			
 		
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
