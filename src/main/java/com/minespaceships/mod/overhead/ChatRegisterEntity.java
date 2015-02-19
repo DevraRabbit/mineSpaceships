@@ -64,7 +64,6 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 			player.addChatComponentMessage(new ChatComponentText("Remote World not registered yet..."));
 			remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
 			player.addChatComponentMessage(new ChatComponentText("Remote World successfully registered!"));
-			return;
 		}
 		
 		if(command.equals("hello")){

@@ -65,7 +65,7 @@ public class Spaceship {
 			}
 		}
 		world.markBlockRangeForRenderUpdate(minPosition, maxPosition);  
-		
+		moveEntities(addDirection);
 		moveMeasurements(addDirection);
 	}
 	private void moveMeasurements(BlockPos addDirection){

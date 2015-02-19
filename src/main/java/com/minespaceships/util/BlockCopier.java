@@ -18,8 +18,10 @@ public class BlockCopier {
 	}
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, boolean copyEntity){
 		worldIn.setBlockState(target, worldIn.getBlockState(origin), 2);	
-		if(worldIn.getTileEntity(origin) != null){
-			moveEntityInformationByReference(worldIn.getTileEntity(origin), worldIn.getTileEntity(target));
+		TileEntity ent = worldIn.getTileEntity(origin);
+		if(ent != null){
+			worldIn.removeTileEntity(origin);
+			moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
 		}
 	}
 	public static void moveEntityInformation(TileEntity entOrigin, TileEntity entTarget){

@@ -42,7 +42,9 @@ public class SpaceshipCommands {
 	public static void move(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		command = command.substring("move".length()).replaceAll("\\s", "");
 		
-		ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
+		if((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()) != null){
+			ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
+		}
 		if(ship == null) {
 			player.addChatComponentMessage(new ChatComponentText("move: Please initialize the Spaceship first"));
 			return;
