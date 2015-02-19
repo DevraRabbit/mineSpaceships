@@ -25,6 +25,8 @@ public class TestMain {
 		menu1.display();
 
 		userInput(menu1);
+		//System.out.print("> ");
+		//input = scanner.next();
 		menu1.switchMenu(input);
 		
 		/*

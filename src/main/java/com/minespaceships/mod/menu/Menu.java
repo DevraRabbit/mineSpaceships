@@ -94,20 +94,38 @@ public class Menu{
 				return true;
 			}
 			
-			n = Integer.parseInt(name);
-			if(n < 0 || n > menuIDcounter)
-			{
-				throw new Exception("ungültige ID");
+			if(name.length()>1){
+			String name2= name.substring(0,2);
+			
+			if(name2.equals("id")){
+				n = Integer.parseInt(name.substring(2));
+				if(n < 0 || n > menuIDcounter)
+				{
+					throw new Exception("ungültige ID");
+				}
+				
+				for(Menu m : menuList)
+				{
+					if(m.getMenuID() == n)
+					{
+						selectedMenu = m;
+						m.display();
+					}
+				}
+				return true;
+			}
 			}
 			
-			for(Menu m : menuList)
-			{
-				if(m.getMenuID() == n)
-				{
-					selectedMenu = m;
-					m.display();
-				}
-			}
+			int o;
+			o = Integer.parseInt(name);
+					
+			
+					selectedMenu = selectedMenu.childrenList.get(o);
+					selectedMenu.display();
+				
+			
+			
+			
 			return true;
 		}
 		
@@ -115,6 +133,7 @@ public class Menu{
 		{
 			return false;
 		}
+		
 	}
 
 	/**
