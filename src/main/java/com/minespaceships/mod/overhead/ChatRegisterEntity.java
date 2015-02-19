@@ -29,7 +29,8 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	
 	//Attributes
 	private Spaceship ship;
-	private WorldServer remoteWorld;	
+	private WorldServer remoteWorld;
+	
 	public ChatRegisterEntity() {
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
 	}
@@ -61,7 +62,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){			
-		
+		System.out.println(pos.toString());
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
 			player.addChatComponentMessage(new ChatComponentText("I love you!"));
