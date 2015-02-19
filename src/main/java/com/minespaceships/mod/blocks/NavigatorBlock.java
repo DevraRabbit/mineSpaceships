@@ -14,6 +14,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
@@ -46,18 +47,22 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {    	 
     	//Check if this code is executed on the client. It is sometimes important to check if
     	//we do things locally or on the server. In this case we act on the client.
-    	if(worldIn.isRemote){
-    		//Send the player a message. This is the common way of sending texts to a single player using the chat.
-			ChatComponentText text = new ChatComponentText("Opening Console");
-			playerIn.addChatComponentMessage(text);	 
+    	if(worldIn.isRemote){    		
 			//Get the TileEntity from the world, which is the object that is associated to the position
 			//of our block and that can execute extra code. In our example this is opening a console.
 			TileEntity entity = worldIn.getTileEntity(pos);
 			if(entity instanceof ChatRegisterEntity){
 				//Activate the entity
-				((ChatRegisterEntity)entity).setRemoteWorld(remoteWorld);
-				((ChatRegisterEntity)entity).Activate(playerIn);
+				if(remoteWorld != null){
+					//Send the player a message. This is the common way of sending texts to a single player using the chat.
+					ChatComponentText text = new ChatComponentText("Opening Console");
+					playerIn.addChatComponentMessage(text);	 
+					((ChatRegisterEntity)entity).setRemoteWorld(remoteWorld);
+					((ChatRegisterEntity)entity).Activate(playerIn);
+				}
 			}
+    	} else {
+    		remoteWorld = (WorldServer)worldIn;
     	}
     	//returns true to prevent placing a block (which would be the default behavior for rightclicking)
     	return true;
@@ -69,9 +74,11 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
 		//the Block is placed.
-		if(!worldIn.isRemote){ //If we're on the server
+		ChatRegisterEntity entity = new ChatRegisterEntity();
+		if(worldIn instanceof WorldServer){ //If we're on the server
 			remoteWorld = (WorldServer)worldIn;
-		}
-		return new ChatRegisterEntity();
+			entity.setRemoteWorld(remoteWorld);
+		} 
+		return entity;
 	}    
 }

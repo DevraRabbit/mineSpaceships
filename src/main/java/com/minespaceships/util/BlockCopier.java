@@ -18,6 +18,9 @@ public class BlockCopier {
 	}
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, boolean copyEntity){
 		worldIn.setBlockState(target, worldIn.getBlockState(origin), 2);	
+		if(copyEntity){copyEntity(worldIn, origin, target);}
+	}
+	public static void copyEntity(World worldIn, BlockPos origin, BlockPos target){
 		if(worldIn.getTileEntity(origin) != null){
 			moveEntityInformationByReference(worldIn.getTileEntity(origin), worldIn.getTileEntity(target));
 		}
