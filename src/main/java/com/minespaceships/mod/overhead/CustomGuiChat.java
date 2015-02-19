@@ -2,6 +2,8 @@ package com.minespaceships.mod.overhead;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
@@ -38,6 +40,7 @@ public class CustomGuiChat extends GuiChat{
 			if(keyCode == 1){
 				//kill the Gui-screen and let minecraft display the normal game
 				this.mc.displayGuiScreen((GuiScreen)null);
+				this.clearChat();
 			}
 			//on Enter
 			else if(keyCode == 28 || keyCode == 156) {
@@ -47,6 +50,24 @@ public class CustomGuiChat extends GuiChat{
 				entity.onCommand(command, player);
 				this.inputField.setText("");
 			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param message
+	 */
+	public void display(final String message){
+		this.clearChat();
+		this.mc.thePlayer.addChatComponentMessage(new ChatComponentText(message));
+	}
+	
+	/**
+	 * 
+	 */
+	public void clearChat(){
+		for(int i = 0; i<10; i++){
+			this.mc.thePlayer.addChatComponentMessage(new ChatComponentText("\n"));
 		}
 	}
 }

@@ -2,6 +2,8 @@ package com.minespaceships.mod.menu;
 
 import java.util.ArrayList;
 
+import com.minespaceships.mod.overhead.CustomGuiChat;
+
 /**
  * The Menu class implements a menu structure and the ability
  * to go through these structure out of menus and sub menus.
@@ -47,16 +49,25 @@ public class Menu{
 	private Menu motherMenu;
 
 	/**
+	 * 
+	 */
+	private CustomGuiChat terminal;
+
+	/**
 	 * The menu constructor creates a new menu object with a menu name.
 	 * @param name
 	 */
-	public Menu(final String name){
+	public Menu(final String name, final CustomGuiChat terminal){
 		if(name.trim().isEmpty()){
-			throw new IllegalArgumentException("The menu name can not be null");
+			throw new IllegalArgumentException("The menu name can not be null.");
+		}
+		if(terminal == null){
+			throw new IllegalArgumentException("the therminal ca not be null.");
 		}
 		
 		menuName = name;
 		motherMenu=this;
+		this.terminal=terminal;
 		childrenList=new ArrayList<Menu>();
 		this.menuID = menuIDcounter;
 		menuIDcounter++;
@@ -66,7 +77,7 @@ public class Menu{
 	/**
 	 * Prints out a List of all sub menus in the terminal.
 	 */
-	public void display(){
+	public String display(){
 		String out = "";
 		//add the menu name
 		out += "["+getMenuID()+"] "+getMenuName()+ '\n';
@@ -74,7 +85,7 @@ public class Menu{
 		for(Menu child: childrenList){
 			out+= "\t ["+child.getMenuID()+"] "+child.getMenuName()+ '\n';
 		}
-		System.out.println(out);
+		return out;
 	}
 
 	/**
@@ -87,7 +98,7 @@ public class Menu{
 		{	
 			if(name.equals("m")){
 				if(selectedMenu != null){
-					selectedMenu.getMother().display();
+					terminal.display(selectedMenu.getMother().display());
 					selectedMenu = this;
 				}
 				System.out.println("");
@@ -105,7 +116,8 @@ public class Menu{
 				if(m.getMenuID() == n)
 				{
 					selectedMenu = m;
-					m.display();
+					terminal.display(m.display());
+					
 				}
 			}
 			return true;

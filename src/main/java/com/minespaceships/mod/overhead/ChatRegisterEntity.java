@@ -3,6 +3,7 @@ package com.minespaceships.mod.overhead;
 import java.util.regex.*;
 
 import com.example.examplemod.ovae.terminalMenu;
+import com.minespaceships.mod.menu.DefaultMenu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -15,6 +16,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class ChatRegisterEntity extends TileEntity {
+	
+	/**
+	 * 
+	 */
+	private CustomGuiChat terminal;
+
+
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
@@ -22,9 +30,16 @@ public class ChatRegisterEntity extends TileEntity {
 	public void Activate(EntityPlayer player){
 		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
-		if(player.equals(Minecraft.getMinecraft().thePlayer)){		
+		if(player.equals(Minecraft.getMinecraft().thePlayer)){
+			//initialise the terminal
+			terminal = new CustomGuiChat(player, this);
+			
 			//open our console. 
-			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, this));
+			Minecraft.getMinecraft().displayGuiScreen(terminal);
+			//Initialise a default menu for testing reasons
+			DefaultMenu.initMenu(terminal);
+			terminal.display(DefaultMenu.getRootMenu().display());
+			
 		}
 	}
 	/**
@@ -40,6 +55,8 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
+		DefaultMenu.getRootMenu().switchMenu(command);
+		
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
@@ -54,7 +71,7 @@ public class ChatRegisterEntity extends TileEntity {
 				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
 			}
 		}
-		terminalMenu.onCommand(command, player);
+		//terminalMenu.onCommand(command, player);
 	}
 
 	
