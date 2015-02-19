@@ -4,6 +4,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 
 public class DefaultMenu {
 	
+	private static boolean runBefore;
 	private static Menu root;
 	private static Menu control;
 	private static Menu armour;
@@ -22,10 +23,15 @@ public class DefaultMenu {
 		root.addSubMenu(armour);
 		root.addSubMenu(protection);
 			protection.addSubMenu(shield);
+		runBefore = true;
 	}
 	
 	public static Menu getRootMenu(){
 		return root;
+	}
+	
+	public static boolean getRunBefore(){
+		return runBefore;
 	}
 
 }

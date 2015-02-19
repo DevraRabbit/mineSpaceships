@@ -11,16 +11,17 @@ public class terminalMenu {
 					//send something to the player to see if we get a feedback from our command.
 					player.addChatComponentMessage(new ChatComponentText("I love you!"));
 				}
-				/*
+				
 				if(command.equals("what are you?")){
 					player.addChatComponentMessage(new ChatComponentText("A cube."));
 				}
 				if(command.equals("rm Ex")){
-					player.addExperience(1000);
+					player.addExperience(-1000);
 				}
 				if(command.equals("add Ex")){
 					player.addExperience(1000);
 				}
+				/*
 				if(command.equals("jump")){
 					player.jump();
 				}

@@ -36,8 +36,11 @@ public class ChatRegisterEntity extends TileEntity {
 			
 			//open our console. 
 			Minecraft.getMinecraft().displayGuiScreen(terminal);
+			
 			//Initialise a default menu for testing reasons
-			DefaultMenu.initMenu(terminal);
+			if(!DefaultMenu.getRunBefore()){
+				DefaultMenu.initMenu(terminal);
+			}
 			terminal.display(DefaultMenu.getRootMenu().display());
 			
 		}
@@ -71,7 +74,7 @@ public class ChatRegisterEntity extends TileEntity {
 				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
 			}
 		}
-		//terminalMenu.onCommand(command, player);
+		terminalMenu.onCommand(command, player);
 	}
 
 	

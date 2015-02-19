@@ -7,7 +7,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * The Menu class implements a menu structure and the ability
  * to go through these structure out of menus and sub menus.
- * @author DieDiren, ovae.
+ * @author DieDiren, Sinan, ovae.
  * @verion 20150219
  */
 public class Menu{
@@ -78,6 +78,7 @@ public class Menu{
 	 * Prints out a List of all sub menus in the terminal.
 	 */
 	public String display(){
+		selectedMenu = this;
 		String out = "";
 		//add the menu name
 		out += "["+getMenuID()+"] "+getMenuName()+ '\n';
@@ -87,15 +88,15 @@ public class Menu{
 		}
 		return out;
 	}
-
+	
 	/**
 	 * returns true if successful, false if the ID was not correct
 	 * changes the static variable selectedMenu to the new Menu
 	 */
-	public boolean switchMenu(String name){
+	public boolean switchMenu(final String name){
 		int n;
-		try
-		{	
+		try{
+			//parent menu
 			if(name.equals("m")){
 				if(selectedMenu != null){
 					terminal.display(selectedMenu.getMother().display());
@@ -104,27 +105,41 @@ public class Menu{
 				System.out.println("");
 				return true;
 			}
-			
-			n = Integer.parseInt(name);
-			if(n < 0 || n > menuIDcounter)
-			{
-				throw new Exception("ungültige ID");
-			}
-			
-			for(Menu m : menuList)
-			{
-				if(m.getMenuID() == n)
-				{
-					selectedMenu = m;
-					terminal.display(m.display());
-					
+
+			//
+			if(name.length()>1){
+				String name2= name.substring(0,2);
+				if(name2.equals("id")){
+					n = Integer.parseInt(name.substring(2));
+					if(n < 0 || n > menuIDcounter){
+						throw new Exception("ungültige ID");
+					}
+
+					//
+					for(Menu m : menuList){
+						if(m.getMenuID() == n){
+							selectedMenu = m;
+							terminal.display(m.display());
+						}
+					}
+					return true;
 				}
 			}
-			return true;
-		}
-		
-		catch(Exception e)
-		{
+
+			int position = Integer.parseInt(name);
+			if(position > 0 && position <= selectedMenu.childrenList.size()){
+				position -= 1;
+				selectedMenu = selectedMenu.childrenList.get(position);
+				terminal.display(selectedMenu.display());
+				return true;
+			}
+
+			return false;
+		}catch(IndexOutOfBoundsException e){
+			System.err.println(e.getStackTrace());
+			return false;
+		}catch(Exception f){
+			System.err.println(f.getStackTrace());
 			return false;
 		}
 	}
