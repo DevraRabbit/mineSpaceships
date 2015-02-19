@@ -19,7 +19,7 @@ public class TestMain {
 		Menu menu3= new Menu("Untermenu3 mit Untermenu");
 		menu2.addSubMenu(menu3);
 		menu2.addSubMenu(new Menu("untermenu4"));
-		menu3.addSubMenu(new Menu("untermenu 5"));
+		menu3.addSubMenu(new Menu("untermenu5"));
 		menu3.addSubMenu(new Menu("untermenu6"));
 
 		menu1.display();
@@ -40,6 +40,9 @@ public class TestMain {
 		scanner.close();
 	}
 	
+	/**
+	 * @param menu
+	 */
 	private static void userInput(Menu menu){
 		System.out.print("> ");
 		input = scanner.next();

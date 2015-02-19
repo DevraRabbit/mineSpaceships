@@ -50,14 +50,13 @@ public class Menu{
 	 * The menu constructor creates a new menu object with a menu name.
 	 * @param name
 	 */
-	public Menu(final String name)
-	{
+	public Menu(final String name){
 		if(name.trim().isEmpty()){
 			throw new IllegalArgumentException("The menu name can not be null");
 		}
 		
 		menuName = name;
-		motherMenu=null;
+		motherMenu=this;
 		childrenList=new ArrayList<Menu>();
 		this.menuID = menuIDcounter;
 		menuIDcounter++;
@@ -70,11 +69,10 @@ public class Menu{
 	public void display(){
 		String out = "";
 		//add the menu name
-		out += getMenuName() + "["+getMenuID()+"] \n";
-		
+		out += "["+getMenuID()+"] "+getMenuName()+ '\n';
 		//add all sub menus to the string.
 		for(Menu child: childrenList){
-			out+= "\t"+child.getMenuName()+ " [" +child.getMenuID() +"]\n" ;
+			out+= "\t ["+child.getMenuID()+"] "+child.getMenuName()+ '\n';
 		}
 		System.out.println(out);
 	}
@@ -87,9 +85,12 @@ public class Menu{
 		int n;
 		try
 		{	
-			if(name=="m"){
-				selectedMenu = motherMenu;
-				selectedMenu.display();
+			if(name.equals("m")){
+				if(selectedMenu != null){
+					selectedMenu.getMother().display();
+					selectedMenu = this;
+				}
+				System.out.println("");
 				return true;
 			}
 			
@@ -118,20 +119,20 @@ public class Menu{
 
 	/**
 	 * Adds a menu to the childrenList of this menu.
-	 * @param m
+	 * @param menu
 	 */
-	public void addSubMenu(Menu m){
-		childrenList.add(m);
-		menuList.add(m);
-		m.setMotherMenu(this);
+	public void addSubMenu(Menu menu){
+		menu.setMotherMenu(this);
+		childrenList.add(menu);
+		menuList.add(menu);
 	}
 
 	/**
 	 * Set the mother menu.
-	 * @param m
+	 * @param menu
 	 */
-	private void setMotherMenu(Menu m){
-		motherMenu=m;
+	private void setMotherMenu(Menu menu){
+		motherMenu=menu;
 	}
 
 	/**
