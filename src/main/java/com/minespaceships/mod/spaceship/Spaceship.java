@@ -1,5 +1,7 @@
 package com.minespaceships.mod.spaceship;
 
+import java.util.List;
+
 import javax.vecmath.Vector3d;
 
 import com.minespaceships.util.BlockCopier;
@@ -7,6 +9,11 @@ import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
@@ -65,5 +72,15 @@ public class Spaceship {
 		minPosition = minPosition.add(addDirection);
 		maxPosition = maxPosition.add(addDirection);
 		origin = origin.add(addDirection);
+	}
+	private void moveEntities(BlockPos addDirection){
+		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(minPosition, maxPosition));
+		for(Entity ent : entities){			
+			if(ent instanceof EntityPlayer){
+				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));
+			}
+			Vec3 newPos = ent.getPositionVector().add(new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ()));
+			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
+		}
 	}
 }
