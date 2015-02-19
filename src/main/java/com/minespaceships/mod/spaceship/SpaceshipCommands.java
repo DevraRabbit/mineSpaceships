@@ -22,7 +22,7 @@ import net.minecraft.world.WorldServer;
  */
 public class SpaceshipCommands {
 
-	public static void init(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player) {		
+	public static void init(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
 		command = command.substring("init".length()).replaceAll("\\s", "");
 
 		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)to([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
@@ -30,7 +30,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
-			commandBlock.setShip(new Spaceship(from, commandBlock.getPos(), to, worldObj));
+			((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).setShip(new Spaceship(from, commandBlock.getPos(), to, worldObj));
 			
 			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
 		} else {
@@ -39,10 +39,10 @@ public class SpaceshipCommands {
 		}
 	}
 	
-	public static void move(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player) {
+	public static void move(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		command = command.substring("move".length()).replaceAll("\\s", "");
 		
-		Spaceship ship = commandBlock.getShip();
+		ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
 		if(ship == null) {
 			player.addChatComponentMessage(new ChatComponentText("move: Please initialize the Spaceship first"));
 			return;

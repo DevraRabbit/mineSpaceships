@@ -39,20 +39,11 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){		
 			//open our console. 
-			ChatRegisterEntity ent = (ChatRegisterEntity)remoteWorld.getTileEntity(pos);
-			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, ent));
+			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, this));
 		}
 	}
 	public void setRemoteWorld(WorldServer world){
 		remoteWorld = world;
-	}
-	public void searchRemoteWorld(){
-		WorldServer[] worlds = MinecraftServer.getServer().worldServers;
-		for(WorldServer world : worlds){
-			if(world.getWorldInfo().getWorldName().equals(worldObj.getWorldInfo().getWorldName())){
-				remoteWorld = world;
-			}
-		}
 	}
 	/**
 	 * Executes the given command, regardless who committed it.
@@ -83,36 +74,21 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
 		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, remoteWorld, this, player);
+			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
 		} else if (command.startsWith("move")) {
-			SpaceshipCommands.move(command, remoteWorld, this, player);
+			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player);
-			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player);
+			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
+			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
 		}
 	}
 
 	public void setShip(Spaceship ship) {
-		if(remoteWorld != null){
-			((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship = ship;
-		} else {
-			remoteWorld = ship.getWorldServer();
-			setShip(ship);
-		}
+		this.ship = ship;
 	}
 	
 	public Spaceship getShip() {
-		if(remoteWorld != null){
-			ChatRegisterEntity ent = ((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			if(ent != null){
-				return ent.ship;
-			} else {
-				return null;
-			}
-		} else {
-			searchRemoteWorld();
-			return getShip();
-		}
+		return ship;
 	}
 	@Override
 	public void moveInformation(IMoveable target) {
