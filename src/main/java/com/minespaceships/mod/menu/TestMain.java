@@ -22,8 +22,12 @@ public class TestMain {
 		menu3.addSubMenu(new Menu("untermenu 5"));
 		menu3.addSubMenu(new Menu("untermenu6"));
 
-		System.out.println(menu1.display());
+		menu1.display();
+
+		userInput(menu1);
+		menu1.switchMenu(input);
 		
+		/*
 		System.out.print("> ");
 		input = scanner.next();
 		menu1.switchMenu(input);
@@ -31,6 +35,19 @@ public class TestMain {
 		System.out.print("> ");
 		input = scanner.next();
 		menu3.switchMenu(input);
+		*/
+		
+		scanner.close();
+	}
+	
+	private static void userInput(Menu menu){
+		System.out.print("> ");
+		input = scanner.next();
+		while(!input.equals("quit")){
+			menu.switchMenu(input);
+			userInput(menu);
+		}
+		
 	}
 	
 

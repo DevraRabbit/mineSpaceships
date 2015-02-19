@@ -2,20 +2,61 @@ package com.minespaceships.mod.menu;
 
 import java.util.ArrayList;
 
+/**
+ * The Menu class implements a menu structure and the ability
+ * to go through these structure out of menus and sub menus.
+ * @author DieDiren, ovae.
+ * @verion 20150219
+ */
+public class Menu{
 
-public class Menu 
-{
+	/**
+	 * The childrenList contains all sub menus.
+	 */
 	private final ArrayList<Menu> childrenList;
+
+	/**
+	 * The menuList contains all existing menus.
+	 */
 	private final static ArrayList<Menu> menuList= new ArrayList<Menu>();
+
+	/**
+	 * The name of the menu.
+	 */
 	private final String menuName;
+
+	/**
+	 * The currently selected Menu Object.
+	 */
 	private static Menu selectedMenu;
+
+	/**
+	 * The menuIdcounter ensures that each new menu gets a unique id.
+	 * It contains the last assigned ID.
+	 */
 	private static int menuIDcounter;
+
+	/**
+	 * The menu id of this menu.
+	 */
 	private final int menuID;
+
+	/**
+	 * The parent/mother Menu of this menu.
+	 */
 	private Menu motherMenu;
-	
-	public Menu(final String s)
+
+	/**
+	 * The menu constructor creates a new menu object with a menu name.
+	 * @param name
+	 */
+	public Menu(final String name)
 	{
-		menuName = s;	
+		if(name.trim().isEmpty()){
+			throw new IllegalArgumentException("The menu name can not be null");
+		}
+		
+		menuName = name;
 		motherMenu=null;
 		childrenList=new ArrayList<Menu>();
 		this.menuID = menuIDcounter;
@@ -24,39 +65,38 @@ public class Menu
 	}
 
 	/**
-	 * returns a String which contains the output of the Menu
+	 * Prints out a List of all sub menus in the terminal.
 	 */
-	public String display()
-	{
+	public void display(){
 		String out = "";
+		//add the menu name
 		out += getMenuName() + "["+getMenuID()+"] \n";
+		
+		//add all sub menus to the string.
 		for(Menu child: childrenList){
 			out+= "\t"+child.getMenuName()+ " [" +child.getMenuID() +"]\n" ;
 		}
-		
-		return out;
+		System.out.println(out);
 	}
-	
+
 	/**
 	 * returns true if successful, false if the ID was not correct
 	 * changes the static variable selectedMenu to the new Menu
 	 */
-	public boolean switchMenu(String name) 
-	{
+	public boolean switchMenu(String name){
 		int n;
 		try
-		{	if(name=="m"){
-			
-			selectedMenu = motherMenu;
-			System.out.println(selectedMenu.display());
-			return true;
-		
-		}
+		{	
+			if(name=="m"){
+				selectedMenu = motherMenu;
+				selectedMenu.display();
+				return true;
+			}
 			
 			n = Integer.parseInt(name);
 			if(n < 0 || n > menuIDcounter)
 			{
-				throw new Exception("ung�ltige ID");
+				throw new Exception("ungültige ID");
 			}
 			
 			for(Menu m : menuList)
@@ -64,7 +104,7 @@ public class Menu
 				if(m.getMenuID() == n)
 				{
 					selectedMenu = m;
-					System.out.println(m.display());
+					m.display();
 				}
 			}
 			return true;
@@ -75,46 +115,71 @@ public class Menu
 			return false;
 		}
 	}
-	
-	public void addSubMenu(Menu m)
-	{
+
+	/**
+	 * Adds a menu to the childrenList of this menu.
+	 * @param m
+	 */
+	public void addSubMenu(Menu m){
 		childrenList.add(m);
 		menuList.add(m);
 		m.setMotherMenu(this);
 	}
-	
+
+	/**
+	 * Set the mother menu.
+	 * @param m
+	 */
 	private void setMotherMenu(Menu m){
 		motherMenu=m;
 	}
-	
+
+	/**
+	 * Returns the mother menu.
+	 * @return motherMenu
+	 */
 	private Menu getMother(){
 		return motherMenu;
 	}
-	
-	public int getMenuID()
-	{
+
+	/**
+	 * Returns the MenuID.
+	 * @return menuID
+	 */
+	public int getMenuID(){
 		return this.menuID;
 	}
-	
-	public String toString()
-	{
+
+	/**
+	 * The toString method returns the menus name.
+	 */
+	@Override
+	public String toString(){
 		return this.menuName;
 	}
-	
-	private ArrayList getChildrenList() 
-	{
+
+	/**
+	 * Returns the childrenList.
+	 * @return childrenList
+	 */
+	private ArrayList getChildrenList(){
 		return this.childrenList;
 	}
-	
-	public static Menu getSelectedMenu()
-	{
+
+	/**
+	 * Returns the selected Menu.
+	 * @return selectedMenu
+	 */
+	public static Menu getSelectedMenu(){
 		return selectedMenu;
 	}
-	
-	public String getMenuName()
-	{
-		return menuName;		
+
+	/**
+	 * Returns the menus name.
+	 * @return menuName
+	 */
+	public String getMenuName(){
+		return menuName;
 	}
 
 }
-
