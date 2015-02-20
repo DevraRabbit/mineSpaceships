@@ -93,18 +93,16 @@ public class Menu{
 	 * returns true if successful, false if the ID was not correct
 	 * changes the static variable selectedMenu to the new Menu
 	 */
-	public boolean switchMenu(final String name){
+	public String switchMenu(final String name){
 		int n;
 		String paramlist = null;
 		try{
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
-					terminal.display(selectedMenu.getMother().display());
 					selectedMenu = this;
+					return selectedMenu.getMother().display();
 				}
-				System.out.println("");
-				return true;
 			}
 
 			//control by id
@@ -123,7 +121,6 @@ public class Menu{
 							functionMenu(menu, paramlist);
 						}
 					}
-					return true;
 				}
 			}
 
@@ -135,7 +132,6 @@ public class Menu{
 						functionMenu(menu, paramlist);
 					}
 				}
-				return true;
 			}
 
 			//control by sub menu position
@@ -148,20 +144,17 @@ public class Menu{
 				}else{
 					functionMenu(selectedMenu.childrenList.get(position), paramlist);
 				}
-				return true;
 			}
-
-			return false;
+			
+			return "";
 		}catch(IndexOutOfBoundsException e){
 			System.err.println("IndexOutOfBoundsException");
-			return false;
 		}catch(IllegalArgumentException f){
 			System.err.println("IllegalArgumentException");
-			return false;
 		}catch(Exception g){
 			System.err.println("Exception");
-			return false;
 		}
+		return "";
 	}
 
 	/**
@@ -178,11 +171,12 @@ public class Menu{
 	/**
 	 * 
 	 */
-	private void functionMenu(final Menu menu, final String paramlist){
+	private String functionMenu(final Menu menu, final String paramlist){
 		if(menu instanceof FunktionalMenu){
 			((FunktionalMenu)menu).activate(paramlist);
+			return "";
 		}else{
-			terminal.display(menu.display());
+			return menu.display();
 		}
 	}
 
@@ -236,6 +230,13 @@ public class Menu{
 		return this.childrenList;
 	}
 
+	/**
+	 * 
+	 */
+	public static void setSelectedMenu(final Menu menu){
+		selectedMenu = menu;
+		
+	}	
 	/**
 	 * Returns the selected Menu.
 	 * @return selectedMenu

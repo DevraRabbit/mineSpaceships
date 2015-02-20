@@ -2,15 +2,14 @@ package com.minespaceships.mod.overhead;
 
 import java.util.regex.*;
 
-
 import com.example.examplemod.ovae.terminalMenu;
 import com.minespaceships.mod.menu.DefaultMenu;
+import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Calculator;
 import com.minespaceships.util.IMoveable;
-
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -36,6 +35,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	private WorldServer remoteWorld;
 
 	private CustomGuiChat terminal;
+	private MenuDisplay menuDisplay;
 	
 	public ChatRegisterEntity() {
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
@@ -51,6 +51,8 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
 			//initialise the terminal
 			terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+			
+			menuDisplay = new MenuDisplay(DefaultMenu.getRootMenu(), terminal);
 			
 			//open our console. 
 
@@ -79,7 +81,9 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
-		DefaultMenu.getRootMenu().switchMenu(command);
+		//DefaultMenu.getRootMenu().switchMenu(command);
+		menuDisplay.navigate(command);
+		
 		
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
