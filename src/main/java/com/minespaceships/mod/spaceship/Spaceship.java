@@ -7,6 +7,7 @@ import javax.vecmath.Vector3d;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -62,7 +63,30 @@ public class Spaceship {
 				for(int z = 0; z < span.getZ(); z++){
 					BlockPos Pos = new BlockPos(x,y,z);
 					Pos = Pos.add(minPosition);
-					BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					Block block = world.getBlockState(Pos).getBlock();
+					if(block.isFullCube()){
+						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(!block.isFullCube()){
+						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
 					BlockCopier.removeBlock(world, Pos);
 				}
 			}
