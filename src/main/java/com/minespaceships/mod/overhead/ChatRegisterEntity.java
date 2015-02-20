@@ -2,26 +2,44 @@ package com.minespaceships.mod.overhead;
 
 import java.util.regex.*;
 
+
 import com.example.examplemod.ovae.terminalMenu;
 import com.minespaceships.mod.menu.DefaultMenu;
+import com.minespaceships.mod.spaceship.Spaceship;
+import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.util.BlockCopier;
+import com.minespaceships.util.Calculator;
+import com.minespaceships.util.IMoveable;
+
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.Vec3;
+import net.minecraft.util.Vec3i;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ChatRegisterEntity extends TileEntity {
+public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	
-	/**
-	 * 
-	 */
-	private CustomGuiChat terminal;
+	//Attributes
+	private Spaceship ship;
+	private WorldServer remoteWorld;
 
+	private CustomGuiChat terminal;
+	
+	public ChatRegisterEntity() {
+		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+	}
 
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
@@ -32,9 +50,10 @@ public class ChatRegisterEntity extends TileEntity {
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
 			//initialise the terminal
-			terminal = new CustomGuiChat(player, this);
+			terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
 			
 			//open our console. 
+
 			Minecraft.getMinecraft().displayGuiScreen(terminal);
 			
 			//Initialise a default menu for testing reasons
@@ -42,8 +61,10 @@ public class ChatRegisterEntity extends TileEntity {
 				DefaultMenu.initMenu(terminal);
 			}
 			terminal.display(DefaultMenu.getRootMenu().display());
-			
 		}
+	}
+	public void setRemoteWorld(WorldServer world){
+		remoteWorld = world;
 	}
 	/**
 	 * Executes the given command, regardless who committed it.
@@ -66,94 +87,33 @@ public class ChatRegisterEntity extends TileEntity {
 			player.addChatComponentMessage(new ChatComponentText("I love you!"));
 		//Define the 'calc' command, which parses a math expression
 		} else if(command.startsWith("calc")) {
-			//prepare the math expression
-			command = command.substring(4).trim(); 
-			try {
-				player.addChatComponentMessage(new ChatComponentText(command + " = " + solve(command.replaceAll("\\s", ""))));
-			} catch (Exception ex) {
-				player.addChatComponentMessage(new ChatComponentText("Error processing intput"));
-			}
+			Calculator.calc(command, player);
+		} else if (command.startsWith("init")) {
+			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
+		} else if (command.startsWith("move")) {
+			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
+		} else if (command.equals("test1")) {
+			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
+			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
+		} else if(command.equals("status")) {
+			SpaceshipCommands.status(remoteWorld, this, player, ship);
 		}
 		terminalMenu.onCommand(command, player);
 	}
 
+	public void setShip(Spaceship ship) {
+		this.ship = ship;
+	}
 	
-	//Attributes for math parser
-	private Pattern brackets = Pattern.compile("\\(.*?\\)");
-	private Pattern times = Pattern.compile("(\\-?[0-9\\.]+)\\*(\\-?[0-9\\.]+)");
-	private Pattern div = Pattern.compile("(\\-?[0-9\\.]+)/(\\-?[0-9\\.]+)");
-	private Pattern plus = Pattern.compile("(\\-?[0-9\\.]+)\\+(\\-?[0-9\\.]+)");
-	private Pattern minus = Pattern.compile("(\\-?[0-9\\.]+)\\-(\\-?[0-9\\.]+)");
-	private Pattern done = Pattern.compile("\\-?[0-9\\.]+");
-	private Matcher mb, mt, md, mp, mm, mdone;
-	
-	//Recursively parses a String containing a math expression
-	//Supported are brackets, +-*/, negative numbers and doubles 
-	private String solve(String expr) throws Exception {
-		mb = brackets.matcher(expr);
-		mt = times.matcher(expr);
-		md = div.matcher(expr);
-		mp = plus.matcher(expr);
-		mm = minus.matcher(expr);
-		mdone = done.matcher(expr);
-		
-		if(mdone.matches()) return expr;
-		
-		if(mb.find()) {
-			Matcher m = mb;
-			String before = expr.substring(0, m.start());
-			String inner = expr.substring(m.start() + 1, m.end() - 1);
-			String after = expr.substring(m.end());			
-			return solve(before + solve(inner) + after);
-		} else if (mt.find()) {
-			Matcher m = mt;
-			String before = expr.substring(0, m.start());
-			
-			String first = expr.substring(m.start(1), m.end(1));
-			String second = expr.substring(m.start(2), m.end(2));
-			
-			String inner = String.valueOf(Double.valueOf(first) * Double.valueOf(second));
-			
-			String after = expr.substring(m.end());
-			
-			return solve(before + inner + after);
-		} else if (md.find()) {
-			Matcher m = md;
-			String before = expr.substring(0, m.start());
-			
-			String first = expr.substring(m.start(1), m.end(1));
-			String second = expr.substring(m.start(2), m.end(2));
-			
-			String inner = String.valueOf(Double.valueOf(first) / Double.valueOf(second));
-			
-			String after = expr.substring(m.end());
-			
-			return solve(before + inner + after);
-		} else if (mp.find()) {
-			Matcher m = mp;
-			String before = expr.substring(0, m.start());
-			
-			String first = expr.substring(m.start(1), m.end(1));
-			String second = expr.substring(m.start(2), m.end(2));
-
-			String inner = String.valueOf(Double.valueOf(first) + Double.valueOf(second));
-			
-			String after = expr.substring(m.end());
-			
-			return solve(before + inner + after);
-		} else if (mm.find()) {
-			Matcher m = mm;
-			String before = expr.substring(0, m.start());
-			
-			String first = expr.substring(m.start(1), m.end(1));
-			String second = expr.substring(m.start(2), m.end(2));
-			
-			String inner = String.valueOf(Double.valueOf(first) - Double.valueOf(second));
-			
-			String after = expr.substring(m.end());
-			
-			return solve(before + inner + after);
+	public Spaceship getShip() {
+		return ship;
+	}
+	@Override
+	public void moveInformation(IMoveable target) {
+		if(target instanceof ChatRegisterEntity){
+			ChatRegisterEntity targetEntity = (ChatRegisterEntity)target;
+			targetEntity.ship = ship;
+			targetEntity.remoteWorld = remoteWorld;
 		}
-		return "Error";
 	}
 }
