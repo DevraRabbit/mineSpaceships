@@ -51,7 +51,7 @@ public class Menu{
 	/**
 	 * 
 	 */
-	private CustomGuiChat terminal;
+	protected CustomGuiChat terminal;
 
 	/**
 	 * The menu constructor creates a new menu object with a menu name.
@@ -97,7 +97,7 @@ public class Menu{
 		int n;
 		try{
 			//parent menu
-			if(name.equals("m")){
+			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
 					terminal.display(selectedMenu.getMother().display());
 					selectedMenu = this;
@@ -106,41 +106,89 @@ public class Menu{
 				return true;
 			}
 
-			//
+			//control by id
 			if(name.length()>1){
-				String name2= name.substring(0,2);
-				if(name2.equals("id")){
+				String nameSub= name.substring(0,2);
+				if(nameSub.equals("id") || nameSub.equals("ID")){
 					n = Integer.parseInt(name.substring(2));
 					if(n < 0 || n > menuIDcounter){
 						throw new Exception("ungültige ID");
 					}
 
 					//
-					for(Menu m : menuList){
-						if(m.getMenuID() == n){
-							selectedMenu = m;
-							terminal.display(m.display());
+					for(Menu menu : menuList){
+						if(menu.getMenuID() == n){
+							selectedMenu = menu;
+							functionMenu(menu);
 						}
 					}
 					return true;
 				}
 			}
 
+			//control by menu name
+			if(name.length() >= 4){
+				for(Menu menu : menuList){
+					if(menu.getMenuName().equals(name)){
+						selectedMenu = menu;
+						functionMenu(menu);
+					}
+				}
+				return true;
+			}
+
+			//control by sub menu position
 			int position = Integer.parseInt(name);
 			if(position > 0 && position <= selectedMenu.childrenList.size()){
 				position -= 1;
-				selectedMenu = selectedMenu.childrenList.get(position);
-				terminal.display(selectedMenu.display());
+				if(selectedMenu instanceof Menu){
+					selectedMenu = selectedMenu.childrenList.get(position);
+					terminal.display(selectedMenu.display());
+				}else{
+					functionMenu(selectedMenu.childrenList.get(position));
+				}
 				return true;
 			}
 
 			return false;
 		}catch(IndexOutOfBoundsException e){
-			System.err.println(e.getStackTrace());
+			System.err.println("IndexOutOfBoundsException");
 			return false;
-		}catch(Exception f){
-			System.err.println(f.getStackTrace());
+		}catch(IllegalArgumentException f){
+			System.err.println("IllegalArgumentException");
 			return false;
+		}catch(Exception g){
+			System.err.println("Exception");
+			return false;
+		}
+	}
+
+	/**
+	 * Gets a command
+	 * @param name
+	 * @return ArrayList<Strings>
+	 */
+	private ArrayList<String> extractParams(final String command){
+		ArrayList<String> list = new ArrayList<String>();
+		
+		return list;
+	}
+
+	/**
+	 * 
+	 */
+	private void functionMenu(final Menu menu){
+		if(menu instanceof ShieldActivateMenu ){
+			((ShieldActivateMenu) menu).function();
+		}
+		else if(menu instanceof ShieldDisableMenu){
+			((ShieldDisableMenu) menu).function();
+		}
+		else if(menu instanceof HelpMenu){
+			((HelpMenu) menu).function();
+		}
+		else{
+			terminal.display(menu.display());
 		}
 	}
 

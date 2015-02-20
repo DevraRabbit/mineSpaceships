@@ -54,7 +54,7 @@ public class CustomGuiChat extends GuiChat{
 	}
 
 	/**
-	 * 
+	 * Prints a message into the chat console.
 	 * @param message
 	 */
 	public void display(final String message){
@@ -63,7 +63,7 @@ public class CustomGuiChat extends GuiChat{
 	}
 	
 	/**
-	 * 
+	 * clears the chat.
 	 */
 	public void clearChat(){
 		for(int i = 0; i<10; i++){

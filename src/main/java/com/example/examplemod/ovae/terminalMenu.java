@@ -37,7 +37,7 @@ public class terminalMenu {
 					player.addChatComponentMessage(new ChatComponentText(clear()));
 					submenuCmd(player);
 				}
-				*/
+				
 				
 				if(command.equals("Menu") || command.equals("menu") ||
 				   command.equals("") || command.equals("up")){
@@ -47,7 +47,7 @@ public class terminalMenu {
 				if(command.equals("control")){
 					controlCmd(player);
 				}
-				
+				*/
 	}
 	
 	

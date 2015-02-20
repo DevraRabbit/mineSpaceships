@@ -9,9 +9,13 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  */
 public class FunktionalMenu extends Menu{
 
+	/**
+	 * 
+	 * @param name
+	 * @param terminal
+	 */
 	public FunktionalMenu(String name, CustomGuiChat terminal) {
 		super(name, terminal);
-
 	}
 
 	/**
