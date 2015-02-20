@@ -53,6 +53,7 @@ public class SpaceshipCommands {
 		}
 
 		//Process "move front, back, etc. commands depending on the direction the player looks"
+		//Taken from http://www.minecraftforge.net/forum/index.php?topic=6514.0
 		int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
 		if(command.startsWith("forward")) {
