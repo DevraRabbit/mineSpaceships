@@ -55,6 +55,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			ship.moveTo(vec_move);
+			commandBlock.setPos(commandBlock.getPos().add(vec_move));
 			
 			player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
 		} else {
@@ -62,5 +63,20 @@ public class SpaceshipCommands {
 			player.addChatComponentMessage(new ChatComponentText("usage: move #;#;#"));
 		}
 	}
+		
+	public static void status(final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+		
+		if((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()) != null){
+			ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
+		}
+		if(ship == null) {
+			player.addChatComponentMessage(new ChatComponentText("status: Not initialized"));
+			return;
+		}
 
+		player.addChatComponentMessage(new ChatComponentText("status: Spaceship"));
+		player.addChatComponentMessage(new ChatComponentText(ship.toString()));
+		player.addChatComponentMessage(new ChatComponentText("status: TileEntity (remote)"));
+		player.addChatComponentMessage(new ChatComponentText(((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).toString()));
+	}
 }
