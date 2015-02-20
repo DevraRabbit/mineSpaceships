@@ -28,6 +28,7 @@ public class Spaceship {
 	private BlockPos origin;
 	private WorldServer worldS;
 	
+	
 	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
 		this.worldS = worldS;
@@ -87,7 +88,22 @@ public class Spaceship {
 				for(int z = 0; z < span.getZ(); z++){
 					BlockPos Pos = new BlockPos(x,y,z);
 					Pos = Pos.add(minPosition);
-					BlockCopier.removeBlock(world, Pos);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(!block.isFullCube()){
+						BlockCopier.removeBlock(world, Pos);
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(block.isFullCube()){
+						BlockCopier.removeBlock(world, Pos);
+					}
 				}
 			}
 		}
