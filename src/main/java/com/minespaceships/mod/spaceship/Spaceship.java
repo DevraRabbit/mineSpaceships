@@ -48,6 +48,9 @@ public class Spaceship {
 		span = ((BlockPos) maxPos).subtract(minPos);
 		origin = Vec3Op.scale(span, 0.5);
 	}
+	public void setTarget(BlockPos position){
+		moveTo(position.subtract(origin));
+	}
 	public void moveTo(BlockPos addDirection){
 		//copyTo(addDirection, worldC);
 		moveTo(addDirection, worldS);
