@@ -70,4 +70,11 @@ public class CustomGuiChat extends GuiChat{
 			this.mc.thePlayer.addChatComponentMessage(new ChatComponentText("\n"));
 		}
 	}
+	
+	/**
+	 * @return ChatRegisterEntity entity
+	 */
+	public ChatRegisterEntity getChatRegisterEntity(){
+		return entity;
+	}
 }

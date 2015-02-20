@@ -4,8 +4,8 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
  * A default menu structure.
- * @author ovae
- * @verison 20150220
+ * @author ovae.
+ * @version 20150220
  */
 public class DefaultMenu {
 
@@ -55,6 +55,11 @@ public class DefaultMenu {
 	private static Menu disableShield;
 
 	/**
+	 * 
+	 */
+	private static Menu shiptoTarget;
+
+	/**
 	 * Initialise the menu structure.
 	 * @param terminal
 	 */
@@ -67,8 +72,10 @@ public class DefaultMenu {
 		shield = new Menu("shield", terminal);
 		activateShield = new ShieldActivateMenu(">activate", terminal);
 		disableShield = new ShieldDisableMenu(">disable", terminal);
+		shiptoTarget = new NavigateToTargetMenu("to target [x][y][z]", terminal);
 
 		root.addSubMenu(navigation);
+			navigation.addSubMenu(shiptoTarget);
 		root.addSubMenu(armour);
 		root.addSubMenu(protection);
 		root.addSubMenu(help);

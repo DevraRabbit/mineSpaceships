@@ -4,7 +4,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
  * 
- * @author ovae
+ * @author ovae.
  * @version 20150220
  */
 public class ShieldActivateMenu extends Menu implements FunktionalMenu{
@@ -22,7 +22,7 @@ public class ShieldActivateMenu extends Menu implements FunktionalMenu{
 	 * 
 	 */
 	@Override
-	public void activate() {
+	public void activate(String paramlist) {
 		super.terminal.display(">> shield activated <<");
 		super.terminal.mc.theWorld.setRainStrength( 0f);
 	}

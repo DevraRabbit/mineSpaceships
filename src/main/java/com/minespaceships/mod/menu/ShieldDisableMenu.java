@@ -27,7 +27,7 @@ public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 	 * 
 	 */
 	@Override
-	public void activate() {
+	public void activate(String paramlist) {
 		super.terminal.display(">> shield disabled <<");
 		//Let it rain
 		super.terminal.mc.theWorld.setRainStrength(2f);

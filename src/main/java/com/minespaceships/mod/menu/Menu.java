@@ -95,6 +95,7 @@ public class Menu{
 	 */
 	public boolean switchMenu(final String name){
 		int n;
+		String paramlist = null;
 		try{
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
@@ -119,7 +120,7 @@ public class Menu{
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
 							selectedMenu = menu;
-							functionMenu(menu);
+							functionMenu(menu, paramlist);
 						}
 					}
 					return true;
@@ -131,7 +132,7 @@ public class Menu{
 				for(Menu menu : menuList){
 					if(menu.getMenuName().equals(name)){
 						selectedMenu = menu;
-						functionMenu(menu);
+						functionMenu(menu, paramlist);
 					}
 				}
 				return true;
@@ -145,7 +146,7 @@ public class Menu{
 					selectedMenu = selectedMenu.childrenList.get(position);
 					terminal.display(selectedMenu.display());
 				}else{
-					functionMenu(selectedMenu.childrenList.get(position));
+					functionMenu(selectedMenu.childrenList.get(position), paramlist);
 				}
 				return true;
 			}
@@ -177,17 +178,10 @@ public class Menu{
 	/**
 	 * 
 	 */
-	private void functionMenu(final Menu menu){
-		if(menu instanceof ShieldActivateMenu ){
-			((ShieldActivateMenu) menu).activate();
-		}
-		else if(menu instanceof ShieldDisableMenu){
-			((ShieldDisableMenu) menu).activate();
-		}
-		else if(menu instanceof HelpMenu){
-			((HelpMenu) menu).activate();
-		}
-		else{
+	private void functionMenu(final Menu menu, final String paramlist){
+		if(menu instanceof FunktionalMenu){
+			((FunktionalMenu)menu).activate(paramlist);
+		}else{
 			terminal.display(menu.display());
 		}
 	}

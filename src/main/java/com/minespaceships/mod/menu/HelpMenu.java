@@ -2,8 +2,18 @@ package com.minespaceships.mod.menu;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
+/**
+ * 
+ * @author ovae.
+ * @version 20150220
+ */
 public class HelpMenu extends Menu implements FunktionalMenu{
 
+	/**
+	 * 
+	 * @param name
+	 * @param terminal
+	 */
 	public HelpMenu(String name, CustomGuiChat terminal) {
 		super(name, terminal);
 
@@ -13,7 +23,7 @@ public class HelpMenu extends Menu implements FunktionalMenu{
 	 * 
 	 */
 	@Override
-	public void activate() {
+	public void activate(String paramlist) {
 		String out="";
 		out+="--Help--\n";
 		out+="You can navigate in three different ways: \n";
@@ -24,4 +34,5 @@ public class HelpMenu extends Menu implements FunktionalMenu{
 		out+="enter 'm','up' or 'parent'.\n\n";
 		super.terminal.display(out);
 	}
+
 }
