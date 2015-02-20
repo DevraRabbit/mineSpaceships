@@ -7,6 +7,7 @@ import javax.vecmath.Vector3d;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -26,6 +27,7 @@ public class Spaceship {
 	private BlockPos span;
 	private BlockPos origin;
 	private WorldServer worldS;
+	
 	
 	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
@@ -48,6 +50,9 @@ public class Spaceship {
 		span = ((BlockPos) maxPos).subtract(minPos);
 		origin = Vec3Op.scale(span, 0.5);
 	}
+	public void setTarget(BlockPos position){
+		moveTo(position.subtract(origin));
+	}
 	public void moveTo(BlockPos addDirection){
 		//copyTo(addDirection, worldC);
 		moveTo(addDirection, worldS);
@@ -59,8 +64,46 @@ public class Spaceship {
 				for(int z = 0; z < span.getZ(); z++){
 					BlockPos Pos = new BlockPos(x,y,z);
 					Pos = Pos.add(minPosition);
-					BlockCopier.copyBlock(world, Pos, Pos.add(add));
-					BlockCopier.removeBlock(world, Pos);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(block.isFullCube()){
+						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(!block.isFullCube()){
+						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(!block.isFullCube()){
+						BlockCopier.removeBlock(world, Pos);
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(block.isFullCube()){
+						BlockCopier.removeBlock(world, Pos);
+					}
 				}
 			}
 		}
@@ -82,5 +125,16 @@ public class Spaceship {
 			Vec3 newPos = ent.getPositionVector().add(new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ()));
 			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("minPosition: " + minPosition.toString());
+		sb.append("\nmaxPosition: " + maxPosition.toString());
+		sb.append("\nspan: " + span.toString());
+		sb.append("\norigin: " + origin.toString());
+		sb.append("\nworldServer: " + worldS == null ? "Not Known.\n" : "Known\n");
+		return sb.toString();
 	}
 }
