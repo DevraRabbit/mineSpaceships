@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -42,6 +43,25 @@ public class Spaceship {
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
 		this.worldS = worldS;
+	}
+	public Spaceship(int[] originMeasurement){
+		readOriginMeasurementArray(originMeasurement);
+		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+	}
+	public int[] getOriginMeasurementArray(){
+		BlockPos minSpan = minPosition.subtract(origin);
+		BlockPos maxSpan = maxPosition.subtract(origin);
+		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
+				origin.getX(), origin.getY(), origin.getZ(),
+				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
+		return a;
+	}
+	public void readOriginMeasurementArray(int[] array){
+		BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
+		BlockPos maxSpan = new BlockPos(array[6], array[7], array[8]);
+		origin = new BlockPos(array[3], array[4], array[5]);
+		setMeasurements(minSpan.add(origin), maxSpan.add(origin));
+		origin = new BlockPos(array[3], array[4], array[5]);
 	}
 	
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){

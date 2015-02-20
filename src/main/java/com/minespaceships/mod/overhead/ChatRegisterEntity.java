@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -31,8 +32,28 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	private Spaceship ship;
 	private WorldServer remoteWorld;
 	
+	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
+	
 	public ChatRegisterEntity() {
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+	}
+	@Override
+	public void writeToNBT(NBTTagCompound par1)
+	{
+	   super.writeToNBT(par1);
+	   if(ship != null){
+		   par1.setIntArray(recoverSpaceshipMeasures, ship.getOriginMeasurementArray());
+	   }	   
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound par1)
+	{
+	   super.readFromNBT(par1);
+	   int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
+	   if(measurements != null){
+		   ship = new Spaceship(measurements);
+	   }
 	}
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
