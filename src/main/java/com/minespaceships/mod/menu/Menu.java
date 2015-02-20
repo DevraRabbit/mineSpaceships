@@ -179,13 +179,13 @@ public class Menu{
 	 */
 	private void functionMenu(final Menu menu){
 		if(menu instanceof ShieldActivateMenu ){
-			((ShieldActivateMenu) menu).function();
+			((ShieldActivateMenu) menu).activate();
 		}
 		else if(menu instanceof ShieldDisableMenu){
-			((ShieldDisableMenu) menu).function();
+			((ShieldDisableMenu) menu).activate();
 		}
 		else if(menu instanceof HelpMenu){
-			((HelpMenu) menu).function();
+			((HelpMenu) menu).activate();
 		}
 		else{
 			terminal.display(menu.display());

@@ -2,17 +2,18 @@ package com.minespaceships.mod.menu;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
-public class HelpMenu extends Menu{
+public class HelpMenu extends Menu implements FunktionalMenu{
 
 	public HelpMenu(String name, CustomGuiChat terminal) {
 		super(name, terminal);
 
 	}
-	
+
 	/**
 	 * 
 	 */
-	public void function(){
+	@Override
+	public void activate() {
 		String out="";
 		out+="--Help--\n";
 		out+="You can navigate in three different ways: \n";
@@ -22,6 +23,5 @@ public class HelpMenu extends Menu{
 		out+="\n To get back in the parent menu, you can either\n";
 		out+="enter 'm','up' or 'parent'.\n\n";
 		super.terminal.display(out);
-		
 	}
 }

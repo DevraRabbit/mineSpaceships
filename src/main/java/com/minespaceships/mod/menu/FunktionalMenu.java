@@ -7,23 +7,10 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author DieDiren, ovae.
  * @version 20150219
  */
-public class FunktionalMenu extends Menu{
+public interface FunktionalMenu{
 
 	/**
-	 * 
-	 * @param name
-	 * @param terminal
+	 * Activate the functionality of the menu.
 	 */
-	public FunktionalMenu(String name, CustomGuiChat terminal) {
-		super(name, terminal);
-	}
-
-	/**
-	 * @param name
-	 */
-	@Override
-	public boolean switchMenu(final String name){
-		
-		return false;
-	}
+	public void activate();
 }

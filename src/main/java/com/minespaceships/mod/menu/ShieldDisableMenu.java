@@ -12,7 +12,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author ovae.
  * @version 20150220
  */
-public class ShieldDisableMenu extends Menu{
+public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 	
 	/**
 	 * 
@@ -26,11 +26,11 @@ public class ShieldDisableMenu extends Menu{
 	/**
 	 * 
 	 */
-	public void function(){
+	@Override
+	public void activate() {
 		super.terminal.display(">> shield disabled <<");
 		//Let it rain
 		super.terminal.mc.theWorld.setRainStrength(2f);
-		
 	}
 
 }
