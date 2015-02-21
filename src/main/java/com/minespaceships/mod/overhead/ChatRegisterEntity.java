@@ -7,6 +7,7 @@ import com.minespaceships.mod.menu.DefaultMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.mod.spaceship.Turn;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Calculator;
 import com.minespaceships.util.IMoveable;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -37,8 +39,29 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	private CustomGuiChat terminal;
 	private MenuDisplay menuDisplay;
 	
+	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
+	
 	public ChatRegisterEntity() {
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound par1)
+	{
+	   super.writeToNBT(par1);
+	   if(ship != null){
+		   par1.setIntArray(recoverSpaceshipMeasures, ship.getOriginMeasurementArray());
+	   }	   
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound par1)
+	{
+	   super.readFromNBT(par1);
+	   int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
+	   if(measurements != null){
+		   ship = new Spaceship(measurements);
+	   }
 	}
 
 	/**
@@ -100,6 +123,17 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		} else if (command.equals("test1")) {
 			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
 			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
+		} else if (command.startsWith("turn ")) {
+			command = command.substring(4).trim();
+			if (command.equals("left")) {
+				Turn.ninetyDeg(worldObj, pos, Turn.LEFT);
+			} else if (command.equals("right")) {
+				Turn.ninetyDeg(worldObj, pos, Turn.RIGHT);
+			} else if (command.equals("around")) {
+				Turn.around(worldObj, pos);
+			} else {
+				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
+			}
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(remoteWorld, this, player, ship);
 		}

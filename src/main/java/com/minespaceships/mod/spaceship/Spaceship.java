@@ -7,12 +7,14 @@ import javax.vecmath.Vector3d;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -27,6 +29,7 @@ public class Spaceship {
 	private BlockPos origin;
 	private WorldServer worldS;
 	
+	
 	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
 		this.worldS = worldS;
@@ -40,6 +43,31 @@ public class Spaceship {
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
 		this.worldS = worldS;
+	}
+	public Spaceship(int[] originMeasurement){
+		readOriginMeasurementArray(originMeasurement);
+		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+	}
+	public int[] getOriginMeasurementArray(){
+		BlockPos minSpan = minPosition.subtract(origin);
+		BlockPos maxSpan = maxPosition.subtract(origin);
+		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
+				origin.getX(), origin.getY(), origin.getZ(),
+				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
+		return a;
+	}
+	public void readOriginMeasurementArray(int[] array){
+		try {
+			BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
+			BlockPos maxSpan = new BlockPos(array[6], array[7], array[8]);
+			origin = new BlockPos(array[3], array[4], array[5]);
+			setMeasurements(minSpan.add(origin), maxSpan.add(origin));
+			origin = new BlockPos(array[3], array[4], array[5]);
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			System.out.println("Could not read OriginMeasurementArray (probably an error with NBT). Try creating a new World.");
+			System.out.println("Printing Exception Stack:");
+			System.out.println(ex.getMessage());
+		}
 	}
 	
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
@@ -62,8 +90,46 @@ public class Spaceship {
 				for(int z = 0; z < span.getZ(); z++){
 					BlockPos Pos = new BlockPos(x,y,z);
 					Pos = Pos.add(minPosition);
-					BlockCopier.copyBlock(world, Pos, Pos.add(add));
-					BlockCopier.removeBlock(world, Pos);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(block.isFullCube()){
+						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(!block.isFullCube()){
+						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(!block.isFullCube()){
+						BlockCopier.removeBlock(world, Pos);
+					}
+				}
+			}
+		}
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					BlockPos Pos = new BlockPos(x,y,z);
+					Pos = Pos.add(minPosition);
+					Block block = world.getBlockState(Pos).getBlock();
+					if(block.isFullCube()){
+						BlockCopier.removeBlock(world, Pos);
+					}
 				}
 			}
 		}
