@@ -72,14 +72,14 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
+			//initialise the terminal
+			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+			terminal = new CustomGuiChat(player, this);
+			
 			//Initialise a default menu for testing reasons
 			if(!DefaultMenu.getRunBefore()){
 				DefaultMenu.initMenu(terminal);
 			}
-
-			//initialise the terminal
-			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			terminal = new CustomGuiChat(player, this);
 
 			//initialise the menu display.
 			menuDisplay = new MenuDisplay(DefaultMenu.getRootMenu(), terminal);

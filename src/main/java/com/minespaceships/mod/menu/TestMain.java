@@ -22,21 +22,11 @@ public class TestMain {
 		menu3.addSubMenu(new Menu("untermenu5"));
 		menu3.addSubMenu(new Menu("untermenu6"));
 
-		menu1.display();
+		System.out.println(menu1.display());
 
 		userInput(menu1);
-		menu1.switchMenu(input);
-		
-		/*
-		System.out.print("> ");
-		input = scanner.next();
-		menu1.switchMenu(input);
-		
-		System.out.print("> ");
-		input = scanner.next();
-		menu3.switchMenu(input);
-		*/
-		
+		//menu1.switchMenu(input);
+
 		scanner.close();
 	}
 	

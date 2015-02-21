@@ -13,12 +13,12 @@ public class MenuDisplay {
 	 * 
 	 */
 	protected CustomGuiChat terminal;
-	
+
 	/**
 	 * 
 	 */
 	private Menu root;
-	
+
 	/**
 	 * 
 	 */
@@ -29,7 +29,7 @@ public class MenuDisplay {
 		if(terminal.equals(null)){
 			throw new IllegalArgumentException("termianl can not be null.");
 		}
-		
+
 		this.root = root;
 		this.terminal = terminal;
 	}
@@ -39,6 +39,6 @@ public class MenuDisplay {
 	 * @param message
 	 */
 	public void display(final String command){
-		terminal.display(DefaultMenu.getRootMenu().switchMenu(command));
+		terminal.display(root.switchMenu(command));
 	}
 }

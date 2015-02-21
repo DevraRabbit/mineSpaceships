@@ -87,13 +87,12 @@ public class Menu{
 	public String switchMenu(final String name){
 		int n;
 		String paramlist = "";
-		String output = "";
 		try{
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
 					selectedMenu = this;
-					output= selectedMenu.display();
+					return selectedMenu.display();
 				}
 			}
 
@@ -103,14 +102,14 @@ public class Menu{
 				if(nameSub.equals("id") || nameSub.equals("ID")){
 					n = Integer.parseInt(name.substring(2));
 					if(n < 0 || n > menuIDcounter){
-						throw new Exception("ungültige ID");
+						throw new IllegalArgumentException("ungültige ID");
 					}
 
 					//
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
 							selectedMenu = menu;
-							output =functionMenu(menu, paramlist);
+							return functionMenu(menu, paramlist);
 						}
 					}
 				}
@@ -121,7 +120,7 @@ public class Menu{
 				for(Menu menu : menuList){
 					if(menu.getMenuName().equals(name)){
 						selectedMenu = menu;
-						output =functionMenu(menu, paramlist);
+						return functionMenu(menu, paramlist);
 					}
 				}
 			}
@@ -132,21 +131,21 @@ public class Menu{
 				position -= 1;
 				if(selectedMenu instanceof Menu){
 					selectedMenu = selectedMenu.childrenList.get(position);
-					output= selectedMenu.display();
+					return selectedMenu.display();
 				}else{
-					output = functionMenu(selectedMenu.childrenList.get(position), paramlist);
+					return functionMenu(selectedMenu.childrenList.get(position), paramlist);
 				}
 			}
-			
-			return output;
 		}catch(IndexOutOfBoundsException e){
-			System.err.println("IndexOutOfBoundsException");
+			System.err.println("IndexOutOfBoundsException appeared");
 		}catch(IllegalArgumentException f){
-			System.err.println("IllegalArgumentException");
-		}catch(Exception g){
-			System.err.println("Exception");
+			System.err.println("IllegalArgumentException appeared");
+		}catch(NullPointerException g){
+			System.err.println("NullPointerException appeared");
+		}catch(Exception h){
+			System.err.println("Exception appeared");
 		}
-		return output;
+		return "unknown command.";
 	}
 
 	/**
@@ -166,7 +165,6 @@ public class Menu{
 	private String functionMenu(final Menu menu, final String paramlist){
 		if(menu instanceof FunktionalMenu){
 			return ((FunktionalMenu)menu).activate(paramlist);
-			
 		}else{
 			return menu.display();
 		}
@@ -177,6 +175,9 @@ public class Menu{
 	 * @param menu
 	 */
 	public void addSubMenu(Menu menu){
+		if(menu.equals(null)){
+			throw new IllegalArgumentException("menu can not be null.");
+		}
 		menu.setMotherMenu(this);
 		childrenList.add(menu);
 		menuList.add(menu);
@@ -187,6 +188,9 @@ public class Menu{
 	 * @param menu
 	 */
 	private void setMotherMenu(Menu menu){
+		if(menu.equals(null)){
+			throw new IllegalArgumentException("mother menu can not be null.");
+		}
 		motherMenu=menu;
 	}
 
@@ -223,12 +227,16 @@ public class Menu{
 	}
 
 	/**
-	 * 
+	 * Set the selected menu.
+	 * @param menu
 	 */
 	public static void setSelectedMenu(final Menu menu){
+		if(menu.equals(null)){
+			throw new IllegalArgumentException("the selected menu can not be null.");
+		}
 		selectedMenu = menu;
-		
-	}	
+	}
+
 	/**
 	 * Returns the selected Menu.
 	 * @return selectedMenu

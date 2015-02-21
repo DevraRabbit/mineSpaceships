@@ -5,7 +5,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * 
  * @author ovae.
- * @version 20150220
+ * @version 20150221
  */
 public class ShieldActivateMenu extends Menu implements FunktionalMenu{
 	
@@ -26,10 +26,8 @@ public class ShieldActivateMenu extends Menu implements FunktionalMenu{
 	 */
 	@Override
 	public String activate(String paramlist) {
-		String out ="";
-		out+=">> shield activated <<";
-		this.terminal.mc.theWorld.setRainStrength( 0f);
-		return out;
+		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 0f);
+		return ">> shield activated <<";
 	}
 
 }

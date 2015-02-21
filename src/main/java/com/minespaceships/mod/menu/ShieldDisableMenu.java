@@ -13,8 +13,12 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @version 20150220
  */
 public class ShieldDisableMenu extends Menu implements FunktionalMenu{
-	
+
+	/**
+	 * 
+	 */
 	private CustomGuiChat terminal;
+
 	/**
 	 * 
 	 * @param name
@@ -22,6 +26,9 @@ public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 	 */
 	public ShieldDisableMenu(String name, CustomGuiChat terminal) {
 		super(name);
+		if(terminal.equals(null)){
+			throw new IllegalArgumentException("terminal can not be null");
+		}
 		this.terminal = terminal;
 	}
 
@@ -30,11 +37,9 @@ public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 	 */
 	@Override
 	public String activate(String paramlist) {
-		String out ="";
-		out+=">> shield disabled <<";
 		//Let it rain
-		this.terminal.mc.theWorld.setRainStrength(2f);
-		return out;
+		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
+		return ">> shield disabled <<";
 	}
 
 }

@@ -64,6 +64,11 @@ public class DefaultMenu {
 	 * @param terminal
 	 */
 	public static void initMenu(CustomGuiChat terminal){
+		if(terminal.equals(null)){
+			System.err.println("terminal can not be null.");
+		}
+
+		//initialise all menus.
 		root = new Menu("Main");
 		navigation = new Menu("spaceshipnavigation");
 		armour = new Menu("weapons");
@@ -74,6 +79,7 @@ public class DefaultMenu {
 		disableShield = new ShieldDisableMenu(">disable", terminal);
 		shiptoTarget = new NavigateToTargetMenu("to target [x][y][z]", terminal);
 
+		//create the menu structure.
 		root.addSubMenu(navigation);
 			navigation.addSubMenu(shiptoTarget);
 		root.addSubMenu(armour);
