@@ -5,58 +5,38 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * A default menu structure.
  * @author ovae.
- * @version 20150220
+ * @version 20150221
  */
 public class DefaultMenu {
 
-	/**
-	 * Is necessary to now if the DefaultMenu was initialise before.
-	 */
+	//Is necessary to now if the DefaultMenu was initialise before.
 	private static boolean runBefore;
 
-	/**
-	 * The root menu.
-	 */
+	//The root menu.
 	private static Menu root;
 
-	/**
-	 * Menu for the spaceship navigation.
-	 */
+	//Menu for the spaceship navigation.
 	private static Menu navigation;
 
-	/*
-	 * Menu for the spaceship armour.
-	 */
+	//Menu for the spaceship armour.
 	private static Menu armour;
 
-	/**
-	 * Menu for all protective devices of the spaceship.
-	 */
+	//Menu for all protective devices of the spaceship.
 	private static Menu protection;
 
-	/**
-	 * Menu if you need help
-	 */
+	//Menu if you need help
 	private static Menu help;
 
-	/**
-	 * Menu for the spaceship shield.
-	 */
+	//Menu for the spaceship shield.
 	private static Menu shield;
 
-	/**
-	 * Menu which contains the ability to activate the shield
-	 */
+	//Menu which contains the ability to activate the shield
 	private static Menu activateShield;
 
-	/**
-	 * Menu which contains the ability to disable the shield
-	 */
+	//Menu which contains the ability to disable the shield
 	private static Menu disableShield;
 
-	/**
-	 * 
-	 */
+	//Menu which contains the ability to set the spaceship to a target position.
 	private static Menu shiptoTarget;
 
 	/**

@@ -10,7 +10,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * 
  * @author ovae.
- * @version 20150220
+ * @version 20150221
  */
 public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 

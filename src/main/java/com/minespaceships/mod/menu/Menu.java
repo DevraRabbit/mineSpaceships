@@ -1,6 +1,7 @@
 package com.minespaceships.mod.menu;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
@@ -8,28 +9,20 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * The Menu class implements a menu structure and the ability
  * to go through these structure out of menus and sub menus.
  * @author DieDiren, Sinan, ovae.
- * @verion 20150219
+ * @verion 20150221
  */
 public class Menu{
 
-	/**
-	 * The childrenList contains all sub menus.
-	 */
+	//The childrenList contains all sub menus.
 	private final ArrayList<Menu> childrenList;
 
-	/**
-	 * The menuList contains all existing menus.
-	 */
+	//The menuList contains all existing menus.
 	private final static ArrayList<Menu> menuList= new ArrayList<Menu>();
 
-	/**
-	 * The name of the menu.
-	 */
+	//The name of the menu.
 	private final String menuName;
 
-	/**
-	 * The currently selected Menu Object.
-	 */
+	//The currently selected Menu Object.
 	private static Menu selectedMenu;
 
 	/**
@@ -38,14 +31,10 @@ public class Menu{
 	 */
 	private static int menuIDcounter;
 
-	/**
-	 * The menu id of this menu.
-	 */
+	//The menu id of this menu.
 	private final int menuID;
 
-	/**
-	 * The parent/mother Menu of this menu.
-	 */
+	//The parent/mother Menu of this menu.
 	private Menu motherMenu;
 
 	/**
@@ -62,7 +51,6 @@ public class Menu{
 		childrenList=new ArrayList<Menu>();
 		this.menuID = menuIDcounter;
 		menuIDcounter++;
-		
 	}
 
 	/**
@@ -81,7 +69,7 @@ public class Menu{
 		}
 		return out;
 	}
-	
+
 	/**
 	 * returns true if successful, false if the ID was not correct
 	 * changes the static variable selectedMenu to the new Menu
@@ -90,10 +78,13 @@ public class Menu{
 		int n;
 		String paramlist = "";
 		try{
+			//Check if there are paramters, if there are some the a
+			paramlist = areParameterExistend(name);
+
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
-					selectedMenu = this;
+					//selectedMenu = this;
 					return selectedMenu.getMother().display();
 				}
 			}
@@ -131,12 +122,7 @@ public class Menu{
 			int position = Integer.parseInt(name);
 			if(position > 0 && position <= selectedMenu.childrenList.size()){
 				position -= 1;
-				//if(selectedMenu instanceof FunktionalMenu){
-					return functionMenu(selectedMenu.childrenList.get(position), paramlist);
-				/*}else{
-					selectedMenu = selectedMenu.childrenList.get(position);
-					return selectedMenu.display();
-				}*/
+				return functionMenu(selectedMenu.childrenList.get(position), paramlist);
 			}
 		}catch(IndexOutOfBoundsException e){
 			System.err.println("IndexOutOfBoundsException appeared");
@@ -151,14 +137,15 @@ public class Menu{
 	}
 
 	/**
-	 * Gets a command
-	 * @param name
-	 * @return ArrayList<Strings>
+	 * Checks if parameters are available.
+	 * @param command
+	 * @return parameter string
 	 */
-	private ArrayList<String> extractParams(final String command){
-		ArrayList<String> list = new ArrayList<String>();
+	private String areParameterExistend(final String command){
+		String out ="";
+		Pattern.matches("(\\w\\s)*",command);
 		
-		return list;
+		return out;
 	}
 
 	/**

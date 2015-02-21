@@ -5,18 +5,14 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * this class displays a menu structure.
  * @author ovae.
- * @version 20150220
+ * @version 20150221
  */
 public class MenuDisplay {
 
-	/**
-	 * 
-	 */
+	//the terminal to write in.
 	protected CustomGuiChat terminal;
 
-	/**
-	 * 
-	 */
+	//The root of the menu structure.
 	private Menu root;
 
 	/**

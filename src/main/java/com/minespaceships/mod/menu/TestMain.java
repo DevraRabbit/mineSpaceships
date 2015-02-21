@@ -3,6 +3,11 @@ package com.minespaceships.mod.menu;
 import java.util.Scanner;
 import com.minespaceships.mod.menu.Menu;
 
+/**
+ * 
+ * @author DieDiren, Sinan, ovae.
+ * @version 20150221
+ */
 public class TestMain {
 	
 	private static Scanner scanner = new Scanner(System.in);

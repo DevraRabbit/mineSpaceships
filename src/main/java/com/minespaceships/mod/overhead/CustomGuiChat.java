@@ -63,12 +63,10 @@ public class CustomGuiChat extends GuiChat{
 	}
 	
 	/**
-	 * clears the chat.
+	 * Clears the chat.
 	 */
 	public void clearChat(){
-		for(int i = 0; i<10; i++){
-			this.mc.thePlayer.addChatComponentMessage(new ChatComponentText("\n"));
-		}
+		this.mc.ingameGUI.getChatGUI().clearChatMessages();
 	}
 	
 	/**

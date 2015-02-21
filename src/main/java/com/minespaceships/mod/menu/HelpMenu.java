@@ -3,14 +3,15 @@ package com.minespaceships.mod.menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
- * 
+ * This menu is the help menu witch explains to the user how to
+ * use the menu structure and how to navigate in it.
  * @author ovae.
- * @version 20150220
+ * @version 20150221
  */
 public class HelpMenu extends Menu implements FunktionalMenu{
 
 	/**
-	 * 
+	 * Help menu constructor, creates an help menu.
 	 * @param name
 	 * @param terminal
 	 */

@@ -10,7 +10,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
 /**
  * 
  * @author ovae.
- * @version 20150220
+ * @version 20150221
  */
 public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
 
