@@ -69,7 +69,7 @@ public class DefaultMenu {
 		}
 
 		//initialise all menus.
-		root = new Menu("Main");
+		root = new Menu("Spaceship console");
 		navigation = new Menu("spaceshipnavigation");
 		armour = new Menu("weapons");
 		protection = new Menu("protection");

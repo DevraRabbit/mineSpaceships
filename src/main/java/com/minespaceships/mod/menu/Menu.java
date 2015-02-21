@@ -72,10 +72,12 @@ public class Menu{
 		selectedMenu = this;
 		String out = "";
 		//add the menu name
-		out += "["+getMenuID()+"] "+getMenuName()+ '\n';
+		out += "]--"+(this.getMenuName().toUpperCase())+" ("+this.getMenuID()+")--[\n\n";
 		//add all sub menus to the string.
+		int position = 1;
 		for(Menu child: childrenList){
-			out+= "\t ["+child.getMenuID()+"] "+child.getMenuName()+ '\n';
+			out+= "    ["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
+			position++;
 		}
 		return out;
 	}
@@ -92,7 +94,7 @@ public class Menu{
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
 					selectedMenu = this;
-					return selectedMenu.display();
+					return selectedMenu.getMother().display();
 				}
 			}
 
@@ -129,12 +131,12 @@ public class Menu{
 			int position = Integer.parseInt(name);
 			if(position > 0 && position <= selectedMenu.childrenList.size()){
 				position -= 1;
-				if(selectedMenu instanceof Menu){
+				//if(selectedMenu instanceof FunktionalMenu){
+					return functionMenu(selectedMenu.childrenList.get(position), paramlist);
+				/*}else{
 					selectedMenu = selectedMenu.childrenList.get(position);
 					return selectedMenu.display();
-				}else{
-					return functionMenu(selectedMenu.childrenList.get(position), paramlist);
-				}
+				}*/
 			}
 		}catch(IndexOutOfBoundsException e){
 			System.err.println("IndexOutOfBoundsException appeared");
@@ -145,7 +147,7 @@ public class Menu{
 		}catch(Exception h){
 			System.err.println("Exception appeared");
 		}
-		return "unknown command.";
+		return "unknown command.\n Press 'm' to get back.";
 	}
 
 	/**
