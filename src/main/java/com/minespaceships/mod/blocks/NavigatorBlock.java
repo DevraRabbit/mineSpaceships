@@ -4,10 +4,13 @@ import com.minespaceships.mod.ExampleMod;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockButton;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -85,7 +88,102 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
     {
         return false;
     }
-	
+	@Override
+	protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {FACING});
+    }
+	public int getMetaFromState(IBlockState state)
+    {
+        int i;
+
+        switch (NavigatorBlock.SwitchEnumFacing.FACING_LOOKUP[((EnumFacing)state.getValue(FACING)).ordinal()])
+        {
+            case 1:
+                i = 1;
+                break;
+            case 2:
+                i = 2;
+                break;
+            case 3:
+                i = 3;
+                break;
+            case 4:
+                i = 4;
+                break;
+            case 5:
+            default:
+                i = 5;
+                break;
+            case 6:
+                i = 0;
+        }
+
+        return i;
+    }
+
+    static final class SwitchEnumFacing
+    {
+        static final int[] FACING_LOOKUP = new int[EnumFacing.values().length];
+        private static final String __OBFID = "CL_00002131";
+
+        static
+        {
+            try
+            {
+                FACING_LOOKUP[EnumFacing.EAST.ordinal()] = 1;
+            }
+            catch (NoSuchFieldError var6)
+            {
+                ;
+            }
+
+            try
+            {
+                FACING_LOOKUP[EnumFacing.WEST.ordinal()] = 2;
+            }
+            catch (NoSuchFieldError var5)
+            {
+                ;
+            }
+
+            try
+            {
+                FACING_LOOKUP[EnumFacing.SOUTH.ordinal()] = 3;
+            }
+            catch (NoSuchFieldError var4)
+            {
+                ;
+            }
+
+            try
+            {
+                FACING_LOOKUP[EnumFacing.NORTH.ordinal()] = 4;
+            }
+            catch (NoSuchFieldError var3)
+            {
+                ;
+            }
+
+            try
+            {
+                FACING_LOOKUP[EnumFacing.UP.ordinal()] = 5;
+            }
+            catch (NoSuchFieldError var2)
+            {
+                ;
+            }
+
+            try
+            {
+                FACING_LOOKUP[EnumFacing.DOWN.ordinal()] = 6;
+            }
+            catch (NoSuchFieldError var1)
+            {
+                ;
+            }
+        }
+    }
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         return worldIn.isSideSolid(pos.offset(facing.getOpposite()), facing, true) ? this.getDefaultState().withProperty(FACING, facing) : this.getDefaultState().withProperty(FACING, EnumFacing.DOWN);

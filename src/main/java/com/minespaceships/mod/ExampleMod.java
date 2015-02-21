@@ -33,6 +33,7 @@ public class ExampleMod
     public void preInit(FMLPreInitializationEvent event) {   	
     	Singleton = this;    	
     	//register our game objects so Minecraft knows how to use them.
+    	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
     }
     
@@ -44,7 +45,7 @@ public class ExampleMod
     
     @EventHandler
     public void postInit(FMLPostInitializationEvent event){
-    	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
+    	
     }
     
     public static ExampleMod instance(){
