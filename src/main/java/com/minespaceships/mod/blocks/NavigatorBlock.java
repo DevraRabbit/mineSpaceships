@@ -26,7 +26,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class NavigatorBlock extends Block implements ITileEntityProvider{
-	
 	/**
 	 * Block to implement an interface for the Spaceships
 	 * @param name The display name of the block
@@ -35,7 +34,7 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
     	//Make a Block with certain attributes. Sponge for example is a quite soft block. Does not affect
     	//the texture of the block.
     	super(Material.sponge);
-    	this.setUnlocalizedName(name);
+    	this.setUnlocalizedName("NavigatorBlock");
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
     /**
@@ -68,5 +67,18 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
 		//the Block is placed.
 		return new ChatRegisterEntity();
-	}    
+	}
+	
+	@Override
+    public boolean isFullBlock()
+    {
+        return false;
+    }
+
+	@Override
+	public boolean isFullCube()
+    {
+        return false;
+    }
+
 }
