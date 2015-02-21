@@ -4,6 +4,7 @@ import java.util.regex.*;
 
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.mod.spaceship.Turn;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Calculator;
 import com.minespaceships.util.IMoveable;
@@ -97,6 +98,17 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		} else if (command.equals("test1")) {
 			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
 			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
+		} else if (command.startsWith("turn ")) {
+			command = command.substring(4).trim();
+			if (command.equals("left")) {
+				Turn.ninetyDeg(worldObj, pos, Turn.LEFT);
+			} else if (command.equals("right")) {
+				Turn.ninetyDeg(worldObj, pos, Turn.RIGHT);
+			} else if (command.equals("around")) {
+				Turn.around(worldObj, pos);
+			} else {
+				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
+			}
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(remoteWorld, this, player, ship);
 		}

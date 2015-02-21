@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "normal": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east": { "model": "minespaceships:NavigatorBlock" },
+        "facing=south": { "model": "minespaceships:NavigatorBlock", "y": 90 },
+        "facing=west": { "model": "minespaceships:NavigatorBlock", "y": 180 },
+        "facing=north": { "model": "minespaceships:NavigatorBlock", "y": 270 }
+    }
+}

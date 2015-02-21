@@ -57,11 +57,17 @@ public class Spaceship {
 		return a;
 	}
 	public void readOriginMeasurementArray(int[] array){
-		BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
-		BlockPos maxSpan = new BlockPos(array[6], array[7], array[8]);
-		origin = new BlockPos(array[3], array[4], array[5]);
-		setMeasurements(minSpan.add(origin), maxSpan.add(origin));
-		origin = new BlockPos(array[3], array[4], array[5]);
+		try {
+			BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
+			BlockPos maxSpan = new BlockPos(array[6], array[7], array[8]);
+			origin = new BlockPos(array[3], array[4], array[5]);
+			setMeasurements(minSpan.add(origin), maxSpan.add(origin));
+			origin = new BlockPos(array[3], array[4], array[5]);
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			System.out.println("Could not read OriginMeasurementArray (probably an error with NBT). Try creating a new World.");
+			System.out.println("Printing Exception Stack:");
+			System.out.println(ex.getMessage());
+		}
 	}
 	
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){

@@ -4,6 +4,7 @@ import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ExampleMod
 {
 	private static ExampleMod Singleton;
-    public static final String MODID = "examplemod";
+    public static final String MODID = "minespaceships";
     public static final String VERSION = "1.0";
     
     private static int navigatorBlockId = 1000;
@@ -36,7 +37,6 @@ public class ExampleMod
     	//register our game objects so Minecraft knows how to use them.
     	GameRegistry.registerBlock(commandBlock, "NavigatorBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
-    	
     }
     
     @EventHandler
