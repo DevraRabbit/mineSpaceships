@@ -5,12 +5,15 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,14 +29,16 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class NavigatorBlock extends Block implements ITileEntityProvider{
+	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 	/**
 	 * Block to implement an interface for the Spaceships
 	 * @param name The display name of the block
 	 */
-    public NavigatorBlock(String name) {
+    public NavigatorBlock() {
     	//Make a Block with certain attributes. Sponge for example is a quite soft block. Does not affect
     	//the texture of the block.
-    	super(Material.sponge);
+    	super(new Material(MapColor.blueColor));
+    	this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     	this.setUnlocalizedName("NavigatorBlock");
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
@@ -79,6 +84,11 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 	public boolean isFullCube()
     {
         return false;
+    }
+	
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        return worldIn.isSideSolid(pos.offset(facing.getOpposite()), facing, true) ? this.getDefaultState().withProperty(FACING, facing) : this.getDefaultState().withProperty(FACING, EnumFacing.DOWN);
     }
 
 }
