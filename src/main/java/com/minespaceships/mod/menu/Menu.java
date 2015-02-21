@@ -49,25 +49,16 @@ public class Menu{
 	private Menu motherMenu;
 
 	/**
-	 * 
-	 */
-	protected CustomGuiChat terminal;
-
-	/**
 	 * The menu constructor creates a new menu object with a menu name.
 	 * @param name
 	 */
-	public Menu(final String name, final CustomGuiChat terminal){
+	public Menu(final String name){
 		if(name.trim().isEmpty()){
 			throw new IllegalArgumentException("The menu name can not be null.");
 		}
-		if(terminal == null){
-			throw new IllegalArgumentException("the therminal ca not be null.");
-		}
-		
+
 		menuName = name;
 		motherMenu=this;
-		this.terminal=terminal;
 		childrenList=new ArrayList<Menu>();
 		this.menuID = menuIDcounter;
 		menuIDcounter++;
@@ -95,13 +86,14 @@ public class Menu{
 	 */
 	public String switchMenu(final String name){
 		int n;
-		String paramlist = null;
+		String paramlist = "";
+		String output = "";
 		try{
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
 					selectedMenu = this;
-					return selectedMenu.getMother().display();
+					output= selectedMenu.display();
 				}
 			}
 
@@ -118,7 +110,7 @@ public class Menu{
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
 							selectedMenu = menu;
-							functionMenu(menu, paramlist);
+							output =functionMenu(menu, paramlist);
 						}
 					}
 				}
@@ -129,7 +121,7 @@ public class Menu{
 				for(Menu menu : menuList){
 					if(menu.getMenuName().equals(name)){
 						selectedMenu = menu;
-						functionMenu(menu, paramlist);
+						output =functionMenu(menu, paramlist);
 					}
 				}
 			}
@@ -140,13 +132,13 @@ public class Menu{
 				position -= 1;
 				if(selectedMenu instanceof Menu){
 					selectedMenu = selectedMenu.childrenList.get(position);
-					terminal.display(selectedMenu.display());
+					output= selectedMenu.display();
 				}else{
-					functionMenu(selectedMenu.childrenList.get(position), paramlist);
+					output = functionMenu(selectedMenu.childrenList.get(position), paramlist);
 				}
 			}
 			
-			return "";
+			return output;
 		}catch(IndexOutOfBoundsException e){
 			System.err.println("IndexOutOfBoundsException");
 		}catch(IllegalArgumentException f){
@@ -154,7 +146,7 @@ public class Menu{
 		}catch(Exception g){
 			System.err.println("Exception");
 		}
-		return "";
+		return output;
 	}
 
 	/**
@@ -173,8 +165,8 @@ public class Menu{
 	 */
 	private String functionMenu(final Menu menu, final String paramlist){
 		if(menu instanceof FunktionalMenu){
-			((FunktionalMenu)menu).activate(paramlist);
-			return "";
+			return ((FunktionalMenu)menu).activate(paramlist);
+			
 		}else{
 			return menu.display();
 		}

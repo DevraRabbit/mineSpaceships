@@ -14,34 +14,35 @@ import com.minespaceships.mod.spaceship.Spaceship;
  */
 public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
 
+	private CustomGuiChat terminal;
 	/**
 	 * 
 	 * @param name
 	 * @param terminal
 	 */
 	public NavigateToTargetMenu(String name, CustomGuiChat terminal) {
-		super(name, terminal);
-		// TODO Auto-generated constructor stub
+		super(name);
+		this.terminal = terminal;
 	}
 
 	/**
 	 * 
 	 */
 	@Override
-	public void activate(String paramlist) {
+	public String activate(String paramlist) {
 		String[] param = paramlist.split("\\s+");
 		double x = Double.parseDouble(param[0]);
 		double y = Double.parseDouble(param[1]);
 		double z = Double.parseDouble(param[2]);
 		
-		Spaceship ship = super.terminal.getChatRegisterEntity().getShip();
+		Spaceship ship = this.terminal.getChatRegisterEntity().getShip();
 		//(double)x, (double)y, (double)z
 		BlockPos position = new BlockPos(x, y, z);
 		if(ship == null) {
-			super.terminal.display("move: Please initialize the Spaceship first");
-			return;
+			this.terminal.display("move: Please initialize the Spaceship first");
 		}
 		ship.setTarget(position);
+		return "";
 	}
 
 }

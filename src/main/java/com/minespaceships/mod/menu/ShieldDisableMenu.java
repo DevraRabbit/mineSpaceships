@@ -14,23 +14,27 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  */
 public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 	
+	private CustomGuiChat terminal;
 	/**
 	 * 
 	 * @param name
 	 * @param terminal
 	 */
 	public ShieldDisableMenu(String name, CustomGuiChat terminal) {
-		super(name, terminal);
+		super(name);
+		this.terminal = terminal;
 	}
 
 	/**
 	 * 
 	 */
 	@Override
-	public void activate(String paramlist) {
-		super.terminal.display(">> shield disabled <<");
+	public String activate(String paramlist) {
+		String out ="";
+		out+=">> shield disabled <<";
 		//Let it rain
-		super.terminal.mc.theWorld.setRainStrength(2f);
+		this.terminal.mc.theWorld.setRainStrength(2f);
+		return out;
 	}
 
 }

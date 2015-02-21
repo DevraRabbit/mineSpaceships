@@ -64,12 +64,12 @@ public class DefaultMenu {
 	 * @param terminal
 	 */
 	public static void initMenu(CustomGuiChat terminal){
-		root = new Menu("Main", terminal);
-		navigation = new Menu("spaceshipnavigation", terminal);
-		armour = new Menu("weapons", terminal);
-		protection = new Menu("protection", terminal);
-		help = new HelpMenu("help", terminal);
-		shield = new Menu("shield", terminal);
+		root = new Menu("Main");
+		navigation = new Menu("spaceshipnavigation");
+		armour = new Menu("weapons");
+		protection = new Menu("protection");
+		help = new HelpMenu("help");
+		shield = new Menu("shield");
 		activateShield = new ShieldActivateMenu(">activate", terminal);
 		disableShield = new ShieldDisableMenu(">disable", terminal);
 		shiptoTarget = new NavigateToTargetMenu("to target [x][y][z]", terminal);

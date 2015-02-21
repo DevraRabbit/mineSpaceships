@@ -9,22 +9,27 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  */
 public class ShieldActivateMenu extends Menu implements FunktionalMenu{
 	
+	private CustomGuiChat terminal;
+	
 	/**
 	 * 
 	 * @param name
 	 * @param terminal
 	 */
 	public ShieldActivateMenu(String name, CustomGuiChat terminal) {
-		super(name, terminal);
+		super(name);
+		this.terminal = terminal;
 	}
 
 	/**
 	 * 
 	 */
 	@Override
-	public void activate(String paramlist) {
-		super.terminal.display(">> shield activated <<");
-		super.terminal.mc.theWorld.setRainStrength( 0f);
+	public String activate(String paramlist) {
+		String out ="";
+		out+=">> shield activated <<";
+		this.terminal.mc.theWorld.setRainStrength( 0f);
+		return out;
 	}
 
 }

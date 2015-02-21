@@ -13,6 +13,6 @@ public interface FunktionalMenu{
 	 * Activate the functionality of the menu.
 	 * @param paramlist
 	 */
-	public void activate(String paramlist);
+	public String activate(String paramlist);
 
 }

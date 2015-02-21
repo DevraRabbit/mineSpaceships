@@ -14,8 +14,8 @@ public class HelpMenu extends Menu implements FunktionalMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public HelpMenu(String name, CustomGuiChat terminal) {
-		super(name, terminal);
+	public HelpMenu(String name) {
+		super(name);
 
 	}
 
@@ -23,7 +23,7 @@ public class HelpMenu extends Menu implements FunktionalMenu{
 	 * 
 	 */
 	@Override
-	public void activate(String paramlist) {
+	public String activate(String paramlist) {
 		String out="";
 		out+="--Help--\n";
 		out+="You can navigate in three different ways: \n";
@@ -32,7 +32,7 @@ public class HelpMenu extends Menu implements FunktionalMenu{
 		out+="  -by the number for the submenu order.\n";
 		out+="\n To get back in the parent menu, you can either\n";
 		out+="enter 'm','up' or 'parent'.\n\n";
-		super.terminal.display(out);
+		return out;
 	}
 
 }

@@ -49,19 +49,21 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
-			//initialise the terminal
-			terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			
-			menuDisplay = new MenuDisplay(DefaultMenu.getRootMenu(), terminal);
-			
-			//open our console. 
-
-			Minecraft.getMinecraft().displayGuiScreen(terminal);
-			
 			//Initialise a default menu for testing reasons
 			if(!DefaultMenu.getRunBefore()){
 				DefaultMenu.initMenu(terminal);
 			}
+
+			//initialise the terminal
+			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+			terminal = new CustomGuiChat(player, this);
+
+			//initialise the menu display.
+			menuDisplay = new MenuDisplay(DefaultMenu.getRootMenu(), terminal);
+
+			//open our console. 
+			Minecraft.getMinecraft().displayGuiScreen(terminal);
+			//Print out the menu in the console.
 			terminal.display(DefaultMenu.getRootMenu().display());
 		}
 	}
@@ -81,10 +83,9 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
-		//DefaultMenu.getRootMenu().switchMenu(command);
-		menuDisplay.navigate(command);
-		
-		
+		//display the menu.
+		menuDisplay.display(command);
+
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
