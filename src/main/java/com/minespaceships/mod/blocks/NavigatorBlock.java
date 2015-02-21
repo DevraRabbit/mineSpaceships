@@ -4,11 +4,8 @@ import com.minespaceships.mod.ExampleMod;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -23,22 +20,20 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
+public class NavigatorBlock extends Block implements ITileEntityProvider{
 	/**
 	 * Block to implement an interface for the Spaceships
 	 * @param name The display name of the block
 	 */
-    public NavigatorBlock(IBlockState state) {
+    public NavigatorBlock(String name) {
     	//Make a Block with certain attributes. Sponge for example is a quite soft block. Does not affect
     	//the texture of the block.
-    	super(state);
+    	super(Material.sponge);
     	this.setUnlocalizedName("NavigatorBlock");
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
@@ -84,6 +79,6 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
 	public boolean isFullCube()
     {
         return false;
-    }	
+    }
 
 }
