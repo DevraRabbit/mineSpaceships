@@ -1,11 +1,57 @@
+
+
+
 {
     "variants": {
-        "normal": { "model": "minespaceships:NavigatorBlock" },
-        "facing=up": { "model": "minespaceships:NavigatorBlock" },
-        "facing=down": { "model": "minespaceships:NavigatorBlockFlipped" },
-        "facing=east": { "model": "minespaceships:NavigatorBlock" },
-        "facing=south": { "model": "minespaceships:NavigatorBlock", "y": 90 },
-        "facing=west": { "model": "minespaceships:NavigatorBlock", "y": 180 },
-        "facing=north": { "model": "minespaceships:NavigatorBlock", "y": 270 }
+                
+        "facing=east,half=bottom,shape=outer_right": { "model": "minespaceships:NavigatorBlock" },     
+        "facing=north,half=top,shape=inner_left": { "model": "minespaceships:NavigatorBlock" }, 
+        "facing=south,half=bottom,shape=inner_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=top,shape=inner_right": { "model": "minespaceships:NavigatorBlock" },  
+        
+        "facing=north,half=bottom,shape=inner_right": { "model": "minespaceships:NavigatorBlock" }, 
+        "facing=south,half=top,shape=outer_right": { "model": "minespaceships:NavigatorBlock" }, 
+        "facing=south,half=top,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=top,shape=inner_left": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=east,half=top,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        "facing=north,half=top,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=bottom,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=south,half=bottom,shape=outer_right": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=east,half=bottom,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east,half=top,shape=inner_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=south,half=bottom,shape=inner_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east,half=top,shape=inner_left": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=south,half=top,shape=inner_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=north,half=top,shape=inner_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=north,half=top,shape=outer_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east,half=top,shape=outer_right": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=north,half=top,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east,half=bottom,shape=inner_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=south,half=top,shape=inner_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=top,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=west,half=bottom,shape=inner_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=north,half=bottom,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=bottom,shape=outer_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=south,half=top,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=south,half=bottom,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=north,half=bottom,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=top,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=north,half=bottom,shape=outer_right": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=north,half=bottom,shape=inner_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east,half=bottom,shape=inner_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=south,half=bottom,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east,half=bottom,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        
+        "facing=west,half=top,shape=outer_right": { "model": "minespaceships:NavigatorBlock" },
+        "facing=east,half=top,shape=outer_left": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=bottom,shape=straight": { "model": "minespaceships:NavigatorBlock" },
+        "facing=west,half=bottom,shape=inner_left": { "model": "minespaceships:NavigatorBlock" },
     }
 }
