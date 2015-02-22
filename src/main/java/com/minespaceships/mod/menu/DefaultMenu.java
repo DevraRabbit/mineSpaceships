@@ -57,7 +57,7 @@ public class DefaultMenu {
 		shield = new Menu("shield");
 		activateShield = new ShieldActivateMenu(">activate", terminal);
 		disableShield = new ShieldDisableMenu(">disable", terminal);
-		shiptoTarget = new NavigateToTargetMenu("to target [x][y][z]", terminal);
+		shiptoTarget = new NavigateToTargetMenu("to target", terminal, "[x][y][z]");
 
 		//create the menu structure.
 		root.addSubMenu(navigation);

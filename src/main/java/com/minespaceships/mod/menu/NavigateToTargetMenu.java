@@ -20,7 +20,7 @@ public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public NavigateToTargetMenu(String name, CustomGuiChat terminal) {
+	public NavigateToTargetMenu(final String name, final CustomGuiChat terminal, final String paramInfo) {
 		super(name);
 		this.terminal = terminal;
 	}
