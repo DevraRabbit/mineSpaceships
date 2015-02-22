@@ -20,6 +20,6 @@ public class EngineBlock extends BlockRotatedPillar {
 
 	@Override
 	public EnumWorldBlockLayer getBlockLayer() {
-		return EnumWorldBlockLayer.TRANSLUCENT;
+		return EnumWorldBlockLayer.CUTOUT;
 	}
 }
