@@ -1,25 +1,11 @@
 {
     "variants": {        
-        "axis=none,variant=birch": { "model": "minespaceships:EngineBlock" },
-        "axis=none,variant=jungle": { "model": "minespaceships:EngineBlock" },
-        "axis=none,variant=spruce": { "model": "minespaceships:EngineBlock" },
-        "axis=none,variant=oak": { "model": "minespaceships:EngineBlock" },
-        
-        "axis=x,variant=oak": { "model": "minespaceships:EngineBlock" },
-        "axis=x,variant=birch": { "model": "minespaceships:EngineBlock" },                 
-        "axis=x,variant=spruce": { "model": "minespaceships:EngineBlock" },      
-        "axis=x,variant=jungle": { "model": "minespaceships:EngineBlock" },
-        
-        "axis=z,variant=oak": { "model": "minespaceships:EngineBlock" , "y": 90  },
-        "axis=z,variant=jungle": { "model": "minespaceships:EngineBlock" , "y": 90  },
-        "axis=z,variant=spruce": { "model": "minespaceships:EngineBlock" , "y": 90  },
-        "axis=z,variant=birch": { "model": "minespaceships:EngineBlock" , "y": 90  },
-        
-        "axis=y,variant=birch": { "model": "minespaceships:EngineBlock" , "z": 90  },  
-        "axis=y,variant=oak": { "model": "minespaceships:EngineBlock" , "z": 90  },        
-        "axis=y,variant=jungle": { "model": "minespaceships:EngineBlock" , "z": 90  },        
-        "axis=y,variant=spruce": { "model": "minespaceships:EngineBlock" , "z": 90  }
-        
+        "facing=up": { "model": "minespaceships:EngineBlock" , "x": 90 },
+        "facing=down": { "model": "minespaceships:EngineBlock" , "x": 270},
+        "facing=north": { "model": "minespaceships:EngineBlock" , "y": 270 , "x": 90 },
+        "facing=east": { "model": "minespaceships:EngineBlock" , "x": 90 },
+        "facing=south": { "model": "minespaceships:EngineBlock" , "y": 90 , "x": 90 },
+        "facing=west": { "model": "minespaceships:EngineBlock" , "y": 180 , "x": 90 }        
     }
 }
 
