@@ -4,6 +4,7 @@ import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,12 +20,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ExampleMod
 {
 	private static ExampleMod Singleton;
-    public static final String MODID = "examplemod";
+    public static final String MODID = "minespaceships";
     public static final String VERSION = "1.0";
     
     private static int navigatorBlockId = 1000;
-    //initializing a block for registration (see below)
-    public static Block commandBlock = new NavigatorBlock("NavigatorBlock");
     
     /**
      * Event that gets called in an early initialization state of Minecraft
@@ -34,9 +33,8 @@ public class ExampleMod
     public void preInit(FMLPreInitializationEvent event) {   	
     	Singleton = this;    	
     	//register our game objects so Minecraft knows how to use them.
-    	GameRegistry.registerBlock(commandBlock, "NavigatorBlock");
+    	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
-    	
     }
     
     @EventHandler
