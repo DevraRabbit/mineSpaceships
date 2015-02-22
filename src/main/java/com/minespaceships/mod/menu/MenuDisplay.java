@@ -1,5 +1,7 @@
 package com.minespaceships.mod.menu;
 
+import java.util.ArrayList;
+
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
@@ -31,10 +33,43 @@ public class MenuDisplay {
 	}
 
 	/**
+	 * Get the currently selected menu and prepares the output of that menu.
+	 * @param menu
+	 */
+	private String preparingOutput(final Menu menu){
+		String out = "";
+		if(menu == null){
+			return "unknown command.\nPress 'm' to get back.";
+		}
+		if(menu instanceof FunktionalMenu){
+			return ((FunktionalMenu)menu).activate("");
+		}
+
+		root.setSelectedMenu(menu);
+		//add the menu name
+		out += "]--"+(menu.getMenuName().toUpperCase())+" ("+menu.getMenuID()+")--[\n\n";
+		//add all sub menus to the string.
+		int position = 1;
+		ArrayList<Menu> list = menu.getChildrenList();
+		for(Menu child: list){
+			out+= "    ["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
+			position++;
+		}
+		return out;
+	}
+
+	/**
 	 * 
-	 * @param message
+	 * @param command
 	 */
 	public void display(final String command){
-		terminal.display(root.switchMenu(command));
+		terminal.display(preparingOutput(root.switchMenu(command)));
+	}
+
+	/**
+	 * @param menu
+	 */
+	public void displayMain(final Menu menu){
+		terminal.display(preparingOutput(menu));
 	}
 }

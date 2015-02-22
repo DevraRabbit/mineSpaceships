@@ -27,7 +27,7 @@ public class ShieldActivateMenu extends Menu implements FunktionalMenu{
 	@Override
 	public String activate(String paramlist) {
 		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 0f);
-		return ">> shield activated <<";
+		return ">> shield activated <<\nPress 'm' to get back.";
 	}
 
 }

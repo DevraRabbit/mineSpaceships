@@ -87,7 +87,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 			//open our console. 
 			Minecraft.getMinecraft().displayGuiScreen(terminal);
 			//Print out the menu in the console.
-			terminal.display(DefaultMenu.getRootMenu().display());
+			menuDisplay.displayMain(DefaultMenu.getRootMenu());
 		}
 	}
 	public void setRemoteWorld(WorldServer world){

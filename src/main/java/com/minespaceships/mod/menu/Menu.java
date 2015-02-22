@@ -54,38 +54,21 @@ public class Menu{
 	}
 
 	/**
-	 * Prints out a List of all sub menus in the terminal.
-	 */
-	public String display(){
-		selectedMenu = this;
-		String out = "";
-		//add the menu name
-		out += "]--"+(this.getMenuName().toUpperCase())+" ("+this.getMenuID()+")--[\n\n";
-		//add all sub menus to the string.
-		int position = 1;
-		for(Menu child: childrenList){
-			out+= "    ["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
-			position++;
-		}
-		return out;
-	}
-
-	/**
 	 * returns true if successful, false if the ID was not correct
 	 * changes the static variable selectedMenu to the new Menu
 	 */
-	public String switchMenu(final String name){
+	public Menu switchMenu(final String name){
 		int n;
 		String paramlist = "";
 		try{
-			//Check if there are paramters, if there are some the a
+			//Check if there are parameters, if there are some the a
 			paramlist = areParameterExistend(name);
 
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
 					//selectedMenu = this;
-					return selectedMenu.getMother().display();
+					return selectedMenu.getMother();
 				}
 			}
 
@@ -102,7 +85,7 @@ public class Menu{
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
 							selectedMenu = menu;
-							return functionMenu(menu, paramlist);
+							return menu;
 						}
 					}
 				}
@@ -113,7 +96,7 @@ public class Menu{
 				for(Menu menu : menuList){
 					if(menu.getMenuName().equals(name)){
 						selectedMenu = menu;
-						return functionMenu(menu, paramlist);
+						return menu;
 					}
 				}
 			}
@@ -122,7 +105,7 @@ public class Menu{
 			int position = Integer.parseInt(name);
 			if(position > 0 && position <= selectedMenu.childrenList.size()){
 				position -= 1;
-				return functionMenu(selectedMenu.childrenList.get(position), paramlist);
+				return selectedMenu.childrenList.get(position);
 			}
 		}catch(IndexOutOfBoundsException e){
 			System.err.println("IndexOutOfBoundsException appeared");
@@ -133,7 +116,7 @@ public class Menu{
 		}catch(Exception h){
 			System.err.println("Exception appeared");
 		}
-		return "unknown command.\n Press 'm' to get back.";
+		return null;
 	}
 
 	/**
@@ -149,23 +132,12 @@ public class Menu{
 	}
 
 	/**
-	 * 
-	 */
-	private String functionMenu(final Menu menu, final String paramlist){
-		if(menu instanceof FunktionalMenu){
-			return ((FunktionalMenu)menu).activate(paramlist);
-		}else{
-			return menu.display();
-		}
-	}
-
-	/**
 	 * Adds a menu to the childrenList of this menu.
 	 * @param menu
 	 */
 	public void addSubMenu(Menu menu){
 		if(menu.equals(null)){
-			throw new IllegalArgumentException("menu can not be null.");
+			throw new IllegalArgumentException("Menu can not be null.");
 		}
 		menu.setMotherMenu(this);
 		childrenList.add(menu);
@@ -178,7 +150,7 @@ public class Menu{
 	 */
 	private void setMotherMenu(Menu menu){
 		if(menu.equals(null)){
-			throw new IllegalArgumentException("mother menu can not be null.");
+			throw new IllegalArgumentException("Mother menu can not be null.");
 		}
 		motherMenu=menu;
 	}
@@ -211,7 +183,7 @@ public class Menu{
 	 * Returns the childrenList.
 	 * @return childrenList
 	 */
-	private ArrayList getChildrenList(){
+	public ArrayList getChildrenList(){
 		return this.childrenList;
 	}
 
@@ -221,7 +193,7 @@ public class Menu{
 	 */
 	public static void setSelectedMenu(final Menu menu){
 		if(menu.equals(null)){
-			throw new IllegalArgumentException("the selected menu can not be null.");
+			throw new IllegalArgumentException("The selected menu can not be null.");
 		}
 		selectedMenu = menu;
 	}

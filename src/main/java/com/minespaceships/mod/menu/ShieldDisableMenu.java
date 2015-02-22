@@ -39,7 +39,7 @@ public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 	public String activate(String paramlist) {
 		//Let it rain
 		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
-		return ">> shield disabled <<";
+		return ">> shield disabled <<\nPress 'm' to get back.";
 	}
 
 }

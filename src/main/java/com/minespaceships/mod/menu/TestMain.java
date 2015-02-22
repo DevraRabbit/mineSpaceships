@@ -27,7 +27,7 @@ public class TestMain {
 		menu3.addSubMenu(new Menu("untermenu5"));
 		menu3.addSubMenu(new Menu("untermenu6"));
 
-		System.out.println(menu1.display());
+		//System.out.println(menu1.display());
 
 		userInput(menu1);
 		//menu1.switchMenu(input);
