@@ -1,6 +1,10 @@
 package com.minespaceships.mod;
 
+import com.minespaceships.mod.blocks.EnergyBlock;
+import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
+import com.minespaceships.mod.blocks.PhaserBlock;
+import com.minespaceships.mod.blocks.ShieldBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
@@ -34,6 +38,10 @@ public class ExampleMod
     	Singleton = this;    	
     	//register our game objects so Minecraft knows how to use them.
     	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
+    	GameRegistry.registerBlock(new EnergyBlock(), "EnergyBlock");
+    	GameRegistry.registerBlock(new PhaserBlock(), "PhaserBlock");
+    	GameRegistry.registerBlock(new EngineBlock(), "EngineBlock");
+    	GameRegistry.registerBlock(new ShieldBlock(), "ShieldBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
     }
     
