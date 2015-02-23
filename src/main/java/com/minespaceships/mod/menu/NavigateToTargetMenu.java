@@ -14,7 +14,9 @@ import com.minespaceships.mod.spaceship.Spaceship;
  */
 public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
 
+	//
 	private CustomGuiChat terminal;
+	
 	/**
 	 * 
 	 * @param name

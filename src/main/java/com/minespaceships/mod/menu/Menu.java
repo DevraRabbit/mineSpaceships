@@ -42,8 +42,11 @@ public class Menu{
 	 * @param name
 	 */
 	public Menu(final String name){
+		if(name.equals(null)){
+			throw new IllegalArgumentException("The menu name can not he null");
+		}
 		if(name.trim().isEmpty()){
-			throw new IllegalArgumentException("The menu name can not be null.");
+			throw new IllegalArgumentException("The menu name can not be empty.");
 		}
 
 		menuName = name;
@@ -54,10 +57,17 @@ public class Menu{
 	}
 
 	/**
-	 * returns true if successful, false if the ID was not correct
-	 * changes the static variable selectedMenu to the new Menu
+	 * Returns the menu in where you are currently in.
+	 * Returns {@code null} if the input was not and id, menu position or the menu name.
 	 */
 	public Menu switchMenu(final String name){
+		if(name.equals(null)){
+			throw new IllegalArgumentException("The menu name can not he null");
+		}
+		if(name.trim().isEmpty()){
+			throw new IllegalArgumentException("The menu name can not be empty.");
+		}
+
 		int n;
 		String paramlist = "";
 		try{
@@ -67,12 +77,14 @@ public class Menu{
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
-					//selectedMenu = this;
 					return selectedMenu.getMother();
 				}
 			}
 
-			//control by id
+			/*
+			 * Changes the men via menu id,
+			 * the input must be longer than one character.
+			 */
 			if(name.length()>1){
 				String nameSub= name.substring(0,2);
 				if(nameSub.equals("id") || nameSub.equals("ID")){
@@ -81,7 +93,6 @@ public class Menu{
 						throw new IllegalArgumentException("ungültige ID");
 					}
 
-					//
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
 							selectedMenu = menu;
@@ -91,7 +102,10 @@ public class Menu{
 				}
 			}
 
-			//control by menu name
+			/*
+			 * Changes the menu vis menu name,
+			 * the input must be longer than 4 characters.
+			 */
 			if(name.length() >= 4){
 				for(Menu menu : menuList){
 					if(menu.getMenuName().equals(name)){
@@ -101,7 +115,7 @@ public class Menu{
 				}
 			}
 
-			//control by sub menu position
+			//Changes the menu via sub menu position.
 			int position = Integer.parseInt(name);
 			if(position > 0 && position <= selectedMenu.childrenList.size()){
 				position -= 1;
@@ -180,7 +194,7 @@ public class Menu{
 	}
 
 	/**
-	 * Returns the childrenList.
+	 * Returns the childrenList, witch contains all sub menus.
 	 * @return childrenList
 	 */
 	public ArrayList getChildrenList(){

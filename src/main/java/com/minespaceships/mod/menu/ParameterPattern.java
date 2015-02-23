@@ -3,7 +3,8 @@ package com.minespaceships.mod.menu;
 import java.util.regex.Pattern;
 
 /**
- * 
+ * This class is a utility to detect parameter patterns in
+ * a string.
  * @author ovae.
  * @version 20150222
  */
@@ -27,9 +28,9 @@ public class ParameterPattern {
 	private ParameterPattern(){}
 
 	/**
-	 * 
+	 * Returns true if the command has an parameter.
 	 * @param command
-	 * @return
+	 * @return boolean
 	 */
 	private static boolean hasParams(final String command){
 		return Pattern.matches(word+whitespaces+anyChar, command);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
- * this class displays a menu structure.
+ * This class displays a menu structure.
  * @author ovae.
  * @version 20150221
  */
@@ -18,7 +18,7 @@ public class MenuDisplay {
 	private Menu root;
 
 	/**
-	 * 
+	 * Creates a new MenuDisplay.
 	 */
 	public MenuDisplay(final Menu root, final CustomGuiChat terminal){
 		if(root.equals(null)){
@@ -59,7 +59,7 @@ public class MenuDisplay {
 	}
 
 	/**
-	 * 
+	 * Displays the current selected menu.
 	 * @param command
 	 */
 	public void display(final String command){
@@ -67,6 +67,7 @@ public class MenuDisplay {
 	}
 
 	/**
+	 * Displays the root menu.
 	 * @param menu
 	 */
 	public void displayMain(final Menu menu){

@@ -17,7 +17,6 @@ public class HelpMenu extends Menu implements FunktionalMenu{
 	 */
 	public HelpMenu(String name) {
 		super(name);
-
 	}
 
 	/**
