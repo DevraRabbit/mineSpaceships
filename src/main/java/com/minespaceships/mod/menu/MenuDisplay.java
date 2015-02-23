@@ -63,6 +63,10 @@ public class MenuDisplay {
 	 * @param command
 	 */
 	public void display(final String command){
+		if(command.trim().isEmpty()){
+			terminal.display("unknown command.\nPress 'm' to get back.");
+			return;
+		}
 		terminal.display(preparingOutput(root.switchMenu(command)));
 	}
 
@@ -71,6 +75,9 @@ public class MenuDisplay {
 	 * @param menu
 	 */
 	public void displayMain(final Menu menu){
+		if(menu.equals(null)){
+			throw new IllegalArgumentException("Menu can not be null.");
+		}
 		terminal.display(preparingOutput(menu));
 	}
 }
