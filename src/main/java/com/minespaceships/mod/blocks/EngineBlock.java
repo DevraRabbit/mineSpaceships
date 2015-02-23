@@ -19,6 +19,8 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
@@ -40,6 +42,7 @@ public class EngineBlock extends Block {
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
 		this.setUnlocalizedName("Engine");
         this.setCreativeTab(CreativeTabs.tabMisc);
+        EntityAnimal ea = new EntityCow(null);
 	}
 
 	@Override
