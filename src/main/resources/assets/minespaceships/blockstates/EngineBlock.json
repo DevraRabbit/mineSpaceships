@@ -1,7 +1,7 @@
 {
     "variants": {        
         "facing=up": { "model": "minespaceships:EngineBlockFlipped"},
-        "facing=down": { "model": "minespaceships:EngineBlockFlipped", "x": 180},
+        "facing=down": { "model": "minespaceships:EngineBlockFlipped", "y": 90},
         "facing=north": { "model": "minespaceships:EngineBlock" , "y": 270 },
         "facing=east": { "model": "minespaceships:EngineBlock" },
         "facing=south": { "model": "minespaceships:EngineBlock" , "y": 90 },

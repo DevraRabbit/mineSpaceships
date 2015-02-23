@@ -2,6 +2,7 @@ package com.minespaceships.mod.blocks;
 
 import com.minespaceships.mod.ExampleMod;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockButton;
@@ -67,6 +68,10 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
     	}
     	//returns true to prevent placing a block (which would be the default behavior for rightclicking)
     	return true;
+    }
+    @Override
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){    	
+    	return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
     }
 
     /**
