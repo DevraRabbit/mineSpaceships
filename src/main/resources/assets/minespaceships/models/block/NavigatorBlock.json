@@ -148,7 +148,8 @@
         }
     ],
     "textures": {
-        "colors": "minespaceships:blocks/colors"
+        "colors": "minespaceships:blocks/colors",
+        "particle": "blocks/obsidian"
     },
     "display": {
         "firstperson": {
