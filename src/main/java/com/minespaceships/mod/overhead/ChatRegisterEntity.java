@@ -2,6 +2,9 @@ package com.minespaceships.mod.overhead;
 
 import java.util.regex.*;
 
+import com.example.examplemod.ovae.terminalMenu;
+import com.minespaceships.mod.menu.DefaultMenu;
+import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.mod.spaceship.Turn;
@@ -32,12 +35,16 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	//Attributes
 	private Spaceship ship;
 	private WorldServer remoteWorld;
+
+	private CustomGuiChat terminal;
+	private MenuDisplay menuDisplay;
 	
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
 	
 	public ChatRegisterEntity() {
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
 	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound par1)
 	{
@@ -56,6 +63,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		   ship = new Spaceship(measurements);
 	   }
 	}
+
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
@@ -63,9 +71,23 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public void Activate(EntityPlayer player){
 		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
-		if(player.equals(Minecraft.getMinecraft().thePlayer)){		
+		if(player.equals(Minecraft.getMinecraft().thePlayer)){
+			//initialise the terminal
+			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+			terminal = new CustomGuiChat(player, this);
+			
+			//Initialise a default menu for testing reasons
+			if(!DefaultMenu.getRunBefore()){
+				DefaultMenu.initMenu(terminal);
+			}
+
+			//initialise the menu display.
+			menuDisplay = new MenuDisplay(DefaultMenu.getRootMenu(), terminal);
+
 			//open our console. 
-			Minecraft.getMinecraft().displayGuiScreen(new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos)));
+			Minecraft.getMinecraft().displayGuiScreen(terminal);
+			//Print out the menu in the console.
+			menuDisplay.displayMain(DefaultMenu.getRootMenu());
 		}
 	}
 	public void setRemoteWorld(WorldServer world){
@@ -83,8 +105,11 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	 * @param command
 	 * @param player
 	 */
-	public void onCommand(String command, EntityPlayer player){			
-		System.out.println(pos.toString());
+	public void onCommand(String command, EntityPlayer player){
+		//display the menu.
+		menuDisplay.display(command);
+
+		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
 			player.addChatComponentMessage(new ChatComponentText("I love you!"));
@@ -112,6 +137,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(remoteWorld, this, player, ship);
 		}
+		terminalMenu.onCommand(command, player);
 	}
 
 	public void setShip(Spaceship ship) {

@@ -2,6 +2,8 @@ package com.minespaceships.mod.overhead;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,6 +13,7 @@ import net.minecraft.util.ChatComponentText;
 public class CustomGuiChat extends GuiChat{
 	private EntityPlayer player;
 	private ChatRegisterEntity entity;
+	
 	/**
 	 * Creates a custom GUI that opens a steady interface for the player to communicate with the entity
 	 * @param player
@@ -37,6 +40,7 @@ public class CustomGuiChat extends GuiChat{
 			if(keyCode == 1){
 				//kill the Gui-screen and let minecraft display the normal game
 				this.mc.displayGuiScreen((GuiScreen)null);
+				this.clearChat();
 			}
 			//on Enter
 			else if(keyCode == 28 || keyCode == 156) {
@@ -47,5 +51,28 @@ public class CustomGuiChat extends GuiChat{
 				this.inputField.setText("");
 			}
 		}
+	}
+
+	/**
+	 * Prints a message into the chat console.
+	 * @param message
+	 */
+	public void display(final String message){
+		this.clearChat();
+		this.mc.thePlayer.addChatComponentMessage(new ChatComponentText(message));
+	}
+	
+	/**
+	 * Clears the chat.
+	 */
+	public void clearChat(){
+		this.mc.ingameGUI.getChatGUI().clearChatMessages();
+	}
+	
+	/**
+	 * @return ChatRegisterEntity entity
+	 */
+	public ChatRegisterEntity getChatRegisterEntity(){
+		return entity;
 	}
 }

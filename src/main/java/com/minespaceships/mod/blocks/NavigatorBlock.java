@@ -68,6 +68,7 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
     	//returns true to prevent placing a block (which would be the default behavior for rightclicking)
     	return true;
     }
+
     /**
      * @returns the TileEntity associated with this block. This way Minecraft can register it into the world
      */
