@@ -1,9 +1,13 @@
 package com.minespaceships.mod.spaceship;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Vector;
 
 import javax.vecmath.Vector3d;
 
+import com.google.common.collect.ImmutableList;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
@@ -84,6 +88,12 @@ public class Spaceship {
 		moveTo(addDirection, worldS);
 	}
 	private void moveTo(BlockPos addDirection, World world){
+		//list of positions left to be build
+		Vector<BlockPos> position = new Vector<BlockPos>();
+		//list of positions that need to be removed in revers order to prevent other blocks from cracking
+		Vector<BlockPos> removal = new Vector<BlockPos>();
+		
+		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
@@ -91,48 +101,57 @@ public class Spaceship {
 					BlockPos Pos = new BlockPos(x,y,z);
 					Pos = Pos.add(minPosition);
 					Block block = world.getBlockState(Pos).getBlock();
-					if(block.isFullCube()){
-						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+					if(!block.isAir(world, Pos)){
+						BlockPos nextPos = Pos.add(add);
+						if(block.canPlaceBlockAt(world, nextPos)){
+							//build the buildable block
+							BlockCopier.copyBlock(world, Pos, nextPos);
+							//remember to remove it
+							removal.add(Pos);
+						} else {
+							//remember to buid the Block later
+							position.add(Pos);
+						}
 					}
 				}
 			}
 		}
-		for(int x = 0; x < span.getX(); x++){
-			for(int y = 0; y < span.getY(); y++){
-				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
-					if(!block.isFullCube()){
-						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+		//get through all the unbuildable positions that are left and build them until all have been moved.
+		//also make a safety layer. If after some layers of fragilness the blocks still can't be placed they certainly never will.
+		int i = 0;
+		while(!position.isEmpty() && i < 3){
+			Iterator<BlockPos> posIterator = position.iterator();
+			while(posIterator.hasNext()){
+				BlockPos Pos = posIterator.next();
+				Block block = world.getBlockState(Pos).getBlock();
+				if(!block.isAir(world, Pos)){
+					BlockPos nextPos = Pos.add(add);
+					if(block.canPlaceBlockAt(world, nextPos)){
+						BlockCopier.copyBlock(world, Pos, nextPos);
+						posIterator.remove();
+						//again: remember to remove the Block
+						removal.add(Pos);
 					}
 				}
 			}
+			i++;
 		}
-		for(int x = 0; x < span.getX(); x++){
-			for(int y = 0; y < span.getY(); y++){
-				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
-					if(!block.isFullCube()){
-						BlockCopier.removeBlock(world, Pos);
-					}
-				}
+		//if there are blocks left
+		if(i == 3){
+			for(BlockPos Pos : position){
+				//force placement
+				BlockPos nextPos = Pos.add(add);
+				BlockCopier.copyBlock(world, Pos, nextPos);
+				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
+				removal.insertElementAt(Pos, 0);
 			}
 		}
-		for(int x = 0; x < span.getX(); x++){
-			for(int y = 0; y < span.getY(); y++){
-				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
-					if(block.isFullCube()){
-						BlockCopier.removeBlock(world, Pos);
-					}
-				}
-			}
+		//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+		while(reverseRemoval.hasPrevious()){
+			BlockCopier.removeBlock(world, reverseRemoval.previous());
 		}
+		//Render the ship, move the entities and move the ships measurements
 		world.markBlockRangeForRenderUpdate(minPosition, maxPosition);  
 		moveEntities(addDirection);
 		moveMeasurements(addDirection);
