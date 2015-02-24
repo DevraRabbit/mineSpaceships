@@ -5,6 +5,7 @@ import java.util.regex.*;
 import com.example.examplemod.ovae.terminalMenu;
 import com.minespaceships.mod.menu.DefaultMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
+import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.mod.spaceship.Turn;
@@ -43,6 +44,9 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	
 	public ChatRegisterEntity() {
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		if(worldObj == remoteWorld){
+			Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+		}
 	}
 
 	@Override
@@ -142,10 +146,25 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 
 	public void setShip(Spaceship ship) {
 		this.ship = ship;
-	}
-	
+	}	
 	public Spaceship getShip() {
 		return ship;
+	}
+	public void createShip(int[] originMeasurements){
+		this.ship = new Spaceship(originMeasurements);
+		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+	}
+	public void createShip(BlockPos minPos, BlockPos maxPos, WorldServer world){
+		this.ship = new Spaceship(minPos, maxPos, world);
+		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+	}
+	public void createShip(BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
+		this.ship = new Spaceship(minPosition, dimX, dimY, dimZ, worldS);
+		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+	}
+	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
+		this.ship = new Spaceship(minSpan, origin, maxSpan, worldS);
+		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
 	}
 	@Override
 	public void moveInformation(IMoveable target) {

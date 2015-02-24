@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -31,26 +33,51 @@ public class Spaceship {
 	private BlockPos maxPosition;
 	private BlockPos span;
 	private BlockPos origin;
-	private WorldServer worldS;
-	
+	private WorldServer worldS;	
+	private Vector<ChatRegisterEntity> navigators;
 	
 	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
 		this.worldS = worldS;
+		initializeBase();
 	}
 	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
 		BlockPos recSpan = new BlockPos(dimX, dimY, dimZ);
 		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
 		this.worldS = worldS;
+		initializeBase();
 	}
 	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
 		this.worldS = worldS;
+		initializeBase();
 	}
 	public Spaceship(int[] originMeasurement){
 		readOriginMeasurementArray(originMeasurement);
 		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		initializeBase();
+	}
+	private void initializeBase(){
+		navigators = new Vector<ChatRegisterEntity>();
+		Shipyard.getShipyard().addShip(this);
+	}
+	public BlockPos getMinPosition(){
+		return minPosition;
+	}
+	public BlockPos getMaxPosition(){
+		return maxPosition;
+	}
+	public void addNavigator(ChatRegisterEntity nav){
+		if(!navigators.contains(nav)){
+			navigators.add(nav);
+		}
+	}
+	public void removeNavigator(BlockPos entity){
+		navigators.remove(entity);
+	}
+	public int getNavigatorCount(){
+		return navigators.size();
 	}
 	public int[] getOriginMeasurementArray(){
 		BlockPos minSpan = minPosition.subtract(origin);
@@ -154,7 +181,11 @@ public class Spaceship {
 		//Render the ship, move the entities and move the ships measurements
 		world.markBlockRangeForRenderUpdate(minPosition, maxPosition);  
 		moveEntities(addDirection);
-		moveMeasurements(addDirection);
+		for(ChatRegisterEntity ent : navigators){
+			if(ent.getShip() != null){
+				ent.getShip().moveMeasurements(addDirection);
+			}
+		}
 	}
 	private void moveMeasurements(BlockPos addDirection){
 		minPosition = minPosition.add(addDirection);
