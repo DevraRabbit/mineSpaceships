@@ -5,6 +5,7 @@ import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
 import com.minespaceships.mod.blocks.ShieldBlock;
+import com.minespaceships.mod.events.ClickBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
@@ -43,6 +44,10 @@ public class ExampleMod
     	GameRegistry.registerBlock(new EngineBlock(), "EngineBlock");
     	GameRegistry.registerBlock(new ShieldBlock(), "ShieldBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
+    	
+    	// Register event listener
+    	// http://www.minecraftforum.net/forums/archive/tutorials/931112-forge-4-x-events-howto
+    	MinecraftForge.EVENT_BUS.register(new BlockEvent());
     }
     
     @EventHandler
