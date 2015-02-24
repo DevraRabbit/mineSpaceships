@@ -25,6 +25,17 @@ import net.minecraft.world.WorldServer;
 public class SpaceshipCommands {
 
 	public static void init(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
+		if(command.equals("init auto")){
+			try {
+				ChatRegisterEntity ent = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()));
+				if(ent != null){
+					ent.createShip(commandBlock.getPos(), worldObj);
+				}
+			} catch (Exception e) {
+				player.addChatComponentMessage(new ChatComponentText(e.toString()));
+			}
+			return;
+		}
 		command = command.substring("init".length()).replaceAll("\\s", "");
 
 		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)to([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
@@ -37,7 +48,7 @@ public class SpaceshipCommands {
 			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
 		} else {
 			player.addChatComponentMessage(new ChatComponentText("init: Error processing intput"));
-			player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;#"));
+			player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;# or try <init auto>"));
 		}
 	}
 	
