@@ -25,7 +25,7 @@ public class SpaceshipMath {
 	public BlockMap getConnectedPositions(BlockPos pos, World worldIn, int maxSize){
 		BlockMap blockMap = new BlockMap();
 		BlockPos origin = pos;
-		blockMap.addCoordinate(pos.subtract(origin));		
+		blockMap.add(pos.subtract(origin));		
 		Vector<BlockPos> neighbors = new Vector<BlockPos>();
 		neighbors.add(pos.subtract(origin));
 		int[] safety = {maxSize};
@@ -54,7 +54,7 @@ public class SpaceshipMath {
 							BlockPos neighbor = pos.add(x,y,z);
 							BlockPos originNeighbor = neighbor.subtract(origin);
 							if(!blockMap.contains(originNeighbor) && !worldIn.isAirBlock(neighbor)){
-								blockMap.addCoordinate(originNeighbor);
+								blockMap.add(originNeighbor);
 								neighbors.addElement(neighbor);
 							}
 						}

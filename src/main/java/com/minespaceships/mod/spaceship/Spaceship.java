@@ -235,11 +235,19 @@ public class Spaceship {
 		return this.worldS;
 	}
 	
-	public Boolean contains(BlockPos pos) {
+	public Boolean containsBlock(final BlockPos pos) {
 		return this.blockmap.contains(pos);
 	}
 	
-	public void remove(BlockPos pos) {
+	public void removeBlock(final BlockPos pos) {
 		this.blockmap.remove(pos);
+	}
+	
+	public void addBlock(final BlockPos pos) {
+		this.blockmap.add(pos);
+	}
+	
+	public boolean isNeighboringBlock(final BlockPos pos) {
+		return this.blockmap.isNeighbor(pos);
 	}
 }
