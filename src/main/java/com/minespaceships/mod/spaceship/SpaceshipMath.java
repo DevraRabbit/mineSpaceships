@@ -9,20 +9,7 @@ import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
 public class SpaceshipMath {
-	public static boolean isPointInShip(BlockPos pos, Spaceship ship){
-		BlockPos minPos = ship.getMinPosition();
-		BlockPos maxPos = ship.getMaxPosition();
-		if(minPos.getX() <= pos.getX() &&
-				minPos.getY() <= pos.getY() &&
-				minPos.getZ() <= pos.getZ() &&
-				maxPos.getX() > pos.getX() &&
-				maxPos.getY() > pos.getY() &&
-				maxPos.getZ() > pos.getZ()){
-			return true;
-		}
-		return false;
-	}	
-	public BlockMap getConnectedPositions(BlockPos pos, World worldIn, int maxSize){
+	public static BlockMap getConnectedPositions(BlockPos pos, World worldIn, int maxSize){
 		BlockMap blockMap = new BlockMap();
 		BlockPos origin = pos;
 		blockMap.addCoordinate(pos.subtract(origin));		
@@ -44,7 +31,7 @@ public class SpaceshipMath {
 		}
 		
 	}
-	private Vector<BlockPos> writeValidNeighbors(BlockPos pos, BlockPos origin, World worldIn, BlockMap blockMap, Vector<BlockPos> neighbors, int[] maxSize){
+	private static Vector<BlockPos> writeValidNeighbors(BlockPos pos, BlockPos origin, World worldIn, BlockMap blockMap, Vector<BlockPos> neighbors, int[] maxSize){
 		maxSize[0]--;
 		if(maxSize[0] >= 0){
 			for(int x = -1; x < 2; x++){

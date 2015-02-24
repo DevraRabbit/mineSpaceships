@@ -25,6 +25,7 @@ public class Shipyard {
 	}
 	
 	public void addShip(Spaceship ship){
+		/*
 		if(ship != null){
 			if(!ships.contains(ship)){
 				ships.add(ship);
@@ -38,15 +39,18 @@ public class Shipyard {
 				}
 			}
 		}
+		*/
 	}
 	
 	public void addNavigator(ChatRegisterEntity entity){
+		/*
 		navigators.add(entity);
 		for(Spaceship ship : ships){
 			if(SpaceshipMath.isPointInShip(entity.getPos(), ship)){
 				ship.addNavigator(entity);
 			}
 		}
+		*/
 	}
 	
 	public void removeNavigator(BlockPos entity){
