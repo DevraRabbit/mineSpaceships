@@ -47,17 +47,24 @@ public class Spaceship {
 	@Deprecated
 	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
 		BlockPos recSpan = new BlockPos(dimX, dimY, dimZ);
-		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
 		this.worldS = worldS;
+		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
 		initializeBase();
 	}
 	@Deprecated
 	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
-		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
 		this.worldS = worldS;
+		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
 		initializeBase();
 	}	
+	@Deprecated
+	public Spaceship(int[] originMeasurement){
+		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		readOriginMeasurementArray(originMeasurement);
+		initializeBase();
+	}
+	
 	public Spaceship(BlockPos initial, WorldServer worldS) throws Exception{
 		blockMap = SpaceshipMath.getConnectedPositions(initial, Minecraft.getMinecraft().theWorld, maxShipSize);
 		if(blockMap == null){
@@ -69,14 +76,8 @@ public class Spaceship {
 	public Spaceship(BlockMap blocks, WorldServer worldS){
 		blockMap = blocks;
 		this.worldS = worldS;
-	}
+	}	
 	
-	
-	public Spaceship(int[] originMeasurement){
-		readOriginMeasurementArray(originMeasurement);
-		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		initializeBase();
-	}
 	
 	private void initializeBase(){
 		navigators = new Vector<ChatRegisterEntity>();
@@ -127,7 +128,9 @@ public class Spaceship {
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
 				for(int z = 0; z < span.getZ(); z++){
-					blockMap.addCoordinate(new BlockPos(x,y,z).add(minPos));
+					if(!worldS.isAirBlock(new BlockPos(x,y,z).add(minPos))){
+						blockMap.addCoordinate(new BlockPos(x,y,z).add(minPos));
+					}
 				}
 			}
 		}

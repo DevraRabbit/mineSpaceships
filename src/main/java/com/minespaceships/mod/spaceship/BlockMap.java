@@ -25,6 +25,7 @@ public class BlockMap {
 	}
 	public void addCoordinate(BlockPos pos){
 		map.put(pos.subtract(origin), true);
+		resize(pos.subtract(origin));
 	}
 	public boolean contains(BlockPos pos){
 		return map.containsKey(pos.subtract(origin));
@@ -33,10 +34,10 @@ public class BlockMap {
 		map.remove(pos.subtract(origin));
 	}
 	public BlockPos getMaxPos(){
-		return maxPos;
+		return maxPos.add(origin);
 	}
 	public BlockPos getMinPos(){
-		return minPos;
+		return minPos.add(origin);
 	}
 	public ArrayList<BlockPos> getPositions(){
 		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
@@ -45,5 +46,25 @@ public class BlockMap {
 			positions.add(pos.add(origin));
 		}
 		return positions;
+	}
+	private void resize(BlockPos pos){
+		if(maxPos.getX() < pos.getX()){
+			maxPos = new BlockPos(pos.getX(), maxPos.getY(), maxPos.getZ());
+		}
+		if(maxPos.getY() < pos.getY()){
+			maxPos = new BlockPos(maxPos.getX(), pos.getY(), maxPos.getZ());
+		}
+		if(maxPos.getZ() < pos.getZ()){
+			maxPos = new BlockPos(maxPos.getX(), maxPos.getY(), pos.getZ());
+		}
+		if(minPos.getX() > pos.getX()){
+			minPos = new BlockPos(pos.getX(), minPos.getY(), minPos.getZ());
+		}
+		if(minPos.getY() > pos.getY()){
+			minPos = new BlockPos(minPos.getX(), pos.getY(), minPos.getZ());
+		}
+		if(minPos.getZ() > pos.getZ()){
+			minPos = new BlockPos(minPos.getX(), minPos.getY(), pos.getZ());
+		}
 	}
 }
