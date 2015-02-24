@@ -5,7 +5,7 @@ import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
 import com.minespaceships.mod.blocks.ShieldBlock;
-import com.minespaceships.mod.events.ClickBlock;
+import com.minespaceships.mod.events.BlockEvent;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.block.Block;
