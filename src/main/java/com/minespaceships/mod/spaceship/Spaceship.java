@@ -35,50 +35,61 @@ public class Spaceship {
 	private BlockPos origin;
 	private WorldServer worldS;	
 	private Vector<ChatRegisterEntity> navigators;
+	private BlockMap blockmap;
 	
 	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
 		this.worldS = worldS;
 		initializeBase();
 	}
+	
 	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
 		BlockPos recSpan = new BlockPos(dimX, dimY, dimZ);
 		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
 		this.worldS = worldS;
 		initializeBase();
 	}
+	
 	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
 		this.worldS = worldS;
 		initializeBase();
 	}
+	
 	public Spaceship(int[] originMeasurement){
 		readOriginMeasurementArray(originMeasurement);
 		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
 		initializeBase();
 	}
+	
 	private void initializeBase(){
 		navigators = new Vector<ChatRegisterEntity>();
 		Shipyard.getShipyard().addShip(this);
 	}
+	
 	public BlockPos getMinPosition(){
 		return minPosition;
 	}
+	
 	public BlockPos getMaxPosition(){
 		return maxPosition;
 	}
+	
 	public void addNavigator(ChatRegisterEntity nav){
 		if(!navigators.contains(nav)){
 			navigators.add(nav);
 		}
 	}
+	
 	public void removeNavigator(BlockPos entity){
 		navigators.remove(entity);
 	}
+	
 	public int getNavigatorCount(){
 		return navigators.size();
 	}
+	
 	public int[] getOriginMeasurementArray(){
 		BlockPos minSpan = minPosition.subtract(origin);
 		BlockPos maxSpan = maxPosition.subtract(origin);
@@ -87,6 +98,7 @@ public class Spaceship {
 				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
 		return a;
 	}
+	
 	public void readOriginMeasurementArray(int[] array){
 		try {
 			BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
@@ -107,13 +119,16 @@ public class Spaceship {
 		span = ((BlockPos) maxPos).subtract(minPos);
 		origin = Vec3Op.scale(span, 0.5);
 	}
+	
 	public void setTarget(BlockPos position){
 		moveTo(position.subtract(origin));
 	}
+	
 	public void moveTo(BlockPos addDirection){
 		//copyTo(addDirection, worldC);
 		moveTo(addDirection, worldS);
 	}
+	
 	private void moveTo(BlockPos addDirection, World world){
 		//list of positions left to be build
 		Vector<BlockPos> position = new Vector<BlockPos>();
@@ -187,11 +202,13 @@ public class Spaceship {
 			}
 		}
 	}
+	
 	private void moveMeasurements(BlockPos addDirection){
 		minPosition = minPosition.add(addDirection);
 		maxPosition = maxPosition.add(addDirection);
 		origin = origin.add(addDirection);
 	}
+	
 	private void moveEntities(BlockPos addDirection){
 		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(minPosition, maxPosition));
 		for(Entity ent : entities){			
@@ -212,5 +229,17 @@ public class Spaceship {
 		sb.append("\norigin: " + origin.toString());
 		sb.append("\nworldServer: " + worldS == null ? "Not Known.\n" : "Known\n");
 		return sb.toString();
+	}
+	
+	public World getWorld() {
+		return this.worldS;
+	}
+	
+	public Boolean contains(BlockPos pos) {
+		return this.blockmap.contains(pos);
+	}
+	
+	public void remove(BlockPos pos) {
+		this.blockmap.remove(pos);
 	}
 }

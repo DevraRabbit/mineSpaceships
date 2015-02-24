@@ -3,6 +3,7 @@ package com.minespaceships.mod.spaceship;
 import java.util.Vector;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
@@ -15,12 +16,14 @@ public class Shipyard {
 		ships = new Vector<Spaceship>();
 		navigators = new Vector<ChatRegisterEntity>();
 	}
+	
 	public static Shipyard getShipyard(){
 		if(singleton == null){
 			singleton = new Shipyard();
 		}
 		return singleton;
 	}
+	
 	public void addShip(Spaceship ship){
 		if(ship != null){
 			if(!ships.contains(ship)){
@@ -36,6 +39,7 @@ public class Shipyard {
 			}
 		}
 	}
+	
 	public void addNavigator(ChatRegisterEntity entity){
 		navigators.add(entity);
 		for(Spaceship ship : ships){
@@ -44,11 +48,25 @@ public class Shipyard {
 			}
 		}
 	}
+	
 	public void removeNavigator(BlockPos entity){
 		for(Spaceship ship : ships){
 			ship.removeNavigator(entity);
 			if(ship.getNavigatorCount() == 0){
 				ships.remove(ship);
+			}
+		}
+	}
+	
+	public void blockBroken(BlockPos pos, World world) {
+		if (ships.isEmpty()) return;
+		
+		for (Spaceship ship: ships) {
+			if (ship.getWorld() == world) {
+				if (ship.contains(pos)) {
+					ship.remove(pos);
+					break;
+				}
 			}
 		}
 	}
