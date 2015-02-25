@@ -12,7 +12,7 @@ public class Shipyard {
 	private Vector<ChatRegisterEntity> navigators;
 	private static Shipyard singleton;
 	
-	protected Shipyard(){
+	protected Shipyard() {
 		ships = new Vector<Spaceship>();
 		navigators = new Vector<ChatRegisterEntity>();
 	}
@@ -62,6 +62,11 @@ public class Shipyard {
 		}
 	}
 	
+	/**
+	 * Called to handle actions on block broken
+	 * @param pos BlockPos
+	 * @param world World
+	 */
 	public void blockBroken(final BlockPos pos, final World world) {
 		if (ships.isEmpty()) return;
 		
@@ -75,6 +80,11 @@ public class Shipyard {
 		}
 	}
 	
+	/**
+	 * Called to handle actions on block placed
+	 * @param pos BlockPos
+	 * @param world World
+	 */
 	public void blockPlaced(final BlockPos pos, final World world) {
 		if (ships.isEmpty()) return;
 		

@@ -28,7 +28,7 @@ public class BlockEvent {
 	// BreakEvent
 	// http://www.minecraftforge.net/wiki/Event_Reference#BreakEvent
 	
-	/*
+	/**
 	 * Calls blockBroken for placed block,
 	 * to remove the block from ships block list if member of a ship
 	 */
@@ -41,7 +41,7 @@ public class BlockEvent {
 		Shipyard.getShipyard().blockBroken(pos, world);
 	}
 	
-	/*
+	/**
 	 * Calls blockPlaced to add block to ships block list if placed
 	 * block is next to a ship
 	 */
@@ -54,11 +54,11 @@ public class BlockEvent {
 		Shipyard.getShipyard().blockPlaced(pos, world);
 	}
 	
-	 /*
-	  * Calls blockPlaced to add block to ships block list if placed
-	  * block is next to a ship
-	  * see http://www.minecraftforge.net/forum/index.php?topic=24376.0
-	  */
+	/**
+	 * Calls blockPlaced to add block to ships block list if placed
+	 * block is next to a ship
+	 * see http://www.minecraftforge.net/forum/index.php?topic=24376.0
+	 */
 	@SubscribeEvent
 	public void onMultiPlaceEvent(final MultiPlaceEvent event) {
 		if (event.isCanceled()) return;
@@ -68,7 +68,7 @@ public class BlockEvent {
 		Shipyard.getShipyard().blockPlaced(pos, world);
 	}
 	
-	/*
+	/**
 	 * Calls blockBroken for each block affected by explosion,
 	 * to remove the blocks from ships block list if member of a ship
 	 */
