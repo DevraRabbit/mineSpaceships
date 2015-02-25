@@ -38,8 +38,18 @@ public class DefaultMenu {
 
 	//Menu which contains the ability to set the spaceship to a target position.
 	private static Menu shipToTargetMenu;
-	
+
+	//
 	private static Menu shipToTargetFunc;
+
+	//
+	private static Menu createShip;
+
+	//
+	private static Menu phaserMenu;
+
+	//
+	private static Menu torpedoMenu;
 
 	/**
 	 * Initialise the menu structure.
@@ -52,14 +62,18 @@ public class DefaultMenu {
 
 		//initialise all menus.
 		root = new Menu("Spaceship console");
-		navigation = new Menu("spaceshipnavigation");
+		createShip = new CreateShipMenu("create spaceship",terminal);
+		navigation = new Menu("spaceship navigation");
 		armour = new Menu("weapons");
 		protection = new Menu("protection");
 		help = new HelpMenu("help");
 		shield = new Menu("shield");
-		activateShield = new ShieldActivateMenu(">activate", terminal);
-		disableShield = new ShieldDisableMenu(">disable", terminal);
+		activateShield = new ShieldActivateMenu("activate shield", terminal);
+		disableShield = new ShieldDisableMenu("disable shield", terminal);
 		shipToTargetMenu = new Menu("to target");
+		phaserMenu = new Menu("phaser");
+		torpedoMenu = new Menu("torpedo");
+
 		String out ="";
 		out+="  To target needs three parameter x,y and z\n"
 		+"    please enter them in the following form,\n"
@@ -68,10 +82,13 @@ public class DefaultMenu {
 		shipToTargetFunc = new ToTargetFunktionalMenu(out, terminal);
 
 		//create the menu structure.
+		root.addSubMenu(createShip);
 		root.addSubMenu(navigation);
 			navigation.addSubMenu(shipToTargetMenu);
 			shipToTargetMenu.addSubMenu(shipToTargetFunc);
 		root.addSubMenu(armour);
+			armour.addSubMenu(phaserMenu);
+			armour.addSubMenu(torpedoMenu);
 		root.addSubMenu(protection);
 		root.addSubMenu(help);
 			protection.addSubMenu(shield);

@@ -41,7 +41,7 @@ public class MenuDisplay {
 	private String preparingOutput(final Menu menu, final String command){
 		String out = "";
 		if(menu == null){
-			return "unknown command.\nPress 'm' to get back.";
+			return EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.";
 		}
 		if(menu instanceof FunctionalMenu){
 			return ((FunctionalMenu)menu).activate(command);

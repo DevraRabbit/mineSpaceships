@@ -97,6 +97,9 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public void setRemoteWorld(WorldServer world){
 		remoteWorld = world;
 	}
+	public WorldServer getRemoteWorld(){
+		return remoteWorld;
+	}
 	/**
 	 * Executes the given command, regardless who committed it.
 	 * @param command

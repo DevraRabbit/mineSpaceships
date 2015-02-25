@@ -44,7 +44,6 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 				x = Double.valueOf(matcher.group(1));
 				y = Double.valueOf(matcher.group(2));
 				z = Double.valueOf(matcher.group(3));
-				this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
 
 				try{
 					Spaceship ship = this.terminal.getChatRegisterEntity().getShip();

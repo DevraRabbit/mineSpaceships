@@ -1,5 +1,7 @@
 package com.minespaceships.mod.menu;
 
+import net.minecraft.util.EnumChatFormatting;
+
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
@@ -25,17 +27,25 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 	@Override
 	public String activate(String command) {
 		String out="";
-		out+="]--HELP--[\n\n";
-		out+="  Menu structure:\n";
-		out+="    ]--Menuname (menu id)--[\n";
-		out+="        [position] sub menu name (sub menu id)\n";
-		out+='\n';
-		out+="  You can navigate in three different ways: \n";
-		out+="    -by the name of the Menu \n";
-		out+="    -by id and the number in brakets e.g. id2 \n";
-		out+="    -by the number for the submenu order.\n";
-		out+="\n   To get back in the parent menu, you can either\n";
-		out+="    enter 'm','up' or 'parent'.\n\n";
+		out+=EnumChatFormatting.GOLD+" "+EnumChatFormatting.BOLD+"]--HELP--[\n\n"
+		+"  "+EnumChatFormatting.YELLOW+"Menu structure:\n"
+		+"    ]--Menuname (menu id)--[\n"
+		+"        [position] sub menu name (sub menu id)\n"
+		+'\n'
+		+"  "+EnumChatFormatting.YELLOW+"Menu navigation:\n"
+		+"   You can navigate in three different ways: \n"
+		+"    -by the name of the Menu \n"
+		+"    -by id and the number in brakets e.g. id2 \n"
+		+"    -by the number for the submenu order.\n"
+		+'\n'
+		+"  "+EnumChatFormatting.YELLOW+"Menu colours:\n"
+		+"    -Oragne: \n"
+		+"    -White : \n"
+		+"    -Green:\n"
+		+"    -Red: \n"
+		+'\n'
+		+EnumChatFormatting.RED+"\n   To get back in the parent menu, you can either\n"
+		+EnumChatFormatting.RED+"    enter 'm','up' or 'parent'.\n\n";
 		return out;
 	}
 
