@@ -49,7 +49,7 @@ public class MenuDisplay {
 
 		root.setSelectedMenu(menu);
 		//add the menu name
-		out += EnumChatFormatting.BOLD.GOLD+"]--"+(menu.getMenuName().toUpperCase())+" ("+menu.getMenuID()+")--[\n\n";
+		out += EnumChatFormatting.GOLD+" "+EnumChatFormatting.BOLD+"]--"+(menu.getMenuName().toUpperCase())+" ("+menu.getMenuID()+")--[\n\n";
 		//add all sub menus to the string.
 		int position = 1;
 		ArrayList<Menu> list = menu.getChildrenList();
