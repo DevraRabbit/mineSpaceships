@@ -31,7 +31,7 @@ public class BlockMap {
 		for(int x = -1; x < 2; x++){
 			for(int y = -1; y < 2; y++){
 				for(int z = -1; z < 2; z++){
-					if(x != 0 && y != 0 && z != 0){
+					if(x != 0 || y != 0 || z != 0){
 						BlockPos neighbor = pos.add(x,y,z);
 						if (this.contains(neighbor)) {
 							return true;
