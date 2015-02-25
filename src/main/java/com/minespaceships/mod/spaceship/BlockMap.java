@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
@@ -20,29 +21,37 @@ public class BlockMap {
 		minPos = new BlockPos(0,0,0);
 		origin = new BlockPos(0,0,0);
 	}
+	
 	public BlockPos getOrigin(){
 		return origin;
 	}
+	
 	public void setOrigin(BlockPos pos){
 		origin = pos;
 	}
+	
 	public void add(BlockPos pos){
 		map.put(pos.subtract(origin), true);
 		resize(pos.subtract(origin));
 	}
+	
 	public boolean contains(BlockPos pos){
 		return map.containsKey(pos.subtract(origin));
 	}
+	
 	public void remove(BlockPos pos, World world){
 		map.remove(pos.subtract(origin));
 		impendEdges(pos.subtract(origin), world);
 	}
+	
 	public BlockPos getMaxPos(){
 		return maxPos.add(origin);
 	}
+	
 	public BlockPos getMinPos(){
 		return minPos.add(origin);
 	}
+	
 	public ArrayList<BlockPos> getPositions(){
 		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
 		Set<BlockPos> keys = map.keySet();
@@ -51,6 +60,7 @@ public class BlockMap {
 		}
 		return positions;
 	}
+	
 	private void resize(BlockPos pos){
 		if(maxPos.getX() < pos.getX()){
 			maxPos = new BlockPos(pos.getX(), maxPos.getY(), maxPos.getZ());
@@ -70,7 +80,8 @@ public class BlockMap {
 		if(minPos.getZ() > pos.getZ()){
 			minPos = new BlockPos(minPos.getX(), minPos.getY(), pos.getZ());
 		}
-	}	
+	}
+	
 	private void impendEdges(BlockPos pos, World world){
 		BlockPos span = maxPos.subtract(minPos);
 		if(pos.getX() == maxPos.getX()){
@@ -101,6 +112,7 @@ public class BlockMap {
 			}
 		}
 	}
+	
 	private boolean otherInYZPane(int index, World world){
 		BlockPos span = maxPos.subtract(minPos);
 		for(int y = 0; y < span.getY(); y++){
@@ -113,6 +125,7 @@ public class BlockMap {
 		}
 		return false;
 	}
+	
 	private boolean otherInXZPane(int index, World world){
 		BlockPos span = maxPos.subtract(minPos);
 		for(int x = 0; x < span.getX(); x++){
@@ -125,6 +138,7 @@ public class BlockMap {
 		}
 		return false;
 	}
+	
 	private boolean otherInXYPane(int index, World world){
 		BlockPos span = maxPos.subtract(minPos);
 		for(int x = 0; x < span.getX(); x++){
@@ -138,6 +152,10 @@ public class BlockMap {
 		return false;
 	}
 	
+	/**
+	 * Checks if block is next to the ship
+	 * @param BlockPos position of block
+	 */
 	public boolean isNeighbor(final BlockPos pos) {
 		for(int x = -1; x < 2; x++){
 			for(int y = -1; y < 2; y++){
@@ -145,13 +163,14 @@ public class BlockMap {
 					if(x != 0 || y != 0 || z != 0){
 						BlockPos neighbor = pos.add(x,y,z);
 						if (this.contains(neighbor)) {
+							Minecraft.getMinecraft().thePlayer.sendChatMessage("true");
 							return true;
 						}
 					}
 				}
 			}
 		}
-
+		Minecraft.getMinecraft().thePlayer.sendChatMessage("false");
 		return false;
 	}
 }

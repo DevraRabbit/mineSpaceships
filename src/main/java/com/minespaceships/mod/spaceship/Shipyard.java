@@ -13,7 +13,7 @@ public class Shipyard {
 	private Vector<ChatRegisterEntity> navigators;
 	private static Shipyard singleton;
 	
-	protected Shipyard(){
+	protected Shipyard() {
 		ships = new Vector<Spaceship>();
 		navigators = new Vector<ChatRegisterEntity>();
 	}
@@ -61,6 +61,11 @@ public class Shipyard {
 		}
 	}
 	
+	/**
+	 * Called to handle actions on block broken
+	 * @param pos BlockPos
+	 * @param world World
+	 */
 	public void blockBroken(final BlockPos pos, final World world) {
 		if (ships.isEmpty()) return;
 		
@@ -74,6 +79,11 @@ public class Shipyard {
 		}
 	}
 	
+	/**
+	 * Called to handle actions on block placed
+	 * @param pos BlockPos
+	 * @param world World
+	 */
 	public void blockPlaced(final BlockPos pos, final World world) {
 		if (ships.isEmpty()) return;
 		
@@ -86,5 +96,28 @@ public class Shipyard {
 				}
 			}
 		}		
+	}
+	
+	/**
+	 * Return debugging information to player
+	 * @param pos BlockPos
+	 * @param world World
+	 */
+	public void getBlockInfo(final BlockPos pos, final World world) {
+		if (ships.isEmpty()) {
+			Minecraft.getMinecraft().thePlayer.sendChatMessage("false - no ships existing");
+			return;
+		}
+		
+		for (Spaceship ship: ships) {
+			if (ship.getWorld() == world) {
+				if (ship.containsBlock(pos)) {
+					Minecraft.getMinecraft().thePlayer.sendChatMessage("block part of \""+ship.toString()+"\"");
+					return;
+				}
+			}
+		}
+		
+		Minecraft.getMinecraft().thePlayer.sendChatMessage("block not part of a ship");
 	}
 }
