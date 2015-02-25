@@ -131,7 +131,7 @@ public class Spaceship {
 			for(int y = 0; y < span.getY(); y++){
 				for(int z = 0; z < span.getZ(); z++){
 					if(!worldS.isAirBlock(new BlockPos(x,y,z).add(minPos))){
-						blockMap.addCoordinate(new BlockPos(x,y,z).add(minPos));
+						blockMap.add(new BlockPos(x,y,z).add(minPos));
 					}
 				}
 			}
@@ -241,11 +241,19 @@ public class Spaceship {
 		return this.worldS;
 	}
 	
-	public Boolean contains(BlockPos pos) {
+	public Boolean containsBlock(BlockPos pos) {
 		return this.blockMap.contains(pos);
 	}
 	
-	public void remove(BlockPos pos) {
-		this.blockMap.remove(pos);
+	public void removeBlock(BlockPos pos) {
+		this.blockMap.remove(pos, Minecraft.getMinecraft().theWorld);
+	}
+	
+	public void addBlock(final BlockPos pos) {
+		this.blockMap.add(pos);
+	}
+	
+	public boolean isNeighboringBlock(final BlockPos pos) {
+		return this.blockMap.isNeighbor(pos);
 	}
 }
