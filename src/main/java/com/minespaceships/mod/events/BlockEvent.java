@@ -19,7 +19,7 @@ public class BlockEvent {
 	//public void onHarvestDropsEvent(HarvestDropsEvent event) {
 	//	
 	//}
-	
+	// Minecraft.getMinecraft().player.sendMessage
 	// BreakEvent
 	// http://www.minecraftforge.net/wiki/Event_Reference#BreakEvent
 	@SubscribeEvent
