@@ -8,7 +8,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author ovae.
  * @version 20150221
  */
-public class HelpMenu extends Menu implements FunktionalMenu{
+public class HelpMenu extends Menu implements FunctionalMenu{
 
 	/**
 	 * Help menu constructor, creates an help menu.
@@ -23,7 +23,7 @@ public class HelpMenu extends Menu implements FunktionalMenu{
 	 * 
 	 */
 	@Override
-	public String activate(String paramlist) {
+	public String activate(String command) {
 		String out="";
 		out+="]--HELP--[\n\n";
 		out+="  Menu structure:\n";

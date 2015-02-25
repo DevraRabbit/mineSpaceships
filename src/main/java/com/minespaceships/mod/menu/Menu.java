@@ -60,7 +60,7 @@ public class Menu{
 	 * Returns the menu in where you are currently in.
 	 * Returns {@code null} if the input was not and id, menu position or the menu name.
 	 */
-	public Menu switchMenu(final String name){
+	public Menu switchMenu(String name){
 		if(name.equals(null)){
 			throw new IllegalArgumentException("The menu name can not he null");
 		}
@@ -69,16 +69,20 @@ public class Menu{
 		}
 
 		int n;
-		String paramlist = "";
 		try{
-			//Check if there are parameters, if there are some the a
-			paramlist = areParameterExistend(name);
-
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
 				if(selectedMenu != null){
 					return selectedMenu.getMother();
 				}
+			}
+
+			//For special menus with parameters
+			if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
+				FunctionalParamMenu menu = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
+				menu.activate(name);
+				selectedMenu =((Menu) menu).getMother().getMother();
+				return ((Menu) menu).getMother().getMother();
 			}
 
 			/*
@@ -134,18 +138,6 @@ public class Menu{
 	}
 
 	/**
-	 * Checks if parameters are available.
-	 * @param command
-	 * @return parameter string
-	 */
-	private String areParameterExistend(final String command){
-		String out ="";
-		Pattern.matches("(\\w\\s)*",command);
-		
-		return out;
-	}
-
-	/**
 	 * Adds a menu to the childrenList of this menu.
 	 * @param menu
 	 */
@@ -173,7 +165,7 @@ public class Menu{
 	 * Returns the mother menu.
 	 * @return motherMenu
 	 */
-	private Menu getMother(){
+	public Menu getMother(){
 		return motherMenu;
 	}
 

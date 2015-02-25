@@ -106,6 +106,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
+		//command = command.toLowerCase();
 		//display the menu.
 		menuDisplay.display(command);
 

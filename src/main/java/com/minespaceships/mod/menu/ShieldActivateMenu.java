@@ -7,7 +7,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author ovae.
  * @version 20150221
  */
-public class ShieldActivateMenu extends Menu implements FunktionalMenu{
+public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 	
 	private CustomGuiChat terminal;
 	

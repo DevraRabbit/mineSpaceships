@@ -3,10 +3,12 @@ package com.minespaceships.mod.overhead;
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
+import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
@@ -24,6 +26,7 @@ public class CustomGuiChat extends GuiChat{
 		this.player = player;
 		this.entity = entity;
 	}
+
 	/**
 	 * Override the keyTyped method to prevent the chat from closing when we hit enter or escape
 	 */
@@ -55,13 +58,17 @@ public class CustomGuiChat extends GuiChat{
 
 	/**
 	 * Prints a message into the chat console.
-	 * @param message
+	 * if clear is set to true, the console is going to clear all messages at the end.
+	 * @param message String
+	 * @param clear boolean
 	 */
-	public void display(final String message){
-		this.clearChat();
+	public void display(final String message, final boolean clear){
+		if(clear){
+			this.clearChat();
+		}
+		
 		this.mc.thePlayer.addChatComponentMessage(new ChatComponentText(message));
 	}
-	
 	/**
 	 * Clears the chat.
 	 */
@@ -74,5 +81,13 @@ public class CustomGuiChat extends GuiChat{
 	 */
 	public ChatRegisterEntity getChatRegisterEntity(){
 		return entity;
+	}
+
+	/**
+	 * 
+	 * @return GuiTextField inputField
+	 */
+	public GuiTextField getInputField(){
+		return inputField;
 	}
 }

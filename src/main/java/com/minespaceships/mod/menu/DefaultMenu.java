@@ -37,7 +37,9 @@ public class DefaultMenu {
 	private static Menu disableShield;
 
 	//Menu which contains the ability to set the spaceship to a target position.
-	private static Menu shiptoTarget;
+	private static Menu shipToTargetMenu;
+	
+	private static Menu shipToTargetFunc;
 
 	/**
 	 * Initialise the menu structure.
@@ -57,11 +59,18 @@ public class DefaultMenu {
 		shield = new Menu("shield");
 		activateShield = new ShieldActivateMenu(">activate", terminal);
 		disableShield = new ShieldDisableMenu(">disable", terminal);
-		shiptoTarget = new NavigateToTargetMenu("to target", terminal, "[x][y][z]");
+		shipToTargetMenu = new Menu("to target");
+		String out ="";
+		out+="  To target needs three parameter x,y and z\n"
+		+"    please enter them in the following form,\n"
+		+"    without the brakets or whitespaces:\n"
+		+"    [x];[y];[z]";
+		shipToTargetFunc = new ToTargetFunktionalMenu(out, terminal);
 
 		//create the menu structure.
 		root.addSubMenu(navigation);
-			navigation.addSubMenu(shiptoTarget);
+			navigation.addSubMenu(shipToTargetMenu);
+			shipToTargetMenu.addSubMenu(shipToTargetFunc);
 		root.addSubMenu(armour);
 		root.addSubMenu(protection);
 		root.addSubMenu(help);

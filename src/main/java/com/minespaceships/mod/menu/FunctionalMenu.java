@@ -7,12 +7,12 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author DieDiren, ovae.
  * @version 20150219
  */
-public interface FunktionalMenu{
+public interface FunctionalMenu{
 
 	/**
 	 * Activate the functionality of the menu.
 	 * @param paramlist
 	 */
-	public String activate(String paramlist);
+	public String activate(String command);
 
 }
