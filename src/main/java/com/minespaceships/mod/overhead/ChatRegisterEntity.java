@@ -48,6 +48,10 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 			Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
 		}
 	}
+	@Override
+	public void finalize(){
+		Shipyard.getShipyard().removeNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1)

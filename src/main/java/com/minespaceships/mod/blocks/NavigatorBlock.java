@@ -24,6 +24,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
@@ -72,6 +73,11 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
     @Override
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){    	
     	return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
+    }
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+    	Shipyard.getShipyard().removeNavigator((ChatRegisterEntity)MinecraftServer.getServer().getEntityWorld().getTileEntity(pos));
+    	super.breakBlock(worldIn, pos, state);
     }
 
     /**
