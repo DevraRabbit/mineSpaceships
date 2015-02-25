@@ -1,24 +1,10 @@
 {
     "variants": {        
-        "facing=up": { "model": "minespaceships:EngineBlock" , "x": 90 },
-        "facing=down": { "model": "minespaceships:EngineBlock" , "x": 270},
+        "facing=up": { "model": "minespaceships:EngineBlockFlipped"},
+        "facing=down": { "model": "minespaceships:EngineBlockFlipped", "x": 180},
         "facing=north": { "model": "minespaceships:EngineBlock" , "y": 270 },
         "facing=east": { "model": "minespaceships:EngineBlock" },
         "facing=south": { "model": "minespaceships:EngineBlock" , "y": 90 },
         "facing=west": { "model": "minespaceships:EngineBlock" , "y": 180 }        
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
