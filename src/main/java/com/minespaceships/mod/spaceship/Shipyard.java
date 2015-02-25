@@ -62,16 +62,29 @@ public class Shipyard {
 		}
 	}
 	
-	public void blockBroken(BlockPos pos, World world) {
+	public void blockBroken(final BlockPos pos, final World world) {
 		if (ships.isEmpty()) return;
 		
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
-				if (ship.contains(pos)) {
-					ship.remove(pos);
+				if (ship.containsBlock(pos)) {
+					ship.removeBlock(pos);
 					break;
 				}
 			}
 		}
+	}
+	
+	public void blockPlaced(final BlockPos pos, final World world) {
+		if (ships.isEmpty()) return;
+		
+		for (Spaceship ship: ships) {
+			if (ship.getWorld() == world) {
+				if (ship.isNeighboringBlock(pos)) {
+					ship.addBlock(pos);
+					break;
+				}
+			}
+		}		
 	}
 }

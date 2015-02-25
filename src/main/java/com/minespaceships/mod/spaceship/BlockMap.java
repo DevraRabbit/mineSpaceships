@@ -13,10 +13,12 @@ public class BlockMap {
 	private BlockPos maxPos;
 	private BlockPos minPos;
 	private BlockPos origin;
+
 	public BlockMap(){
 		map = new HashMap<BlockPos, Boolean>();
 		maxPos = new BlockPos(0,0,0);
 		minPos = new BlockPos(0,0,0);
+		origin = new BlockPos(0,0,0);
 	}
 	public BlockPos getOrigin(){
 		return origin;
@@ -24,7 +26,7 @@ public class BlockMap {
 	public void setOrigin(BlockPos pos){
 		origin = pos;
 	}
-	public void addCoordinate(BlockPos pos){
+	public void add(BlockPos pos){
 		map.put(pos.subtract(origin), true);
 		resize(pos.subtract(origin));
 	}
@@ -133,6 +135,23 @@ public class BlockMap {
 				}
 			}
 		}
+		return false;
+	}
+	
+	public boolean isNeighbor(final BlockPos pos) {
+		for(int x = -1; x < 2; x++){
+			for(int y = -1; y < 2; y++){
+				for(int z = -1; z < 2; z++){
+					if(x != 0 || y != 0 || z != 0){
+						BlockPos neighbor = pos.add(x,y,z);
+						if (this.contains(neighbor)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+
 		return false;
 	}
 }
