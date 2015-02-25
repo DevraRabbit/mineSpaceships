@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
@@ -79,6 +80,16 @@ public class BlockEvent {
 		List<BlockPos> posList = event.getAffectedBlocks();
 		for(BlockPos pos: posList) {
 			Shipyard.getShipyard().blockBroken(pos, world);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onUseHoeEvent(final UseHoeEvent event) {
+		if (event.isCanceled()) return;
+		World world = event.world;
+		BlockPos pos = event.pos;
+		if (world.isRemote) {
+			Shipyard.getShipyard().getBlockInfo(pos, world);
 		}
 	}
 }

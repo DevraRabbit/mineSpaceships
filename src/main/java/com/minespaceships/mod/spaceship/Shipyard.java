@@ -2,6 +2,7 @@ package com.minespaceships.mod.spaceship;
 
 import java.util.Vector;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
@@ -92,5 +93,28 @@ public class Shipyard {
 				}
 			}
 		}		
+	}
+	
+	/**
+	 * Return debugging information to player
+	 * @param pos BlockPos
+	 * @param world World
+	 */
+	public void getBlockInfo(final BlockPos pos, final World world) {
+		if (ships.isEmpty()) {
+			Minecraft.getMinecraft().thePlayer.sendChatMessage("false - no ships existing");
+			return;
+		}
+		
+		for (Spaceship ship: ships) {
+			if (ship.getWorld() == world) {
+				if (ship.containsBlock(pos)) {
+					Minecraft.getMinecraft().thePlayer.sendChatMessage("block part of \""+ship.toString()+"\"");
+					return;
+				}
+			}
+		}
+		
+		Minecraft.getMinecraft().thePlayer.sendChatMessage("block not part of a ship");
 	}
 }
