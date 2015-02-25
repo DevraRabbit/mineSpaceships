@@ -112,11 +112,9 @@ public class Shipyard {
 		}
 		
 		for (Spaceship ship: ships) {
-			if (ship.getWorld() == world) {
-				if (ship.containsBlock(pos)) {
-					Minecraft.getMinecraft().thePlayer.sendChatMessage("block part of \""+ship.toString()+"\"");
-					return;
-				}
+			if (ship.containsBlock(pos)) {
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("block part of \""+ship.toString()+"\"");
+				return;
 			}
 		}
 		
