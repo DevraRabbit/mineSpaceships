@@ -87,7 +87,7 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
 		//the Block is placed.
-		return new ChatRegisterEntity();
+		return new ChatRegisterEntity(worldIn);
 	}
 	
 	@Override

@@ -74,10 +74,12 @@ public class Spaceship {
 		}
 		this.origin = initial;
 		this.worldS = worldS;
+		initializeBase();
 	}
 	public Spaceship(BlockMap blocks, WorldServer worldS){
 		blockMap = blocks;
 		this.worldS = worldS;
+		initializeBase();
 	}	
 	
 	

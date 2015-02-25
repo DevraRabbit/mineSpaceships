@@ -2,6 +2,7 @@ package com.minespaceships.mod.spaceship;
 
 import java.util.Vector;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
@@ -41,10 +42,12 @@ public class Shipyard {
 	}
 	
 	public void addNavigator(ChatRegisterEntity entity){
-		navigators.add(entity);
-		for(Spaceship ship : ships){
-			if(ship.containsBlock(entity.getPos())){
-				ship.addNavigator(entity);
+		if(entity != null){
+			navigators.add(entity);
+			for(Spaceship ship : ships){
+				if(ship.containsBlock(entity.getPos())){
+					ship.addNavigator(entity);
+				}
 			}
 		}
 	}
@@ -77,6 +80,7 @@ public class Shipyard {
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
 				if (ship.isNeighboringBlock(pos)) {
+					Minecraft.getMinecraft().thePlayer.sendChatMessage("Block is added");
 					ship.addBlock(pos);
 					break;
 				}
