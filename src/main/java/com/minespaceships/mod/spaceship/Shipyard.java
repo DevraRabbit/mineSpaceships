@@ -25,12 +25,11 @@ public class Shipyard {
 	}
 	
 	public void addShip(Spaceship ship){
-		/*
 		if(ship != null){
 			if(!ships.contains(ship)){
 				ships.add(ship);
 				for(ChatRegisterEntity ent : navigators){
-					if(SpaceshipMath.isPointInShip(ent.getPos(), ship)){
+					if(ship.containsBlock(ent.getPos())){
 						ship.addNavigator(ent);
 						if(ent.getShip() == null){
 							ent.setShip(ship);
@@ -39,21 +38,18 @@ public class Shipyard {
 				}
 			}
 		}
-		*/
 	}
 	
 	public void addNavigator(ChatRegisterEntity entity){
-		/*
 		navigators.add(entity);
 		for(Spaceship ship : ships){
-			if(SpaceshipMath.isPointInShip(entity.getPos(), ship)){
+			if(ship.containsBlock(entity.getPos())){
 				ship.addNavigator(entity);
 			}
 		}
-		*/
 	}
 	
-	public void removeNavigator(BlockPos entity){
+	public void removeNavigator(ChatRegisterEntity entity){
 		for(Spaceship ship : ships){
 			ship.removeNavigator(entity);
 			if(ship.getNavigatorCount() == 0){

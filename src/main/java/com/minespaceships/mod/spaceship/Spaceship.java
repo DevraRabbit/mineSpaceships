@@ -92,7 +92,7 @@ public class Spaceship {
 		}
 	}
 	
-	public void removeNavigator(BlockPos entity){
+	public void removeNavigator(ChatRegisterEntity entity){
 		navigators.remove(entity);
 	}
 	
