@@ -1,8 +1,10 @@
 package com.minespaceships.mod.spaceship;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.vecmath.Vector3d;
@@ -29,51 +31,59 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class Spaceship {
-	private BlockPos minPosition;
-	private BlockPos maxPosition;
-	private BlockPos span;
 	private BlockPos origin;
 	private WorldServer worldS;	
 	private Vector<ChatRegisterEntity> navigators;
-	private BlockMap blockmap;
+	private BlockMap blockMap;
 	
+	public static final int maxShipSize = 27000;
+	
+	@Deprecated
 	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
 		this.worldS = worldS;
 		initializeBase();
 	}
-	
+	@Deprecated
 	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
 		BlockPos recSpan = new BlockPos(dimX, dimY, dimZ);
-		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
 		this.worldS = worldS;
+		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
 		initializeBase();
 	}
-	
+	@Deprecated
 	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
-		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));
 		this.origin = origin;
 		this.worldS = worldS;
+		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
+		initializeBase();
+	}	
+	@Deprecated
+	public Spaceship(int[] originMeasurement){
+		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		readOriginMeasurementArray(originMeasurement);
 		initializeBase();
 	}
 	
-	public Spaceship(int[] originMeasurement){
-		readOriginMeasurementArray(originMeasurement);
-		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		initializeBase();
+	public Spaceship(BlockPos initial, WorldServer worldS) throws Exception{
+		blockMap = new BlockMap();
+		blockMap.setOrigin(initial);
+		blockMap = SpaceshipMath.getConnectedPositions(initial, Minecraft.getMinecraft().theWorld, maxShipSize);
+		if(blockMap == null){
+			throw new Exception("Ship is too huge or connected to the Ground");
+		}
+		this.origin = initial;
+		this.worldS = worldS;
 	}
+	public Spaceship(BlockMap blocks, WorldServer worldS){
+		blockMap = blocks;
+		this.worldS = worldS;
+	}	
+	
 	
 	private void initializeBase(){
 		navigators = new Vector<ChatRegisterEntity>();
 		Shipyard.getShipyard().addShip(this);
-	}
-	
-	public BlockPos getMinPosition(){
-		return minPosition;
-	}
-	
-	public BlockPos getMaxPosition(){
-		return maxPosition;
 	}
 	
 	public void addNavigator(ChatRegisterEntity nav){
@@ -89,16 +99,16 @@ public class Spaceship {
 	public int getNavigatorCount(){
 		return navigators.size();
 	}
-	
+	@Deprecated
 	public int[] getOriginMeasurementArray(){
-		BlockPos minSpan = minPosition.subtract(origin);
-		BlockPos maxSpan = maxPosition.subtract(origin);
+		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
+		BlockPos maxSpan = blockMap.getMinPos().subtract(origin);
 		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
 				origin.getX(), origin.getY(), origin.getZ(),
 				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
 		return a;
 	}
-	
+	@Deprecated
 	public void readOriginMeasurementArray(int[] array){
 		try {
 			BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
@@ -112,11 +122,20 @@ public class Spaceship {
 			System.out.println(ex.getMessage());
 		}
 	}
-	
+	@Deprecated
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
-		minPosition = minPos;
-		maxPosition = maxPos;
-		span = ((BlockPos) maxPos).subtract(minPos);
+		blockMap = new BlockMap();
+		blockMap.setOrigin(minPos);
+		BlockPos span = ((BlockPos) maxPos).subtract(minPos);
+		for(int x = 0; x < span.getX(); x++){
+			for(int y = 0; y < span.getY(); y++){
+				for(int z = 0; z < span.getZ(); z++){
+					if(!worldS.isAirBlock(new BlockPos(x,y,z).add(minPos))){
+						blockMap.add(new BlockPos(x,y,z).add(minPos));
+					}
+				}
+			}
+		}
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	
@@ -137,27 +156,21 @@ public class Spaceship {
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
-		for(int x = 0; x < span.getX(); x++){
-			for(int y = 0; y < span.getY(); y++){
-				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
-					if(!block.isAir(world, Pos)){
-						BlockPos nextPos = Pos.add(add);
-						if(block.canPlaceBlockAt(world, nextPos)){
-							//build the buildable block
-							BlockCopier.copyBlock(world, Pos, nextPos);
-							//remember to remove it
-							removal.add(Pos);
-						} else {
-							//remember to buid the Block later
-							position.add(Pos);
-						}
-					}
-				}
+		ArrayList<BlockPos> positions = blockMap.getPositions();
+		for(BlockPos Pos : positions){
+			Block block = world.getBlockState(Pos).getBlock();
+			BlockPos nextPos = Pos.add(add);
+			if(block.canPlaceBlockAt(world, nextPos)){
+				//build the buildable block
+				BlockCopier.copyBlock(world, Pos, nextPos);
+				//remember to remove it
+				removal.add(Pos);
+			} else {
+				//remember to buid the Block later
+				position.add(Pos);
 			}
 		}
+
 		//get through all the unbuildable positions that are left and build them until all have been moved.
 		//also make a safety layer. If after some layers of fragilness the blocks still can't be placed they certainly never will.
 		int i = 0;
@@ -193,24 +206,18 @@ public class Spaceship {
 		while(reverseRemoval.hasPrevious()){
 			BlockCopier.removeBlock(world, reverseRemoval.previous());
 		}
-		//Render the ship, move the entities and move the ships measurements
-		world.markBlockRangeForRenderUpdate(minPosition, maxPosition);  
+		//move the entities and move the ships measurements  
 		moveEntities(addDirection);
-		for(ChatRegisterEntity ent : navigators){
-			if(ent.getShip() != null){
-				ent.getShip().moveMeasurements(addDirection);
-			}
-		}
+		moveMeasurements(addDirection);
 	}
 	
 	private void moveMeasurements(BlockPos addDirection){
-		minPosition = minPosition.add(addDirection);
-		maxPosition = maxPosition.add(addDirection);
+		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
-	
+	@Deprecated
 	private void moveEntities(BlockPos addDirection){
-		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(minPosition, maxPosition));
+		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos()));
 		for(Entity ent : entities){			
 			if(ent instanceof EntityPlayer){
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));
@@ -223,9 +230,8 @@ public class Spaceship {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("minPosition: " + minPosition.toString());
-		sb.append("\nmaxPosition: " + maxPosition.toString());
-		sb.append("\nspan: " + span.toString());
+		sb.append("minPosition: " + blockMap.getMinPos().toString());
+		sb.append("\nmaxPosition: " + blockMap.getMaxPos().toString());
 		sb.append("\norigin: " + origin.toString());
 		sb.append("\nworldServer: " + worldS == null ? "Not Known.\n" : "Known\n");
 		return sb.toString();
@@ -235,19 +241,19 @@ public class Spaceship {
 		return this.worldS;
 	}
 	
-	public Boolean containsBlock(final BlockPos pos) {
-		return this.blockmap.contains(pos);
+	public Boolean containsBlock(BlockPos pos) {
+		return this.blockMap.contains(pos);
 	}
 	
-	public void removeBlock(final BlockPos pos) {
-		this.blockmap.remove(pos);
+	public void removeBlock(BlockPos pos) {
+		this.blockMap.remove(pos, Minecraft.getMinecraft().theWorld);
 	}
 	
 	public void addBlock(final BlockPos pos) {
-		this.blockmap.add(pos);
+		this.blockMap.add(pos);
 	}
 	
 	public boolean isNeighboringBlock(final BlockPos pos) {
-		return this.blockmap.isNeighbor(pos);
+		return this.blockMap.isNeighbor(pos);
 	}
 }

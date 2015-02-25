@@ -9,30 +9,17 @@ import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
 public class SpaceshipMath {
-	public static boolean isPointInShip(BlockPos pos, Spaceship ship){
-		BlockPos minPos = ship.getMinPosition();
-		BlockPos maxPos = ship.getMaxPosition();
-		if(minPos.getX() <= pos.getX() &&
-				minPos.getY() <= pos.getY() &&
-				minPos.getZ() <= pos.getZ() &&
-				maxPos.getX() > pos.getX() &&
-				maxPos.getY() > pos.getY() &&
-				maxPos.getZ() > pos.getZ()){
-			return true;
-		}
-		return false;
-	}	
-	public BlockMap getConnectedPositions(BlockPos pos, World worldIn, int maxSize){
+	public static BlockMap getConnectedPositions(BlockPos pos, World worldIn, int maxSize){
 		BlockMap blockMap = new BlockMap();
-		BlockPos origin = pos;
-		blockMap.add(pos.subtract(origin));		
+		blockMap.setOrigin(pos);
+		blockMap.add(pos);		
 		Vector<BlockPos> neighbors = new Vector<BlockPos>();
-		neighbors.add(pos.subtract(origin));
+		neighbors.add(pos);
 		int[] safety = {maxSize};
 		while(safety[0] >= 0 && neighbors.size() != 0){
 			Vector<BlockPos> nextNeighbors = new Vector<BlockPos>();
 			for(BlockPos nPos : neighbors){
-				nextNeighbors = writeValidNeighbors(nPos, origin, worldIn, blockMap, nextNeighbors, safety);
+				nextNeighbors = writeValidNeighbors(nPos, worldIn, blockMap, nextNeighbors, safety);
 			}
 			neighbors.clear();
 			neighbors.addAll(nextNeighbors);
@@ -44,18 +31,21 @@ public class SpaceshipMath {
 		}
 		
 	}
-	private Vector<BlockPos> writeValidNeighbors(BlockPos pos, BlockPos origin, World worldIn, BlockMap blockMap, Vector<BlockPos> neighbors, int[] maxSize){
+	private static Vector<BlockPos> writeValidNeighbors(BlockPos pos, World worldIn, BlockMap blockMap, Vector<BlockPos> neighbors, int[] maxSize){
 		maxSize[0]--;
 		if(maxSize[0] >= 0){
 			for(int x = -1; x < 2; x++){
 				for(int y = -1; y < 2; y++){
 					for(int z = -1; z < 2; z++){
-						if(x != 0 && y != 0 && z != 0){
+						if(x != 0 || y != 0 || z != 0){
 							BlockPos neighbor = pos.add(x,y,z);
-							BlockPos originNeighbor = neighbor.subtract(origin);
-							if(!blockMap.contains(originNeighbor) && !worldIn.isAirBlock(neighbor)){
-								blockMap.add(originNeighbor);
-								neighbors.addElement(neighbor);
+							if(!blockMap.contains(neighbor)){
+								if(!worldIn.isAirBlock(neighbor)){
+									blockMap.add(neighbor);
+									neighbors.addElement(neighbor);
+								}
+							} else {
+								int i = 0;
 							}
 						}
 					}
