@@ -75,8 +75,9 @@ public class DefaultMenu {
 		torpedoMenu = new Menu("torpedo");
 
 		String out ="";
-		out+="  To target needs three parameter x,y and z\n"
-		+"    please enter them in the following form,\n"
+		out+="  To target needs three parameter x,y and z.\n"
+		+"    Current position: "+terminal.getChatRegisterEntity().getPos()+'\n'
+		+"    Please enter them in the following form,\n"
 		+"    without the brakets or whitespaces:\n"
 		+"    [x];[y];[z]";
 		shipToTargetFunc = new ToTargetFunktionalMenu(out, terminal);

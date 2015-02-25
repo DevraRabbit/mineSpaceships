@@ -39,10 +39,10 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 		+"    -by the number for the submenu order.\n"
 		+'\n'
 		+"  "+EnumChatFormatting.YELLOW+"Menu colours:\n"
-		+"    -Oragne: \n"
-		+"    -White : \n"
-		+"    -Green:\n"
-		+"    -Red: \n"
+		+"    -Oragne: header\n"
+		+"    -White : normal menus\n"
+		+"    -Green:  menus with a functinality\n"
+		+"    -Red: error"
 		+'\n'
 		+EnumChatFormatting.RED+"\n   To get back in the parent menu, you can either\n"
 		+EnumChatFormatting.RED+"    enter 'm','up' or 'parent'.\n\n";
