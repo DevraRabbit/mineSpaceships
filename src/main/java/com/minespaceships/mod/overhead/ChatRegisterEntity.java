@@ -50,8 +50,9 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		}
 	}
 	@Override
-	public void finalize(){
+	public void invalidate(){
 		Shipyard.getShipyard().removeNavigator(this);
+		super.invalidate();
 	}
 
 	@Override

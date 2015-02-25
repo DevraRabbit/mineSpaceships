@@ -2,6 +2,7 @@ package com.minespaceships.mod.spaceship;
 
 import java.util.Vector;
 
+import scala.collection.Iterator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -42,7 +43,7 @@ public class Shipyard {
 	}
 	
 	public void addNavigator(ChatRegisterEntity entity){
-		if(entity != null){
+		if(entity != null && navigators.contains(entity)){
 			navigators.add(entity);
 			for(Spaceship ship : ships){
 				if(ship.containsBlock(entity.getPos())){
@@ -53,10 +54,11 @@ public class Shipyard {
 	}
 	
 	public void removeNavigator(ChatRegisterEntity entity){
-		for(Spaceship ship : ships){
+		for(java.util.Iterator<Spaceship> shipIt = ships.iterator(); shipIt.hasNext();){
+			Spaceship ship = shipIt.next();
 			ship.removeNavigator(entity);
 			if(ship.getNavigatorCount() == 0){
-				ships.remove(ship);
+				shipIt.remove();
 			}
 		}
 	}
