@@ -4,8 +4,10 @@ import java.util.Vector;
 
 import scala.collection.Iterator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
@@ -106,6 +108,12 @@ public class Shipyard {
 	 * @param world World
 	 */
 	public void getBlockInfo(final BlockPos pos, final World world) {
+		WorldServer[] remoteWorlds = MinecraftServer.getServer().worldServers;
+		for (WorldServer ws: remoteWorlds) {
+			Minecraft.getMinecraft().thePlayer.sendChatMessage("World Name: "+ws.getWorldInfo().getWorldName());
+			Minecraft.getMinecraft().thePlayer.sendChatMessage("Seed: "+ws.getWorldInfo().getSeed());
+		}
+		
 		if (ships.isEmpty()) {
 			Minecraft.getMinecraft().thePlayer.sendChatMessage("false - no ships existing");
 			return;
