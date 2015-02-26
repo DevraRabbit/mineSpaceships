@@ -57,8 +57,8 @@ public class Shipyard {
 		navigators.remove(entity);
 		for(java.util.Iterator<Spaceship> shipIt = ships.iterator(); shipIt.hasNext();){
 			Spaceship ship = shipIt.next();
-			ship.removeNavigator(entity);
-			if(ship.getNavigatorCount() == 0){
+			if(ship.getNavigatorCount() == 0 && ship.canBeRemoved()){
+				ship.removeNavigator(entity);
 				shipIt.remove();
 			}
 		}

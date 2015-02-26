@@ -36,6 +36,8 @@ public class Spaceship {
 	private Vector<ChatRegisterEntity> navigators;
 	private BlockMap blockMap;
 	
+	private boolean canBeRemoved = true;
+	
 	public static final int maxShipSize = 27000;
 	
 	@Deprecated
@@ -80,14 +82,15 @@ public class Spaceship {
 		blockMap = blocks;
 		this.worldS = worldS;
 		initializeBase();
-	}	
-	
-	
+	}		
 	private void initializeBase(){
 		navigators = new Vector<ChatRegisterEntity>();
 		Shipyard.getShipyard().addShip(this);
 	}
 	
+	public boolean canBeRemoved(){
+		return canBeRemoved;
+	}
 	public void addNavigator(ChatRegisterEntity nav){
 		if(!navigators.contains(nav)){
 			navigators.add(nav);
@@ -151,6 +154,8 @@ public class Spaceship {
 	}
 	
 	private void moveTo(BlockPos addDirection, World world){
+		//prevent it from being removed from the shipyard
+		canBeRemoved = false;
 		//list of positions left to be build
 		Vector<BlockPos> position = new Vector<BlockPos>();
 		//list of positions that need to be removed in revers order to prevent other blocks from cracking
@@ -211,6 +216,7 @@ public class Spaceship {
 		//move the entities and move the ships measurements  
 		moveEntities(addDirection);
 		moveMeasurements(addDirection);
+		canBeRemoved = true;
 	}
 	
 	private void moveMeasurements(BlockPos addDirection){

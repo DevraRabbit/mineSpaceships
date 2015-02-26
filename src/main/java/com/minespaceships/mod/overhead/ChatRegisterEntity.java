@@ -162,10 +162,10 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	}
 	@Deprecated
 	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
-		this.ship = new Spaceship(minSpan, origin, maxSpan, worldS);
+		setShip(new Spaceship(minSpan, origin, maxSpan, worldS));
 	}
 	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
-		this.ship = new Spaceship(initial, worldS);
+		setShip(new Spaceship(initial, worldS));
 	}
 
 	@Override
