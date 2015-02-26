@@ -1,5 +1,6 @@
 package com.minespaceships.mod.menu;
 
+import com.minespaceships.mod.menu.functionalMenus.*;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
@@ -50,6 +51,23 @@ public class DefaultMenu {
 
 	//Menu for all torpedo types.
 	private static Menu torpedoMenu;
+	
+	private static Menu moveForwardMenu;
+	private static Menu moveForwardFuncMenu;
+	private static Menu moveBackMenu;
+	private static Menu moveBackFuncMenu;
+	private static Menu moveRightMenu;
+	private static Menu moveRightFuncMenu;
+	private static Menu moveLeftMenu;
+	private static Menu moveLeftFuncMenu;
+	private static Menu moveUpMenu;
+	private static Menu moveUpFuncMenu;
+	private static Menu moveDownMenu;
+	private static Menu moveDownFuncMenu;
+	
+	private static Menu liftoffMenu;
+	private static Menu liftoffFuncMenu;
+	private static Menu landingMenu;
 
 	/**
 	 * Initialise the menu structure.
@@ -59,6 +77,7 @@ public class DefaultMenu {
 		if(terminal.equals(null)){
 			System.err.println("terminal can not be null.");
 		}
+		String out ="";
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
@@ -74,7 +93,43 @@ public class DefaultMenu {
 		phaserMenu = new Menu("phaser");
 		torpedoMenu = new Menu("torpedo");
 
-		String out ="";
+		moveForwardMenu = new Menu("move forward");
+		out = "";
+		out +="move forward functional menu";
+		moveForwardFuncMenu = new moveForwardMenu(out);
+
+		moveBackMenu = new Menu("move back");
+		out = "";
+		out +="move back functional menu";
+		moveBackFuncMenu = new moveBackMenu(out);
+
+		moveRightMenu = new Menu("move right");
+		out = "";
+		out +="move right functional menu";
+		moveRightFuncMenu = new moveRightMenu(out);
+
+		moveLeftMenu = new Menu("move left");
+		out = "";
+		out +="move left functional menu";
+		moveLeftFuncMenu = new moveLeftMenu(out);
+
+		moveUpMenu = new Menu("move up");
+		out = "";
+		out +="move up functional menu";
+		moveUpFuncMenu = new moveUpMenu(out);
+
+		moveDownMenu = new Menu("move down");
+		out = "";
+		out +="move down functional menu";
+		moveDownFuncMenu = new moveDownMenu(out);
+
+		liftoffMenu = new Menu("liftoff");
+		out = "";
+		out +="liftoff functional menu";
+		liftoffFuncMenu = new liftoffMenu(out);
+		landingMenu = new landingMenu("landing");
+
+		out = "";
 		out+="  To target needs three parameter x,y and z.\n"
 		+"    Current position: "+terminal.getChatRegisterEntity().getPos()+'\n'
 		+"    Please enter them in the following form,\n"
@@ -86,7 +141,24 @@ public class DefaultMenu {
 		root.addSubMenu(createShip);
 		root.addSubMenu(navigation);
 			navigation.addSubMenu(shipToTargetMenu);
-			shipToTargetMenu.addSubMenu(shipToTargetFunc);
+				shipToTargetMenu.addSubMenu(shipToTargetFunc);
+			navigation.addSubMenu(moveForwardMenu);
+				moveForwardMenu.addSubMenu(moveForwardFuncMenu);
+			navigation.addSubMenu(moveBackMenu);
+				moveBackMenu.addSubMenu(moveBackFuncMenu);
+			navigation.addSubMenu(moveRightMenu);
+				moveRightMenu.addSubMenu(moveRightFuncMenu);
+			navigation.addSubMenu(moveLeftMenu);
+				moveLeftMenu.addSubMenu(moveLeftFuncMenu);
+			navigation.addSubMenu(moveUpMenu);
+				moveUpMenu.addSubMenu(moveUpFuncMenu);
+			navigation.addSubMenu(moveDownMenu);
+				moveDownMenu.addSubMenu(moveDownFuncMenu);
+			navigation.addSubMenu(liftoffMenu);
+				liftoffMenu.addSubMenu(liftoffFuncMenu);
+			navigation.addSubMenu(landingMenu);
+				
+			
 		root.addSubMenu(armour);
 			armour.addSubMenu(phaserMenu);
 			armour.addSubMenu(torpedoMenu);

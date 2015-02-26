@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
  * This class displays a menu structure.
@@ -73,7 +74,7 @@ public class MenuDisplay {
 	 */
 	public void display(final String command){
 		if(command.trim().isEmpty()){
-			terminal.display("unknown command.\nPress 'm' to get back.", true);
+			terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", true);
 			return;
 		}
 		terminal.display(preparingOutput(root.switchMenu(command),command),true);
@@ -87,6 +88,12 @@ public class MenuDisplay {
 		if(menu.equals(null)){
 			throw new IllegalArgumentException("Menu can not be null.");
 		}
+		/*
+		Spaceship ship = terminal.getChatRegisterEntity().getShip();
+		if(ship.equals(null)){
+			terminal.display("no ship", true);
+			return;
+		}*/
 		terminal.display(preparingOutput(menu, ""),true);
 	}
 }
