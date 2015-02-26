@@ -31,7 +31,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ChatRegisterEntity extends TileEntity implements IMoveable{
+public class ChatRegisterEntity extends TileEntity {
 	
 	//Attributes
 	private Spaceship ship;
@@ -42,7 +42,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
 	
-	public ChatRegisterEntity(World world) {
+	public ChatRegisterEntity() {
 		super();		
 	}
 	@Override
@@ -159,7 +159,10 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	}
 
 	public void setShip(Spaceship ship) {
-		((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship = ship;
+		ChatRegisterEntity cre = (ChatRegisterEntity)remoteWorld.getTileEntity(pos);
+		if(cre != null){
+			cre.ship = ship;
+		}
 	}	
 	@Deprecated
 	public void hardSetShip(Spaceship ship){
@@ -174,14 +177,5 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	}
 	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
 		setShip(new Spaceship(initial, worldS));
-	}
-
-	@Override
-	public void moveInformation(IMoveable target) {
-		if(target instanceof ChatRegisterEntity){
-			ChatRegisterEntity targetEntity = (ChatRegisterEntity)target;
-			targetEntity.ship = ship;
-			targetEntity.remoteWorld = remoteWorld;
-		}
 	}
 }

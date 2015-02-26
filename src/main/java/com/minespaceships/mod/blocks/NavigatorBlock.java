@@ -66,6 +66,9 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
 				//Activate the entity
 				((ChatRegisterEntity)entity).Activate(playerIn);
 			}
+    	} else {
+    		//instantiate the remote worlds tile entity
+    		worldIn.getTileEntity(pos);
     	}
     	//returns true to prevent placing a block (which would be the default behavior for rightclicking)
     	return true;
@@ -86,7 +89,7 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
 		//the Block is placed.
-		return new ChatRegisterEntity(worldIn);
+		return new ChatRegisterEntity();
 	}
 	
 	@Override
