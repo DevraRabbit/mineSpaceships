@@ -147,6 +147,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public Spaceship getShip() {
 		return ship;
 	}
+	
 	@Override
 	public void moveInformation(IMoveable target) {
 		if(target instanceof ChatRegisterEntity){
