@@ -154,21 +154,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public Spaceship getShip() {
 		return ship;
 	}
-	@Deprecated
-	public void createShip(int[] originMeasurements){
-		this.ship = new Spaceship(originMeasurements);
-		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-	}
-	@Deprecated
-	public void createShip(BlockPos minPos, BlockPos maxPos, WorldServer world){
-		this.ship = new Spaceship(minPos, maxPos, world);
-		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-	}
-	@Deprecated
-	public void createShip(BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
-		this.ship = new Spaceship(minPosition, dimX, dimY, dimZ, worldS);
-		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-	}
+
 	@Deprecated
 	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
 		this.ship = new Spaceship(minSpan, origin, maxSpan, worldS);
@@ -178,6 +164,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		this.ship = new Spaceship(initial, worldS);
 		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
 	}
+
 	@Override
 	public void moveInformation(IMoveable target) {
 		if(target instanceof ChatRegisterEntity){
