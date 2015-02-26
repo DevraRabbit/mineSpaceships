@@ -48,7 +48,6 @@ public class ParameterPattern {
 		double[] list = new double[3];
 		//get the parameter without the command name.
 		command = command.replaceAll(whitespaces, "");
-		//Pattern pattern  = Pattern.compile(floatPattern+whitespaces+floatPattern+whitespaces+floatPattern+"([\\s]?)*");
 		Pattern pattern = Pattern.compile(floatPattern+floatPattern+floatPattern);
 		Matcher matcher = pattern.matcher(command);
 		if(matcher.matches()){
@@ -60,9 +59,8 @@ public class ParameterPattern {
 		}else{
 			return list;
 		}
-		//return Pattern.matches(word+whitespaces+floatPattern+whitespaces+floatPattern+whitespaces+floatPattern+"([\\s]?)*", command);
 	}
-	
+
 	/**
 	 * Removes all parameter and returns only the command.
 	 * @return command.

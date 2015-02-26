@@ -39,16 +39,16 @@ public class DefaultMenu {
 	//Menu which contains the ability to set the spaceship to a target position.
 	private static Menu shipToTargetMenu;
 
-	//
+	//Menu which contains the functionality to get the to target coordinates.
 	private static Menu shipToTargetFunc;
 
-	//
+	//Menu to create a new spaceship.
 	private static Menu createShip;
 
-	//
+	//Menu for all phaser types.
 	private static Menu phaserMenu;
 
-	//
+	//Menu for all torpedo types.
 	private static Menu torpedoMenu;
 
 	/**
@@ -60,7 +60,7 @@ public class DefaultMenu {
 			System.err.println("terminal can not be null.");
 		}
 
-		//initialise all menus.
+		//Initialise all menus.
 		root = new Menu("Spaceship console");
 		createShip = new CreateShipMenu("create spaceship",terminal);
 		navigation = new Menu("spaceship navigation");
@@ -82,7 +82,7 @@ public class DefaultMenu {
 		+"    [x];[y];[z]";
 		shipToTargetFunc = new ToTargetFunktionalMenu(out, terminal);
 
-		//create the menu structure.
+		//Create the menu structure.
 		root.addSubMenu(createShip);
 		root.addSubMenu(navigation);
 			navigation.addSubMenu(shipToTargetMenu);

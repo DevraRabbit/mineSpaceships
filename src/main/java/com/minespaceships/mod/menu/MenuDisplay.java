@@ -9,11 +9,11 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * This class displays a menu structure.
  * @author ovae.
- * @version 20150221
+ * @version 20150225
  */
 public class MenuDisplay {
 
-	//the terminal to write in.
+	//The terminal to write in.
 	protected CustomGuiChat terminal;
 
 	//The root of the menu structure.
@@ -21,6 +21,8 @@ public class MenuDisplay {
 
 	/**
 	 * Creates a new MenuDisplay.
+	 * @param root
+	 * @param terminal
 	 */
 	public MenuDisplay(final Menu root, final CustomGuiChat terminal){
 		if(root.equals(null)){
@@ -37,6 +39,7 @@ public class MenuDisplay {
 	/**
 	 * Get the currently selected menu and prepares the output of that menu.
 	 * @param menu
+	 * @param command
 	 */
 	private String preparingOutput(final Menu menu, final String command){
 		String out = "";

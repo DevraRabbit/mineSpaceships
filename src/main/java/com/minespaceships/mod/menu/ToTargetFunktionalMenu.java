@@ -11,11 +11,24 @@ import com.minespaceships.mod.spaceship.Spaceship;
 
 import scala.reflect.api.Types.ThisTypeExtractor;
 
+/**
+ * A new functional menu, for the 'to target' functionality.
+ * @author ovae.
+ * @version 20150226
+ */
 public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 
+	//array of all parameters.
 	private double[] param;
+
+	//The terminal to write in.
 	private CustomGuiChat terminal;
 
+	/**
+	 * Creates new functional menu, for the 'to target' functionality.
+	 * @param name
+	 * @param terminal
+	 */
 	public ToTargetFunktionalMenu(String name, CustomGuiChat terminal) {
 		super(name);
 		if(terminal.equals(null)){
@@ -24,6 +37,10 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 		this.terminal = terminal;
 	}
 
+	/**
+	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 */
 	@Override
 	public String activate(String command){
 		if(command.equals(null)){
@@ -53,6 +70,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 						this.terminal.display("move: Please initialise the Spaceship first", true);
 					}
 					ship.setTarget(position);
+					return ">> To target <<";
 				}catch(Exception e){
 					System.err.println("ship is broken");
 				}
@@ -64,8 +82,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 			System.err.println("IllegalArgumentException: regex failed");
 		}
 
-		return ">> to target <<";
+		return ">> To target failed <<";
 	}
-	
 
 }

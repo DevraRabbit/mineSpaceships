@@ -8,19 +8,17 @@ import net.minecraft.util.ChatComponentText;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
- * 
+ * A menu for the shields disable functionality.
  * @author ovae.
  * @version 20150221
  */
 public class ShieldDisableMenu extends Menu implements FunctionalMenu{
 
-	/**
-	 * 
-	 */
+	//The terminal to write in.
 	private CustomGuiChat terminal;
 
 	/**
-	 * 
+	 * Creates a new menu, for the shields disable functionality.
 	 * @param name
 	 * @param terminal
 	 */
@@ -33,10 +31,11 @@ public class ShieldDisableMenu extends Menu implements FunctionalMenu{
 	}
 
 	/**
-	 * 
+	 * The functionality of the menu is activated by this method.
+	 * @param command
 	 */
 	@Override
-	public String activate(String paramlist) {
+	public String activate(String command) {
 		//Let it rain
 		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
 		return ">> shield disabled <<\nPress 'm' to get back.";

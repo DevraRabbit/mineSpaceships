@@ -8,7 +8,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * This menu is the help menu witch explains to the user how to
  * use the menu structure and how to navigate in it.
  * @author ovae.
- * @version 20150221
+ * @version 20150226
  */
 public class HelpMenu extends Menu implements FunctionalMenu{
 
@@ -22,7 +22,7 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 	}
 
 	/**
-	 * 
+	 * The functionality of the menu is activated by this method.
 	 */
 	@Override
 	public String activate(String command) {
@@ -39,13 +39,13 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 		+"    -by the number for the submenu order.\n"
 		+'\n'
 		+"  "+EnumChatFormatting.YELLOW+"Menu colours:\n"
-		+"    -Oragne: header\n"
-		+"    -White : normal menus\n"
-		+"    -Green:  menus with a functinality\n"
-		+"    -Red: error"
+		+"    -"+EnumChatFormatting.GOLD+"Gold: header\n"
+		+"    -"+EnumChatFormatting.WHITE+"White : normal menus\n"
+		+"    -"+EnumChatFormatting.GREEN+"Green:  menus with a functinality\n"
+		+"    -"+EnumChatFormatting.RED+"Red: error"
 		+'\n'
 		+EnumChatFormatting.RED+"\n   To get back in the parent menu, you can either\n"
-		+EnumChatFormatting.RED+"    enter 'm','up' or 'parent'.\n\n";
+		+EnumChatFormatting.RED+"    enter 'm','up' or 'parent'.";
 		return out;
 	}
 
