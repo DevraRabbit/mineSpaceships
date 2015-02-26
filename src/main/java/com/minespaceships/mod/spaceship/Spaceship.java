@@ -219,7 +219,7 @@ public class Spaceship {
 	}
 	@Deprecated
 	private void moveEntities(BlockPos addDirection){
-		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos()));
+		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos().add(1,1,1)));
 		for(Entity ent : entities){			
 			if(ent instanceof EntityPlayer){
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));

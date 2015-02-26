@@ -103,6 +103,9 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public void setRemoteWorld(WorldServer world){
 		remoteWorld = world;
 	}
+	public WorldServer getRemoteWorld(){
+		return remoteWorld;
+	}
 	/**
 	 * Executes the given command, regardless who committed it.
 	 * @param command
@@ -116,6 +119,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
+		//command = command.toLowerCase();
 		//display the menu.
 		menuDisplay.display(command);
 
@@ -151,22 +155,10 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	}
 
 	public void setShip(Spaceship ship) {
-		this.ship = ship;
+		((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship = ship;
 	}	
 	public Spaceship getShip() {
-		return ship;
-	}
-	@Deprecated
-	public void createShip(int[] originMeasurements){
-		this.ship = new Spaceship(originMeasurements);
-	}
-	@Deprecated
-	public void createShip(BlockPos minPos, BlockPos maxPos, WorldServer world){
-		this.ship = new Spaceship(minPos, maxPos, world);
-	}
-	@Deprecated
-	public void createShip(BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
-		this.ship = new Spaceship(minPosition, dimX, dimY, dimZ, worldS);
+		return ((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship;
 	}
 	@Deprecated
 	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
@@ -175,6 +167,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
 		this.ship = new Spaceship(initial, worldS);
 	}
+
 	@Override
 	public void moveInformation(IMoveable target) {
 		if(target instanceof ChatRegisterEntity){

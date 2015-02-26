@@ -38,7 +38,7 @@ public class SpaceshipCommands {
 		}
 		command = command.substring("init".length()).replaceAll("\\s", "");
 
-		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)to([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
+		Pattern poffset = Pattern.compile("([-+]?[0-9]+);([-+]?[0-9]+);([-+]?[0-9]+)to([-+]?[0-9]+);([-+]?[0-9]+);([-+]?[0-9]+)");
 		Matcher moffset = poffset.matcher(command);
 		if(moffset.matches()) {
 			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
@@ -95,7 +95,7 @@ public class SpaceshipCommands {
 			}
 		}
 		
-		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
+		Pattern poffset = Pattern.compile("([-+]?[0-9]+);([-+]?[0-9]+);([-+]?[0-9]+)");
 		Matcher moffset = poffset.matcher(command);
 		
 		if(moffset.matches()) {

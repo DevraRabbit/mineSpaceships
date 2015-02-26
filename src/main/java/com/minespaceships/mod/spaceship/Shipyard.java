@@ -43,10 +43,10 @@ public class Shipyard {
 	}
 	
 	public void addNavigator(ChatRegisterEntity entity){
-		if(entity != null && navigators.contains(entity)){
+		if(entity != null && !navigators.contains(entity)){
 			navigators.add(entity);
 			for(Spaceship ship : ships){
-				if(ship.containsBlock(entity.getPos())){
+				if(ship.isNeighboringBlock(entity.getPos())){
 					ship.addNavigator(entity);
 				}
 			}
@@ -54,6 +54,7 @@ public class Shipyard {
 	}
 	
 	public void removeNavigator(ChatRegisterEntity entity){
+		navigators.remove(entity);
 		for(java.util.Iterator<Spaceship> shipIt = ships.iterator(); shipIt.hasNext();){
 			Spaceship ship = shipIt.next();
 			ship.removeNavigator(entity);

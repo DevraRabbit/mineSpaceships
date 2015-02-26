@@ -37,7 +37,19 @@ public class DefaultMenu {
 	private static Menu disableShield;
 
 	//Menu which contains the ability to set the spaceship to a target position.
-	private static Menu shiptoTarget;
+	private static Menu shipToTargetMenu;
+
+	//Menu which contains the functionality to get the to target coordinates.
+	private static Menu shipToTargetFunc;
+
+	//Menu to create a new spaceship.
+	private static Menu createShip;
+
+	//Menu for all phaser types.
+	private static Menu phaserMenu;
+
+	//Menu for all torpedo types.
+	private static Menu torpedoMenu;
 
 	/**
 	 * Initialise the menu structure.
@@ -48,21 +60,36 @@ public class DefaultMenu {
 			System.err.println("terminal can not be null.");
 		}
 
-		//initialise all menus.
+		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		navigation = new Menu("spaceshipnavigation");
+		createShip = new CreateShipMenu("create spaceship",terminal);
+		navigation = new Menu("spaceship navigation");
 		armour = new Menu("weapons");
 		protection = new Menu("protection");
 		help = new HelpMenu("help");
 		shield = new Menu("shield");
-		activateShield = new ShieldActivateMenu(">activate", terminal);
-		disableShield = new ShieldDisableMenu(">disable", terminal);
-		shiptoTarget = new NavigateToTargetMenu("to target", terminal, "[x][y][z]");
+		activateShield = new ShieldActivateMenu("activate shield", terminal);
+		disableShield = new ShieldDisableMenu("disable shield", terminal);
+		shipToTargetMenu = new Menu("to target");
+		phaserMenu = new Menu("phaser");
+		torpedoMenu = new Menu("torpedo");
 
-		//create the menu structure.
+		String out ="";
+		out+="  To target needs three parameter x,y and z.\n"
+		+"    Current position: "+terminal.getChatRegisterEntity().getPos()+'\n'
+		+"    Please enter them in the following form,\n"
+		+"    without the brakets or whitespaces:\n"
+		+"    [x];[y];[z]";
+		shipToTargetFunc = new ToTargetFunktionalMenu(out, terminal);
+
+		//Create the menu structure.
+		root.addSubMenu(createShip);
 		root.addSubMenu(navigation);
-			navigation.addSubMenu(shiptoTarget);
+			navigation.addSubMenu(shipToTargetMenu);
+			shipToTargetMenu.addSubMenu(shipToTargetFunc);
 		root.addSubMenu(armour);
+			armour.addSubMenu(phaserMenu);
+			armour.addSubMenu(torpedoMenu);
 		root.addSubMenu(protection);
 		root.addSubMenu(help);
 			protection.addSubMenu(shield);
