@@ -1,4 +1,4 @@
-package com.minespaceships.mod.menu;
+package com.minespaceships.mod.menu.functionalMenus;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 
+import com.minespaceships.mod.menu.FunctionalParamMenu;
+import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Spaceship;
 

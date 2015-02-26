@@ -1,5 +1,7 @@
-package com.minespaceships.mod.menu;
+package com.minespaceships.mod.menu.functionalMenus;
 
+import com.minespaceships.mod.menu.FunctionalMenu;
+import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
