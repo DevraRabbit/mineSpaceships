@@ -10,8 +10,7 @@ import net.minecraft.world.World;
 
 public class SpaceshipMath {
 	public static BlockMap getConnectedPositions(BlockPos pos, World worldIn, int maxSize){
-		BlockMap blockMap = new BlockMap();
-		blockMap.setOrigin(pos);
+		BlockMap blockMap = new BlockMap(pos);
 		blockMap.add(pos);		
 		Vector<BlockPos> neighbors = new Vector<BlockPos>();
 		neighbors.add(pos);

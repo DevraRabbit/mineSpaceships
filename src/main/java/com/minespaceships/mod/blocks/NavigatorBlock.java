@@ -76,7 +76,6 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
     }
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-    	Shipyard.getShipyard().removeNavigator((ChatRegisterEntity)MinecraftServer.getServer().getEntityWorld().getTileEntity(pos));
     	super.breakBlock(worldIn, pos, state);
     }
 

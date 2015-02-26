@@ -68,8 +68,7 @@ public class Spaceship {
 	}
 	
 	public Spaceship(BlockPos initial, WorldServer worldS) throws Exception{
-		blockMap = new BlockMap();
-		blockMap.setOrigin(initial);
+		blockMap = new BlockMap(initial);
 		blockMap = SpaceshipMath.getConnectedPositions(initial, Minecraft.getMinecraft().theWorld, maxShipSize);
 		if(blockMap == null){
 			throw new Exception("Ship is too huge or connected to the Ground");
@@ -94,6 +93,7 @@ public class Spaceship {
 	public void addNavigator(ChatRegisterEntity nav){
 		if(!navigators.contains(nav)){
 			navigators.add(nav);
+			nav.hardSetShip(this);
 		}
 	}
 	
@@ -129,8 +129,7 @@ public class Spaceship {
 	}
 	@Deprecated
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
-		blockMap = new BlockMap();
-		blockMap.setOrigin(minPos);
+		blockMap = new BlockMap(minPos);
 		BlockPos span = ((BlockPos) maxPos).subtract(minPos);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){

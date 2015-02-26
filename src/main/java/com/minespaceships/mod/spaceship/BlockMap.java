@@ -15,11 +15,11 @@ public class BlockMap {
 	private BlockPos minPos;
 	private BlockPos origin;
 
-	public BlockMap(){
+	public BlockMap(BlockPos originPoint){
 		map = new HashMap<BlockPos, Boolean>();
 		maxPos = new BlockPos(0,0,0);
 		minPos = new BlockPos(0,0,0);
-		origin = new BlockPos(0,0,0);
+		origin = originPoint;
 	}
 	
 	public BlockPos getOrigin(){

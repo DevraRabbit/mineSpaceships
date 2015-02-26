@@ -43,9 +43,13 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
 	
 	public ChatRegisterEntity(World world) {
-		super();
+		super();		
+	}
+	@Override
+	public void setPos(BlockPos pos){
+		super.setPos(pos);
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		if(world != null && world == remoteWorld){
+		if(worldObj != null && worldObj == remoteWorld){
 			Shipyard.getShipyard().addNavigator(this);
 		}
 	}
@@ -157,6 +161,10 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public void setShip(Spaceship ship) {
 		((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship = ship;
 	}	
+	@Deprecated
+	public void hardSetShip(Spaceship ship){
+		this.ship = ship;
+	}
 	public Spaceship getShip() {
 		return ((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship;
 	}
