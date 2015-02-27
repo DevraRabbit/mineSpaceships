@@ -66,7 +66,8 @@ public class ChatRegisterEntity extends TileEntity {
 	{
 	   super.writeToNBT(par1);
 	   if(ship != null){
-		   par1.setIntArray(recoverSpaceshipMeasures, ship.getOriginMeasurementArray());
+		   int[] a = ship.getOriginMeasurementArray();
+		   par1.setIntArray(recoverSpaceshipMeasures, a);
 	   }	   
 	}
 
@@ -179,7 +180,12 @@ public class ChatRegisterEntity extends TileEntity {
 		this.ship = ship;
 	}
 	public Spaceship getShip() {
-		return ((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship;
+		ChatRegisterEntity entity = ((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+		if(entity != null){
+			return entity.ship;
+		} else {
+			return null;
+		}
 	}
 	@Deprecated
 	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){

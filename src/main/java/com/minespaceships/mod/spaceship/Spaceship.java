@@ -107,7 +107,7 @@ public class Spaceship {
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
 		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
-		BlockPos maxSpan = blockMap.getMinPos().subtract(origin);
+		BlockPos maxSpan = blockMap.getMaxPos().subtract(origin);
 		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
 				origin.getX(), origin.getY(), origin.getZ(),
 				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
@@ -131,12 +131,12 @@ public class Spaceship {
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
 		blockMap = new BlockMap(minPos);
 		BlockPos span = ((BlockPos) maxPos).subtract(minPos);
-		for(int x = 0; x < span.getX(); x++){
-			for(int y = 0; y < span.getY(); y++){
-				for(int z = 0; z < span.getZ(); z++){
-					if(!worldS.isAirBlock(new BlockPos(x,y,z).add(minPos))){
+		for(int x = 0; x <= span.getX(); x++){
+			for(int y = 0; y <= span.getY(); y++){
+				for(int z = 0; z <= span.getZ(); z++){
+					//if(!worldS.isAirBlock(new BlockPos(x,y,z).add(minPos))){
 						blockMap.add(new BlockPos(x,y,z).add(minPos));
-					}
+					//}
 				}
 			}
 		}
