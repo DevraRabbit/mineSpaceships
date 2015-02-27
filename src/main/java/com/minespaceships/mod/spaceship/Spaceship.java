@@ -149,10 +149,16 @@ public class Spaceship {
 	
 	public void moveTo(BlockPos addDirection){
 		//copyTo(addDirection, worldC);
-		moveTo(addDirection, worldS);
+		moveTo(addDirection, worldS, 0);
+	}
+	public void moveTo(BlockPos addDirection, World world) {
+		moveTo(addDirection, world, 0);
+	}
+	public void moveTo(BlockPos addDirection, int turn) {
+		moveTo(addDirection, worldS, turn);
 	}
 	
-	private void moveTo(BlockPos addDirection, World world){
+	private void moveTo(BlockPos addDirection, World world, final int turn){
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
 		//list of positions left to be build
