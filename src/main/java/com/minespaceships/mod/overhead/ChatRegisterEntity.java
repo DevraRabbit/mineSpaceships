@@ -50,7 +50,10 @@ public class ChatRegisterEntity extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
-		addNavigator();
+		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		if(worldObj != null && worldObj == remoteWorld){
+			Shipyard.getShipyard().addNavigator(this);
+		}
 	}
 	@Override
 	public void invalidate(){
@@ -70,21 +73,12 @@ public class ChatRegisterEntity extends TileEntity {
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1)
-	{		
-	    super.readFromNBT(par1);
-	    int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
-	    if(measurements != null){
-	 	    ship = new Spaceship(measurements);
-	    }
-	    setRemoteWorld();
-	}
-	public void setRemoteWorld(){
-		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-	}
-	public void addNavigator(){
-		if(worldObj != null && worldObj == remoteWorld){
-			Shipyard.getShipyard().addNavigator(this);
-		}
+	{
+	   super.readFromNBT(par1);
+	   int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
+	   if(measurements != null){
+		   ship = new Spaceship(measurements);
+	   }
 	}
 
 	/**
@@ -188,9 +182,6 @@ public class ChatRegisterEntity extends TileEntity {
 		this.ship = ship;
 	}
 	public Spaceship getShip() {
-		if(remoteWorld == null){
-			setRemoteWorld();
-		}
 		ChatRegisterEntity entity = ((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
 		if(entity != null){
 			return entity.ship;

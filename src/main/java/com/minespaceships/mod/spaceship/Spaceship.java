@@ -68,6 +68,7 @@ public class Spaceship {
 	}
 	
 	public Spaceship(BlockPos initial, WorldServer worldS) throws Exception{
+		blockMap = new BlockMap(initial);
 		blockMap = SpaceshipMath.getConnectedPositions(initial, Minecraft.getMinecraft().theWorld, maxShipSize);
 		if(blockMap == null){
 			throw new Exception("Ship is too huge or connected to the Ground");
