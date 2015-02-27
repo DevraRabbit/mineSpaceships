@@ -3,6 +3,7 @@ package com.minespaceships.mod.menu.functionalMenus;
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
  * 	Menu witch will create a new spaceship.
@@ -34,6 +35,10 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	@Override
 	public String activate(String command) {
 		try {
+			Spaceship spaceship = terminal.getChatRegisterEntity().getShip();
+			if(spaceship.equals(null)){
+				return ">> spaceship already exists <<\nPress 'm' to get back.";
+			}
 			this.terminal.getChatRegisterEntity().createShip( this.terminal.getChatRegisterEntity().getPos() , this.terminal.getChatRegisterEntity().getRemoteWorld());
 			return ">> Created spaceship <<\nPress 'm' to get back.";
 		} catch (Exception e) {

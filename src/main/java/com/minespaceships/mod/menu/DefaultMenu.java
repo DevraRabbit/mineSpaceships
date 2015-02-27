@@ -157,7 +157,6 @@ public class DefaultMenu {
 			navigation.addSubMenu(liftoffMenu);
 				liftoffMenu.addSubMenu(liftoffFuncMenu);
 			navigation.addSubMenu(landingMenu);
-				
 			
 		root.addSubMenu(armour);
 			armour.addSubMenu(phaserMenu);
