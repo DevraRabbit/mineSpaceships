@@ -163,14 +163,12 @@ public class BlockMap {
 					if(x != 0 || y != 0 || z != 0){
 						BlockPos neighbor = pos.add(x,y,z);
 						if (this.contains(neighbor)) {
-							Minecraft.getMinecraft().thePlayer.sendChatMessage("true");
 							return true;
 						}
 					}
 				}
 			}
 		}
-		Minecraft.getMinecraft().thePlayer.sendChatMessage("false");
 		return false;
 	}
 }
