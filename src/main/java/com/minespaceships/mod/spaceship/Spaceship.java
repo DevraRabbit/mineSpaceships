@@ -36,6 +36,8 @@ public class Spaceship {
 	private Vector<ChatRegisterEntity> navigators;
 	private BlockMap blockMap;
 	
+	private boolean canBeRemoved = true;
+	
 	public static final int maxShipSize = 27000;
 	
 	@Deprecated
@@ -66,33 +68,36 @@ public class Spaceship {
 	}
 	
 	public Spaceship(BlockPos initial, WorldServer worldS) throws Exception{
-		blockMap = new BlockMap();
-		blockMap.setOrigin(initial);
+		blockMap = new BlockMap(initial);
 		blockMap = SpaceshipMath.getConnectedPositions(initial, Minecraft.getMinecraft().theWorld, maxShipSize);
 		if(blockMap == null){
 			throw new Exception("Ship is too huge or connected to the Ground");
 		}
 		this.origin = initial;
 		this.worldS = worldS;
+		initializeBase();
 	}
 	public Spaceship(BlockMap blocks, WorldServer worldS){
 		blockMap = blocks;
 		this.worldS = worldS;
-	}	
-	
-	
+		initializeBase();
+	}		
 	private void initializeBase(){
 		navigators = new Vector<ChatRegisterEntity>();
 		Shipyard.getShipyard().addShip(this);
 	}
 	
+	public boolean canBeRemoved(){
+		return canBeRemoved;
+	}
 	public void addNavigator(ChatRegisterEntity nav){
 		if(!navigators.contains(nav)){
 			navigators.add(nav);
+			nav.hardSetShip(this);
 		}
 	}
 	
-	public void removeNavigator(BlockPos entity){
+	public void removeNavigator(ChatRegisterEntity entity){
 		navigators.remove(entity);
 	}
 	
@@ -124,8 +129,7 @@ public class Spaceship {
 	}
 	@Deprecated
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
-		blockMap = new BlockMap();
-		blockMap.setOrigin(minPos);
+		blockMap = new BlockMap(minPos);
 		BlockPos span = ((BlockPos) maxPos).subtract(minPos);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
@@ -149,6 +153,8 @@ public class Spaceship {
 	}
 	
 	private void moveTo(BlockPos addDirection, World world){
+		//prevent it from being removed from the shipyard
+		canBeRemoved = false;
 		//list of positions left to be build
 		Vector<BlockPos> position = new Vector<BlockPos>();
 		//list of positions that need to be removed in revers order to prevent other blocks from cracking
@@ -209,6 +215,7 @@ public class Spaceship {
 		//move the entities and move the ships measurements  
 		moveEntities(addDirection);
 		moveMeasurements(addDirection);
+		canBeRemoved = true;
 	}
 	
 	private void moveMeasurements(BlockPos addDirection){
@@ -217,7 +224,7 @@ public class Spaceship {
 	}
 	@Deprecated
 	private void moveEntities(BlockPos addDirection){
-		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos()));
+		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos().add(1,1,1)));
 		for(Entity ent : entities){			
 			if(ent instanceof EntityPlayer){
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));

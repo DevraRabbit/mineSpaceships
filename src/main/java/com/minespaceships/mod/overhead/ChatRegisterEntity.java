@@ -31,7 +31,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ChatRegisterEntity extends TileEntity implements IMoveable{
+public class ChatRegisterEntity extends TileEntity {
 	
 	//Attributes
 	private Spaceship ship;
@@ -43,10 +43,20 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
 	
 	public ChatRegisterEntity() {
+		super();		
+	}
+	@Override
+	public void setPos(BlockPos pos){
+		super.setPos(pos);
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		if(worldObj == remoteWorld){
-			Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+		if(worldObj != null && worldObj == remoteWorld){
+			Shipyard.getShipyard().addNavigator(this);
 		}
+	}
+	@Override
+	public void invalidate(){
+		Shipyard.getShipyard().removeNavigator(this);
+		super.invalidate();
 	}
 
 	@Override
@@ -149,28 +159,23 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	}
 
 	public void setShip(Spaceship ship) {
-		this.ship = ship;
+		ChatRegisterEntity cre = (ChatRegisterEntity)remoteWorld.getTileEntity(pos);
+		if(cre != null){
+			cre.ship = ship;
+		}
 	}	
-	public Spaceship getShip() {
-		return ship;
+	@Deprecated
+	public void hardSetShip(Spaceship ship){
+		this.ship = ship;
 	}
-
+	public Spaceship getShip() {
+		return ((ChatRegisterEntity)remoteWorld.getTileEntity(pos)).ship;
+	}
 	@Deprecated
 	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
-		this.ship = new Spaceship(minSpan, origin, maxSpan, worldS);
-		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
+		setShip(new Spaceship(minSpan, origin, maxSpan, worldS));
 	}
 	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
-		this.ship = new Spaceship(initial, worldS);
-		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-	}
-
-	@Override
-	public void moveInformation(IMoveable target) {
-		if(target instanceof ChatRegisterEntity){
-			ChatRegisterEntity targetEntity = (ChatRegisterEntity)target;
-			targetEntity.ship = ship;
-			targetEntity.remoteWorld = remoteWorld;
-		}
+		setShip(new Spaceship(initial, worldS));
 	}
 }
