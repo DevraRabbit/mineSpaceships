@@ -126,7 +126,7 @@ public class SpaceshipCommands {
 		player.addChatComponentMessage(new ChatComponentText(((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).toString()));
 	}
 	
-	private static String processDirectionMoveCommand(String command, int playerRotation) {
+	public static String processDirectionMoveCommand(String command, int playerRotation) {
 		Pattern p = Pattern.compile("[0-9]+");
 		Matcher m = p.matcher(command);
 		

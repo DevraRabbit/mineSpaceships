@@ -101,33 +101,33 @@ public class SpaceshipMenu {
 		moveBackMenu = new Menu("move back");
 		out = "";
 		out +="move back functional menu";
-		moveBackFuncMenu = new moveBackMenu(out);
+		moveBackFuncMenu = new moveBackMenu(out,terminal);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
 		out +="move right functional menu";
-		moveRightFuncMenu = new moveRightMenu(out);
+		moveRightFuncMenu = new moveRightMenu(out,terminal);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
 		out +="move left functional menu";
-		moveLeftFuncMenu = new moveLeftMenu(out);
+		moveLeftFuncMenu = new moveLeftMenu(out,terminal);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
 		out +="move up functional menu";
-		moveUpFuncMenu = new moveUpMenu(out);
+		moveUpFuncMenu = new moveUpMenu(out,terminal);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
 		out +="move down functional menu";
-		moveDownFuncMenu = new moveDownMenu(out);
+		moveDownFuncMenu = new moveDownMenu(out,terminal);
 
 		liftoffMenu = new Menu("liftoff");
 		out = "";
 		out +="liftoff functional menu";
-		liftoffFuncMenu = new liftoffMenu(out);
-		landingMenu = new landingMenu("landing");
+		liftoffFuncMenu = new liftoffMenu(out,terminal);
+		landingMenu = new landingMenu("landing",terminal);
 
 		out = "";
 		out+="  To target needs three parameter x,y and z.\n"
