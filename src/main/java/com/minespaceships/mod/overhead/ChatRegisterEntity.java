@@ -3,8 +3,9 @@ package com.minespaceships.mod.overhead;
 import java.util.regex.*;
 
 import com.example.examplemod.ovae.terminalMenu;
-import com.minespaceships.mod.menu.DefaultMenu;
+import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
+import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
@@ -38,7 +39,8 @@ public class ChatRegisterEntity extends TileEntity {
 	private WorldServer remoteWorld;
 
 	private CustomGuiChat terminal;
-	private MenuDisplay menuDisplay;
+	private MenuDisplay spaceshipMenu;
+	private MenuDisplay noSpaceshipMenu;
 	
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
 	
@@ -91,17 +93,26 @@ public class ChatRegisterEntity extends TileEntity {
 			terminal = new CustomGuiChat(player, this);
 			
 			//Initialise a default menu for testing reasons
-			if(!DefaultMenu.getRunBefore()){
-				DefaultMenu.initMenu(terminal);
+			if(!SpaceshipMenu.getRunBefore()){
+				SpaceshipMenu.initMenu(terminal);
+			}
+			if(!NoSpaceshipEntityMenu.getRunBefore()){
+				NoSpaceshipEntityMenu.initMenu(terminal);
 			}
 
 			//initialise the menu display.
-			menuDisplay = new MenuDisplay(DefaultMenu.getRootMenu(), terminal);
+			spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
+			noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
 
 			//open our console. 
 			Minecraft.getMinecraft().displayGuiScreen(terminal);
-			//Print out the menu in the console.
-			menuDisplay.displayMain(DefaultMenu.getRootMenu());
+
+			if(terminal.getChatRegisterEntity().getShip() == null){
+				noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
+			}else{
+				//Print out the menu in the console.
+				spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
+			}
 		}
 	}
 	public void setRemoteWorld(WorldServer world){
@@ -123,9 +134,8 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
-		//command = command.toLowerCase();
 		//display the menu.
-		menuDisplay.display(command);
+		spaceshipMenu.display(command);
 
 		//define a very first command to see if it works.
 		if(command.equals("hello")){

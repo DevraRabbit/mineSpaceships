@@ -8,7 +8,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author ovae.
  * @version 20150221
  */
-public class DefaultMenu {
+public class SpaceshipMenu {
 
 	//Is necessary to now if the DefaultMenu was initialise before.
 	private static boolean runBefore;
@@ -81,7 +81,7 @@ public class DefaultMenu {
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		createShip = new CreateShipMenu("create spaceship",terminal);
+		createShip = new CreateShipMenu("recreate spaceship",terminal);
 		navigation = new Menu("spaceship navigation");
 		armour = new Menu("weapons");
 		protection = new Menu("protection");
@@ -96,7 +96,7 @@ public class DefaultMenu {
 		moveForwardMenu = new Menu("move forward");
 		out = "";
 		out +="move forward functional menu";
-		moveForwardFuncMenu = new moveForwardMenu(out);
+		moveForwardFuncMenu = new moveForwardMenu(out,terminal);
 
 		moveBackMenu = new Menu("move back");
 		out = "";

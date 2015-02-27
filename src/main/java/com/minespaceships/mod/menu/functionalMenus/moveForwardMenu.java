@@ -1,7 +1,10 @@
 package com.minespaceships.mod.menu.functionalMenus;
 
+import net.minecraft.util.MathHelper;
+
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
  * 
@@ -10,14 +13,23 @@ import com.minespaceships.mod.menu.Menu;
  */
 public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 
-	public moveForwardMenu(String name) {
+	//The terminal to write in.
+	private CustomGuiChat terminal;
+
+	public moveForwardMenu(String name,  CustomGuiChat terminal) {
 		super(name);
-		// TODO Auto-generated constructor stub
+		this.terminal = terminal;
 	}
 
 	@Override
 	public String activate(String command) {
-		// TODO Auto-generated method stub
+		if(command.trim().isEmpty()){
+			return "command can not be empty.";
+		}
+		if(command.equals(null)){
+			return "command can not be null.";
+		}
+
 		return "move forward not implemented yet!";
 	}
 
