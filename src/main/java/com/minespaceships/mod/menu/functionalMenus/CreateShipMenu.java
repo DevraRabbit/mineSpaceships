@@ -52,7 +52,6 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 			+EnumChatFormatting.RED+">> Initialise spaceship failed <<"
 			+ "\nPress 'Esc' to close the menu.";
 		return out;
-		
 	}
 
 }

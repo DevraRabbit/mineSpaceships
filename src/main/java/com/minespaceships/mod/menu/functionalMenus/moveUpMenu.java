@@ -2,6 +2,7 @@ package com.minespaceships.mod.menu.functionalMenus;
 
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
  * 
@@ -9,10 +10,13 @@ import com.minespaceships.mod.menu.Menu;
  * @version 20150226
  */
 public class moveUpMenu extends Menu implements FunctionalParamMenu{
-
-	public moveUpMenu(String name) {
+	
+	//The terminal to write in.
+	private CustomGuiChat terminal;
+	
+	public moveUpMenu(String name, CustomGuiChat terminal) {
 		super(name);
-		// TODO Auto-generated constructor stub
+		this.terminal=terminal;
 	}
 
 	@Override

@@ -95,39 +95,39 @@ public class SpaceshipMenu {
 
 		moveForwardMenu = new Menu("move forward");
 		out = "";
-		out +="move forward functional menu";
+		out +="Please type in how may blocks you want to move forward.";
 		moveForwardFuncMenu = new moveForwardMenu(out,terminal);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
-		out +="move back functional menu";
-		moveBackFuncMenu = new moveBackMenu(out);
+		out +="Please type in how may blocks you want to move back.";
+		moveBackFuncMenu = new moveBackMenu(out,terminal);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
-		out +="move right functional menu";
-		moveRightFuncMenu = new moveRightMenu(out);
+		out +="Please type in how may blocks you want to move right.";
+		moveRightFuncMenu = new moveRightMenu(out,terminal);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
-		out +="move left functional menu";
-		moveLeftFuncMenu = new moveLeftMenu(out);
+		out +="Please type in how may blocks you want to move left.";
+		moveLeftFuncMenu = new moveLeftMenu(out,terminal);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
-		out +="move up functional menu";
-		moveUpFuncMenu = new moveUpMenu(out);
+		out +="Please type in how may blocks you want to move up.";
+		moveUpFuncMenu = new moveUpMenu(out,terminal);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
-		out +="move down functional menu";
-		moveDownFuncMenu = new moveDownMenu(out);
+		out +="Please type in how may blocks you want to move down.";
+		moveDownFuncMenu = new moveDownMenu(out,terminal);
 
 		liftoffMenu = new Menu("liftoff");
 		out = "";
 		out +="liftoff functional menu";
-		liftoffFuncMenu = new liftoffMenu(out);
-		landingMenu = new landingMenu("landing");
+		liftoffFuncMenu = new liftoffMenu(out,terminal);
+		landingMenu = new landingMenu("landing",terminal);
 
 		out = "";
 		out+="  To target needs three parameter x,y and z.\n"
