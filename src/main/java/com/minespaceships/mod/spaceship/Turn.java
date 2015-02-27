@@ -14,9 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class Turn {
-	public static int LEFT = -1;
-	public static int RIGHT = 1;
-	public static int AROUND = 2;
+	public static final int LEFT = -1;
+	public static final int RIGHT = 1;
+	public static final int AROUND = 2;
+	public static boolean toBeMoved = true;
 
 	public static void around(final World world, final BlockPos origin) {
 		if (world != null && origin != null) {
@@ -41,29 +42,32 @@ public class Turn {
 	 * @param state current block state
 	 * @param prop current "facing" property
 	 * @param steps Indicates, how many turning steps of 90 degrees are to be made (-1 for a left
-	 *        turn, 1 for a right turn, 2 for a U-turn.
+	 *        turn, 1 for a right turn, 2 for a U-turn).
 	 * @return the new "facing" property value
 	 */
 	private static EnumFacing changeValue(World world, IBlockState state, BlockPos pos, IProperty prop, int steps) {
-		if (state != null && prop != null) {
-			while (steps < 0) {
-				steps += 4;
-			}
-			EnumFacing currentFacing = (EnumFacing)state.getValue(prop);
-			switch (currentFacing) {
-			case NORTH :
-				return direction(steps % 4) ;
-			case EAST :
-				return direction((1 + steps) % 4);
-			case SOUTH :
-				return direction((2 + steps) % 4);
-			case WEST :
-				return direction((3 + steps) % 4);
-			default:
-				// UP and DOWN can be ignored since "before" and "after" look the same.
-			}
+		if (state == null) {
+			throw new IllegalArgumentException("state must not be null!");
+		} else if (prop == null) {
+			throw new IllegalArgumentException("prop must not be null!");
 		}
-		throw new IllegalArgumentException("state and prop must not be null!");
+		while (steps < 0) {
+			steps += 4;
+		}
+		EnumFacing currentFacing = (EnumFacing)state.getValue(prop);
+		switch (currentFacing) {
+		case NORTH :
+			return direction(steps % 4) ;
+		case EAST :
+			return direction((1 + steps) % 4);
+		case SOUTH :
+			return direction((2 + steps) % 4);
+		case WEST :
+			return direction((3 + steps) % 4);
+		default:
+			// UP and DOWN can be ignored since "before" and "after" look the same.
+			return currentFacing;
+		}
 	}
 
 	/**
@@ -113,14 +117,23 @@ public class Turn {
 		}
 	}
 
+	public static void test(final World world, final BlockPos origin) {
+		BlockPos sourcePos, targetPos;
+		sourcePos = new BlockPos(origin.getX(), origin.getY(), origin.getZ() - 2);
+		// targetPos = new BlockPos(origin.getX() - leftRight * z, origin.getY() + y + 8, origin.getZ() + leftRight * x);
+		toBeMoved = false;
+		turn(world, sourcePos, sourcePos, Turn.LEFT);
+		toBeMoved = true;
+	}
+	
 	private static void turn(final World world, final BlockPos sourcePos, final BlockPos targetPos, final int dir) {
 		Block targetBlock;
 		IBlockState targetState;
 		IProperty targetProp;
 		EnumFacing facing, targetFacing;
 
-		// copy Blocks to new position
-		BlockCopier.copyBlock(world, sourcePos, targetPos);
+		// copy Blocks to new position if required
+		if (sourcePos != targetPos) BlockCopier.copyBlock(world, sourcePos, targetPos);
 		// make calculations for turning turnable blocks such as pistons, pumpkins etc.
 		targetState = world.getBlockState(targetPos);
 		targetBlock = targetState.getBlock();

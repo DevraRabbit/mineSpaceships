@@ -27,8 +27,8 @@ public class Spaceship {
 	private BlockPos span;
 	private BlockPos origin;
 	private WorldServer worldS;
-	
-	
+
+
 	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
 		setMeasurements(minPosition, maxPosition);
 		this.worldS = worldS;
@@ -43,7 +43,7 @@ public class Spaceship {
 		this.origin = origin;
 		this.worldS = worldS;
 	}
-	
+
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
 		minPosition = minPos;
 		maxPosition = maxPos;
@@ -55,18 +55,24 @@ public class Spaceship {
 	}
 	public void moveTo(BlockPos addDirection){
 		//copyTo(addDirection, worldC);
-		moveTo(addDirection, worldS);
+		moveTo(addDirection, worldS, 0);
 	}
-	private void moveTo(BlockPos addDirection, World world){
+	public void moveTo(BlockPos addDirection, World world) {
+		moveTo(addDirection, world, 0);
+	}
+	public void moveTo(BlockPos addDirection, int turn) {
+		moveTo(addDirection, worldS, turn);
+	}
+	private void moveTo(BlockPos addDirection, World world, final int turn){
 		BlockPos add = new BlockPos(addDirection);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
 				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
+					BlockPos pos = new BlockPos(x,y,z);
+					pos = pos.add(minPosition);
+					Block block = world.getBlockState(pos).getBlock();
 					if(block.isFullCube()){
-						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+						BlockCopier.copyBlock(world, pos, pos.add(add));
 					}
 				}
 			}
@@ -74,11 +80,11 @@ public class Spaceship {
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
 				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
+					BlockPos pos = new BlockPos(x,y,z);
+					pos = pos.add(minPosition);
+					Block block = world.getBlockState(pos).getBlock();
 					if(!block.isFullCube()){
-						BlockCopier.copyBlock(world, Pos, Pos.add(add));
+						BlockCopier.copyBlock(world, pos, pos.add(add));
 					}
 				}
 			}
@@ -86,11 +92,11 @@ public class Spaceship {
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
 				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
+					BlockPos pos = new BlockPos(x,y,z);
+					pos = pos.add(minPosition);
+					Block block = world.getBlockState(pos).getBlock();
 					if(!block.isFullCube()){
-						BlockCopier.removeBlock(world, Pos);
+						BlockCopier.removeBlock(world, pos);
 					}
 				}
 			}
@@ -98,11 +104,11 @@ public class Spaceship {
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
 				for(int z = 0; z < span.getZ(); z++){
-					BlockPos Pos = new BlockPos(x,y,z);
-					Pos = Pos.add(minPosition);
-					Block block = world.getBlockState(Pos).getBlock();
+					BlockPos pos = new BlockPos(x,y,z);
+					pos = pos.add(minPosition);
+					Block block = world.getBlockState(pos).getBlock();
 					if(block.isFullCube()){
-						BlockCopier.removeBlock(world, Pos);
+						BlockCopier.removeBlock(world, pos);
 					}
 				}
 			}

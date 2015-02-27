@@ -50,6 +50,7 @@ public class SpaceshipCommands {
 			return;
 		}
 
+		// 3D-Vector: [+|-]x;[+|-]y;[+|-]z
 		Pattern poffset = Pattern.compile("([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+);([\\-\\+]?[0-9]+)");
 		Matcher moffset = poffset.matcher(command);
 		if(moffset.matches()) {
