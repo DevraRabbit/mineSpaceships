@@ -95,32 +95,32 @@ public class SpaceshipMenu {
 
 		moveForwardMenu = new Menu("move forward");
 		out = "";
-		out +="move forward functional menu";
+		out +="Please type in how may blocks you want to move forward.";
 		moveForwardFuncMenu = new moveForwardMenu(out,terminal);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
-		out +="move back functional menu";
+		out +="Please type in how may blocks you want to move back.";
 		moveBackFuncMenu = new moveBackMenu(out,terminal);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
-		out +="move right functional menu";
+		out +="Please type in how may blocks you want to move right.";
 		moveRightFuncMenu = new moveRightMenu(out,terminal);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
-		out +="move left functional menu";
+		out +="Please type in how may blocks you want to move left.";
 		moveLeftFuncMenu = new moveLeftMenu(out,terminal);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
-		out +="move up functional menu";
+		out +="Please type in how may blocks you want to move up.";
 		moveUpFuncMenu = new moveUpMenu(out,terminal);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
-		out +="move down functional menu";
+		out +="Please type in how may blocks you want to move down.";
 		moveDownFuncMenu = new moveDownMenu(out,terminal);
 
 		liftoffMenu = new Menu("liftoff");
