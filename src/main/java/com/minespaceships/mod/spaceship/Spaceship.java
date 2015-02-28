@@ -10,11 +10,14 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -32,27 +35,14 @@ import net.minecraft.world.WorldServer;
 
 public class Spaceship {
 	private BlockPos origin;
-	private WorldServer worldS;	
-	private Vector<ChatRegisterEntity> navigators;
+	private WorldServer worldS;
 	private BlockMap blockMap;
+	private SpaceshipAssembler assembler;
 	
 	private boolean canBeRemoved = true;
 	
 	public static final int maxShipSize = 27000;
-	
-	@Deprecated
-	public Spaceship(final BlockPos minPosition,final BlockPos maxPosition, WorldServer worldS){
-		setMeasurements(minPosition, maxPosition);
-		this.worldS = worldS;
-		initializeBase();
-	}
-	@Deprecated
-	public Spaceship(final BlockPos minPosition, int dimX, int dimY, int dimZ, WorldServer worldS){
-		BlockPos recSpan = new BlockPos(dimX, dimY, dimZ);
-		this.worldS = worldS;
-		setMeasurements(minPosition, ((BlockPos) recSpan).add(minPosition));
-		initializeBase();
-	}
+
 	@Deprecated
 	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
 		this.origin = origin;
@@ -83,26 +73,17 @@ public class Spaceship {
 		initializeBase();
 	}		
 	private void initializeBase(){
-		navigators = new Vector<ChatRegisterEntity>();
+		assembler = new SpaceshipAssembler();
+		refreshParts();
 		Shipyard.getShipyard().addShip(this);
 	}
 	
 	public boolean canBeRemoved(){
 		return canBeRemoved;
 	}
-	public void addNavigator(ChatRegisterEntity nav){
-		if(!navigators.contains(nav)){
-			navigators.add(nav);
-			nav.hardSetShip(this);
-		}
-	}
-	
-	public void removeNavigator(ChatRegisterEntity entity){
-		navigators.remove(entity);
-	}
 	
 	public int getNavigatorCount(){
-		return navigators.size();
+		return assembler.getParts(NavigatorBlock.class).size();
 	}
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
@@ -142,20 +123,20 @@ public class Spaceship {
 		}
 		origin = Vec3Op.scale(span, 0.5);
 	}
-	
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin));
+		moveTo(position.subtract(origin), worldS);
 	}
-	
-	public void moveTo(BlockPos addDirection){
-		//copyTo(addDirection, worldC);
+	public void setTarget(BlockPos position, WorldServer world){
+		moveTo(position.subtract(origin), world);
+	}
+	public void moveTo(BlockPos addDirection) {
 		moveTo(addDirection, worldS, 0);
 	}
-	public void moveTo(BlockPos addDirection, World world) {
+	public void moveTo(BlockPos addDirection, WorldServer world) {
 		moveTo(addDirection, world, 0);
 	}
-	public void moveTo(BlockPos addDirection, int turn) {
-		moveTo(addDirection, worldS, turn);
+	public void moveTo(BlockPos addDirection, int turn, WorldServer world) {
+		moveTo(addDirection, world, turn);
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
@@ -250,7 +231,7 @@ public class Spaceship {
 		return sb.toString();
 	}
 	
-	public World getWorld() {
+	public WorldServer getWorld() {
 		return this.worldS;
 	}
 	
@@ -260,10 +241,32 @@ public class Spaceship {
 	
 	public void removeBlock(BlockPos pos) {
 		this.blockMap.remove(pos, Minecraft.getMinecraft().theWorld);
+		removeSpaceshipPart(pos);
+	}
+	private void removeSpaceshipPart(BlockPos pos){
+		IBlockState state = worldS.getBlockState(pos);
+		if(state.getBlock() instanceof ISpaceshipPart){
+			assembler.remove(state);
+		}
 	}
 	
 	public void addBlock(final BlockPos pos) {
-		this.blockMap.add(pos);
+		this.blockMap.add(pos);		
+		addSpaceshipPart(pos);
+	}
+	private void addSpaceshipPart(BlockPos pos){
+		IBlockState state = worldS.getBlockState(pos);
+		if(state.getBlock() instanceof ISpaceshipPart){
+			assembler.put(state);
+		}
+	}
+	
+	public void refreshParts(){
+		assembler.clear();
+		ArrayList<BlockPos> position = blockMap.getPositions();
+		for(BlockPos pos : position){
+			addSpaceshipPart(pos);
+		}
 	}
 	
 	public boolean isNeighboringBlock(final BlockPos pos) {

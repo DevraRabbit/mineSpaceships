@@ -2,6 +2,7 @@ package com.minespaceships.mod.blocks;
 
 import com.minespaceships.mod.ExampleMod;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.block.Block;
@@ -36,7 +37,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
+public class NavigatorBlock extends BlockStairs implements ITileEntityProvider, ISpaceshipPart{
 	/**
 	 * Block to implement an interface for the Spaceships
 	 * @param name The display name of the block

@@ -12,12 +12,10 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 public class Shipyard {
 	private Vector<Spaceship> ships;
-	private Vector<ChatRegisterEntity> navigators;
 	private static Shipyard singleton;
 	
 	protected Shipyard() {
 		ships = new Vector<Spaceship>();
-		navigators = new Vector<ChatRegisterEntity>();
 	}
 	
 	public static Shipyard getShipyard(){
@@ -31,37 +29,25 @@ public class Shipyard {
 		if(ship != null){
 			if(!ships.contains(ship)){
 				ships.add(ship);
-				for(ChatRegisterEntity ent : navigators){
-					if(ship.containsBlock(ent.getPos())){
-						ship.addNavigator(ent);
-					}
-				}
 			}
 		}
 	}
 	
-	public void addNavigator(ChatRegisterEntity entity){
-		if(entity != null && !navigators.contains(entity) && entity.getWorld() instanceof WorldServer){
-			navigators.add(entity);
-			for(Spaceship ship : ships){
-				if(ship.isNeighboringBlock(entity.getPos())){
-					ship.addNavigator(entity);
-				}
+	public Spaceship getShip(BlockPos pos, WorldServer world){
+		for(Spaceship ship : ships){
+			if(ship.containsBlock(pos) && ship.getWorld() == world){
+				return ship;
 			}
 		}
-	}
+		return null;
+	}	
 	
-	public void removeNavigator(ChatRegisterEntity entity){
-		navigators.remove(entity);
-		for(java.util.Iterator<Spaceship> shipIt = ships.iterator(); shipIt.hasNext();){
-			Spaceship ship = shipIt.next();
-			if(ship.canBeRemoved()){
-				ship.removeNavigator(entity);
-				if(ship.getNavigatorCount() == 0){
-					shipIt.remove();
-				}
-			}			
-		}
+	@Deprecated
+	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
+		addShip(new Spaceship(minSpan, origin, maxSpan, worldS));
+	}
+	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
+		addShip(new Spaceship(initial, worldS));
 	}
 	
 	/**

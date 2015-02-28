@@ -5,6 +5,7 @@ import net.minecraft.util.EnumChatFormatting;
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
@@ -38,7 +39,7 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	public String activate(String command) {
 		try {
 			Spaceship spaceship = terminal.getChatRegisterEntity().getShip();
-			this.terminal.getChatRegisterEntity().createShip( this.terminal.getChatRegisterEntity().getPos() , this.terminal.getChatRegisterEntity().getRemoteWorld());
+			Shipyard.getShipyard().createShip( this.terminal.getChatRegisterEntity().getPos() , this.terminal.getChatRegisterEntity().getRemoteWorld());
 			String out="";
 			out+= EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\n"
 				+"Press 'Esc' and reopen the menu.";

@@ -6,6 +6,7 @@ import com.example.examplemod.ovae.terminalMenu;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
+import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
@@ -35,7 +36,6 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ChatRegisterEntity extends TileEntity {
 	
 	//Attributes
-	private Spaceship ship;
 	private WorldServer remoteWorld;
 
 	private CustomGuiChat terminal;
@@ -51,36 +51,22 @@ public class ChatRegisterEntity extends TileEntity {
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		if(worldObj instanceof WorldServer){
-			Shipyard.getShipyard().addNavigator(this);
-		}
 	}
 	@Override
 	public void invalidate(){
-		Shipyard.getShipyard().removeNavigator(this);
 		super.invalidate();
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1)
 	{
-	   super.writeToNBT(par1);
-	   if(ship != null && worldObj instanceof WorldServer){
-		   int[] a = ship.getOriginMeasurementArray();
-		   par1.setIntArray(recoverSpaceshipMeasures, a);
-	   }	   
+	   super.writeToNBT(par1); 
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1)
 	{
 	   super.readFromNBT(par1);
-	   if(worldObj instanceof WorldServer){
-		   int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
-		   if(measurements != null){
-			   ship = new Spaceship(measurements);
-		   }
-	   }
 	}
 
 	/**
@@ -148,12 +134,12 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
 		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
+			SpaceshipCommands.init(command, remoteWorld, this, player, getShip());
 		} else if (command.startsWith("move")) {
-			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
+			SpaceshipCommands.move(command, remoteWorld, this, player, getShip());
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
-			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
+			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, getShip());
+			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, getShip());
 		} else if (command.startsWith("turn ")) {
 			command = command.substring(4).trim();
 			if (command.equals("left")) {
@@ -168,34 +154,11 @@ public class ChatRegisterEntity extends TileEntity {
 				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
 			}
 		} else if(command.equals("status")) {
-			SpaceshipCommands.status(remoteWorld, this, player, ship);
+			SpaceshipCommands.status(remoteWorld, this, player, getShip());
 		}
 		terminalMenu.onCommand(command, player);
 	}
-
-	public void setShip(Spaceship ship) {
-		ChatRegisterEntity cre = (ChatRegisterEntity)remoteWorld.getTileEntity(pos);
-		if(cre != null){
-			cre.ship = ship;
-		}
-	}	
-	@Deprecated
-	public void hardSetShip(Spaceship ship){
-		this.ship = ship;
-	}
 	public Spaceship getShip() {
-		ChatRegisterEntity entity = ((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-		if(entity != null){
-			return entity.ship;
-		} else {
-			return null;
-		}
-	}
-	@Deprecated
-	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
-		setShip(new Spaceship(minSpan, origin, maxSpan, worldS));
-	}
-	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
-		setShip(new Spaceship(initial, worldS));
-	}
+		return Shipyard.getShipyard().getShip(pos, remoteWorld);
+	}	
 }
