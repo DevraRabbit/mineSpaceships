@@ -32,6 +32,9 @@ public class Shipyard {
 			}
 		}
 	}
+	public void removeShip(Spaceship ship){
+		ships.remove(ship);
+	}
 	
 	public Spaceship getShip(BlockPos pos, WorldServer world){
 		for(Spaceship ship : ships){

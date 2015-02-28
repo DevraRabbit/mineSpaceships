@@ -73,7 +73,7 @@ public class Spaceship {
 		initializeBase();
 	}		
 	private void initializeBase(){
-		assembler = new SpaceshipAssembler();
+		assembler = new SpaceshipAssembler(blockMap.getOrigin());
 		refreshParts();
 		Shipyard.getShipyard().addShip(this);
 	}
@@ -207,6 +207,7 @@ public class Spaceship {
 	
 	private void moveMeasurements(BlockPos addDirection){
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));
+		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
 	@Deprecated
@@ -242,11 +243,14 @@ public class Spaceship {
 	public void removeBlock(BlockPos pos) {
 		this.blockMap.remove(pos, Minecraft.getMinecraft().theWorld);
 		removeSpaceshipPart(pos);
+		if(getNavigatorCount() <= 0){
+			Shipyard.getShipyard().removeShip(this);
+		}
 	}
 	private void removeSpaceshipPart(BlockPos pos){
 		IBlockState state = worldS.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.remove(state);
+			assembler.remove(state, pos);
 		}
 	}
 	
@@ -257,7 +261,7 @@ public class Spaceship {
 	private void addSpaceshipPart(BlockPos pos){
 		IBlockState state = worldS.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.put(state);
+			assembler.put(state, pos);
 		}
 	}
 	
