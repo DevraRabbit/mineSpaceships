@@ -51,7 +51,7 @@ public class ChatRegisterEntity extends TileEntity {
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		if(worldObj != null && worldObj == remoteWorld){
+		if(worldObj instanceof WorldServer){
 			Shipyard.getShipyard().addNavigator(this);
 		}
 	}
@@ -65,7 +65,7 @@ public class ChatRegisterEntity extends TileEntity {
 	public void writeToNBT(NBTTagCompound par1)
 	{
 	   super.writeToNBT(par1);
-	   if(ship != null){
+	   if(ship != null && worldObj instanceof WorldServer){
 		   int[] a = ship.getOriginMeasurementArray();
 		   par1.setIntArray(recoverSpaceshipMeasures, a);
 	   }	   
@@ -75,9 +75,11 @@ public class ChatRegisterEntity extends TileEntity {
 	public void readFromNBT(NBTTagCompound par1)
 	{
 	   super.readFromNBT(par1);
-	   int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
-	   if(measurements != null){
-		   ship = new Spaceship(measurements);
+	   if(worldObj instanceof WorldServer){
+		   int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
+		   if(measurements != null){
+			   ship = new Spaceship(measurements);
+		   }
 	   }
 	}
 

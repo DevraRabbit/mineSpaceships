@@ -6,6 +6,7 @@ import scala.collection.Iterator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
@@ -33,9 +34,6 @@ public class Shipyard {
 				for(ChatRegisterEntity ent : navigators){
 					if(ship.containsBlock(ent.getPos())){
 						ship.addNavigator(ent);
-						if(ent.getShip() == null){
-							ent.setShip(ship);
-						}
 					}
 				}
 			}
@@ -43,7 +41,7 @@ public class Shipyard {
 	}
 	
 	public void addNavigator(ChatRegisterEntity entity){
-		if(entity != null && !navigators.contains(entity)){
+		if(entity != null && !navigators.contains(entity) && entity.getWorld() instanceof WorldServer){
 			navigators.add(entity);
 			for(Spaceship ship : ships){
 				if(ship.isNeighboringBlock(entity.getPos())){
