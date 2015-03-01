@@ -79,6 +79,7 @@ public class Spaceship implements Serializable{
 	public Spaceship(String s, WorldServer worldS)throws Exception {
 		this.fromData(s);
 		this.worldS = worldS;
+		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
 	private void initializeBase(){
@@ -305,10 +306,9 @@ public class Spaceship implements Serializable{
 			blockMap.add(BlockPos.fromLong(Long.parseLong(lines[i])));			
 		}
 	}
-	public boolean lightEquals(Spaceship ship){
+	public boolean measuresEquals(Spaceship ship){
 		return ship.blockMap.getMaxPos().equals(blockMap.getMaxPos()) &&
 				ship.blockMap.getMinPos().equals(blockMap.getMinPos()) &&
-				ship.blockMap.getOrigin().equals(blockMap.getOrigin()) &&
 				ship.getWorld() == worldS;
 	}
 }

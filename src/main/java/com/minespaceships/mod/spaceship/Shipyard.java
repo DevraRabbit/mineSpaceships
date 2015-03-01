@@ -46,7 +46,7 @@ public class Shipyard {
 				Iterator<Spaceship> shipIt = ships.iterator();
 				while(shipIt.hasNext()){
 					Spaceship nextShip = shipIt.next();
-					if(nextShip.lightEquals(ship)){
+					if(nextShip.measuresEquals(ship)){
 						shipIt.remove();
 					}
 				}
