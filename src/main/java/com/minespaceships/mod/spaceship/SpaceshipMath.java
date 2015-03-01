@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
@@ -52,6 +53,17 @@ public class SpaceshipMath {
 			}
 		}
 		return neighbors;
+	}
+	
+	public static ArrayList<EnumFacing> getPossibleConnections(World worldIn, BlockPos pos){
+		ArrayList<EnumFacing> facings = new ArrayList<EnumFacing>();
+		if(!worldIn.canBlockBePlaced(worldIn.getBlockState(pos).getBlock(), pos, true, EnumFacing.NORTH, null, null)){facings.add(EnumFacing.NORTH);}
+		if(!worldIn.canBlockBePlaced(worldIn.getBlockState(pos).getBlock(), pos, true, EnumFacing.EAST, null, null)){facings.add(EnumFacing.EAST);}
+		if(!worldIn.canBlockBePlaced(worldIn.getBlockState(pos).getBlock(), pos, true, EnumFacing.SOUTH, null, null)){facings.add(EnumFacing.SOUTH);}
+		if(!worldIn.canBlockBePlaced(worldIn.getBlockState(pos).getBlock(), pos, true, EnumFacing.WEST, null, null)){facings.add(EnumFacing.WEST);}
+		if(!worldIn.canBlockBePlaced(worldIn.getBlockState(pos).getBlock(), pos, true, EnumFacing.UP, null, null)){facings.add(EnumFacing.UP);}
+		if(!worldIn.canBlockBePlaced(worldIn.getBlockState(pos).getBlock(), pos, true, EnumFacing.DOWN, null, null)){facings.add(EnumFacing.DOWN);}
+		return facings;
 	}
 	
 }
