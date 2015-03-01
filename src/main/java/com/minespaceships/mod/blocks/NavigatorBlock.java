@@ -1,6 +1,6 @@
 package com.minespaceships.mod.blocks;
 
-import com.minespaceships.mod.ExampleMod;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;

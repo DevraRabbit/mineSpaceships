@@ -1,9 +1,12 @@
 package com.minespaceships.mod.spaceship;
 
+import java.io.Serializable;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
 
@@ -28,12 +31,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public class Spaceship {
+public class Spaceship implements Serializable{
 	private BlockPos origin;
 	private WorldServer worldS;
 	private BlockMap blockMap;
@@ -71,7 +75,12 @@ public class Spaceship {
 		blockMap = blocks;
 		this.worldS = worldS;
 		initializeBase();
-	}		
+	}	
+	public Spaceship(String s, WorldServer worldS)throws Exception {
+		this.fromData(s);
+		this.worldS = worldS;
+		initializeBase();
+	}
 	private void initializeBase(){
 		assembler = new SpaceshipAssembler(blockMap.getOrigin());
 		refreshParts();
@@ -85,6 +94,10 @@ public class Spaceship {
 	public int getNavigatorCount(){
 		return assembler.getParts(NavigatorBlock.class).size();
 	}
+	public ArrayList<BlockPos> getPositions(){
+		return blockMap.getPositions();
+	}
+	
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
 		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
@@ -275,5 +288,27 @@ public class Spaceship {
 	
 	public boolean isNeighboringBlock(final BlockPos pos) {
 		return this.blockMap.isNeighbor(pos);
+	}
+	public String toData(){
+		String data = "";
+		ArrayList<BlockPos> positions = blockMap.getPositions();
+		data += blockMap.getOrigin().toLong()+"\n";
+		for(BlockPos pos : positions){
+			data += pos.toLong()+"\n";
+		}
+		return data;
+	}
+	public void fromData(String data) throws Exception{
+		String[] lines = data.split("\n");		
+		blockMap = new BlockMap(BlockPos.fromLong(Long.parseLong(lines[0])));
+		for(int i = 1; i < lines.length; i++){
+			blockMap.add(BlockPos.fromLong(Long.parseLong(lines[i])));			
+		}
+	}
+	public boolean lightEquals(Spaceship ship){
+		return ship.blockMap.getMaxPos().equals(blockMap.getMaxPos()) &&
+				ship.blockMap.getMinPos().equals(blockMap.getMinPos()) &&
+				ship.blockMap.getOrigin().equals(blockMap.getOrigin()) &&
+				ship.getWorld() == worldS;
 	}
 }
