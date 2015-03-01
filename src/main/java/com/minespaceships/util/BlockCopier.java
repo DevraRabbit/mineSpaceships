@@ -20,7 +20,7 @@ public class BlockCopier {
 		copyBlock(worldIn, origin, target, true);
 	}
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, boolean copyEntity){
-		worldIn.setBlockState(target, worldIn.getBlockState(origin), 2);
+		worldIn.setBlockState(target, worldIn.getBlockState(origin), 2);	
 		TileEntity ent = worldIn.getTileEntity(origin);
 		if(ent != null){
 			worldIn.removeTileEntity(origin);

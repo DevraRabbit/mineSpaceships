@@ -31,7 +31,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
@@ -157,17 +156,32 @@ public class Spaceship implements Serializable{
 	private void moveTo(BlockPos addDirection, World world, final int turn){
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
+		//list of positions left to be build
+		Vector<BlockPos> position = new Vector<BlockPos>();
 		//list of positions that need to be removed in revers order to prevent other blocks from cracking
 		Vector<BlockPos> removal = new Vector<BlockPos>();
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
-		ArrayList<BlockPos> position = blockMap.getPositions();
+		ArrayList<BlockPos> positions = blockMap.getPositions();
+		for(BlockPos Pos : positions){
+			Block block = world.getBlockState(Pos).getBlock();
+			BlockPos nextPos = Pos.add(add);
+			if(block.canPlaceBlockAt(world, nextPos)){
+				//build the buildable block
+				BlockCopier.copyBlock(world, Pos, nextPos);
+				//remember to remove it
+				removal.add(Pos);
+			} else {
+				//remember to buid the Block later
+				position.add(Pos);
+			}
+		}
+
 		//get through all the unbuildable positions that are left and build them until all have been moved.
 		//also make a safety layer. If after some layers of fragilness the blocks still can't be placed they certainly never will.
 		int i = 0;
-		int imax = 1;
-		while(!position.isEmpty() && i < imax){
+		while(!position.isEmpty() && i < 3){
 			Iterator<BlockPos> posIterator = position.iterator();
 			while(posIterator.hasNext()){
 				BlockPos Pos = posIterator.next();
@@ -184,21 +198,21 @@ public class Spaceship implements Serializable{
 			}
 			i++;
 		}
-//		//if there are blocks left
-//		if(!position.isEmpty()){
-//			for(BlockPos Pos : position){
-//				//force placement
-//				BlockPos nextPos = Pos.add(add);
-//				BlockCopier.copyBlock(world, Pos, nextPos);
-//				//again: remember to remove the Block.
-//				removal.add(Pos);
-//			}
-//		}
-//		//remove the Blocks in reversed order, so that the most fragile ones are removed last.
-//		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
-//		while(reverseRemoval.hasPrevious()){
-//			BlockCopier.removeBlock(world, reverseRemoval.previous());
-//		}
+		//if there are blocks left
+		if(i == 3){
+			for(BlockPos Pos : position){
+				//force placement
+				BlockPos nextPos = Pos.add(add);
+				BlockCopier.copyBlock(world, Pos, nextPos);
+				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
+				removal.insertElementAt(Pos, 0);
+			}
+		}
+		//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+		while(reverseRemoval.hasPrevious()){
+			BlockCopier.removeBlock(world, reverseRemoval.previous());
+		}
 		//move the entities and move the ships measurements  
 		moveEntities(addDirection);
 		moveMeasurements(addDirection);
