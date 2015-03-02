@@ -104,6 +104,11 @@ public class Spaceship {
 	public int getNavigatorCount(){
 		return navigators.size();
 	}
+	
+	public BlockMap getBlockMap(){
+		return blockMap;
+	}
+	
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
 		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
