@@ -10,12 +10,12 @@ import com.minespaceships.mod.spaceship.Spaceship;
 /**
  * This class displays a menu structure.
  * @author ovae.
- * @version 20150225
+ * @version 20150302
  */
 public class MenuDisplay {
 
 	//The terminal to write in.
-	protected CustomGuiChat terminal;
+	private CustomGuiChat terminal;
 
 	//The root of the menu structure.
 	private Menu root;
@@ -88,12 +88,6 @@ public class MenuDisplay {
 		if(menu.equals(null)){
 			throw new IllegalArgumentException("Menu can not be null.");
 		}
-		/*
-		Spaceship ship = terminal.getChatRegisterEntity().getShip();
-		if(ship.equals(null)){
-			terminal.display("no ship", true);
-			return;
-		}*/
 		terminal.display(preparingOutput(menu, ""),true);
 	}
 }
