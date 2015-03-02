@@ -29,7 +29,7 @@ public class SpaceshipCommands {
 			try {
 				ChatRegisterEntity ent = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()));
 				if(ent != null){
-					ent.createShip(commandBlock.getPos(), worldObj);
+					Shipyard.getShipyard().createShip(commandBlock.getPos(), worldObj);
 				}
 			} catch (Exception e) {
 				player.addChatComponentMessage(new ChatComponentText(e.toString()));
@@ -43,7 +43,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
-			((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).createShip(from, commandBlock.getPos(), to, worldObj);
+			Shipyard.getShipyard().createShip(from, commandBlock.getPos(), to, worldObj);
 			
 			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
 		} else {
