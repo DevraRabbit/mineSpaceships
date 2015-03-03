@@ -91,6 +91,9 @@ public class Spaceship implements Serializable{
 		Shipyard.getShipyard().addShip(this);
 	}
 	
+	public BlockPos getOrigin(){
+		return origin;
+	}
 	public boolean canBeRemoved(){
 		return canBeRemoved;
 	}
@@ -145,7 +148,7 @@ public class Spaceship implements Serializable{
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin), worldS);
+		moveTo(position.subtract(origin), Turn.LEFT, worldS);
 	}
 	public void setTarget(BlockPos position, WorldServer world){
 		moveTo(position.subtract(origin), world);
@@ -176,7 +179,7 @@ public class Spaceship implements Serializable{
 				BlockPos Pos = it.next();
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
-				BlockPos nextPos = Pos.add(add);			
+				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);			
 				EnumFacing facing = Turn.getFacing(state);
 				BlockPos neighbor = null;
 				if(facing != null){

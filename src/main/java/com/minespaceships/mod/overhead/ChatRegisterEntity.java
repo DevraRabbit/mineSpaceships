@@ -148,8 +148,6 @@ public class ChatRegisterEntity extends TileEntity {
 				Turn.ninetyDeg(worldObj, pos, Turn.RIGHT);
 			} else if (command.equals("around")) {
 				Turn.around(worldObj, pos);
-			} else if (command.equals("test")) {
-				Turn.test(worldObj, pos);
 			} else {
 				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
 			}
