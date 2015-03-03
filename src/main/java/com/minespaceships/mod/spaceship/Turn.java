@@ -17,7 +17,6 @@ public class Turn {
 	public static final int LEFT = -1;
 	public static final int RIGHT = 1;
 	public static final int AROUND = 2;
-	public static boolean toBeMoved = true;
 
 	public static void around(final World world, final BlockPos origin) {
 		if (world != null && origin != null) {
@@ -128,15 +127,23 @@ public class Turn {
 		}
 	}
 
-	public static void test(final World world, final BlockPos origin) {
-		BlockPos sourcePos, targetPos;
-		sourcePos = new BlockPos(origin.getX(), origin.getY(), origin.getZ() - 2);
-		// targetPos = new BlockPos(origin.getX() - leftRight * z, origin.getY() + y + 8, origin.getZ() + leftRight * x);
-		toBeMoved = false;
-		turn(world, sourcePos, sourcePos, Turn.LEFT);
-		toBeMoved = true;
+	public static BlockPos getRotatedPos(final World world, final BlockPos pos, final BlockPos origin, final BlockPos moveTo, final int dir) {
+		BlockPos sourcePos = new BlockPos(pos.subtract(origin));
+		BlockPos targetPos;
+		switch(dir) {
+		case LEFT:
+		case RIGHT:
+			targetPos = new BlockPos(- sourcePos.getZ() * dir, sourcePos.getY(), sourcePos.getX() * dir);
+			break;
+		case AROUND:
+			targetPos = new BlockPos(-sourcePos.getX(), sourcePos.getY(), -sourcePos.getZ());
+			break;
+		default:
+			throw new IllegalArgumentException("dir must be Turn.LEFT, Turn.RIGHT or Turn.AROUND!");
+		}
+		return targetPos.add(origin).add(moveTo);
 	}
-	
+
 	private static void turn(final World world, final BlockPos sourcePos, final BlockPos targetPos, final int dir) {
 		Block targetBlock;
 		IBlockState targetState;
