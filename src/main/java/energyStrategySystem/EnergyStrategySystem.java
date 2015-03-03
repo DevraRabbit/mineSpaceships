@@ -8,6 +8,7 @@ public class EnergyStrategySystem {
 	private final ArrayList<EnergyConsumer> consumerList;
 	private final ArrayList<EnergyProducer> producerList;
 	private final ArrayList<EnergyConsumer> removeList;
+	private final ArrayList<Object> allList;
 	
 	
 	
@@ -16,6 +17,7 @@ public class EnergyStrategySystem {
 		consumerList= new ArrayList<EnergyConsumer>();
 		producerList= new ArrayList<EnergyProducer>();	
 		removeList= new ArrayList<EnergyConsumer>();
+		allList= new ArrayList<Object>();
 	}
 	
 	public String print(){
@@ -33,12 +35,28 @@ public class EnergyStrategySystem {
 		return out;
 	}
 	
+	public String add(EnergyConsumer e){
+		if(e.getEnergy()>0){
+			return this.addProducer(e);
+		} else if (e.getEnergy()<0){
+			return this.addConsumer(e);
+		} else {
+			return addNeutral(e);
+		}
 	
+		
+	}
+	
+	public String addNeutral(EnergyProducer p){
+		allList.add(p);
+		return "Neutral thing added to EnergySystem" + '\n';
+	}
 
 	public String addConsumer(EnergyConsumer c){
 		if(energy>=c.getEnergy()){
 		energy=energy-c.getEnergy();
 		consumerList.add(c);
+		allList.add(c);
 		return "EnergyConsumer added. Energy=" +energy+ '\n';
 		}
 		else{
@@ -49,6 +67,7 @@ public class EnergyStrategySystem {
 	public String addProducer(EnergyProducer p){
 		energy=energy+p.getEnergy();
 		producerList.add(p);
+		allList.add(p);
 		return "EnergyProducer added. Energy=" +energy+ '\n';
 		
 	}
