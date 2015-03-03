@@ -1,31 +1,92 @@
 package com.minespaceships.mod.menu;
 
 import java.util.Scanner;
+
 import com.minespaceships.mod.menu.Menu;
 
 public class TestMain {
 	
 	private static Scanner scanner = new Scanner(System.in);
 	private static String input;
+	/**
+	 * Is necessary to now if the DefaultMenu was initialise before.
+	 */
+	private static boolean runBefore;
+
+	/**
+	 * The root menu.
+	 */
+	private static Menu root;
+
+	/**
+	 * Menu for the spaceship navigation.
+	 */
+	private static Menu navigation;
+
+	/*
+	 * Menu for the spaceship armour.
+	 */
+	private static Menu armour;
+
+	/**
+	 * Menu for all protective devices of the spaceship.
+	 */
+	private static Menu protection;
+
+	/**
+	 * Menu if you need help
+	 */
+	private static Menu help;
+
+	/**
+	 * Menu for the spaceship shield.
+	 */
+	private static Menu shield;
+
+	/**
+	 * Menu which contains the ability to activate the shield
+	 */
+	private static Menu activateShield;
+
+	/**
+	 * Menu which contains the ability to disable the shield
+	 */
+	private static Menu disableShield;
+
+	/**
+	 * 
+	 */
+	private static Menu shiptoTarget;
+
 	
 	
 	public static void main(String[] args){
 		
-		Menu menu1 = new Menu("Root 0");
-		Menu menu2 = new Menu("Hauptmenu 1");
-		
-		menu1.addSubMenu(menu2);
-		menu1.addSubMenu(new Menu("untermenu2"));
-		Menu menu3= new Menu("Untermenu3 mit Untermenu");
-		menu2.addSubMenu(menu3);
-		menu2.addSubMenu(new Menu("untermenu4"));
-		menu3.addSubMenu(new Menu("untermenu5"));
-		menu3.addSubMenu(new Menu("untermenu6"));
+		root = new Menu("Main");
+		navigation = new Menu("spaceshipnavigation");
+		armour = new Menu("weapons");
+		protection = new Menu("protection");
+		help = new HelpMenu("help");
+		shield = new Menu("shield");
+		activateShield = new ShieldActivateMenu(">activate");
+		disableShield = new ShieldDisableMenu(">disable");
+		shiptoTarget = new NavigateToTargetMenu("to target [x][y][z]");
 
-		menu1.display();
+		root.addSubMenu(navigation);
+			navigation.addSubMenu(shiptoTarget);
+		root.addSubMenu(armour);
+		root.addSubMenu(protection);
+		root.addSubMenu(help);
+			protection.addSubMenu(shield);
+			shield.addSubMenu(activateShield);
+			shield.addSubMenu(disableShield);
+			
+			runBefore = true;
+			
+		System.out.println("");
 
-		userInput(menu1);
-		menu1.switchMenu(input);
+		userInput(root);
+		root.switchMenu(input);
 		
 		/*
 		System.out.print("> ");
@@ -52,6 +113,23 @@ public class TestMain {
 		}
 		
 	}
+	
+	/**
+	 * Returns the root menu.
+	 * @return root
+	 */
+	public static Menu getRootMenu(){
+		return root;
+	}
+
+	/**
+	 * Returns a boolean runBefore.
+	 * @return runBefore
+	 */
+	public static boolean getRunBefore(){
+		return runBefore;
+	}
+
 	
 
 

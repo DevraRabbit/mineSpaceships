@@ -14,8 +14,8 @@ public class ShieldActivateMenu extends Menu implements FunktionalMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public ShieldActivateMenu(String name, CustomGuiChat terminal) {
-		super(name, terminal);
+	public ShieldActivateMenu(String name) {
+		super(name);
 	}
 
 	/**
@@ -23,8 +23,8 @@ public class ShieldActivateMenu extends Menu implements FunktionalMenu{
 	 */
 	@Override
 	public void activate(String paramlist) {
-		super.terminal.display(">> shield activated <<");
-		super.terminal.mc.theWorld.setRainStrength( 0f);
+		System.out.println(">> shield activated <<");
+		
 	}
 
 }

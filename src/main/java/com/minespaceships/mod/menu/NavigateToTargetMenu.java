@@ -19,8 +19,8 @@ public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public NavigateToTargetMenu(String name, CustomGuiChat terminal) {
-		super(name, terminal);
+	public NavigateToTargetMenu(String name) {
+		super(name);
 		// TODO Auto-generated constructor stub
 	}
 

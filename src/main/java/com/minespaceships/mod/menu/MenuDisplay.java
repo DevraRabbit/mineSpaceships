@@ -34,15 +34,13 @@ public class MenuDisplay {
 		this.terminal = terminal;
 	}
 
-	public void navigate(final String command){
-		terminal.display(root.switchMenu(command));
-	}
+	
 
 	/**
 	 * 
 	 * @param message
 	 */
-	public void display(final String message){
-		
+	public void display(final String command){
+		terminal.display(root.switchMenu(command));
 	}
 }

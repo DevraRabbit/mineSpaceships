@@ -57,7 +57,7 @@ public class Menu{
 	 * The menu constructor creates a new menu object with a menu name.
 	 * @param name
 	 */
-	public Menu(final String name, final CustomGuiChat terminal){
+	public Menu(final String name){
 		if(name.trim().isEmpty()){
 			throw new IllegalArgumentException("The menu name can not be null.");
 		}
