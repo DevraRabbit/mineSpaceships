@@ -19,6 +19,8 @@ import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -31,6 +33,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
@@ -160,51 +163,39 @@ public class Spaceship implements Serializable{
 	private void moveTo(BlockPos addDirection, World world, final int turn){
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
-		//list of positions left to be build
-		Vector<BlockPos> position = new Vector<BlockPos>();
 		//list of positions that need to be removed in revers order to prevent other blocks from cracking
 		Vector<BlockPos> removal = new Vector<BlockPos>();
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
-		ArrayList<BlockPos> positions = blockMap.getPositions();
-		for(BlockPos Pos : positions){
-			Block block = world.getBlockState(Pos).getBlock();
-			BlockPos nextPos = Pos.add(add);
-			if(block.canPlaceBlockAt(world, nextPos)){
-				//build the buildable block
-				BlockCopier.copyBlock(world, Pos, nextPos);
-				//remember to remove it
-				removal.add(Pos);
-			} else {
-				//remember to buid the Block later
-				position.add(Pos);
-			}
-		}
-
-		//get through all the unbuildable positions that are left and build them until all have been moved.
-		//also make a safety layer. If after some layers of fragilness the blocks still can't be placed they certainly never will.
-		int i = 0;
-		while(!position.isEmpty() && i < 3){
-			Iterator<BlockPos> posIterator = position.iterator();
-			while(posIterator.hasNext()){
-				BlockPos Pos = posIterator.next();
-				Block block = world.getBlockState(Pos).getBlock();
-				if(!block.isAir(world, Pos)){
-					BlockPos nextPos = Pos.add(add);
-					if(block.canPlaceBlockAt(world, nextPos)){
-						BlockCopier.copyBlock(world, Pos, nextPos);
-						posIterator.remove();
-						//again: remember to remove the Block
-						removal.add(Pos);
-					}
+		ArrayList<BlockPos> positions = blockMap.getPositions();	
+		int i = 3;
+		while(!positions.isEmpty() && i > 0){
+			Iterator<BlockPos> it = positions.iterator();
+			while(it.hasNext()){
+				BlockPos Pos = it.next();
+				IBlockState state = world.getBlockState(Pos);
+				Block block = state.getBlock();
+				BlockPos nextPos = Pos.add(add);			
+				EnumFacing facing = Turn.getFacing(state);
+				BlockPos neighbor = null;
+				if(facing != null){
+					facing = Turn.getNextFacing(facing, turn);
+					neighbor = nextPos.offset(facing.getOpposite());
 				}
+				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
+					//build the buildable block
+					BlockCopier.copyBlock(world, Pos, nextPos);
+					it.remove();
+					//remember to remove it
+					removal.add(Pos);
+				} 
 			}
-			i++;
-		}
+			i--;
+		}		
 		//if there are blocks left
-		if(i == 3){
-			for(BlockPos Pos : position){
+		if(!positions.isEmpty()){
+			for(BlockPos Pos : positions){
 				//force placement
 				BlockPos nextPos = Pos.add(add);
 				BlockCopier.copyBlock(world, Pos, nextPos);

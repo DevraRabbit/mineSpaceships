@@ -55,6 +55,9 @@ public class Turn {
 			steps += 4;
 		}
 		EnumFacing currentFacing = (EnumFacing)state.getValue(prop);
+		return getNextFacing(currentFacing, steps);
+	}
+	public static EnumFacing getNextFacing(EnumFacing currentFacing,  int steps){
 		switch (currentFacing) {
 		case NORTH :
 			return direction(steps % 4) ;
@@ -73,7 +76,7 @@ public class Turn {
 	/**
 	 * Turns an index back to a horizontal EnumFacing element.
 	 */
-	private static EnumFacing direction(final int index) {
+	public static EnumFacing direction(final int index) {
 		switch(index) {
 		case 0: return EnumFacing.NORTH;
 		case 1: return EnumFacing.EAST;
@@ -83,6 +86,14 @@ public class Turn {
 		}
 	}
 
+	public static EnumFacing getFacing(final IBlockState state){
+		IProperty facing = getFacingProperty(state);
+		if(facing != null){
+			return (EnumFacing)state.getValue(facing);		
+		} else {
+			return null;
+		}
+	}
 	/**
 	 * Loads the whole set of properties from an IBlockState and searches it for a "facing" property.
 	 * @return The "facing" property of state if it exists. If not, null is returned.
