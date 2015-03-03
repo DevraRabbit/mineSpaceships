@@ -99,6 +99,10 @@ public class Spaceship implements Serializable{
 		return blockMap.getPositions();
 	}
 	
+	public BlockMap getBlockMap(){
+		return blockMap;
+	}
+	
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
 		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
