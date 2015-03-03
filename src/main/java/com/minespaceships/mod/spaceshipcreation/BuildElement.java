@@ -17,7 +17,11 @@ public abstract class BuildElement {
 		this.min = min;
 		this.max = max;
 	}
-	public abstract BlockPos getRandomBuildPosition(Random random);
+	public BlockPos getSpan(){
+		return max.subtract(min);
+	}
+	public abstract BlockPos getRandomBuildPosition(Random random);	
 	public abstract BlockMap getPositions();
+	public abstract BuildElement getTransposedElement(BlockPos addDirection);
 	public abstract boolean overlaps(BuildElement element);
 }
