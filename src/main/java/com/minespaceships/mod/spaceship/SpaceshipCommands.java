@@ -100,7 +100,7 @@ public class SpaceshipCommands {
 		
 		if(moffset.matches()) {
 			BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
-			ship.moveTo(vec_move);
+			ship.setTarget(vec_move.add(ship.getOrigin()));
 			commandBlock.setPos(commandBlock.getPos().add(vec_move));
 			
 			player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
@@ -147,5 +147,11 @@ public class SpaceshipCommands {
 			}
 		}
 		return command;
+	}
+	
+	public static void debug(String command, final ChatRegisterEntity commandBlock){
+		if(command.equals("debug blockMap")){
+			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getRemoteWorld()).debugMap();;
+		}
 	}
 }

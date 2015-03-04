@@ -1,5 +1,6 @@
 package com.minespaceships.mod.spaceshipcreation;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.util.BlockPos;
@@ -11,11 +12,23 @@ public class SpaceshipCreator {
 			//createSpaceship(worldIn, pos.subtract(new BlockPos(10,10,10)), pos.add(new BlockPos(10,10,10)), 3, 0.2f, 0.9f, new Random(123));
 		}
 	}
-	public static void FillElement(World worldIn, BuildElement element, int subsets, float splitChance, float symmetryChance, Random random){
-		while(subsets > 0){
+	public static ArrayList<BuildElement> FillElement(World worldIn, BuildElement element, float subsetChance, float fillingChance, float symmetryChance, Random random){
+		ArrayList<BuildElement> nextElements = new ArrayList<BuildElement>();
+		while(random.nextFloat() < subsetChance){
 			BlockPos pos = element.getRandomBuildPosition(random);
-			
+			BuildElement smallerElement = getSmallerElement(element, pos, random);
+			if(random.nextFloat() < fillingChance){
+				smallerElement.isFilling = true;
+			} else {
+				smallerElement.isFilling = false;
+			}
+			nextElements.add(smallerElement);
+			if(random.nextFloat() < symmetryChance){
+				//BlockPos symmetryPos = new BlockPos(element.getSpan().getX() - pos.subtract(element.min).getX(), 0, 0);    DOES NOT WORK!
+				//nextElements.add(smallerElement.getTransposedElement(symmetryPos));
+			}
 		}
+		return nextElements;
 	}
 	public static BuildElement getSmallerElement(BuildElement element, BlockPos pos, Random random){
 		BlockPos span = element.max.subtract(element.min);

@@ -58,10 +58,7 @@ public class Turn {
 			throw new IllegalArgumentException("state must not be null!");
 		} else if (prop == null) {
 			throw new IllegalArgumentException("prop must not be null!");
-		}
-		while (steps < 0) {
-			steps += 4;
-		}
+		}		
 		EnumFacing currentFacing = (EnumFacing)state.getValue(prop);
 		return getNextFacing(currentFacing, steps);
 	}
@@ -141,7 +138,7 @@ public class Turn {
 	}
 
 	public static BlockPos getRotatedPos(final World world, final BlockPos pos, final BlockPos origin, final BlockPos moveTo, final int dir) {
-		BlockPos sourcePos = new BlockPos(pos.subtract(origin));
+		BlockPos sourcePos = pos.subtract(origin);
 		BlockPos targetPos;
 		switch(dir) {
 		case LEFT:
@@ -151,6 +148,8 @@ public class Turn {
 		case AROUND:
 			targetPos = new BlockPos(-sourcePos.getX(), sourcePos.getY(), -sourcePos.getZ());
 			break;
+		case 0:
+			targetPos = sourcePos;
 		default:
 			throw new IllegalArgumentException("dir must be Turn.LEFT, Turn.RIGHT or Turn.AROUND!");
 		}

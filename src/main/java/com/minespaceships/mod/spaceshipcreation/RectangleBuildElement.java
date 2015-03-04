@@ -48,4 +48,10 @@ public class RectangleBuildElement extends BuildElement {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public BuildElement getTransposedElement(BlockPos addDirection) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
