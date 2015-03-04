@@ -311,4 +311,7 @@ public class Spaceship implements Serializable{
 				ship.blockMap.getMinPos().equals(blockMap.getMinPos()) &&
 				ship.getWorld() == worldS;
 	}
+	public void debugMap(){
+		blockMap.showDebug(worldS);
+	}
 }

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -176,10 +177,20 @@ public class BlockMap {
 	public void rotate(BlockPos origin, int turn){
 		BlockPos rotateOrigin = origin.subtract(this.origin);
 		Set<BlockPos> posSet = map.keySet();
+		HashMap nextMap = new HashMap<BlockPos, Boolean>();
 		for(Iterator<BlockPos> it = posSet.iterator(); it.hasNext();){
 			BlockPos pos = it.next();
 			BlockPos nextPos = Turn.getRotatedPos(null, pos, rotateOrigin, new BlockPos(0,0,0), turn);
-			pos = nextPos;
+			nextMap.put(nextPos, true);
+		}
+		map = nextMap;
+		this.origin = Turn.getRotatedPos(null, this.origin, origin, new BlockPos(0,0,0), turn);
+	}
+	
+	public void showDebug(World world){
+		ArrayList<BlockPos> positions = getPositions();
+		for(BlockPos pos : positions){
+			world.setBlockState(pos, Block.getStateById(2));
 		}
 	}
 }

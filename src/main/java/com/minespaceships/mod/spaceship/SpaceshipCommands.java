@@ -148,4 +148,10 @@ public class SpaceshipCommands {
 		}
 		return command;
 	}
+	
+	public static void debug(String command, final ChatRegisterEntity commandBlock){
+		if(command.equals("debug blockMap")){
+			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getRemoteWorld()).debugMap();;
+		}
+	}
 }
