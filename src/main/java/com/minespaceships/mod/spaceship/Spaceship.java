@@ -185,7 +185,7 @@ public class Spaceship implements Serializable{
 				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos);
+					BlockCopier.copyBlock(world, Pos, nextPos, turn);
 					it.remove();
 					//remember to remove it
 					removal.add(Pos);
@@ -198,7 +198,7 @@ public class Spaceship implements Serializable{
 			for(BlockPos Pos : positions){
 				//force placement
 				BlockPos nextPos = Pos.add(add);
-				BlockCopier.copyBlock(world, Pos, nextPos);
+				BlockCopier.copyBlock(world, Pos, nextPos, turn);
 				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
 				removal.insertElementAt(Pos, 0);
 			}
