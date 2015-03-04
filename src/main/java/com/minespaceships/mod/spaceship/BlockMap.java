@@ -2,6 +2,7 @@ package com.minespaceships.mod.spaceship;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -170,5 +171,15 @@ public class BlockMap {
 			}
 		}
 		return false;
+	}
+	
+	public void rotate(BlockPos origin, int turn){
+		BlockPos rotateOrigin = origin.subtract(this.origin);
+		Set<BlockPos> posSet = map.keySet();
+		for(Iterator<BlockPos> it = posSet.iterator(); it.hasNext();){
+			BlockPos pos = it.next();
+			BlockPos nextPos = Turn.getRotatedPos(null, pos, rotateOrigin, new BlockPos(0,0,0), turn);
+			pos = nextPos;
+		}
 	}
 }

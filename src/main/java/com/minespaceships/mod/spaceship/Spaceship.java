@@ -200,7 +200,7 @@ public class Spaceship implements Serializable{
 		if(!positions.isEmpty()){
 			for(BlockPos Pos : positions){
 				//force placement
-				BlockPos nextPos = Pos.add(add);
+				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);	
 				BlockCopier.copyBlock(world, Pos, nextPos);
 				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
 				removal.insertElementAt(Pos, 0);
@@ -213,12 +213,13 @@ public class Spaceship implements Serializable{
 		}
 		//move the entities and move the ships measurements  
 		moveEntities(addDirection);
-		moveMeasurements(addDirection);
+		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}
 	
-	private void moveMeasurements(BlockPos addDirection){
-		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));
+	private void moveMeasurements(BlockPos addDirection, int turn){
+		if(turn != 0){blockMap.rotate(origin, turn);}
+		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));		
 		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
@@ -252,12 +253,13 @@ public class Spaceship implements Serializable{
 		return this.blockMap.contains(pos);
 	}
 	
-	public void removeBlock(BlockPos pos) {
+	public boolean removeBlock(BlockPos pos) {
 		this.blockMap.remove(pos, Minecraft.getMinecraft().theWorld);
 		removeSpaceshipPart(pos);
 		if(getNavigatorCount() <= 0){
-			Shipyard.getShipyard().removeShip(this);
+			return true;
 		}
+		return false;
 	}
 	private void removeSpaceshipPart(BlockPos pos){
 		IBlockState state = worldS.getBlockState(pos);

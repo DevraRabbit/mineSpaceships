@@ -128,7 +128,7 @@ public class Turn {
 	}
 
 	public static BlockPos getRotatedPos(final World world, final BlockPos pos, final BlockPos origin, final BlockPos moveTo, final int dir) {
-		BlockPos sourcePos = new BlockPos(pos.subtract(origin));
+		BlockPos sourcePos = pos.subtract(origin);
 		BlockPos targetPos;
 		switch(dir) {
 		case LEFT:

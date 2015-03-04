@@ -81,13 +81,11 @@ public class Shipyard {
 	 * @param world World
 	 */
 	public void blockBroken(final BlockPos pos, final World world) {
-		if (ships.isEmpty()) return;
-		
-		for (Spaceship ship: ships) {
+		for (Iterator<Spaceship> it = ships.iterator(); it.hasNext();) {
+			Spaceship ship = it.next();
 			if (ship.getWorld() == world) {
 				if (ship.containsBlock(pos)) {
-					ship.removeBlock(pos);
-					break;
+					if(ship.removeBlock(pos)){it.remove();}
 				}
 			}
 		}
