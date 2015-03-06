@@ -5,29 +5,29 @@ import com.minespaceships.mod.menu.Menu;
 
 public class EnergyStrategySystem {
 	private int energy;
-	private final ArrayList<EnergyConsumer> consumerList;
-	private final ArrayList<EnergyProducer> producerList;
-	private final ArrayList<EnergyConsumer> removeList;
-	private final ArrayList<Object> allList;
+	private final ArrayList<EnergyC> consumerList;
+	private final ArrayList<EnergyC> producerList;
+	private final ArrayList<EnergyC> removeList;
+	private final ArrayList<EnergyC> allList;
 	
 	
 	
 	public EnergyStrategySystem(){
 		energy=0;
-		consumerList= new ArrayList<EnergyConsumer>();
-		producerList= new ArrayList<EnergyProducer>();	
-		removeList= new ArrayList<EnergyConsumer>();
-		allList= new ArrayList<Object>();
+		consumerList= new ArrayList<EnergyC>();
+		producerList= new ArrayList<EnergyC>();	
+		removeList= new ArrayList<EnergyC>();
+		allList= new ArrayList<EnergyC>();
 	}
 	
 	public String print(){
 		String out;
 		out="EnergyConsumer" +'\n';
-		for(EnergyConsumer e: consumerList){
+		for(EnergyC e: consumerList){
 			out=out +e.toString();
 		}
 		out=out +"EnergyProducer" +'\n';
-		for(EnergyProducer e: producerList){
+		for(EnergyC e: producerList){
 			out=out +e.toString();
 		}
 		
@@ -35,7 +35,7 @@ public class EnergyStrategySystem {
 		return out;
 	}
 	
-	public String add(EnergyConsumer e){
+	public String add(EnergyC e){
 		if(e.getEnergy()>0){
 			return this.addProducer(e);
 		} else if (e.getEnergy()<0){
@@ -47,12 +47,12 @@ public class EnergyStrategySystem {
 		
 	}
 	
-	public String addNeutral(EnergyProducer p){
+	public String addNeutral(EnergyC p){
 		allList.add(p);
 		return "Neutral thing added to EnergySystem" + '\n';
 	}
 
-	public String addConsumer(EnergyConsumer c){
+	public String addConsumer(EnergyC c){
 		if(energy>=c.getEnergy()){
 		energy=energy-c.getEnergy();
 		consumerList.add(c);
@@ -64,7 +64,7 @@ public class EnergyStrategySystem {
 		}
 	}
 	
-	public String addProducer(EnergyProducer p){
+	public String addProducer(EnergyC p){
 		energy=energy+p.getEnergy();
 		producerList.add(p);
 		allList.add(p);
@@ -72,7 +72,7 @@ public class EnergyStrategySystem {
 		
 	}
 	
-	public String removeConsumer(EnergyConsumer c){
+	public String removeConsumer(EnergyC c){
 		energy=energy+c.getEnergy();
 		for(int i=0; i<consumerList.size(); i++){
 			if(c==consumerList.get(i)){
@@ -83,7 +83,7 @@ public class EnergyStrategySystem {
 		return "EnergyConsumer removed" + '\n';
 	}
 	
-	public String removeProducer(EnergyProducer p){
+	public String removeProducer(EnergyC p){
 		
 		if(0>=energy-p.getEnergy()){
 			forceRemove(java.lang.Math.abs(energy-p.getEnergy()));
@@ -127,7 +127,7 @@ public class EnergyStrategySystem {
 			} 				
 		}
 		
-		for(EnergyConsumer e: removeList ){
+		for(EnergyC e: removeList ){
 			
 			for(int l=0; l<consumerList.size(); l++){
 				if(e.equals(consumerList.get(l))){

@@ -10,9 +10,9 @@ public class TestEnergyStrategySystem {
 	private static EnergyStrategySystem e;
 	public static void main(String[] args){
 		e = new EnergyStrategySystem();
-		p1= new EnergyProducer(10);
-		p2= new EnergyProducer(50);
-		p3= new EnergyProducer(10);
+		p1= new EnergyProducer(10,1);
+		p2= new EnergyProducer(50,1);
+		p3= new EnergyProducer(10,2);
 		c1= new EnergyConsumer(10,1);
 		c2= new EnergyConsumer(50,2);
 		c3= new EnergyConsumer(10,3);
