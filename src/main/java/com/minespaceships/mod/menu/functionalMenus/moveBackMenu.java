@@ -19,16 +19,12 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  */
 public class moveBackMenu extends Menu implements FunctionalParamMenu{
 
-	//The terminal to write in.
-	private CustomGuiChat terminal;
-
-	public moveBackMenu(String name, CustomGuiChat terminal) {
+	public moveBackMenu(String name) {
 		super(name);
-		this.terminal=terminal;
 	}
 
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}
@@ -47,11 +43,11 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 			z = Double.valueOf(matcher.group(3));
 
 			try{
-				Spaceship ship = this.terminal.getChatRegisterEntity().getShip();
+				Spaceship ship = terminal.getChatRegisterEntity().getShip();
 				//(double)x, (double)y, (double)z
 				BlockPos position = new BlockPos(x, y, z);
 				if(ship == null) {
-					this.terminal.display("move: Please initialise the Spaceship first", true);
+					terminal.display("move: Please initialise the Spaceship first", true);
 				}
 				ship.moveTo(position);
 				

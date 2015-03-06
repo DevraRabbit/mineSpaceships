@@ -27,7 +27,7 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 	 * The functionality of the menu is activated by this method.
 	 */
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		String out="";
 		out+=EnumChatFormatting.GOLD+" "+EnumChatFormatting.BOLD+"]--HELP--[\n\n"
 		+"  "+EnumChatFormatting.YELLOW+"Menu structure:\n"

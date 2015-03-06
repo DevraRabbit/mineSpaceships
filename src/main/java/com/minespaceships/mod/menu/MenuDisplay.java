@@ -48,7 +48,7 @@ public class MenuDisplay {
 			return EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.";
 		}
 		if(menu instanceof FunctionalMenu){
-			return ((FunctionalMenu)menu).activate(command);
+			return ((FunctionalMenu)menu).activate(command, terminal);
 		}
 
 		root.setSelectedMenu(menu);
@@ -72,12 +72,12 @@ public class MenuDisplay {
 	 * Displays the current selected menu.
 	 * @param command
 	 */
-	public void display(final String command){
+	public void display(final String command, CustomGuiChat terminal){
 		if(command.trim().isEmpty()){
 			terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", true);
 			return;
 		}
-		terminal.display(preparingOutput(root.switchMenu(command),command),true);
+		terminal.display(preparingOutput(root.switchMenu(command, terminal),command),true);
 	}
 
 	/**

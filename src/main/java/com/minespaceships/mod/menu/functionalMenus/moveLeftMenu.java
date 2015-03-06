@@ -14,13 +14,12 @@ public class moveLeftMenu extends Menu implements FunctionalParamMenu{
 	//The terminal to write in.
 	private CustomGuiChat terminal;
 	
-	public moveLeftMenu(String name, CustomGuiChat terminal) {
+	public moveLeftMenu(String name) {
 		super(name);
-		this.terminal = terminal;
 	}
 
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		// TODO Auto-generated method stub
 		return "move left not implemented yet!";
 	}

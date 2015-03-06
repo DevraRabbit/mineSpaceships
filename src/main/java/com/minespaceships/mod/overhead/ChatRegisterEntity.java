@@ -124,7 +124,7 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void onCommand(String command, EntityPlayer player){
 		//display the menu.
-		spaceshipMenu.display(command);
+		spaceshipMenu.display(command, terminal);
 
 		//define a very first command to see if it works.
 		if(command.equals("hello")){

@@ -1,7 +1,9 @@
 package com.minespaceships.mod.menu;
 
 import java.util.Scanner;
+
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
  * 
@@ -29,7 +31,7 @@ public class TestMain {
 
 		//System.out.println(menu1.display());
 
-		userInput(menu1);
+		//userInput(menu1);
 		//menu1.switchMenu(input);
 
 		scanner.close();
@@ -38,12 +40,12 @@ public class TestMain {
 	/**
 	 * @param menu
 	 */
-	private static void userInput(Menu menu){
+	private static void userInput(Menu menu, CustomGuiChat terminal){
 		System.out.print("> ");
 		input = scanner.next();
 		while(!input.equals("quit")){
-			menu.switchMenu(input);
-			userInput(menu);
+			menu.switchMenu(input, terminal);
+			userInput(menu, terminal);
 		}
 		
 	}

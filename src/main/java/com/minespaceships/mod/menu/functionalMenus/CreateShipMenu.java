@@ -4,6 +4,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
@@ -15,20 +16,13 @@ import com.minespaceships.mod.spaceship.Spaceship;
  */
 public class CreateShipMenu extends Menu implements FunctionalMenu{
 
-	//The terminal to write in.
-	CustomGuiChat terminal;
-
 	/**
 	 * The constructor creates a new spaceship.
 	 * @param name
 	 * @param terminal
 	 */
-	public CreateShipMenu(String name, CustomGuiChat terminal) {
+	public CreateShipMenu(String name) {
 		super(name);
-		if(terminal.equals(null)){
-			throw new IllegalArgumentException("terminal can not be null.");
-		}
-		this.terminal=terminal;
 	}
 
 	/**
@@ -36,10 +30,10 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	 * @param command
 	 */
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		try {
 			Spaceship spaceship = terminal.getChatRegisterEntity().getShip();
-			Shipyard.getShipyard().createShip( this.terminal.getChatRegisterEntity().getPos() , this.terminal.getChatRegisterEntity().getRemoteWorld());
+			Shipyard.getShipyard().createShip(terminal.getChatRegisterEntity().getPos() , terminal.getChatRegisterEntity().getRemoteWorld());
 			String out="";
 			out+= EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\n"
 				+"Press 'Esc' and reopen the menu.";
