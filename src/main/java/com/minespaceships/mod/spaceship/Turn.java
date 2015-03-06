@@ -150,6 +150,7 @@ public class Turn {
 			break;
 		case 0:
 			targetPos = sourcePos;
+			break;
 		default:
 			throw new IllegalArgumentException("dir must be Turn.LEFT, Turn.RIGHT or Turn.AROUND!");
 		}

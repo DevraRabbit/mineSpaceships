@@ -148,7 +148,7 @@ public class Spaceship implements Serializable{
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin), Turn.LEFT, worldS);
+		moveTo(position.subtract(origin), 0, worldS);
 	}
 	public void setTarget(BlockPos position, WorldServer world){
 		moveTo(position.subtract(origin), world);
