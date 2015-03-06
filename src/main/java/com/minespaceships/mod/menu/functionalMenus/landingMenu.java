@@ -14,13 +14,12 @@ public class landingMenu extends Menu implements FunctionalMenu{
 	//The terminal to write in.
 	private CustomGuiChat terminal;
 
-	public landingMenu(String name, CustomGuiChat terminal) {
+	public landingMenu(String name) {
 		super(name);
-		this.terminal = terminal;
 	}
 
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		return "landing not implemented yet!";
 	}
 

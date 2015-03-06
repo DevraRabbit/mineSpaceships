@@ -42,7 +42,7 @@ public class Shipyard {
 	
 	public void addShip(Spaceship ship){
 		if(ship != null){
-			if(!ships.contains(ship)){
+			if(!ships.contains(ship) && ship.getNavigatorCount() > 0){
 				Iterator<Spaceship> shipIt = ships.iterator();
 				while(shipIt.hasNext()){
 					Spaceship nextShip = shipIt.next();

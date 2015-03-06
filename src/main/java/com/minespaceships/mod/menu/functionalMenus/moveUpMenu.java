@@ -11,16 +11,12 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  */
 public class moveUpMenu extends Menu implements FunctionalParamMenu{
 	
-	//The terminal to write in.
-	private CustomGuiChat terminal;
-	
-	public moveUpMenu(String name, CustomGuiChat terminal) {
+	public moveUpMenu(String name) {
 		super(name);
-		this.terminal=terminal;
 	}
 
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		// TODO Auto-generated method stub
 		return "move up not implemented yet!";
 	}

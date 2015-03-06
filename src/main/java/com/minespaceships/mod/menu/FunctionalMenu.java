@@ -13,6 +13,6 @@ public interface FunctionalMenu{
 	 * Activate the functionality of the menu.
 	 * @param paramlist
 	 */
-	public String activate(String command);
+	public String activate(String command, CustomGuiChat terminal);
 
 }

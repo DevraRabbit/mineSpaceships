@@ -11,16 +11,12 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  */
 public class liftoffMenu extends Menu implements FunctionalParamMenu{
 
-	//The terminal to write in.
-	private CustomGuiChat terminal;
-
-	public liftoffMenu(String name, CustomGuiChat terminal) {
+	public liftoffMenu(String name) {
 		super(name);
-		this.terminal=terminal;
 	}
 
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		// TODO Auto-generated method stub
 		return "liftoff not implemented yet!";
 	}

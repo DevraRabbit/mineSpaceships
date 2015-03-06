@@ -31,12 +31,8 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public ToTargetFunktionalMenu(String name, CustomGuiChat terminal) {
+	public ToTargetFunktionalMenu(String name) {
 		super(name);
-		if(terminal.equals(null)){
-			throw new IllegalArgumentException("Terminal can not be null.");
-		}
-		this.terminal = terminal;
 	}
 
 	/**
@@ -44,7 +40,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 	 * @param command
 	 */
 	@Override
-	public String activate(String command){
+	public String activate(String command, CustomGuiChat terminal){
 		if(command.equals(null)){
 			throw new IllegalArgumentException("Command can not be null.");
 		}
