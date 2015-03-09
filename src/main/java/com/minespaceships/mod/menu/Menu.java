@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
  * The Menu class implements a menu structure and the ability

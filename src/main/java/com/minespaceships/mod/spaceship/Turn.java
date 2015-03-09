@@ -13,11 +13,20 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * This class contains static methods to transform coordinates of a Block in order to turn it
+ * around an origin coordinate. Furthermore, it turns blocks facing in a certain direction
+ * around themselves (e.g. pumpkins, pistons, tree trunks [TO DO]).
+ * 
+ * @author Marcel
+ *
+ */
 public class Turn {
-	public static int LEFT = -1;
-	public static int RIGHT = 1;
-	public static int AROUND = 2;
+	public static final int LEFT = -1;
+	public static final int RIGHT = 1;
+	public static final int AROUND = 2;
 
+	@Deprecated
 	public static void around(final World world, final BlockPos origin) {
 		if (world != null && origin != null) {
 			BlockPos sourcePos, targetPos;
@@ -27,7 +36,7 @@ public class Turn {
 					for (int z = -2; z <= 2; z++) {
 						sourcePos = new BlockPos(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
 						targetPos = new BlockPos(origin.getX() - x, origin.getY() + y + 8, origin.getZ() - z);
-						turn(world, sourcePos, targetPos, 2);
+						BlockCopier.copyBlock(world, sourcePos, targetPos, AROUND);
 					}
 				}
 			}
@@ -40,36 +49,42 @@ public class Turn {
 	 * Changes the "facing" property value of a block.
 	 * @param state current block state
 	 * @param prop current "facing" property
-	 * @param steps Indicates, how many turning steps of 90 degrees are to be made (-1 for a left
-	 *        turn, 1 for a right turn, 2 for a U-turn.
+	 * @param steps Indicates, how many turning steps of 90 degrees are to be made (Turn.LEFT for a left
+	 *        turn, Turn.RIGHT for a right turn, Turn.AROUND for a U-turn, 0 for no turn).
 	 * @return the new "facing" property value
 	 */
 	private static EnumFacing changeValue(World world, IBlockState state, BlockPos pos, IProperty prop, int steps) {
-		if (state != null && prop != null) {
-			while (steps < 0) {
-				steps += 4;
-			}
-			EnumFacing currentFacing = (EnumFacing)state.getValue(prop);
-			switch (currentFacing) {
-			case NORTH :
-				return direction(steps % 4) ;
-			case EAST :
-				return direction((1 + steps) % 4);
-			case SOUTH :
-				return direction((2 + steps) % 4);
-			case WEST :
-				return direction((3 + steps) % 4);
-			default:
-				// UP and DOWN can be ignored since "before" and "after" look the same.
-			}
+		if (state == null) {
+			throw new IllegalArgumentException("state must not be null!");
+		} else if (prop == null) {
+			throw new IllegalArgumentException("prop must not be null!");
+		}		
+		EnumFacing currentFacing = (EnumFacing)state.getValue(prop);
+		return getNextFacing(currentFacing, steps);
+	}
+	public static EnumFacing getNextFacing(EnumFacing currentFacing,  int steps){
+		while (steps < 0) {
+			steps += 4;
 		}
-		throw new IllegalArgumentException("state and prop must not be null!");
+		switch (currentFacing) {
+		case NORTH :
+			return direction(steps % 4) ;
+		case EAST :
+			return direction((1 + steps) % 4);
+		case SOUTH :
+			return direction((2 + steps) % 4);
+		case WEST :
+			return direction((3 + steps) % 4);
+		default:
+			// UP and DOWN can be ignored since "before" and "after" look the same.
+			return currentFacing;
+		}
 	}
 
 	/**
 	 * Turns an index back to a horizontal EnumFacing element.
 	 */
-	private static EnumFacing direction(final int index) {
+	public static EnumFacing direction(final int index) {
 		switch(index) {
 		case 0: return EnumFacing.NORTH;
 		case 1: return EnumFacing.EAST;
@@ -79,6 +94,14 @@ public class Turn {
 		}
 	}
 
+	public static EnumFacing getFacing(final IBlockState state){
+		IProperty facing = getFacingProperty(state);
+		if(facing != null){
+			return (EnumFacing)state.getValue(facing);		
+		} else {
+			return null;
+		}
+	}
 	/**
 	 * Loads the whole set of properties from an IBlockState and searches it for a "facing" property.
 	 * @return The "facing" property of state if it exists. If not, null is returned.
@@ -96,6 +119,7 @@ public class Turn {
 		return null;
 	}
 
+	@Deprecated
 	public static void ninetyDeg(final World world, final BlockPos origin, final int leftRight) {
 		if (world != null && origin != null && (leftRight == LEFT || leftRight == RIGHT)) {
 			BlockPos sourcePos, targetPos;
@@ -104,7 +128,7 @@ public class Turn {
 					for (int z = -2; z <= 2; z++) {
 						sourcePos = new BlockPos(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
 						targetPos = new BlockPos(origin.getX() - leftRight * z, origin.getY() + y + 8, origin.getZ() + leftRight * x);
-						turn(world, sourcePos, targetPos, leftRight);
+						BlockCopier.copyBlock(world, sourcePos, targetPos, leftRight);
 					}
 				}
 			}
@@ -113,28 +137,45 @@ public class Turn {
 		}
 	}
 
-	private static void turn(final World world, final BlockPos sourcePos, final BlockPos targetPos, final int dir) {
-		Block targetBlock;
-		IBlockState targetState;
-		IProperty targetProp;
+	public static BlockPos getRotatedPos(final World world, final BlockPos pos, final BlockPos origin, final BlockPos moveTo, final int dir) {
+		BlockPos sourcePos = pos.subtract(origin);
+		BlockPos targetPos;
+		switch(dir) {
+		case LEFT:
+		case RIGHT:
+			targetPos = new BlockPos(- sourcePos.getZ() * dir, sourcePos.getY(), sourcePos.getX() * dir);
+			break;
+		case AROUND:
+			targetPos = new BlockPos(-sourcePos.getX(), sourcePos.getY(), -sourcePos.getZ());
+			break;
+		case 0:
+			targetPos = sourcePos;
+		default:
+			throw new IllegalArgumentException("dir must be Turn.LEFT, Turn.RIGHT or Turn.AROUND!");
+		}
+		return targetPos.add(origin).add(moveTo);
+	}
+
+	public static void turn(final World world, final BlockPos pos, final int dir) {
+		Block block;
+		IBlockState state;
+		IProperty prop;
 		EnumFacing facing, targetFacing;
 
-		// copy Blocks to new position
-		BlockCopier.copyBlock(world, sourcePos, targetPos);
 		// make calculations for turning turnable blocks such as pistons, pumpkins etc.
-		targetState = world.getBlockState(targetPos);
-		targetBlock = targetState.getBlock();
-		targetProp = getFacingProperty(targetState);
+		state = world.getBlockState(pos);
+		block = state.getBlock();
+		prop = getFacingProperty(state);
 		// make sure this is a block that can be rotated
-		if (targetProp != null) {
+		if (prop != null) {
 			// Set "facing" property value to which a block shall be turned.
-			facing = changeValue(world, targetState, targetPos, targetProp, dir);
-			targetFacing = (EnumFacing)targetState.getValue(targetProp);
-			while (targetFacing.compareTo(facing) != 0) {
-				world.setBlockState(targetPos, targetState.cycleProperty(targetProp));
-				targetState = world.getBlockState(targetPos);
-				targetProp = getFacingProperty(targetState);
-				targetFacing = (EnumFacing)targetState.getValue(targetProp);
+			targetFacing = changeValue(world, state, pos, prop, dir);
+			facing = (EnumFacing)state.getValue(prop);
+			while (facing.compareTo(targetFacing) != 0) {
+				world.setBlockState(pos, state.cycleProperty(prop));
+				state = world.getBlockState(pos);
+				prop = getFacingProperty(state);
+				facing = (EnumFacing)state.getValue(prop);
 			}
 		}
 	}

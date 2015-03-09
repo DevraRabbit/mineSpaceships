@@ -1,7 +1,8 @@
 package com.minespaceships.mod.blocks;
 
-import com.minespaceships.mod.ExampleMod;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.block.Block;
@@ -24,6 +25,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
@@ -35,7 +37,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
+public class NavigatorBlock extends BlockStairs implements ITileEntityProvider, ISpaceshipPart{
 	/**
 	 * Block to implement an interface for the Spaceships
 	 * @param name The display name of the block
@@ -65,6 +67,9 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
 				//Activate the entity
 				((ChatRegisterEntity)entity).Activate(playerIn);
 			}
+    	} else {
+    		//instantiate the remote worlds tile entity
+    		worldIn.getTileEntity(pos);
     	}
     	//returns true to prevent placing a block (which would be the default behavior for rightclicking)
     	return true;
@@ -72,6 +77,10 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider{
     @Override
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){    	
     	return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
+    }
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+    	super.breakBlock(worldIn, pos, state);
     }
 
     /**

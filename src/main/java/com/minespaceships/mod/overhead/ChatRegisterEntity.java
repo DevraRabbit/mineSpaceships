@@ -3,8 +3,10 @@ package com.minespaceships.mod.overhead;
 import java.util.regex.*;
 
 import com.example.examplemod.ovae.terminalMenu;
-import com.minespaceships.mod.menu.DefaultMenu;
+import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
+import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
+import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
@@ -31,41 +33,41 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ChatRegisterEntity extends TileEntity implements IMoveable{
+public class ChatRegisterEntity extends TileEntity {
 	
 	//Attributes
 	private Spaceship ship;
 	private WorldServer remoteWorld;
 
 	private CustomGuiChat terminal;
-	private MenuDisplay menuDisplay;
+	private MenuDisplay spaceshipMenu;
+	private MenuDisplay noSpaceshipMenu;
 	
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
 	
 	public ChatRegisterEntity() {
+		super();		
+	}
+	@Override
+	public void setPos(BlockPos pos){
+		super.setPos(pos);
 		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		if(worldObj == remoteWorld){
-			Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-		}
+	}
+	@Override
+	public void invalidate(){
+		super.invalidate();
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1)
 	{
-	   super.writeToNBT(par1);
-	   if(ship != null){
-		   par1.setIntArray(recoverSpaceshipMeasures, ship.getOriginMeasurementArray());
-	   }	   
+	   super.writeToNBT(par1); 
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1)
 	{
 	   super.readFromNBT(par1);
-	   int[] measurements = par1.getIntArray(recoverSpaceshipMeasures);
-	   if(measurements != null){
-		   ship = new Spaceship(measurements);
-	   }
 	}
 
 	/**
@@ -81,17 +83,26 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 			terminal = new CustomGuiChat(player, this);
 			
 			//Initialise a default menu for testing reasons
-			if(!DefaultMenu.getRunBefore()){
-				DefaultMenu.initMenu(terminal);
+			if(!SpaceshipMenu.getRunBefore()){
+				SpaceshipMenu.initMenu(terminal);
+			}
+			if(!NoSpaceshipEntityMenu.getRunBefore()){
+				NoSpaceshipEntityMenu.initMenu(terminal);
 			}
 
 			//initialise the menu display.
-			menuDisplay = new MenuDisplay(DefaultMenu.getRootMenu(), terminal);
+			spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
+			noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
 
 			//open our console. 
 			Minecraft.getMinecraft().displayGuiScreen(terminal);
-			//Print out the menu in the console.
-			menuDisplay.displayMain(DefaultMenu.getRootMenu());
+
+			if(terminal.getChatRegisterEntity().getShip() == null){
+				noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
+			}else{
+				//Print out the menu in the console.
+				spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
+			}
 		}
 	}
 	public void setRemoteWorld(WorldServer world){
@@ -115,7 +126,7 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 	public void onCommand(String command, EntityPlayer player){
 		//command = command.toLowerCase();
 		//display the menu.
-		menuDisplay.display(command);
+		spaceshipMenu.display(command);
 
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
@@ -125,12 +136,12 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
 		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, remoteWorld, this, player, ship);
+			SpaceshipCommands.init(command, remoteWorld, this, player, getShip());
 		} else if (command.startsWith("move")) {
-			SpaceshipCommands.move(command, remoteWorld, this, player, ship);
+			SpaceshipCommands.move(command, remoteWorld, this, player, getShip());
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, ship);
-			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, ship);
+			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, getShip());
+			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, getShip());
 		} else if (command.startsWith("turn ")) {
 			command = command.substring(4).trim();
 			if (command.equals("left")) {
@@ -143,36 +154,12 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
 			}
 		} else if(command.equals("status")) {
-			SpaceshipCommands.status(remoteWorld, this, player, ship);
-		} else if(command.startsWith("shoot")) {
-			SpaceshipCommands.shoot(command, remoteWorld, this, player, ship);
+			SpaceshipCommands.status(remoteWorld, this, player, getShip());
 		}
 		terminalMenu.onCommand(command, player);
+		SpaceshipCommands.debug(command, this);
 	}
-
-	public void setShip(Spaceship ship) {
-		this.ship = ship;
-	}	
 	public Spaceship getShip() {
-		return ship;
-	}
-
-	@Deprecated
-	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
-		this.ship = new Spaceship(minSpan, origin, maxSpan, worldS);
-		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-	}
-	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
-		this.ship = new Spaceship(initial, worldS);
-		Shipyard.getShipyard().addNavigator((ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-	}
-
-	@Override
-	public void moveInformation(IMoveable target) {
-		if(target instanceof ChatRegisterEntity){
-			ChatRegisterEntity targetEntity = (ChatRegisterEntity)target;
-			targetEntity.ship = ship;
-			targetEntity.remoteWorld = remoteWorld;
-		}
-	}
+		return Shipyard.getShipyard().getShip(pos, remoteWorld);
+	}	
 }

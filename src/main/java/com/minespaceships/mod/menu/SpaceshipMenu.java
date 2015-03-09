@@ -1,5 +1,6 @@
 package com.minespaceships.mod.menu;
 
+import com.minespaceships.mod.menu.functionalMenus.*;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
@@ -7,7 +8,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author ovae.
  * @version 20150221
  */
-public class DefaultMenu {
+public class SpaceshipMenu {
 
 	//Is necessary to now if the DefaultMenu was initialise before.
 	private static boolean runBefore;
@@ -50,6 +51,23 @@ public class DefaultMenu {
 
 	//Menu for all torpedo types.
 	private static Menu torpedoMenu;
+	
+	private static Menu moveForwardMenu;
+	private static Menu moveForwardFuncMenu;
+	private static Menu moveBackMenu;
+	private static Menu moveBackFuncMenu;
+	private static Menu moveRightMenu;
+	private static Menu moveRightFuncMenu;
+	private static Menu moveLeftMenu;
+	private static Menu moveLeftFuncMenu;
+	private static Menu moveUpMenu;
+	private static Menu moveUpFuncMenu;
+	private static Menu moveDownMenu;
+	private static Menu moveDownFuncMenu;
+	
+	private static Menu liftoffMenu;
+	private static Menu liftoffFuncMenu;
+	private static Menu landingMenu;
 
 	/**
 	 * Initialise the menu structure.
@@ -59,10 +77,11 @@ public class DefaultMenu {
 		if(terminal.equals(null)){
 			System.err.println("terminal can not be null.");
 		}
+		String out ="";
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		createShip = new CreateShipMenu("create spaceship",terminal);
+		createShip = new CreateShipMenu("recreate spaceship",terminal);
 		navigation = new Menu("spaceship navigation");
 		armour = new Menu("weapons");
 		protection = new Menu("protection");
@@ -74,7 +93,43 @@ public class DefaultMenu {
 		phaserMenu = new Menu("phaser");
 		torpedoMenu = new Menu("torpedo");
 
-		String out ="";
+		moveForwardMenu = new Menu("move forward");
+		out = "";
+		out +="Please type in how may blocks you want to move forward.";
+		moveForwardFuncMenu = new moveForwardMenu(out,terminal);
+
+		moveBackMenu = new Menu("move back");
+		out = "";
+		out +="Please type in how may blocks you want to move back.";
+		moveBackFuncMenu = new moveBackMenu(out,terminal);
+
+		moveRightMenu = new Menu("move right");
+		out = "";
+		out +="Please type in how may blocks you want to move right.";
+		moveRightFuncMenu = new moveRightMenu(out,terminal);
+
+		moveLeftMenu = new Menu("move left");
+		out = "";
+		out +="Please type in how may blocks you want to move left.";
+		moveLeftFuncMenu = new moveLeftMenu(out,terminal);
+
+		moveUpMenu = new Menu("move up");
+		out = "";
+		out +="Please type in how may blocks you want to move up.";
+		moveUpFuncMenu = new moveUpMenu(out,terminal);
+
+		moveDownMenu = new Menu("move down");
+		out = "";
+		out +="Please type in how may blocks you want to move down.";
+		moveDownFuncMenu = new moveDownMenu(out,terminal);
+
+		liftoffMenu = new Menu("liftoff");
+		out = "";
+		out +="liftoff functional menu";
+		liftoffFuncMenu = new liftoffMenu(out,terminal);
+		landingMenu = new landingMenu("landing",terminal);
+
+		out = "";
 		out+="  To target needs three parameter x,y and z.\n"
 		+"    Current position: "+terminal.getChatRegisterEntity().getPos()+'\n'
 		+"    Please enter them in the following form,\n"
@@ -86,7 +141,23 @@ public class DefaultMenu {
 		root.addSubMenu(createShip);
 		root.addSubMenu(navigation);
 			navigation.addSubMenu(shipToTargetMenu);
-			shipToTargetMenu.addSubMenu(shipToTargetFunc);
+				shipToTargetMenu.addSubMenu(shipToTargetFunc);
+			navigation.addSubMenu(moveForwardMenu);
+				moveForwardMenu.addSubMenu(moveForwardFuncMenu);
+			navigation.addSubMenu(moveBackMenu);
+				moveBackMenu.addSubMenu(moveBackFuncMenu);
+			navigation.addSubMenu(moveRightMenu);
+				moveRightMenu.addSubMenu(moveRightFuncMenu);
+			navigation.addSubMenu(moveLeftMenu);
+				moveLeftMenu.addSubMenu(moveLeftFuncMenu);
+			navigation.addSubMenu(moveUpMenu);
+				moveUpMenu.addSubMenu(moveUpFuncMenu);
+			navigation.addSubMenu(moveDownMenu);
+				moveDownMenu.addSubMenu(moveDownFuncMenu);
+			navigation.addSubMenu(liftoffMenu);
+				liftoffMenu.addSubMenu(liftoffFuncMenu);
+			navigation.addSubMenu(landingMenu);
+			
 		root.addSubMenu(armour);
 			armour.addSubMenu(phaserMenu);
 			armour.addSubMenu(torpedoMenu);

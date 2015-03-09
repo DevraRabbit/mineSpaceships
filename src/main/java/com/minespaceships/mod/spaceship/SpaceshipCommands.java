@@ -30,7 +30,7 @@ public class SpaceshipCommands {
 			try {
 				ChatRegisterEntity ent = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()));
 				if(ent != null){
-					ent.createShip(commandBlock.getPos(), worldObj);
+					Shipyard.getShipyard().createShip(commandBlock.getPos(), worldObj);
 				}
 			} catch (Exception e) {
 				player.addChatComponentMessage(new ChatComponentText(e.toString()));
@@ -44,7 +44,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
-			((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).createShip(from, commandBlock.getPos(), to, worldObj);
+			Shipyard.getShipyard().createShip(from, commandBlock.getPos(), to, worldObj);
 			
 			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
 		} else {
@@ -101,7 +101,7 @@ public class SpaceshipCommands {
 		
 		if(moffset.matches()) {
 			BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
-			ship.moveTo(vec_move);
+			ship.setTarget(vec_move.add(ship.getOrigin()));
 			commandBlock.setPos(commandBlock.getPos().add(vec_move));
 			
 			player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
@@ -127,7 +127,7 @@ public class SpaceshipCommands {
 		player.addChatComponentMessage(new ChatComponentText(((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).toString()));
 	}
 	
-	private static String processDirectionMoveCommand(String command, int playerRotation) {
+	public static String processDirectionMoveCommand(String command, int playerRotation) {
 		Pattern p = Pattern.compile("[0-9]+");
 		Matcher m = p.matcher(command);
 		
@@ -150,6 +150,12 @@ public class SpaceshipCommands {
 		return command;
 	}
 	
+	public static void debug(String command, final ChatRegisterEntity commandBlock){
+		if(command.equals("debug blockMap")){
+			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getRemoteWorld()).debugMap();;
+		}
+	}
+
 	public static void shoot(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		command = command.substring("shoot".length()).replaceAll("\\s", "");
 	

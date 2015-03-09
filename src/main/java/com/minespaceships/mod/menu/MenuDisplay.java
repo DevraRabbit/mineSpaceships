@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
  * This class displays a menu structure.
  * @author ovae.
- * @version 20150225
+ * @version 20150302
  */
 public class MenuDisplay {
 
 	//The terminal to write in.
-	protected CustomGuiChat terminal;
+	private CustomGuiChat terminal;
 
 	//The root of the menu structure.
 	private Menu root;
@@ -73,7 +74,7 @@ public class MenuDisplay {
 	 */
 	public void display(final String command){
 		if(command.trim().isEmpty()){
-			terminal.display("unknown command.\nPress 'm' to get back.", true);
+			terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", true);
 			return;
 		}
 		terminal.display(preparingOutput(root.switchMenu(command),command),true);
