@@ -1,5 +1,8 @@
 package energyStrategySystem;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 
 import com.minespaceships.mod.menu.Menu;
 
@@ -21,14 +24,16 @@ public class EnergyStrategySystem {
 	}
 	
 	public String print(){
-		String out;
-		out="EnergyConsumer" +'\n';
+		sortPriority(consumerList);
+		String out="";
+		out= "Energy in System:" +energy +'\n';
+		out=out +"EnergyConsumer" +'\n';
 		for(EnergyC e: consumerList){
-			out=out +e.toString();
+			out=out +"Energy: " +e.getEnergy() +" Priority: " +e.getPriority() +'\n';
 		}
 		out=out +"EnergyProducer" +'\n';
 		for(EnergyC e: producerList){
-			out=out +e.toString();
+			out=out +"Energy: " +e.getEnergy() +" Priority: " +e.getPriority() + '\n';
 		}
 		
 		out=out+'\n';
@@ -36,6 +41,7 @@ public class EnergyStrategySystem {
 	}
 	
 	public String add(EnergyC e){
+		if(allList.contains(e)==false){
 		if(e.getEnergy()>0){
 			return this.addProducer(e);
 		} else if (e.getEnergy()<0){
@@ -43,21 +49,31 @@ public class EnergyStrategySystem {
 		} else {
 			return addNeutral(e);
 		}
+		}
+		else {return "Already in System";
+				
+		}
 	
 		
 	}
 	
 	public String addNeutral(EnergyC p){
+		if(allList.contains(p)==true){
+			return "Already in System";
+		}
 		allList.add(p);
 		return "Neutral thing added to EnergySystem" + '\n';
 	}
 
 	public String addConsumer(EnergyC c){
+		if(allList.contains(c)==true){
+			return "Already in System";
+		}
 		if(energy>=c.getEnergy()){
 		energy=energy-c.getEnergy();
 		consumerList.add(c);
 		allList.add(c);
-		return "EnergyConsumer added. Energy=" +energy+ '\n';
+		return "EnergyConsumer added. Energy of Consumer=" +energy+ '\n';
 		}
 		else{
 		return "Not enough Energy to add Consumer"+ '\n';
@@ -65,10 +81,47 @@ public class EnergyStrategySystem {
 	}
 	
 	public String addProducer(EnergyC p){
+		if(allList.contains(p)==true){
+			return "Already in System";
+		}
 		energy=energy+p.getEnergy();
 		producerList.add(p);
 		allList.add(p);
-		return "EnergyProducer added. Energy=" +energy+ '\n';
+		forceAdd(energy);
+		return "EnergyProducer added. Energy of Producer=" +energy+ '\n';
+		
+	}
+	
+	private void forceAdd(int toAdd){
+		ArrayList<EnergyC> consumer= new ArrayList();
+		sortPriority(allList);
+		for(Iterator<EnergyC> iterator=allList.iterator(); iterator.hasNext();){
+			EnergyC next= iterator.next();
+			if(next.getEnergy()<=toAdd){
+				consumer.add(next);
+				toAdd-=next.getEnergy();
+			}
+			
+		}
+		
+		for(EnergyC c: consumer){
+			addConsumer(c);
+		}
+		
+	
+	}
+	
+	private void sortPriority(ArrayList l){
+		Collections.sort(l, new Comparator<EnergyC>(){
+			@Override
+	        public int compare(EnergyC e1, EnergyC e2)
+	        {
+				Integer i1= new Integer(e1.getPriority());
+				Integer i2 = new Integer(e2.getPriority());
+				
+	            return  i1.compareTo(i2);
+	        }
+		});
 		
 	}
 	

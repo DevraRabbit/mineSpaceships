@@ -13,9 +13,9 @@ public class TestEnergyStrategySystem {
 		p1= new EnergyProducer(10,1);
 		p2= new EnergyProducer(50,1);
 		p3= new EnergyProducer(10,2);
-		c1= new EnergyConsumer(10,1);
+		c1= new EnergyConsumer(10,3);
 		c2= new EnergyConsumer(50,2);
-		c3= new EnergyConsumer(10,3);
+		c3= new EnergyConsumer(10,1);
 		
 		System.out.print(
 		
