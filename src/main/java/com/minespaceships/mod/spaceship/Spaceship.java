@@ -148,7 +148,7 @@ public class Spaceship implements Serializable{
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin), 0, worldS);
+		moveTo(position.subtract(origin), Turn.LEFT, worldS);
 	}
 	public void setTarget(BlockPos position, WorldServer world){
 		moveTo(position.subtract(origin), world);
@@ -182,13 +182,15 @@ public class Spaceship implements Serializable{
 				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);			
 				EnumFacing facing = Turn.getFacing(state);
 				BlockPos neighbor = null;
+				IBlockState neighborState = null;
 				if(facing != null){
 					facing = Turn.getNextFacing(facing, turn);
 					neighbor = nextPos.offset(facing.getOpposite());
+					neighborState = world.getBlockState(neighbor);
 				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos, turn);
+					BlockCopier.copyBlock(world, Pos, nextPos, turn);					
 					it.remove();
 					//remember to remove it
 					removal.add(Pos);
