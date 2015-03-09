@@ -6,6 +6,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
@@ -179,16 +180,24 @@ public class Turn {
 	 * 					Turn.AROUND = 180 degrees.
 	 * @return			The new absolute position after rotation and moving.
 	 */
-	public static BlockPos getRotatedPos(final World world, final BlockPos pos, final BlockPos origin, final BlockPos moveTo, final int dir) {
-		BlockPos sourcePos = pos.subtract(origin);
-		BlockPos targetPos;
+	public static BlockPos getRotatedPos(final BlockPos pos, final BlockPos origin, final BlockPos moveTo, final int dir) {
+		Vec3 vecPos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+		Vec3 vecOrigin = new Vec3(origin.getX(), origin.getY(), origin.getZ());
+		Vec3 vecMoveTo = new Vec3(moveTo.getX(), moveTo.getY(), moveTo.getZ());		
+		Vec3 rotation = getRotatedPos(vecPos, vecOrigin, vecMoveTo, dir);
+		return new BlockPos(rotation.xCoord, rotation.yCoord, rotation.zCoord);
+	}
+	
+	public static Vec3 getRotatedPos(final Vec3 pos, final Vec3 origin, final Vec3 moveTo, final int dir) {
+		Vec3 sourcePos = pos.subtract(origin);
+		Vec3 targetPos;
 		switch(dir) {
 		case LEFT:
 		case RIGHT:
-			targetPos = new BlockPos(- sourcePos.getZ() * dir, sourcePos.getY(), sourcePos.getX() * dir);
+			targetPos = new Vec3(- sourcePos.zCoord * dir, sourcePos.yCoord, sourcePos.xCoord * dir);
 			break;
 		case AROUND:
-			targetPos = new BlockPos(-sourcePos.getX(), sourcePos.getY(), -sourcePos.getZ());
+			targetPos = new Vec3(-sourcePos.xCoord, sourcePos.yCoord, -sourcePos.zCoord);
 			break;
 		case 0:
 			targetPos = sourcePos;
