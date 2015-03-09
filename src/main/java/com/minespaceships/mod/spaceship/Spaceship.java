@@ -180,10 +180,10 @@ public class Spaceship implements Serializable{
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
 				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);			
-				EnumFacing facing = Turn.getFacing(state);
+				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				if(facing != null){
-					facing = Turn.getNextFacing(facing, turn);
+					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
 					neighbor = nextPos.offset(facing.getOpposite());
 				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
