@@ -144,6 +144,8 @@ public class ChatRegisterEntity extends TileEntity implements IMoveable{
 			}
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(remoteWorld, this, player, ship);
+		} else if(command.startsWith("shoot")) {
+			SpaceshipCommands.shoot(command, remoteWorld, this, player, ship);
 		}
 		terminalMenu.onCommand(command, player);
 	}
