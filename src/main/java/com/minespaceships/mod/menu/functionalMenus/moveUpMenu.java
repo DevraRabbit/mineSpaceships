@@ -9,13 +9,14 @@ import net.minecraft.util.MathHelper;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
- * 
+ * Move the spaceship position up.
  * @author ovae.
- * @version 20150226
+ * @version 20150310.
  */
 public class moveUpMenu extends Menu implements FunctionalParamMenu{
 	
@@ -31,10 +32,7 @@ public class moveUpMenu extends Menu implements FunctionalParamMenu{
 		if(command.equals(null)){
 			return "command can not be null.";
 		}
-		/*
-		int playerRotation = MathHelper.floor_double((double)(terminal.mc.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		command = SpaceshipCommands.processDirectionMoveCommand(command, playerRotation);
-		*/
+		System.out.println(command);
 		double x,y,z;
 		Pattern pattern = Pattern.compile("\\d*");
 		//Pattern pattern = Pattern.compile("\\d");
@@ -44,14 +42,14 @@ public class moveUpMenu extends Menu implements FunctionalParamMenu{
 			y = terminal.getChatRegisterEntity().getPos().getY() +Double.parseDouble(command);
 			z = terminal.getChatRegisterEntity().getPos().getZ();
 			try{
-				Spaceship ship = terminal.getChatRegisterEntity().getShip();
+				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getRemoteWorld());
 				//(double)x, (double)y, (double)z
 				BlockPos position = new BlockPos(x, y, z);
 
 				if(ship == null) {
 					terminal.display("move: Please initialise the Spaceship first", true);
 				}
-				ship.setTarget(position);
+				ship.move(position);
 
 				return ">> To target <<";
 			}catch(Exception e){

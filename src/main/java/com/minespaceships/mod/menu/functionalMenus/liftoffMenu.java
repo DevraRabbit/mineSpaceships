@@ -5,9 +5,9 @@ import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
- * 
+ * Move the spaceship position up.
  * @author ovae.
- * @version 20150226
+ * @version 20150310.
  */
 public class liftoffMenu extends Menu implements FunctionalParamMenu{
 
