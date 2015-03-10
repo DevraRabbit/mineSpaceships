@@ -314,4 +314,27 @@ public class Spaceship implements Serializable{
 	public void debugMap(){
 		blockMap.showDebug(worldS);
 	}
+
+	/**
+	 * 
+	 * @param position
+	 */
+	public void move(final BlockPos position){
+		if(position == null){
+			throw new IllegalArgumentException("Position can not be null");
+		}
+
+		double x = position.getX();
+		double y = position.getY();
+		double z = position.getZ();
+		double maxWorldHeight = this.worldS.getHeight();
+		//double maxShipHeight = this.getMaxPos();
+		double shipLength;
+
+		//Troubleshooting for the world height out of bounds.
+		if(position.getY() > maxWorldHeight){
+			
+		}
+
+	}
 }

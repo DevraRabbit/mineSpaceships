@@ -50,7 +50,8 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 				if(ship == null) {
 					terminal.display("move: Please initialise the Spaceship first", true);
 				}
-				ship.setTarget(position);
+				//ship.setTarget(position);
+				ship.move(position);
 
 				return ">> To target <<";
 			}catch(Exception e){
