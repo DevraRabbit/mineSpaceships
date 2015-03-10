@@ -21,6 +21,6 @@ public interface EnergyC {
 	 */
 	boolean getStatus();
 	
-	boolean setStatus();
+	void setStatus(boolean b);
 
 }
