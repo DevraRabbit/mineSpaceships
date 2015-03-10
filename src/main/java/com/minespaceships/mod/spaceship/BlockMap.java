@@ -180,11 +180,11 @@ public class BlockMap {
 		HashMap nextMap = new HashMap<BlockPos, Boolean>();
 		for(Iterator<BlockPos> it = posSet.iterator(); it.hasNext();){
 			BlockPos pos = it.next();
-			BlockPos nextPos = Turn.getRotatedPos(null, pos, rotateOrigin, new BlockPos(0,0,0), turn);
+			BlockPos nextPos = Turn.getRotatedPos(pos, rotateOrigin, new BlockPos(0,0,0), turn);
 			nextMap.put(nextPos, true);
 		}
 		map = nextMap;
-		this.origin = Turn.getRotatedPos(null, this.origin, origin, new BlockPos(0,0,0), turn);
+		this.origin = Turn.getRotatedPos(this.origin, origin, new BlockPos(0,0,0), turn);
 	}
 	
 	public void showDebug(World world){

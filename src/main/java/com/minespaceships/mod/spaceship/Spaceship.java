@@ -94,6 +94,12 @@ public class Spaceship implements Serializable{
 	public BlockPos getOrigin(){
 		return origin;
 	}
+	public BlockPos getMaxPos(){
+		return blockMap.getMaxPos();
+	}
+	public BlockPos getMinPos(){
+		return blockMap.getMinPos();
+	}
 	public boolean canBeRemoved(){
 		return canBeRemoved;
 	}
@@ -148,7 +154,7 @@ public class Spaceship implements Serializable{
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin), Turn.LEFT, worldS);
+		moveTo(position.subtract(origin), 0, worldS);
 	}
 	public void setTarget(BlockPos position, WorldServer world){
 		moveTo(position.subtract(origin), world);
@@ -179,16 +185,18 @@ public class Spaceship implements Serializable{
 				BlockPos Pos = it.next();
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
-				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);			
-				EnumFacing facing = Turn.getFacing(state);
+				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);			
+				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
+				IBlockState neighborState = null;
 				if(facing != null){
-					facing = Turn.getNextFacing(facing, turn);
+					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
 					neighbor = nextPos.offset(facing.getOpposite());
+					neighborState = world.getBlockState(neighbor);
 				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos, turn);
+					BlockCopier.copyBlock(world, Pos, nextPos, turn);					
 					it.remove();
 					//remember to remove it
 					removal.add(Pos);
@@ -200,7 +208,7 @@ public class Spaceship implements Serializable{
 		if(!positions.isEmpty()){
 			for(BlockPos Pos : positions){
 				//force placement
-				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);	
+				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);	
 				BlockCopier.copyBlock(world, Pos, nextPos, turn);
 				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
 				removal.insertElementAt(Pos, 0);
@@ -212,7 +220,7 @@ public class Spaceship implements Serializable{
 			BlockCopier.removeBlock(world, reverseRemoval.previous());
 		}
 		//move the entities and move the ships measurements  
-		moveEntities(addDirection);
+		moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}
@@ -224,13 +232,26 @@ public class Spaceship implements Serializable{
 		origin = origin.add(addDirection);
 	}
 	@Deprecated
-	private void moveEntities(BlockPos addDirection){
+	private void moveEntities(BlockPos addDirection, int turn){
 		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos().add(1,1,1)));
 		for(Entity ent : entities){			
 			if(ent instanceof EntityPlayer){
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));
 			}
-			Vec3 newPos = ent.getPositionVector().add(new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ()));
+			Vec3 addDir = new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ());
+			Vec3 orig = new Vec3(origin.getX(), origin.getY(), origin.getZ());
+			Vec3 newPos = Turn.getRotatedPos(ent.getPositionVector(), orig, addDir, turn);
+			switch(turn){
+			case Turn.LEFT:
+				ent.setRotationYawHead((float) (ent.rotationYaw+Math.PI/2));
+				break;
+			case Turn.RIGHT:
+				ent.setRotationYawHead((float) (ent.rotationYaw-Math.PI/2));
+				break;
+			case Turn.AROUND:
+				ent.setRotationYawHead((float) (ent.rotationYaw+Math.PI));
+				break;
+			}
 			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 		}
 	}
