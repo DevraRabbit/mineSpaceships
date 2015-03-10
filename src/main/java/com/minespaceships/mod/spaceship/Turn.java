@@ -258,6 +258,7 @@ public class Turn {
 					Integer targetRotation = (rotation + posMod4(dir) * 4) % 16;
 					while ((int)rotation != (int)targetRotation) {
 						state = state.cycleProperty(prop);
+						rotation = (Integer)state.getValue(prop);
 					}
 				}
 			}
