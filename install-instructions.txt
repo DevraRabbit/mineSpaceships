@@ -1,0 +1,5 @@
+See http://www.minecraftforge.net/wiki/Installation/Source
+
+Short:
+run `gradlew setupDecompWorkspace --refresh-dependencies`
+run `gradlew eclipse`

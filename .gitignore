@@ -24,3 +24,5 @@ hs_err_pid*
 /build.gradle
 /.project
 *.classpath
+/forge-*-changelog.txt
+/src/main/java/com/example/examplemod/ExampleMod.java
