@@ -92,34 +92,36 @@ public class Turn {
 	 */
 	public static EnumFacing getEnumFacing(final IBlockState state) {
 		IProperty facing = getFacingProperty(state);
-		if(facing != null && facing.getName().equals("facing")) {
-			return (EnumFacing)state.getValue(facing);		
-		} else {
-			return null;
+		if(facing != null) {
+			if (facing.getName().equals("facing")) {
+				return (EnumFacing)state.getValue(facing);		
+			} else if (facing.getName().equals("rotation")){
+				return EnumFacing.UP;
+			}
 		}
+		return null;
 	}
+
 	/**
 	 * Loads the whole set of properties from an IBlockState and searches it for a "rotatable" property.
-	 * @return The property of the IBlockState if it exists. If not, null is returned.
+	 * @return The "rotatable" property of the IBlockState if it exists. If not, null is returned.
 	 */
 	private static IProperty getFacingProperty(final IBlockState state) {
 		java.util.Set<IProperty> propSet = (java.util.Set<IProperty>)state.getProperties().keySet();
 		for (IProperty prop : propSet)
 		{
-			if (prop.getName().equals("facing") || prop.getName().equals("axis"))
+			if (prop.getName().equals("facing") || prop.getName().equals("axis") || prop.getName().equals("rotation"))
 			{
 				return prop;
 			}
 		}
-		// No "facing" property found means that the block cannot be turned.
+		// No "rotatable" property found means that the block cannot be turned.
 		return null;
 	}
 
 	public static IStringSerializable getNextFacing(IStringSerializable currentFacing,  int steps){
 		if (currentFacing != null) {
-			while (steps < 0) {
-				steps += 4;
-			}
+			steps = posMod4(steps);
 			if (currentFacing instanceof EnumFacing) {
 				switch ((EnumFacing)currentFacing) {
 				case NORTH :
@@ -138,7 +140,7 @@ public class Turn {
 				/* If a log is rotated by 180 degrees or not at all, the facing axis stays the same (X or Z).
 				 * If it is turned left or right by 90 degrees, it changes from X to Z (indices 0 and 2) or the other way round. */
 				int axisOrd = ((BlockLog.EnumAxis) currentFacing).ordinal();
-				return steps % 2 != 0 && (isHorizontal((BlockLog.EnumAxis)currentFacing)) ? axis(Z_ORD-axisOrd) : currentFacing;
+				return steps % 2 != 0 && (isHorizontal((BlockLog.EnumAxis)currentFacing)) ? axis(Z_ORD - axisOrd) : currentFacing;
 			}
 		}
 		return null;
@@ -187,7 +189,7 @@ public class Turn {
 		Vec3 rotation = getRotatedPos(vecPos, vecOrigin, vecMoveTo, dir);
 		return new BlockPos(rotation.xCoord, rotation.yCoord, rotation.zCoord);
 	}
-	
+
 	public static Vec3 getRotatedPos(final Vec3 pos, final Vec3 origin, final Vec3 moveTo, final int dir) {
 		Vec3 sourcePos = pos.subtract(origin);
 		Vec3 targetPos;
@@ -209,6 +211,16 @@ public class Turn {
 	}
 
 	/**
+	 * Calculates i mod 4 with positive return values only (i.e. 0 to 3).
+	 */
+	private static int posMod4(int i) {
+		while (i < 0) {
+			i += 4;
+		}
+		return i % 4;
+	}
+	
+	/**
 	 * Rotates a block horizontally around itself by altering its BlockState.
 	 * @param world	The world in which the block is located.
 	 * @param pos	The current absolute position of the block.
@@ -223,7 +235,6 @@ public class Turn {
 			Block block;
 			IBlockState state;
 			IProperty prop;
-			IStringSerializable facing, targetFacing;
 
 			// make calculations for rotating blocks such as pistons, pumpkins, logs etc.
 			state = world.getBlockState(pos);
@@ -231,15 +242,24 @@ public class Turn {
 			prop = getFacingProperty(state);
 			// make sure this is a block that can be rotated
 			if (prop != null) {
-				// Set "facing" property value to which a block shall be turned.
-				targetFacing = changeValue(world, state, pos, prop, dir);
-				facing = (IStringSerializable)state.getValue(prop);
-				while (!facing.equals(targetFacing)) {
-					state = state.cycleProperty(prop);
-					prop = getFacingProperty(state);
-					facing = (IStringSerializable)state.getValue(prop);
+				if (!prop.getName().equals("rotation")) {
+					// This section is for all Blocks with a "facing" or "axis" property (pumpkins, pistons, logs etc.)
+					// Set "facing" property value to which a block shall be turned.
+					IStringSerializable targetFacing = changeValue(world, state, pos, prop, dir);
+					IStringSerializable facing = (IStringSerializable)state.getValue(prop);
+					while (!facing.equals(targetFacing)) {
+						state = state.cycleProperty(prop);
+						prop = getFacingProperty(state);
+						facing = (IStringSerializable)state.getValue(prop);
+					}
+				} else {
+					// This section is for blocks with "rotation" properties (signs, banners etc.)
+					Integer rotation = (Integer)state.getValue(prop);
+					Integer targetRotation = (rotation + posMod4(dir) * 4) % 16;
+					while ((int)rotation != (int)targetRotation) {
+						state = state.cycleProperty(prop);
+					}
 				}
-				return state;
 			}
 			return state;
 		}
