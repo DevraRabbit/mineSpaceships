@@ -102,6 +102,9 @@ public class ChatRegisterEntity extends TileEntity {
 				//Print out the menu in the console.
 				spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
 			}
+
+			System.out.println("Default: ");
+			System.out.println(terminal.getChatRegisterEntity().getPos());
 		}
 	}
 	public void setRemoteWorld(WorldServer world){
@@ -115,7 +118,7 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param command
 	 */
 	public void onCommand(String command){
-		
+
 	}
 	/**
 	 * Executing the given command considering the player that sent it.
@@ -154,10 +157,11 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(remoteWorld, this, player, getShip());
 		}
-		terminalMenu.onCommand(command, player);
+		terminalMenu.onCommand(command, player, this, terminal);
 		SpaceshipCommands.debug(command, this);
 	}
 	public Spaceship getShip() {
 		return Shipyard.getShipyard().getShip(pos, remoteWorld);
-	}	
+	}
+
 }

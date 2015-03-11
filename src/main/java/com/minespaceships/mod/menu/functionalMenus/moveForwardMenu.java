@@ -9,11 +9,12 @@ import net.minecraft.util.MathHelper;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
- * 
+ * Move the spaceship position forward.
  * @author ovae.
  * @version 20150226
  */
@@ -43,14 +44,14 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 			y = terminal.getChatRegisterEntity().getPos().getY();
 			z = terminal.getChatRegisterEntity().getPos().getZ();
 			try{
-				Spaceship ship = terminal.getChatRegisterEntity().getShip();
+				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getRemoteWorld());
 				//(double)x, (double)y, (double)z
 				BlockPos position = new BlockPos(x, y, z);
 
 				if(ship == null) {
 					terminal.display("move: Please initialise the Spaceship first", true);
 				}
-				ship.setTarget(position);
+				ship.move(position);
 
 				return ">> To target <<";
 			}catch(Exception e){

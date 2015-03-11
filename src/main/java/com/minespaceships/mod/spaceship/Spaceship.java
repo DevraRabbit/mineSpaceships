@@ -335,4 +335,34 @@ public class Spaceship implements Serializable{
 	public void debugMap(){
 		blockMap.showDebug(worldS);
 	}
+
+	/**
+	 * Moves the spaceship to a target position.
+	 * These method check also if the target position is a valid position.
+	 * @param position
+	 */
+	public void move(final BlockPos position){
+		if(position == null){
+			throw new IllegalArgumentException("The target position can not be null");
+		}
+
+		double x = position.getX();
+		double y = position.getY();
+		double z = position.getZ();
+		double maxWorldHeight = this.worldS.getHeight();
+		BlockPos maxShipHeight = getMaxPos();
+		BlockPos minShipHeight = getMinPos();
+		double shipHeight = maxShipHeight.getY()-minShipHeight.getY();
+
+		//Troubleshooting for the world height out of bounds.
+		if(position.getY() >= maxWorldHeight){
+			this.setTarget(new BlockPos(x,(maxWorldHeight-shipHeight),z));
+		}
+		if(position.getY() <= 0){
+			this.setTarget(new BlockPos(x,(0+shipHeight),z));
+		}
+
+		//Valid position
+		this.setTarget(new BlockPos(x,y,z));
+	}
 }
