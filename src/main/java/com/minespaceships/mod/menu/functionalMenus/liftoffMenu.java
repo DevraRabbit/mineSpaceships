@@ -2,6 +2,7 @@ package com.minespaceships.mod.menu.functionalMenus;
 
 import net.minecraft.util.BlockPos;
 
+import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -13,7 +14,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
  * @author ovae.
  * @version 20150310.
  */
-public class liftoffMenu extends Menu implements FunctionalParamMenu{
+public class liftoffMenu extends Menu implements FunctionalMenu{
 
 	public liftoffMenu(String name) {
 		super(name);

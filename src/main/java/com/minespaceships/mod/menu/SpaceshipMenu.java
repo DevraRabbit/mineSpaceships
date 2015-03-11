@@ -66,7 +66,6 @@ public class SpaceshipMenu {
 	private static Menu moveDownFuncMenu;
 	
 	private static Menu liftoffMenu;
-	private static Menu liftoffFuncMenu;
 	private static Menu landingMenu;
 
 	/**
@@ -123,10 +122,7 @@ public class SpaceshipMenu {
 		out +="Please type in how may blocks you want to move down.";
 		moveDownFuncMenu = new moveDownMenu(out);
 
-		liftoffMenu = new Menu("liftoff");
-		out = "";
-		out +="liftoff functional menu";
-		liftoffFuncMenu = new liftoffMenu(out);
+		liftoffMenu = new liftoffMenu("liftoff");
 		landingMenu = new landingMenu("landing");
 
 		out = "";
@@ -155,7 +151,6 @@ public class SpaceshipMenu {
 			navigation.addSubMenu(moveDownMenu);
 				moveDownMenu.addSubMenu(moveDownFuncMenu);
 			navigation.addSubMenu(liftoffMenu);
-				liftoffMenu.addSubMenu(liftoffFuncMenu);
 			navigation.addSubMenu(landingMenu);
 			
 		root.addSubMenu(armour);
