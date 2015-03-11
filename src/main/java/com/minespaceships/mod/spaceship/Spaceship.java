@@ -357,17 +357,12 @@ public class Spaceship implements Serializable{
 		//Troubleshooting for the world height out of bounds.
 		if(position.getY() >= maxWorldHeight){
 			this.setTarget(new BlockPos(x,(maxWorldHeight-shipHeight),z));
-			System.out.println((maxWorldHeight-shipHeight));
 		}
 		if(position.getY() <= 0){
 			this.setTarget(new BlockPos(x,(0+shipHeight),z));
-			System.out.println((0+shipHeight));
 		}
 
-		//Valid 
+		//Valid position
 		this.setTarget(new BlockPos(x,y,z));
-		System.out.println((maxWorldHeight-shipHeight));
-		System.out.println("\n"+this.toString());
-
 	}
 }

@@ -78,7 +78,8 @@ public class terminalMenu {
 					//Place EngineBlocks
 					if((x==0) && (y==1) || (x==0) && (y==size)){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y-1);
-						world.setBlockState(newPos, EngineBlock.getStateById(201));
+						EngineBlock engine = new EngineBlock();
+						world.setBlockState(newPos, EngineBlock.getStateById(203));
 					}*/
 
 					//Place the redstone_block

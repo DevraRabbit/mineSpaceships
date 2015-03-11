@@ -152,7 +152,7 @@ public class SpaceshipMenu {
 				moveDownMenu.addSubMenu(moveDownFuncMenu);
 			navigation.addSubMenu(liftoffMenu);
 			navigation.addSubMenu(landingMenu);
-			
+
 		root.addSubMenu(armour);
 			armour.addSubMenu(phaserMenu);
 			armour.addSubMenu(torpedoMenu);
