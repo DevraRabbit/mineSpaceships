@@ -154,7 +154,7 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(remoteWorld, this, player, getShip());
 		}
-		terminalMenu.onCommand(command, player, this);
+		terminalMenu.onCommand(command, player, this, terminal);
 		SpaceshipCommands.debug(command, this);
 	}
 	public Spaceship getShip() {

@@ -5,6 +5,7 @@ import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.block.BlockPlanks;
@@ -14,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureStrongholdPieces.Library;
@@ -21,7 +23,14 @@ import net.minecraft.world.gen.structure.StructureVillagePieces.Church;
 
 public class terminalMenu {
 
-	public static void onCommand(String command, EntityPlayer player, ChatRegisterEntity chat){
+	/**
+	 * 
+	 * @param command
+	 * @param player
+	 * @param chatEntity
+	 * @param chat
+	 */
+	public static void onCommand(String command, EntityPlayer player, ChatRegisterEntity chatEntity, CustomGuiChat chat){
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
@@ -43,7 +52,7 @@ public class terminalMenu {
 			player.addChatComponentMessage(new ChatComponentText(player.toString()));
 		}
 		if(command.equals("melon")){
-			World world = chat.getRemoteWorld();
+			World world = chatEntity.getRemoteWorld();
 			BlockPos pos = player.getPosition();
 			int size=5;
 			for(int x=0;x<size;x++){
@@ -79,7 +88,10 @@ public class terminalMenu {
 					}
 				}
 			}
-			
+			chat.clearChat();
+			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.GREEN+"Basic spaceship spawned."));
+			chat.display("\nPress 'm' to get back.", false);
 		}
 	}
+
 }
