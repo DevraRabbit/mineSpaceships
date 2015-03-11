@@ -10,6 +10,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLever;
+import net.minecraft.block.BlockLever.EnumOrientation;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.properties.*;
 import net.minecraft.block.state.IBlockState;
@@ -94,7 +96,11 @@ public class Turn {
 		IProperty facing = getFacingProperty(state);
 		if(facing != null) {
 			if (facing.getName().equals("facing")) {
-				return (EnumFacing)state.getValue(facing);		
+				if (state.getBlock() instanceof BlockLever) {
+					return ((EnumOrientation)state.getValue(facing)).getFacing();
+				} else {
+					return (EnumFacing)state.getValue(facing);		
+				}
 			} else if (facing.getName().equals("rotation")){
 				return EnumFacing.UP;
 			}
