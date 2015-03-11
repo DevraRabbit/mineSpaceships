@@ -32,13 +32,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ChatRegisterEntity extends TileEntity {
 	
 	//Attributes
 	private WorldServer remoteWorld;
-
-	private CustomGuiChat terminal;
+	
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
 	
@@ -50,7 +50,14 @@ public class ChatRegisterEntity extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
-		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		retrieveServerWorld();
+	}
+	private void retrieveServerWorld(){
+		if(!worldObj.isRemote){
+			remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		} else {
+			//remoteWorld = (WorldServer) worldObj;
+		}
 	}
 	@Override
 	public void invalidate(){
@@ -72,43 +79,57 @@ public class ChatRegisterEntity extends TileEntity {
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
-	 */
+	 */	
+	@SideOnly(Side.CLIENT)
 	public void Activate(EntityPlayer player){
+		CustomGuiChat terminal = null;
 		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
 			//initialise the terminal
 			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			terminal = new CustomGuiChat(player, this);
-			
-			//Initialise a default menu for testing reasons
-			if(!SpaceshipMenu.getRunBefore()){
-				SpaceshipMenu.initMenu(terminal);
-			}
-			if(!NoSpaceshipEntityMenu.getRunBefore()){
-				NoSpaceshipEntityMenu.initMenu(terminal);
-			}
-
-			//initialise the menu display.
-			spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
-			noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
-
-			//open our console. 
-			Minecraft.getMinecraft().displayGuiScreen(terminal);
-
-			if(terminal.getChatRegisterEntity().getShip() == null){
-				noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
-			}else{
-				//Print out the menu in the console.
-				spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
-			}
+			makeTerminal(player);
 		}
+	}
+	@SideOnly(Side.CLIENT)
+	private CustomGuiChat makeTerminal(EntityPlayer player) {
+		CustomGuiChat terminal;
+		terminal = new CustomGuiChat(player, this);
+		
+		//Initialise a default menu for testing reasons
+		if(!SpaceshipMenu.getRunBefore()){
+			SpaceshipMenu.initMenu(terminal);
+		}
+		if(!NoSpaceshipEntityMenu.getRunBefore()){
+			NoSpaceshipEntityMenu.initMenu(terminal);
+		}
+
+		//initialise the menu display.
+		spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
+		noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
+
+		//open our console. 
+		Minecraft.getMinecraft().displayGuiScreen(terminal);
+
+		if(terminal.getChatRegisterEntity().getShip() == null){
+			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
+		}else{
+			//Print out the menu in the console.
+			spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
+		}
+		return terminal;
 	}
 	public void setRemoteWorld(WorldServer world){
 		remoteWorld = world;
 	}
 	public WorldServer getRemoteWorld(){
-		return remoteWorld;
+		if(remoteWorld != null){
+			return remoteWorld;
+		} else {
+			//retrieveServerWorld();
+			//return getRemoteWorld();
+			return null;
+		}
 	}
 	/**
 	 * Executes the given command, regardless who committed it.
@@ -124,7 +145,7 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void onCommand(String command, EntityPlayer player){
 		//display the menu.
-		spaceshipMenu.display(command, terminal);
+		spaceshipMenu.display(command, makeTerminal(player));
 
 		//define a very first command to see if it works.
 		if(command.equals("hello")){

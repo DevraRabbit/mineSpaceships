@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -34,6 +35,9 @@ public class MineSpaceships
     
     private static int navigatorBlockId = 1000;
     
+    @SidedProxy(clientSide="com.minespaceships.mod.ClientProxy", serverSide="com.minespaceships.mod.ServerProxy")
+    public static CommonProxy proxy;
+    
     /**
      * Event that gets called in an early initialization state of Minecraft
      * @param event
@@ -42,29 +46,18 @@ public class MineSpaceships
     public void preInit(FMLPreInitializationEvent event) {
     	
     	Singleton = this;    	
-    	//register our game objects so Minecraft knows how to use them.
-    	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
-    	GameRegistry.registerBlock(new EnergyBlock(), "EnergyBlock");
-    	GameRegistry.registerBlock(new PhaserBlock(), "PhaserBlock");
-    	GameRegistry.registerBlock(new EngineBlock(), "EngineBlock");
-    	GameRegistry.registerBlock(new ShieldBlock(), "ShieldBlock");
-    	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
-    	
-    	// Register event listener
-    	// http://www.minecraftforum.net/forums/archive/tutorials/931112-forge-4-x-events-howto
-    	MinecraftForge.EVENT_BUS.register(new BlockEvent());
-    	MinecraftForge.EVENT_BUS.register(Shipyard.getShipyard());
+    	proxy.preInit(event);
     }
     
     @EventHandler
     public void init(FMLInitializationEvent event)    
     {
-    	
+    	proxy.init(event);
     }
     
     @EventHandler
     public void postInit(FMLPostInitializationEvent event){
-    	
+    	proxy.postInit(event);
     }
     
     public static MineSpaceships instance(){
