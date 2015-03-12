@@ -36,8 +36,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ChatRegisterEntity extends TileEntity {
-	
+public class ChatRegisterEntity extends TileEntity {	
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
 	
@@ -123,7 +122,7 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
-		MineSpaceships.network.sendToServer(new CommandMessage(command));
+		MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
 		
 		//display the menu.
 		spaceshipMenu.display(command, makeTerminal(player));
