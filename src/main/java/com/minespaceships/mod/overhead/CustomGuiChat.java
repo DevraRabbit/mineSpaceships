@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 
 public class CustomGuiChat extends GuiChat{
@@ -89,5 +90,12 @@ public class CustomGuiChat extends GuiChat{
 	 */
 	public GuiTextField getInputField(){
 		return inputField;
+	}
+
+	/**
+	 * 
+	 */
+	public void setTileEntity(TileEntity tileEntity){
+		this.entity =(ChatRegisterEntity) tileEntity;
 	}
 }

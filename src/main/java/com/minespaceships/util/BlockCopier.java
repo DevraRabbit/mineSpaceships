@@ -22,11 +22,13 @@ public class BlockCopier {
 		copyBlock(worldIn, origin, target, dir, true);
 	}
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, int dir, boolean copyEntity){
-		worldIn.setBlockState(target, worldIn.getBlockState(origin), 2);
-		if (dir != 0) Turn.turn(worldIn, target, dir);
+		IBlockState newState = worldIn.getBlockState(origin);
+		if (dir != 0) newState = Turn.turn(worldIn, origin, dir);
+		worldIn.setBlockState(target, newState, 2);		
 		TileEntity ent = worldIn.getTileEntity(origin);
 		if(ent != null){
 			worldIn.removeTileEntity(origin);
+			//ent.setPos(target);
 			moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
 		}
 	}
@@ -41,7 +43,7 @@ public class BlockCopier {
 				for(int i = 0; i < invOrigin.getSizeInventory(); i++){
 					invTarget.setInventorySlotContents(i, invOrigin.getStackInSlot(i));
 				}
-			}			
+			}
 		} else {
 			throw new IllegalArgumentException("Not the same entity types!");
 		}

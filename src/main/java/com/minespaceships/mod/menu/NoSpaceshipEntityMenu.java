@@ -21,7 +21,7 @@ public class NoSpaceshipEntityMenu{
 
 	public static void initMenu(CustomGuiChat terminal){
 		rootMenu = new Menu("root");
-		initMenu= new CreateShipMenu("initialise spaceship", terminal);
+		initMenu= new CreateShipMenu("initialise spaceship");
 		rootMenu.addSubMenu(initMenu);
 		runBefore = true;
 	}

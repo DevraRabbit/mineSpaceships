@@ -3,6 +3,8 @@ package com.minespaceships.mod.overhead;
 import java.util.regex.*;
 
 import com.example.examplemod.ovae.terminalMenu;
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
@@ -32,14 +34,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ChatRegisterEntity extends TileEntity {
-	
-	//Attributes
-	private Spaceship ship;
-	private WorldServer remoteWorld;
-
-	private CustomGuiChat terminal;
+public class ChatRegisterEntity extends TileEntity {	
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
 	
@@ -51,8 +48,7 @@ public class ChatRegisterEntity extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
-		remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-	}
+		}
 	@Override
 	public void invalidate(){
 		super.invalidate();
@@ -73,43 +69,44 @@ public class ChatRegisterEntity extends TileEntity {
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
-	 */
+	 */	
+	@SideOnly(Side.CLIENT)
 	public void Activate(EntityPlayer player){
 		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
 			//initialise the terminal
 			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			terminal = new CustomGuiChat(player, this);
-			
-			//Initialise a default menu for testing reasons
-			if(!SpaceshipMenu.getRunBefore()){
-				SpaceshipMenu.initMenu(terminal);
-			}
-			if(!NoSpaceshipEntityMenu.getRunBefore()){
-				NoSpaceshipEntityMenu.initMenu(terminal);
-			}
-
-			//initialise the menu display.
-			spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
-			noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
-
-			//open our console. 
-			Minecraft.getMinecraft().displayGuiScreen(terminal);
-
-			if(terminal.getChatRegisterEntity().getShip() == null){
-				noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
-			}else{
-				//Print out the menu in the console.
-				spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
-			}
+			makeTerminal(player);
 		}
 	}
-	public void setRemoteWorld(WorldServer world){
-		remoteWorld = world;
-	}
-	public WorldServer getRemoteWorld(){
-		return remoteWorld;
+	@SideOnly(Side.CLIENT)
+	private CustomGuiChat makeTerminal(EntityPlayer player) {
+		CustomGuiChat terminal;
+		terminal = new CustomGuiChat(player, this);
+		
+		//Initialise a default menu for testing reasons
+		if(!SpaceshipMenu.getRunBefore()){
+			SpaceshipMenu.initMenu(terminal);
+		}
+		if(!NoSpaceshipEntityMenu.getRunBefore()){
+			NoSpaceshipEntityMenu.initMenu(terminal);
+		}
+
+		//initialise the menu display.
+		spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
+		noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
+
+		//open our console. 
+		Minecraft.getMinecraft().displayGuiScreen(terminal);
+
+		if(terminal.getChatRegisterEntity().getShip() == null){
+			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
+		}else{
+			//Print out the menu in the console.
+			spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
+		}
+		return terminal;
 	}
 	/**
 	 * Executes the given command, regardless who committed it.
@@ -124,44 +121,47 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
-		//command = command.toLowerCase();
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		
+		if(side == Side.CLIENT) {
+		MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
+		
 		//display the menu.
-		spaceshipMenu.display(command);
-
-		//define a very first command to see if it works.
-		if(command.equals("hello")){
-			//send something to the player to see if we get a feedback from our command.
-			player.addChatComponentMessage(new ChatComponentText("I love you!"));
-		//Define the 'calc' command, which parses a math expression
-		} else if(command.startsWith("calc")) {
-			Calculator.calc(command, player);
-		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, remoteWorld, this, player, getShip());
-		} else if (command.startsWith("move")) {
-			SpaceshipCommands.move(command, remoteWorld, this, player, getShip());
-		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, getShip());
-			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, getShip());
-		} else if (command.startsWith("turn ")) {
-			command = command.substring(4).trim();
-			if (command.equals("left")) {
-				Turn.ninetyDeg(worldObj, pos, Turn.LEFT);
-			} else if (command.equals("right")) {
-				Turn.ninetyDeg(worldObj, pos, Turn.RIGHT);
-			} else if (command.equals("around")) {
-				Turn.around(worldObj, pos);
-			} else {
-				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
+		spaceshipMenu.display(command, makeTerminal(player));
+		} else if (side == Side.SERVER) {
+			//define a very first command to see if it works.
+			if(command.equals("hello")){
+				//send something to the player to see if we get a feedback from our command.
+				player.addChatComponentMessage(new ChatComponentText("I love you!"));
+			//Define the 'calc' command, which parses a math expression
+			} else if(command.startsWith("calc")) {
+				Calculator.calc(command, player);
+			} else if (command.startsWith("init")) {
+				SpaceshipCommands.init(command, worldObj, this, player, getShip());
+			} else if (command.startsWith("move")) {
+				SpaceshipCommands.move(command, worldObj, this, player, getShip());
+			} else if (command.equals("test1")) {
+				SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", worldObj, this, player, getShip());
+				SpaceshipCommands.move("move 0;15;0", worldObj, this, player, getShip());
+			} else if (command.startsWith("turn ")) {
+				command = command.substring(4).trim();
+				if (command.equals("left")) {
+					Turn.ninetyDeg(worldObj, pos, Turn.LEFT);
+				} else if (command.equals("right")) {
+					Turn.ninetyDeg(worldObj, pos, Turn.RIGHT);
+				} else if (command.equals("around")) {
+					Turn.around(worldObj, pos);
+				} else {
+					player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
+				}
+			} else if(command.equals("status")) {
+				SpaceshipCommands.status(worldObj, this, player, getShip());
 			}
-		} else if(command.equals("status")) {
-			SpaceshipCommands.status(remoteWorld, this, player, getShip());
-		} else if(command.startsWith("shoot")) {
-			SpaceshipCommands.shoot(command, remoteWorld, this, player, ship);
+			terminalMenu.onCommand(command, player, this, makeTerminal(player));
+			SpaceshipCommands.debug(command, this);
 		}
-		terminalMenu.onCommand(command, player);
-		SpaceshipCommands.debug(command, this);
 	}
 	public Spaceship getShip() {
-		return Shipyard.getShipyard().getShip(pos, remoteWorld);
+		return Shipyard.getShipyard().getShip(pos, worldObj);
 	}	
 }

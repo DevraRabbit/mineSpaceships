@@ -17,7 +17,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.World;
 
 /**
  * @author jannes
@@ -25,7 +25,7 @@ import net.minecraft.world.WorldServer;
  */
 public class SpaceshipCommands {
 
-	public static void init(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
+	public static void init(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
 		if(command.equals("init auto")){
 			try {
 				ChatRegisterEntity ent = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()));
@@ -53,7 +53,7 @@ public class SpaceshipCommands {
 		}
 	}
 	
-	public static void move(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+	public static void move(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		command = command.substring("move".length()).replaceAll("\\s", "");
 		
 		if((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()) != null){
@@ -111,7 +111,7 @@ public class SpaceshipCommands {
 		}
 	}
 		
-	public static void status(final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+	public static void status(final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		
 		if((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()) != null){
 			ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
@@ -152,11 +152,11 @@ public class SpaceshipCommands {
 	
 	public static void debug(String command, final ChatRegisterEntity commandBlock){
 		if(command.equals("debug blockMap")){
-			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getRemoteWorld()).debugMap();;
+			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getWorld()).debugMap();;
 		}
 	}
 
-	public static void shoot(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+	public static void shoot(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		command = command.substring("shoot".length()).replaceAll("\\s", "");
 	
 		player.addChatComponentMessage(new ChatComponentText("IMMA FIRING MAH PHAZ0R!!"));

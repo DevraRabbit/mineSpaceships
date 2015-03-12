@@ -41,9 +41,9 @@ public class BlockMap {
 		return map.containsKey(pos.subtract(origin));
 	}
 	
-	public void remove(BlockPos pos, World world){
+	public void remove(BlockPos pos){
 		map.remove(pos.subtract(origin));
-		impendEdges(pos.subtract(origin), world);
+		impendEdges(pos.subtract(origin));
 	}
 	
 	public BlockPos getMaxPos(){
@@ -84,43 +84,43 @@ public class BlockMap {
 		}
 	}
 	
-	private void impendEdges(BlockPos pos, World world){
+	private void impendEdges(BlockPos pos){
 		BlockPos span = maxPos.subtract(minPos);
 		if(pos.getX() == maxPos.getX()){
-			if(!otherInYZPane(span.getX(), world)){
+			if(!otherInYZPane(span.getX())){
 				maxPos = maxPos.subtract(new BlockPos(1,0,0));
 			}
 		} else if(pos.getX() == minPos.getX()){
-			if(!otherInYZPane(0, world)){
+			if(!otherInYZPane(0)){
 				minPos = minPos.add(new BlockPos(1,0,0));
 			}
 		}
 		if(pos.getY() == maxPos.getY()){
-			if(!otherInXZPane(span.getY(), world)){
+			if(!otherInXZPane(span.getY())){
 				maxPos = maxPos.subtract(new BlockPos(0,1,0));
 			}
 		} else if(pos.getY() == minPos.getY()){
-			if(!otherInXZPane(0, world)){
+			if(!otherInXZPane(0)){
 				minPos = minPos.add(new BlockPos(0,1,0));
 			}
 		}
 		if(pos.getZ() == maxPos.getZ()){
-			if(!otherInXYPane(span.getZ(), world)){
+			if(!otherInXYPane(span.getZ())){
 				maxPos = maxPos.subtract(new BlockPos(0,0,1));
 			}
 		} else if(pos.getZ() == minPos.getZ()){
-			if(!otherInXYPane(0, world)){
+			if(!otherInXYPane(0)){
 				minPos = minPos.add(new BlockPos(0,0,1));
 			}
 		}
 	}
 	
-	private boolean otherInYZPane(int index, World world){
+	private boolean otherInYZPane(int index){
 		BlockPos span = maxPos.subtract(minPos);
 		for(int y = 0; y < span.getY(); y++){
 			for(int z = 0; z < span.getZ(); z++){
 				BlockPos pos = minPos.add(minPos.getX()+index, minPos.getY()+y, minPos.getZ()+z).add(origin);
-				if(!world.isAirBlock(pos) && contains(pos)){
+				if(contains(pos)){
 					return true;
 				}
 			}
@@ -128,12 +128,12 @@ public class BlockMap {
 		return false;
 	}
 	
-	private boolean otherInXZPane(int index, World world){
+	private boolean otherInXZPane(int index){
 		BlockPos span = maxPos.subtract(minPos);
 		for(int x = 0; x < span.getX(); x++){
 			for(int z = 0; z < span.getZ(); z++){
 				BlockPos pos = minPos.add(minPos.getX()+x, minPos.getY()+index, minPos.getZ()+z).add(origin);
-				if(!world.isAirBlock(pos) && contains(pos)){
+				if(contains(pos)){
 					return true;
 				}
 			}
@@ -141,12 +141,12 @@ public class BlockMap {
 		return false;
 	}
 	
-	private boolean otherInXYPane(int index, World world){
+	private boolean otherInXYPane(int index){
 		BlockPos span = maxPos.subtract(minPos);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
 				BlockPos pos = minPos.add(minPos.getX()+x, minPos.getY()+y, minPos.getZ()+index).add(origin);
-				if(!world.isAirBlock(pos) && contains(pos)){
+				if(contains(pos)){
 					return true;
 				}
 			}
@@ -180,11 +180,11 @@ public class BlockMap {
 		HashMap nextMap = new HashMap<BlockPos, Boolean>();
 		for(Iterator<BlockPos> it = posSet.iterator(); it.hasNext();){
 			BlockPos pos = it.next();
-			BlockPos nextPos = Turn.getRotatedPos(null, pos, rotateOrigin, new BlockPos(0,0,0), turn);
+			BlockPos nextPos = Turn.getRotatedPos(pos, rotateOrigin, new BlockPos(0,0,0), turn);
 			nextMap.put(nextPos, true);
 		}
 		map = nextMap;
-		this.origin = Turn.getRotatedPos(null, this.origin, origin, new BlockPos(0,0,0), turn);
+		this.origin = Turn.getRotatedPos(this.origin, origin, new BlockPos(0,0,0), turn);
 	}
 	
 	public void showDebug(World world){

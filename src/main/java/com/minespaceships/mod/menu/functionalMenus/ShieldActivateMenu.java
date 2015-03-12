@@ -11,17 +11,13 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  */
 public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 
-	//The terminal to write in.
-	private CustomGuiChat terminal;
-
 	/**
 	 * Creates a new menu, for the shield activate functionality.
 	 * @param name
 	 * @param terminal
 	 */
-	public ShieldActivateMenu(String name, CustomGuiChat terminal) {
+	public ShieldActivateMenu(String name) {
 		super(name);
-		this.terminal = terminal;
 	}
 
 	/**
@@ -29,8 +25,8 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 	 * @param command
 	 */
 	@Override
-	public String activate(String command) {
-		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 0f);
+	public String activate(String command, CustomGuiChat terminal) {
+		terminal.getChatRegisterEntity().getWorld().setRainStrength( 0f);
 		return ">> shield activated <<\nPress 'm' to get back.";
 	}
 

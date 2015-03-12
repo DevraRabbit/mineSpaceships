@@ -16,7 +16,7 @@ import scala.reflect.api.Types.ThisTypeExtractor;
 /**
  * A new functional menu, for the 'to target' functionality.
  * @author ovae.
- * @version 20150226
+ * @version 20150310.
  */
 public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 
@@ -31,12 +31,8 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public ToTargetFunktionalMenu(String name, CustomGuiChat terminal) {
+	public ToTargetFunktionalMenu(String name) {
 		super(name);
-		if(terminal.equals(null)){
-			throw new IllegalArgumentException("Terminal can not be null.");
-		}
-		this.terminal = terminal;
 	}
 
 	/**
@@ -44,7 +40,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 	 * @param command
 	 */
 	@Override
-	public String activate(String command){
+	public String activate(String command, CustomGuiChat terminal){
 		if(command.equals(null)){
 			throw new IllegalArgumentException("Command can not be null.");
 		}
@@ -53,9 +49,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 		}
 		double x=0, y=0, z=0;
 		try{
-			
 			command = command.replaceAll("\\s*", "");
-			
 			//Pattern pattern = Pattern.compile("([\\-\\+]?[0-9]*\\.[0-9]*);([\\-\\+]?[0-9]*\\.[0-9]*);([\\-\\+]?[0-9]*\\.[0-9]*)");
 			Pattern pattern = Pattern.compile("([\\-\\+]?[0-9]*[\\.]?[0-9]+);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*)");
 			Matcher matcher = pattern.matcher(command);
@@ -71,7 +65,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 					if(ship == null) {
 						this.terminal.display("move: Please initialise the Spaceship first", true);
 					}
-					ship.setTarget(position);
+					ship.move(position);
 					return ">> To target <<";
 				}catch(Exception e){
 					System.err.println("ship is broken");

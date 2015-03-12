@@ -14,10 +14,11 @@ import java.util.Vector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.event.*;
 
 import com.minespaceships.mod.MineSpaceships;
@@ -42,7 +43,7 @@ public class Shipyard {
 	
 	public void addShip(Spaceship ship){
 		if(ship != null){
-			if(!ships.contains(ship)){
+			if(!ships.contains(ship) && ship.getNavigatorCount() > 0){
 				Iterator<Spaceship> shipIt = ships.iterator();
 				while(shipIt.hasNext()){
 					Spaceship nextShip = shipIt.next();
@@ -58,7 +59,7 @@ public class Shipyard {
 		ships.remove(ship);
 	}
 	
-	public Spaceship getShip(BlockPos pos, WorldServer world){
+	public Spaceship getShip(BlockPos pos, World world){
 		for(Spaceship ship : ships){
 			if(ship.containsBlock(pos) && ship.getWorld() == world){
 				return ship;
@@ -68,10 +69,10 @@ public class Shipyard {
 	}	
 	
 	@Deprecated
-	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
+	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World worldS){
 		new Spaceship(minSpan, origin, maxSpan, worldS);
 	}
-	public void createShip(BlockPos initial, WorldServer worldS) throws Exception{
+	public void createShip(BlockPos initial, World worldS) throws Exception{
 		new Spaceship(initial, worldS);
 	}
 	
@@ -133,63 +134,61 @@ public class Shipyard {
 	
 	
 	@SubscribeEvent
+	@SideOnly(Side.SERVER)
 	public void safe(WorldEvent.Save event){
-		if(event.world instanceof WorldServer){
-			BufferedWriter writer = null;
-			File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
-			try {
-				new File(MineSpaceships.SpaceshipSavePath).mkdirs();
-				f.createNewFile();
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+		BufferedWriter writer = null;
+		File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
+		try {
+			new File(MineSpaceships.SpaceshipSavePath).mkdirs();
+			f.createNewFile();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+			writer = new BufferedWriter(new FileWriter(f));
+			for(Spaceship ship : ships){				
+				writer.write(ship.toData());
+				writer.write(SPACESHIP_TAG+"\n");
 			}
+			writer.close();
+		} catch (IOException e) {
 			try {
-				writer = new BufferedWriter(new FileWriter(f));
-				for(Spaceship ship : ships){				
-					writer.write(ship.toData());
-					writer.write(SPACESHIP_TAG+"\n");
-				}
 				writer.close();
-			} catch (IOException e) {
-				try {
-					writer.close();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				e.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+			e.printStackTrace();
 		}
 	}
 	@SubscribeEvent
+	@SideOnly(Side.SERVER)
 	public void load(WorldEvent.Load event){
 		ships.clear();
-		if(event.world instanceof WorldServer){
-			Scanner scanner = null;
-			File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
-			try {
-				scanner = new Scanner(f);
-			} catch (FileNotFoundException e) {
-				return;
-			}
-			if(scanner != null){
-				String ship = "";
-				while(scanner.hasNext()){
-					String line = scanner.next();
-					if(!line.equals(SPACESHIP_TAG)){
-						ship += line + "\n";
-					} else {
-						try{
-							addShip(new Spaceship(ship, (WorldServer)event.world));
-						} catch (Exception e){
-							System.out.println("Could not initialize Ship");
-						}
-						ship = "";
-					}
-				}
-				scanner.close();
-			}
+		Scanner scanner = null;
+		File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
+		try {
+			scanner = new Scanner(f);
+		} catch (FileNotFoundException e) {
+			return;
 		}
+		if(scanner != null){
+			String ship = "";
+			while(scanner.hasNext()){
+				String line = scanner.next();
+				if(!line.equals(SPACESHIP_TAG)){
+					ship += line + "\n";
+				} else {
+					try{
+						addShip(new Spaceship(ship, event.world));
+					} catch (Exception e){
+						System.out.println("Could not initialize Ship");
+					}
+					ship = "";
+				}
+			}
+			scanner.close();
+		}		
 	}
 }

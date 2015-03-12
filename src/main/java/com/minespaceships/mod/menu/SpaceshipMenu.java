@@ -66,7 +66,6 @@ public class SpaceshipMenu {
 	private static Menu moveDownFuncMenu;
 	
 	private static Menu liftoffMenu;
-	private static Menu liftoffFuncMenu;
 	private static Menu landingMenu;
 
 	/**
@@ -81,14 +80,14 @@ public class SpaceshipMenu {
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		createShip = new CreateShipMenu("recreate spaceship",terminal);
+		createShip = new CreateShipMenu("recreate spaceship");
 		navigation = new Menu("spaceship navigation");
 		armour = new Menu("weapons");
 		protection = new Menu("protection");
 		help = new HelpMenu("help");
 		shield = new Menu("shield");
-		activateShield = new ShieldActivateMenu("activate shield", terminal);
-		disableShield = new ShieldDisableMenu("disable shield", terminal);
+		activateShield = new ShieldActivateMenu("activate shield");
+		disableShield = new ShieldDisableMenu("disable shield");
 		shipToTargetMenu = new Menu("to target");
 		phaserMenu = new Menu("phaser");
 		torpedoMenu = new Menu("torpedo");
@@ -96,38 +95,35 @@ public class SpaceshipMenu {
 		moveForwardMenu = new Menu("move forward");
 		out = "";
 		out +="Please type in how may blocks you want to move forward.";
-		moveForwardFuncMenu = new moveForwardMenu(out,terminal);
+		moveForwardFuncMenu = new moveForwardMenu(out);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
 		out +="Please type in how may blocks you want to move back.";
-		moveBackFuncMenu = new moveBackMenu(out,terminal);
+		moveBackFuncMenu = new moveBackMenu(out);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
 		out +="Please type in how may blocks you want to move right.";
-		moveRightFuncMenu = new moveRightMenu(out,terminal);
+		moveRightFuncMenu = new moveRightMenu(out);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
 		out +="Please type in how may blocks you want to move left.";
-		moveLeftFuncMenu = new moveLeftMenu(out,terminal);
+		moveLeftFuncMenu = new moveLeftMenu(out);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
 		out +="Please type in how may blocks you want to move up.";
-		moveUpFuncMenu = new moveUpMenu(out,terminal);
+		moveUpFuncMenu = new moveUpMenu(out);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
 		out +="Please type in how may blocks you want to move down.";
-		moveDownFuncMenu = new moveDownMenu(out,terminal);
+		moveDownFuncMenu = new moveDownMenu(out);
 
-		liftoffMenu = new Menu("liftoff");
-		out = "";
-		out +="liftoff functional menu";
-		liftoffFuncMenu = new liftoffMenu(out,terminal);
-		landingMenu = new landingMenu("landing",terminal);
+		liftoffMenu = new liftoffMenu("liftoff");
+		landingMenu = new landingMenu("landing");
 
 		out = "";
 		out+="  To target needs three parameter x,y and z.\n"
@@ -135,7 +131,7 @@ public class SpaceshipMenu {
 		+"    Please enter them in the following form,\n"
 		+"    without the brakets or whitespaces:\n"
 		+"    [x];[y];[z]";
-		shipToTargetFunc = new ToTargetFunktionalMenu(out, terminal);
+		shipToTargetFunc = new ToTargetFunktionalMenu(out);
 
 		//Create the menu structure.
 		root.addSubMenu(createShip);
@@ -155,9 +151,8 @@ public class SpaceshipMenu {
 			navigation.addSubMenu(moveDownMenu);
 				moveDownMenu.addSubMenu(moveDownFuncMenu);
 			navigation.addSubMenu(liftoffMenu);
-				liftoffMenu.addSubMenu(liftoffFuncMenu);
 			navigation.addSubMenu(landingMenu);
-			
+
 		root.addSubMenu(armour);
 			armour.addSubMenu(phaserMenu);
 			armour.addSubMenu(torpedoMenu);

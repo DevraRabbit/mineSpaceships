@@ -5,22 +5,18 @@ import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
- * 
+ * Move the spaceship position to the right.
  * @author ovae.
- * @version 20150226
+ * @version 20150310.
  */
 public class moveRightMenu extends Menu implements FunctionalParamMenu{
 
-	//The terminal to write in.
-	private CustomGuiChat terminal;
-
-	public moveRightMenu(String name, CustomGuiChat terminal) {
+	public moveRightMenu(String name) {
 		super(name);
-		this.terminal = terminal;
 	}
 
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		// TODO Auto-generated method stub
 		return "move right not implemented yet!";
 	}
