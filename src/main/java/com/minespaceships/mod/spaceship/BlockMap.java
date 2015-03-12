@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSponge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -16,7 +17,10 @@ public class BlockMap {
 	private BlockPos maxPos;
 	private BlockPos minPos;
 	private BlockPos origin;
-
+	private HashMap<BlockPos, Boolean> outerBlocks; 
+	private HashMap<BlockPos, Boolean> outerOutBlocks;
+	private HashMap<BlockPos, Boolean> spannedRectangle;
+			
 	public BlockMap(BlockPos originPoint){
 		map = new HashMap<BlockPos, Boolean>();
 		maxPos = new BlockPos(0,0,0);
@@ -53,6 +57,183 @@ public class BlockMap {
 	public BlockPos getMinPos(){
 		return minPos.add(origin);
 	}
+	
+	public void refreshOuterBlocks()
+	{
+		outerBlocks = new HashMap(); 
+		outerOutBlocks = new HashMap(); ;
+		spannedRectangle = new HashMap(); ;
+		calculateOuterOutBlocks();
+		spanRectangle();
+		for(BlockPos l : outerOutBlocks.keySet())
+		{
+			checkRoom(l);
+		}
+	}
+	
+	private void checkRoom(BlockPos aktPos)
+	{
+		if(!map.containsKey(aktPos) && !outerBlocks.containsKey(aktPos) && spannedRectangle.containsKey(aktPos))
+		{
+			outerBlocks.put(aktPos, true);
+			for(BlockPos p: getNeighboursInRectangle(aktPos)){
+				checkRoom(p);
+			}
+		}
+	}
+	
+	private ArrayList<BlockPos> getNeighboursInRectangle(BlockPos aktPos){
+		ArrayList<BlockPos> toReturn= new ArrayList();
+		toReturn.add(new BlockPos(aktPos.getX()-1, aktPos.getY(), aktPos.getZ()));
+		toReturn.add(new BlockPos(aktPos.getX()+1, aktPos.getY(), aktPos.getZ()));
+		toReturn.add(new BlockPos(aktPos.getX(), aktPos.getY()-1, aktPos.getZ()));
+		toReturn.add(new BlockPos(aktPos.getX(), aktPos.getY()+1, aktPos.getZ()));
+		toReturn.add(new BlockPos(aktPos.getX(), aktPos.getY(), aktPos.getZ()-1));
+		toReturn.add(new BlockPos(aktPos.getX(), aktPos.getY(), aktPos.getZ()+1));
+		return toReturn;
+		
+		
+	}
+	
+	private void calculateOuterOutBlocks()
+	{
+		HashMap<BlockPos, Boolean> aktList = new HashMap();
+		{
+		int x = minPos.getX();
+		for(int y = minPos.getY(); y <=maxPos.getY(); y++)
+		{
+			for(int z = minPos.getZ(); z <=maxPos.getZ(); z++)
+			{
+				boolean addIt = true;
+				for(BlockPos bp : aktList.keySet()){
+					if(bp.equals(new BlockPos(x, y, z)))
+						addIt = false;
+				}
+				if(addIt)
+					aktList.put(new BlockPos(x, y, z), true);
+			}
+		}
+		}
+		{
+		int y = minPos.getY();
+		for(int x = minPos.getX(); x <=maxPos.getX(); x++)
+		{
+			for(int z = minPos.getZ(); z <=maxPos.getZ(); z++)
+			{
+				boolean addIt = true;
+				for(BlockPos bp : aktList.keySet()){
+					if(bp.equals(new BlockPos(x, y, z)))
+						addIt = false;
+				}
+				if(addIt)
+					aktList.put(new BlockPos(x, y, z), true);
+			}
+		}
+		}
+		{
+		int z = minPos.getZ();
+		for(int x = minPos.getX(); x <=maxPos.getX(); x++)
+		{
+			for(int y = minPos.getY(); y <=maxPos.getY(); y++)
+			{
+				boolean addIt = true;
+				for(BlockPos bp : aktList.keySet()){
+					if(bp.equals(new BlockPos(x, y, z)))
+						addIt = false;
+				}
+				if(addIt)
+					aktList.put(new BlockPos(x, y, z), true);
+			}
+		}
+		}
+		
+		{
+		int x = maxPos.getX();
+		for(int y = maxPos.getY(); y >=minPos.getY(); y--)
+		{
+			for(int z = maxPos.getZ(); z >=minPos.getZ(); z--)
+			{
+				boolean addIt = true;
+				for(BlockPos bp : aktList.keySet()){
+					if(bp.equals(new BlockPos(x, y, z)))
+						addIt = false;
+				}
+				if(addIt)
+					aktList.put(new BlockPos(x, y, z), true);
+			}
+		}
+		}
+		{
+		int y = maxPos.getY();
+		for(int x = maxPos.getX(); x >=minPos.getX(); x--)
+		{
+			for(int z = maxPos.getZ(); z >=minPos.getZ(); z--)
+			{
+				boolean addIt = true;
+				for(BlockPos bp : aktList.keySet()){
+					if(bp.equals(new BlockPos(x, y, z)))
+						addIt = false;
+				}
+				if(addIt)
+					aktList.put(new BlockPos(x, y, z), true);
+			}
+		}
+		}
+		{
+		int z = maxPos.getZ();
+		for(int x = maxPos.getX(); x >=minPos.getX(); x--)
+		{
+			for(int y = maxPos.getY(); y >=minPos.getY(); y--)
+			{
+				boolean addIt = true;
+				for(BlockPos bp : aktList.keySet()){
+					if(bp.equals(new BlockPos(x, y, z)))
+						addIt = false;
+				}
+				if(addIt)
+					aktList.put(new BlockPos(x, y, z), true);
+			}
+		}
+		}
+		this.outerOutBlocks = aktList;
+	}
+	
+	private void spanRectangle()
+	{
+		HashMap<BlockPos, Boolean> aktList = new HashMap();
+		for(int x = minPos.getX(); x <=maxPos.getX(); x++)
+		{
+			for(int y = minPos.getY(); y <=maxPos.getY(); y++)
+			{
+				for(int z = minPos.getZ(); z <=maxPos.getZ(); z++)
+				{
+					aktList.put(new BlockPos(x, y, z), true);
+				}
+			}
+		}
+		this.spannedRectangle = aktList;
+	}
+	
+	public void showDebug(World world){
+		
+			refreshOuterBlocks();
+			
+			ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
+			Set<BlockPos> keys = outerBlocks.keySet();
+			for(BlockPos pos : keys){
+				positions.add(pos.add(origin));
+			}
+			
+		
+			
+			for(BlockPos po : positions)
+			{
+				world.setBlockState(po, Block.getStateById(4));
+			}
+		
+	}
+	
+
 	
 	public ArrayList<BlockPos> getPositions(){
 		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
@@ -187,7 +368,7 @@ public class BlockMap {
 		this.origin = Turn.getRotatedPos(null, this.origin, origin, new BlockPos(0,0,0), turn);
 	}
 	
-	public void showDebug(World world){
+	public void showDebug11(World world){
 		ArrayList<BlockPos> positions = getPositions();
 		for(BlockPos pos : positions){
 			world.setBlockState(pos, Block.getStateById(2));
