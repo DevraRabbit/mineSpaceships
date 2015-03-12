@@ -36,9 +36,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ChatRegisterEntity extends TileEntity {
 	
-	//Attributes
-	private WorldServer remoteWorld;
-	
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
 	
@@ -50,14 +47,6 @@ public class ChatRegisterEntity extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
-		retrieveServerWorld();
-	}
-	private void retrieveServerWorld(){
-		if(!worldObj.isRemote){
-			remoteWorld = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		} else {
-			//remoteWorld = (WorldServer) worldObj;
-		}
 	}
 	@Override
 	public void invalidate(){
@@ -119,18 +108,6 @@ public class ChatRegisterEntity extends TileEntity {
 		}
 		return terminal;
 	}
-	public void setRemoteWorld(WorldServer world){
-		remoteWorld = world;
-	}
-	public WorldServer getRemoteWorld(){
-		if(remoteWorld != null){
-			return remoteWorld;
-		} else {
-			//retrieveServerWorld();
-			//return getRemoteWorld();
-			return null;
-		}
-	}
 	/**
 	 * Executes the given command, regardless who committed it.
 	 * @param command
@@ -155,12 +132,12 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
 		} else if (command.startsWith("init")) {
-			SpaceshipCommands.init(command, remoteWorld, this, player, getShip());
+			SpaceshipCommands.init(command, worldObj, this, player, getShip());
 		} else if (command.startsWith("move")) {
-			SpaceshipCommands.move(command, remoteWorld, this, player, getShip());
+			SpaceshipCommands.move(command, worldObj, this, player, getShip());
 		} else if (command.equals("test1")) {
-			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", remoteWorld, this, player, getShip());
-			SpaceshipCommands.move("move 0;15;0", remoteWorld, this, player, getShip());
+			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", worldObj, this, player, getShip());
+			SpaceshipCommands.move("move 0;15;0", worldObj, this, player, getShip());
 		} else if (command.startsWith("turn ")) {
 			command = command.substring(4).trim();
 			if (command.equals("left")) {
@@ -173,12 +150,12 @@ public class ChatRegisterEntity extends TileEntity {
 				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
 			}
 		} else if(command.equals("status")) {
-			SpaceshipCommands.status(remoteWorld, this, player, getShip());
+			SpaceshipCommands.status(worldObj, this, player, getShip());
 		}
 		terminalMenu.onCommand(command, player);
 		SpaceshipCommands.debug(command, this);
 	}
 	public Spaceship getShip() {
-		return Shipyard.getShipyard().getShip(pos, remoteWorld);
+		return Shipyard.getShipyard().getShip(pos, worldObj);
 	}	
 }
