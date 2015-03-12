@@ -10,9 +10,9 @@ import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
- * 	Menu witch will create a new spaceship.
+ * Menu witch will create a new spaceship.
  * @author ovae
- * @verison 20150226
+ * @version 20150226
  */
 public class CreateShipMenu extends Menu implements FunctionalMenu{
 

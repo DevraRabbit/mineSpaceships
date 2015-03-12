@@ -16,14 +16,23 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position down.
  * @author ovae.
- * @version 20150310.
+ * @version 20150312.
  */
 public class moveDownMenu extends Menu implements FunctionalParamMenu{
 
+	/**
+	 * Creates a new moveDownMenu.
+	 * @param name
+	 */
 	public moveDownMenu(String name) {
 		super(name);
 	}
 
+	/**
+	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 * @param terminal
+	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		if(command.trim().isEmpty()){

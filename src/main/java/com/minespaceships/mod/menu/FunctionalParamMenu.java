@@ -8,10 +8,11 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @version 20150225
  */
 public interface FunctionalParamMenu{
-	
+
 	/**
 	 * Activate the functionality of the menu.
 	 * @param paramlist
 	 */
 	public String activate(String command, CustomGuiChat terminal);
+
 }

@@ -10,7 +10,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * This menu is the help menu witch explains to the user how to
  * use the menu structure and how to navigate in it.
  * @author ovae.
- * @version 20150226
+ * @version 20150312.
  */
 public class HelpMenu extends Menu implements FunctionalMenu{
 
@@ -25,6 +25,8 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 
 	/**
 	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 * @param terminal
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {

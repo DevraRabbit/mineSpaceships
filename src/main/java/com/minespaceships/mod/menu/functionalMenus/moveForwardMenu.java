@@ -16,14 +16,23 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position forward.
  * @author ovae.
- * @version 20150226
+ * @version 20150312.
  */
 public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 
+	/**
+	 * Creates a new moveForwardMenu.
+	 * @param name
+	 */
 	public moveForwardMenu(String name) {
 		super(name);
 	}
 
+	/**
+	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 * @param terminal
+	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		if(command.trim().isEmpty()){
