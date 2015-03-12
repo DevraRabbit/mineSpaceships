@@ -13,7 +13,6 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
 
-import com.minespaceships.mod.overhead.SpaceshipCommandEvent;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 // http://www.minecraftforge.net/wiki/Event_Reference#BlockEvent
@@ -92,10 +91,5 @@ public class BlockEvent {
 		if (world.isRemote) {
 			Shipyard.getShipyard().getBlockInfo(pos, world);
 		}
-	}
-	
-	@SubscribeEvent
-	public void onSpaceshipCommand(SpaceshipCommandEvent event){
-		System.out.println(event.command);
 	}
 }
