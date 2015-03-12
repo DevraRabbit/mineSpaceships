@@ -8,12 +8,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
@@ -34,10 +36,10 @@ public class PhaserUtils {
 		Vec3 ray = direction.normalize();
 
 		while (strength > 0 && maxrange > 0) {
-			//
 			Object[] nextHitInfo = getNextPhaserHit(ray);
 			current = source.add((BlockPos) nextHitInfo[0]);
 			ray = (Vec3) nextHitInfo[1];
+			
 			if (!world.isAirBlock(current) && !(world.getBlockState(current).getBlock() instanceof BlockFire)) {
 				strength -= world.getBlockState(current).getBlock()
 						.getBlockHardness(world, current);
@@ -45,11 +47,6 @@ public class PhaserUtils {
 					world.destroyBlock(current, false);
 					world.setBlockState(current, Blocks.fire.getDefaultState());
 				}
-
-	            //Block block = world.getBlockState(current).getBlock();
-				//EntityLightningBolt elb = new EntityLightningBolt(world, (double)current.getX()+0.5, (double)current.getY()+1, (double)current.getZ()+0.5);
-				//elb.setAngles(90f/.15f, 0f);
-				//world.addWeatherEffect(elb);
 	            
 	            if(world.isAirBlock(current.down()))
 	            world.setBlockState(current.down(), Blocks.fire.getDefaultState());
@@ -68,7 +65,6 @@ public class PhaserUtils {
 
 	            if(world.isAirBlock(current.west()))
 	            world.setBlockState(current.west(), Blocks.fire.getDefaultState());
-	            
 			}
 			
         	double d0 = 2.0D;
@@ -82,6 +78,9 @@ public class PhaserUtils {
                 if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, killer))
                     entity.onStruckByLightning(killer);
             }
+            
+            world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, ray.xCoord, ray.yCoord, ray.zCoord, 0, 0, 0, 0);
+            
 			maxrange--;
 		}
 	}
@@ -136,15 +135,24 @@ public class PhaserUtils {
 		
 		Vec3 x_scaled, y_scaled, z_scaled;
 		x_scaled = scale(ray, x_next / x);
-		y_scaled = scale(ray, y_next / x);
-		z_scaled = scale(ray, z_next / x);
+		y_scaled = scale(ray, y_next / y);
+		z_scaled = scale(ray, z_next / z);
 		
-		if (isBiggestAbsolute(x_scaled.lengthVector(), y_scaled.lengthVector(), z_scaled.lengthVector())) {
+		double x_length, y_length, z_length;
+		x_length = x_scaled.lengthVector();
+		y_length = y_scaled.lengthVector();
+		z_length = z_scaled.lengthVector();
+
+		if(Double.isNaN(x_length)) x_length = Double.MAX_VALUE;
+		if(Double.isNaN(y_length)) y_length = Double.MAX_VALUE;
+		if(Double.isNaN(z_length)) z_length = Double.MAX_VALUE;
+		
+		if (isSmallestAbsolute(x_length, y_length, z_length)) {
 			// auf X skalieren
 			return x_scaled;
-		} else if (isBiggestAbsolute(y_scaled.lengthVector(), x_scaled.lengthVector(), z_scaled.lengthVector())) {
+		} else if (isSmallestAbsolute(y_length, x_length, z_length)) {
 			return y_scaled;
-		} else if (isBiggestAbsolute(z_scaled.lengthVector(), y_scaled.lengthVector(), x_scaled.lengthVector())) {
+		} else if (isSmallestAbsolute(z_length, y_length, x_length)) {
 			// auf Z skalieren
 			return z_scaled;
 		}
@@ -152,10 +160,10 @@ public class PhaserUtils {
 		return null;
 	}
 
-	private static boolean isBiggestAbsolute(double test, double contestant1,
+	private static boolean isSmallestAbsolute(double test, double contestant1,
 			double contestant2) {
-		return (Math.abs(test) == Math.max(Math.abs(test),
-				Math.abs(contestant1)) && Math.abs(test) == Math.max(
+		return (Math.abs(test) == Math.min(Math.abs(test),
+				Math.abs(contestant1)) && Math.abs(test) == Math.min(
 				Math.abs(test), Math.abs(contestant2)));
 	}
 }
