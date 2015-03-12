@@ -100,98 +100,62 @@ public class BlockMap {
 		HashMap<BlockPos, Boolean> aktList = new HashMap();
 		{
 		int x = minPos.getX();
-		for(int y = minPos.getY(); y <=maxPos.getY(); y++)
+		for(int y = minPos.getY(); y < maxPos.getY(); y++)
 		{
-			for(int z = minPos.getZ(); z <=maxPos.getZ(); z++)
+			for(int z = minPos.getZ(); z < maxPos.getZ(); z++)
 			{
-				boolean addIt = true;
-				for(BlockPos bp : aktList.keySet()){
-					if(bp.equals(new BlockPos(x, y, z)))
-						addIt = false;
-				}
-				if(addIt)
-					aktList.put(new BlockPos(x, y, z), true);
+				aktList.put(new BlockPos(x, y, z), true);
 			}
 		}
 		}
 		{
 		int y = minPos.getY();
-		for(int x = minPos.getX(); x <=maxPos.getX(); x++)
+		for(int x = minPos.getX(); x < maxPos.getX(); x++)
 		{
-			for(int z = minPos.getZ(); z <=maxPos.getZ(); z++)
+			for(int z = minPos.getZ(); z < maxPos.getZ(); z++)
 			{
-				boolean addIt = true;
-				for(BlockPos bp : aktList.keySet()){
-					if(bp.equals(new BlockPos(x, y, z)))
-						addIt = false;
-				}
-				if(addIt)
-					aktList.put(new BlockPos(x, y, z), true);
+				aktList.put(new BlockPos(x, y, z), true);
 			}
 		}
 		}
 		{
 		int z = minPos.getZ();
-		for(int x = minPos.getX(); x <=maxPos.getX(); x++)
+		for(int x = minPos.getX(); x < maxPos.getX(); x++)
 		{
-			for(int y = minPos.getY(); y <=maxPos.getY(); y++)
+			for(int y = minPos.getY(); y < maxPos.getY(); y++)
 			{
-				boolean addIt = true;
-				for(BlockPos bp : aktList.keySet()){
-					if(bp.equals(new BlockPos(x, y, z)))
-						addIt = false;
-				}
-				if(addIt)
-					aktList.put(new BlockPos(x, y, z), true);
+				aktList.put(new BlockPos(x, y, z), true);
 			}
 		}
 		}
 		
 		{
 		int x = maxPos.getX();
-		for(int y = maxPos.getY(); y >=minPos.getY(); y--)
+		for(int y = maxPos.getY(); y >= minPos.getY(); y--)
 		{
-			for(int z = maxPos.getZ(); z >=minPos.getZ(); z--)
+			for(int z = maxPos.getZ(); z >= minPos.getZ(); z--)
 			{
-				boolean addIt = true;
-				for(BlockPos bp : aktList.keySet()){
-					if(bp.equals(new BlockPos(x, y, z)))
-						addIt = false;
-				}
-				if(addIt)
-					aktList.put(new BlockPos(x, y, z), true);
+				aktList.put(new BlockPos(x, y, z), true);
 			}
 		}
 		}
 		{
 		int y = maxPos.getY();
-		for(int x = maxPos.getX(); x >=minPos.getX(); x--)
+		for(int x = maxPos.getX(); x >= minPos.getX(); x--)
 		{
-			for(int z = maxPos.getZ(); z >=minPos.getZ(); z--)
+			for(int z = maxPos.getZ(); z >= minPos.getZ(); z--)
 			{
-				boolean addIt = true;
-				for(BlockPos bp : aktList.keySet()){
-					if(bp.equals(new BlockPos(x, y, z)))
-						addIt = false;
-				}
-				if(addIt)
-					aktList.put(new BlockPos(x, y, z), true);
+				aktList.put(new BlockPos(x, y, z), true);
 			}
 		}
 		}
 		{
 		int z = maxPos.getZ();
-		for(int x = maxPos.getX(); x >=minPos.getX(); x--)
+		for(int x = maxPos.getX(); x >= minPos.getX(); x--)
 		{
-			for(int y = maxPos.getY(); y >=minPos.getY(); y--)
+			for(int y = maxPos.getY(); y >= minPos.getY(); y--)
 			{
-				boolean addIt = true;
-				for(BlockPos bp : aktList.keySet()){
-					if(bp.equals(new BlockPos(x, y, z)))
-						addIt = false;
-				}
-				if(addIt)
-					aktList.put(new BlockPos(x, y, z), true);
+				aktList.put(new BlockPos(x, y, z), true);
 			}
 		}
 		}
@@ -213,27 +177,6 @@ public class BlockMap {
 		}
 		this.spannedRectangle = aktList;
 	}
-	
-	public void showDebug(World world){
-		
-			refreshOuterBlocks();
-			
-			ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
-			Set<BlockPos> keys = outerBlocks.keySet();
-			for(BlockPos pos : keys){
-				positions.add(pos.add(origin));
-			}
-			
-		
-			
-			for(BlockPos po : positions)
-			{
-				world.setBlockState(po, Block.getStateById(4));
-			}
-		
-	}
-	
-
 	
 	public ArrayList<BlockPos> getPositions(){
 		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
@@ -366,6 +309,19 @@ public class BlockMap {
 		}
 		map = nextMap;
 		this.origin = Turn.getRotatedPos(null, this.origin, origin, new BlockPos(0,0,0), turn);
+	}
+	
+	public void showDebug(World world){
+		refreshOuterBlocks();
+		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
+		Set<BlockPos> keys = outerBlocks.keySet();
+		for(BlockPos pos : keys){
+			positions.add(pos.add(origin));
+		}
+		for(BlockPos po : positions)
+		{
+			world.setBlockState(po, Block.getStateById(4));
+		}
 	}
 	
 	public void showDebug11(World world){
