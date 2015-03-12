@@ -20,6 +20,7 @@ public class BlockMap {
 	private HashMap<BlockPos, Boolean> outerBlocks; 
 	private HashMap<BlockPos, Boolean> outerOutBlocks;
 	private HashMap<BlockPos, Boolean> spannedRectangle;
+	private HashMap<BlockPos, Boolean> innerBlocks;
 			
 	public BlockMap(BlockPos originPoint){
 		map = new HashMap<BlockPos, Boolean>();
@@ -58,18 +59,43 @@ public class BlockMap {
 		return minPos.add(origin);
 	}
 	
-	public void refreshOuterBlocks()
+	public HashMap<BlockPos, Boolean> getOuterBlocks()
 	{
-		outerBlocks = new HashMap(); 
-		outerOutBlocks = new HashMap(); ;
-		spannedRectangle = new HashMap(); ;
+		return outerBlocks;
+	}
+	
+	public HashMap<BlockPos, Boolean> getInnerBlocks()
+	{
+		return innerBlocks;
+	}
+		
+	/** calculates and refreshes the innerBlocks and outerBlocks
+	 * 
+	 */
+	public void refreshVolumeBlocks()
+	{
+		outerBlocks = new HashMap(); 	//initializes outerBlocks
+		outerOutBlocks = new HashMap();
+		spannedRectangle = new HashMap();
 		calculateOuterOutBlocks();
 		spanRectangle();
 		for(BlockPos l : outerOutBlocks.keySet())
 		{
 			checkRoom(l);
 		}
+		innerBlocks = null; 	//initializes innerBlocks
+		for(BlockPos l : spannedRectangle.keySet())
+		{
+			if(!map.containsKey(l) && !outerBlocks.containsKey(l))
+			{
+				innerBlocks.put(l, true);
+			}
+		}
 	}
+	
+	
+	
+	
 	
 	private void checkRoom(BlockPos aktPos)
 	{
