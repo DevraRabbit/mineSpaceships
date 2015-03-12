@@ -160,6 +160,7 @@ public class ChatRegisterEntity extends TileEntity {
 		terminalMenu.onCommand(command, player, this, terminal);
 		SpaceshipCommands.debug(command, this);
 	}
+
 	public Spaceship getShip() {
 		return Shipyard.getShipyard().getShip(pos, remoteWorld);
 	}

@@ -341,7 +341,7 @@ public class Spaceship implements Serializable{
 	 * These method check also if the target position is a valid position.
 	 * @param position
 	 */
-	public void move(final BlockPos position){
+	public void move(final ChatRegisterEntity entity, BlockPos position){
 		if(position == null){
 			throw new IllegalArgumentException("The target position can not be null");
 		}
@@ -364,5 +364,8 @@ public class Spaceship implements Serializable{
 
 		//Valid position
 		this.setTarget(new BlockPos(x,y,z));
+
+		//Update the entity position.
+		entity.setPos(position);
 	}
 }

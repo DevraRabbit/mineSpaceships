@@ -23,8 +23,6 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		try{
-			System.out.println("Before: ");
-			System.out.println(terminal.getChatRegisterEntity().getPos());
 			double x,y,z;
 			x = terminal.getChatRegisterEntity().getPos().getX();
 			y = terminal.getChatRegisterEntity().getPos().getY()+20;
@@ -35,14 +33,12 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 			if(ship == null) {
 				terminal.display("liftoff: Please initialise the Spaceship first", true);
 			}
-			ship.move(position);
-			System.out.println("After: ");
-			System.out.println(terminal.getChatRegisterEntity().getPos());
+			ship.move(terminal.getChatRegisterEntity(), position);
 			return ">> Liftoff <<\nPress 'm' to get back.";
 		}catch(Exception e){
 			System.err.println("ship is broken");
 		}
-		return "liftoff not implemented yet!";
+		return "liftoff failed!";
 	}
 
 }

@@ -20,7 +20,7 @@ public class landingMenu extends Menu implements FunctionalMenu{
 
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
-		return "landing not implemented yet!";
+		return "landing not implemented yet!\nPress 'm' to get back.";
 	}
 
 }

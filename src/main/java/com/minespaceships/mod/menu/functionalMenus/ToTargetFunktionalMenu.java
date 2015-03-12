@@ -50,7 +50,6 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 		double x=0, y=0, z=0;
 		try{
 			command = command.replaceAll("\\s*", "");
-			//Pattern pattern = Pattern.compile("([\\-\\+]?[0-9]*\\.[0-9]*);([\\-\\+]?[0-9]*\\.[0-9]*);([\\-\\+]?[0-9]*\\.[0-9]*)");
 			Pattern pattern = Pattern.compile("([\\-\\+]?[0-9]*[\\.]?[0-9]+);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*)");
 			Matcher matcher = pattern.matcher(command);
 			if(matcher.matches()){
@@ -65,8 +64,8 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 					if(ship == null) {
 						this.terminal.display("move: Please initialise the Spaceship first", true);
 					}
-					ship.move(position);
-					return ">> To target <<";
+					ship.move(terminal.getChatRegisterEntity(), position);
+					return ">> to target <<\nPress 'm' to get back.";
 				}catch(Exception e){
 					System.err.println("ship is broken");
 				}
@@ -78,7 +77,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 			System.err.println("IllegalArgumentException: regex failed");
 		}
 
-		return ">> To target failed <<";
+		return "To target failed!";
 	}
 
 }

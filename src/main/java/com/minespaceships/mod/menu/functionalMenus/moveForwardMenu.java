@@ -32,15 +32,12 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 		if(command.equals(null)){
 			return "command can not be null.";
 		}
-		int playerRotation = MathHelper.floor_double((double)(terminal.mc.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		command = SpaceshipCommands.processDirectionMoveCommand(command, playerRotation);
-		
+
 		double x,y,z;
-		Pattern pattern = Pattern.compile("([\\-\\+]?[0-9]*[\\.]?[0-9]+);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*)");
-		//Pattern pattern = Pattern.compile("\\d");
+		Pattern pattern = Pattern.compile("\\d*");
 		Matcher matcher = pattern.matcher(command);
 		if(matcher.matches()){
-			x = Double.valueOf(matcher.group(1));
+			x = terminal.getChatRegisterEntity().getPos().getX() + Double.parseDouble(command);
 			y = terminal.getChatRegisterEntity().getPos().getY();
 			z = terminal.getChatRegisterEntity().getPos().getZ();
 			try{
@@ -51,14 +48,13 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 				if(ship == null) {
 					terminal.display("move: Please initialise the Spaceship first", true);
 				}
-				ship.move(position);
-
-				return ">> To target <<";
+				ship.move(terminal.getChatRegisterEntity(), position);
+				return ">> move forward <<\nPress 'm' to get back.";
 			}catch(Exception e){
 				System.err.println("ship is broken");
 			}
 		}
-		return "move forward not implemented yet!";
+		return "move forward failed!";
 	}
 
 }

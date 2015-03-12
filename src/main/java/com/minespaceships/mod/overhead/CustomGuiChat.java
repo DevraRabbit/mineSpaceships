@@ -96,6 +96,6 @@ public class CustomGuiChat extends GuiChat{
 	 * 
 	 */
 	public void setTileEntity(TileEntity tileEntity){
-		this.entity =(ChatRegisterEntity) tileEntity;
+		this.entity = (ChatRegisterEntity) tileEntity;
 	}
 }
