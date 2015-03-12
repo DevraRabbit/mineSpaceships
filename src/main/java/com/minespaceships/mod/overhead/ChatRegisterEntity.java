@@ -26,10 +26,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -143,6 +147,7 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param command
 	 * @param player
 	 */
+	@SideOnly(Side.CLIENT)
 	public void onCommand(String command, EntityPlayer player){
 		//display the menu.
 		spaceshipMenu.display(command, makeTerminal(player));
@@ -177,6 +182,10 @@ public class ChatRegisterEntity extends TileEntity {
 		}
 		terminalMenu.onCommand(command, player);
 		SpaceshipCommands.debug(command, this);
+		
+		if(command.equals("ping")){
+			MinecraftForge.EVENT_BUS.post(new SpaceshipCommandEvent(command, player));
+		}
 	}
 	public Spaceship getShip() {
 		return Shipyard.getShipyard().getShip(pos, remoteWorld);
