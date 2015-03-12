@@ -3,6 +3,8 @@ package com.minespaceships.mod.overhead;
 import java.util.regex.*;
 
 import com.example.examplemod.ovae.terminalMenu;
+import com.minespaceships.mod.MineSpaceships;
+import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
@@ -144,6 +146,8 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void onCommand(String command, EntityPlayer player){
+		MineSpaceships.network.sendToServer(new CommandMessage(command));
+		
 		//display the menu.
 		spaceshipMenu.display(command, makeTerminal(player));
 
