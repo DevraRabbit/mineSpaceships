@@ -28,7 +28,6 @@ public class BlockCopier {
 		TileEntity ent = worldIn.getTileEntity(origin);
 		if(ent != null){
 			worldIn.removeTileEntity(origin);
-			//ent.setPos(target);
 			moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
 		}
 	}

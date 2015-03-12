@@ -161,6 +161,7 @@ public class ChatRegisterEntity extends TileEntity {
 			SpaceshipCommands.debug(command, this);
 		}
 	}
+
 	public Spaceship getShip() {
 		return Shipyard.getShipyard().getShip(pos, worldObj);
 	}	

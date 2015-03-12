@@ -7,14 +7,13 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * A menu for the shield activate functionality.
  * @author ovae.
- * @version 20150221
+ * @version 20150312.
  */
 public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 
 	/**
 	 * Creates a new menu, for the shield activate functionality.
 	 * @param name
-	 * @param terminal
 	 */
 	public ShieldActivateMenu(String name) {
 		super(name);
@@ -23,6 +22,7 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 	/**
 	 * The functionality of the menu is activated by this method.
 	 * @param command
+	 * @param terminal
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {

@@ -16,14 +16,23 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position back.
  * @author ovae.
- * @version 20150310.
+ * @version 20150312.
  */
 public class moveBackMenu extends Menu implements FunctionalParamMenu{
 
+	/**
+	 * Creates a new moveBackMenu.
+	 * @param name
+	 */
 	public moveBackMenu(String name) {
 		super(name);
 	}
 
+	/**
+	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 * @param terminal
+	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		if(command.trim().isEmpty()){
@@ -34,12 +43,12 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 		}
 
 		double x,y,z;
-		Pattern pattern = Pattern.compile("([\\-\\+]?[0-9]*[\\.]?[0-9]+);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*)");
+		Pattern pattern = Pattern.compile("\\d*");
 		Matcher matcher = pattern.matcher(command);
 		if(matcher.matches()){
-			x = Double.valueOf(matcher.group(1));
-			y = Double.valueOf(matcher.group(2));
-			z = Double.valueOf(matcher.group(3));
+			x = terminal.getChatRegisterEntity().getPos().getX() - Double.parseDouble(command);
+			y = terminal.getChatRegisterEntity().getPos().getY();
+			z = terminal.getChatRegisterEntity().getPos().getZ();
 
 			try{
 				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
@@ -48,14 +57,13 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 				if(ship == null) {
 					terminal.display("move: Please initialise the Spaceship first", true);
 				}
-				ship.move(position);
-
-				return ">> To target <<";
+				ship.move(terminal.getChatRegisterEntity(), position);
+				return ">> move back <<\nPress 'm' to get back.";
 			}catch(Exception e){
 				System.err.println("ship is broken");
 			}
 		}
-		return "move back not implemented yet!";
+		return "move back failed!";
 	}
 
 }

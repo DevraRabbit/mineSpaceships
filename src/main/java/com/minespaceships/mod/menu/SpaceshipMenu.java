@@ -51,21 +51,47 @@ public class SpaceshipMenu {
 
 	//Menu for all torpedo types.
 	private static Menu torpedoMenu;
-	
+
+	//Menu of the move forward command
 	private static Menu moveForwardMenu;
+
+	//Menu of the move forward command witch contains the functionality.
 	private static Menu moveForwardFuncMenu;
+
+	//Menu of the move back command.
 	private static Menu moveBackMenu;
+
+	//Menu for the move back command witch contains the functionality.
 	private static Menu moveBackFuncMenu;
+
+	//Menu of the move right command.
 	private static Menu moveRightMenu;
+
+	//Menu for the move right command witch contains the functionality.
 	private static Menu moveRightFuncMenu;
+
+	//Menu of the move left command.
 	private static Menu moveLeftMenu;
+
+	//Menu for the move left command witch contains the functionality.
 	private static Menu moveLeftFuncMenu;
+
+	//Menu of the move up command.
 	private static Menu moveUpMenu;
+
+	//Menu for the move up command witch contains the functionality.
 	private static Menu moveUpFuncMenu;
+
+	//Menu of the move down command.
 	private static Menu moveDownMenu;
+
+	//Menu for the move down command witch contains the functionality.
 	private static Menu moveDownFuncMenu;
-	
+
+	//Menu for the liftoff functionality.
 	private static Menu liftoffMenu;
+
+	//Menu for the landing functionality.
 	private static Menu landingMenu;
 
 	/**

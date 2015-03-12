@@ -33,7 +33,7 @@ public class NoSpaceshipEntityMenu{
 	public static Menu getRootMenu(){
 		return rootMenu;
 	}
-	
+
 	/**
 	 * Returns a boolean runBefore.
 	 * @return runBefore

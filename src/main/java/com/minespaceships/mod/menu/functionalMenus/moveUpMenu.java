@@ -16,14 +16,23 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position up.
  * @author ovae.
- * @version 20150310.
+ * @version 20150312.
  */
 public class moveUpMenu extends Menu implements FunctionalParamMenu{
-	
+
+	/**
+	 * Creates a new moveUpMenu.
+	 * @param name
+	 */
 	public moveUpMenu(String name) {
 		super(name);
 	}
 
+	/**
+	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 * @param terminal
+	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		if(command.trim().isEmpty()){
@@ -32,10 +41,9 @@ public class moveUpMenu extends Menu implements FunctionalParamMenu{
 		if(command.equals(null)){
 			return "command can not be null.";
 		}
-		System.out.println(command);
+
 		double x,y,z;
 		Pattern pattern = Pattern.compile("\\d*");
-		//Pattern pattern = Pattern.compile("\\d");
 		Matcher matcher = pattern.matcher(command);
 		if(matcher.matches()){
 			x = terminal.getChatRegisterEntity().getPos().getX();
@@ -49,14 +57,13 @@ public class moveUpMenu extends Menu implements FunctionalParamMenu{
 				if(ship == null) {
 					terminal.display("move: Please initialise the Spaceship first", true);
 				}
-				ship.move(position);
-
-				return ">> To target <<";
+				ship.move(terminal.getChatRegisterEntity(), position);
+				return ">> move up <<\nPress 'm' to get back.";
 			}catch(Exception e){
 				System.err.println("ship is broken");
 			}
 		}
-		return "move up not implemented yet!";
+		return "move up failed!";
 	}
 
 }
