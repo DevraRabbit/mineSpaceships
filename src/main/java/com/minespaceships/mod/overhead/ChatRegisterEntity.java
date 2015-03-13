@@ -125,10 +125,10 @@ public class ChatRegisterEntity extends TileEntity {
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		
 		if(side == Side.CLIENT) {
-		MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
-		
-		//display the menu.
-		spaceshipMenu.display(command, makeTerminal(player));
+			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
+			
+			//display the menu.
+			spaceshipMenu.display(command, makeTerminal(player));
 		} else if (side == Side.SERVER) {
 			//define a very first command to see if it works.
 			if(command.equals("hello")){
