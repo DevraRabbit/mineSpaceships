@@ -40,6 +40,10 @@ public class BlockMap {
 	public void add(BlockPos pos){
 		map.put(pos.subtract(origin), true);
 		resize(pos.subtract(origin));
+		
+		outerBlocks.remove(pos);
+		innerBlocks.remove(pos);
+		
 	}
 	
 	public boolean contains(BlockPos pos){
@@ -49,6 +53,21 @@ public class BlockMap {
 	public void remove(BlockPos pos, World world){
 		map.remove(pos.subtract(origin));
 		impendEdges(pos.subtract(origin), world);
+		
+		ArrayList<BlockPos> neighbours= getNeighboursInRectangle(pos);
+		boolean outer= false;
+		for(BlockPos p:neighbours){
+			if(outerBlocks.containsKey(p)){
+				outer=true;
+				break;				
+			}
+		}
+		
+		if(outer){
+			outerBlocks.put(pos, true);
+		}else{
+			innerBlocks.put(pos, true);
+		}
 	}
 	
 	public BlockPos getMaxPos(){
@@ -338,7 +357,7 @@ public class BlockMap {
 	}
 	
 	public void showDebug(World world){
-		refreshOuterBlocks();
+		refreshVolumeBlocks();
 		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
 		Set<BlockPos> keys = outerBlocks.keySet();
 		for(BlockPos pos : keys){
