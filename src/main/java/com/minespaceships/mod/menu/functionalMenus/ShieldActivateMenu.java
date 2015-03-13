@@ -43,7 +43,7 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 			BlockPos minPos = ship.getMinPos();
 
 			//IBlockState shieldBlock = Blocks.barrier.getDefaultState();
-			IBlockState shieldBlock = Blocks.slime_block.getDefaultState();
+			IBlockState shieldBlock = Blocks.glass.getDefaultState();
 
 			int abstand = 2;
 			//Right shield side

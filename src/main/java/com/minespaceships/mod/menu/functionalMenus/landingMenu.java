@@ -58,7 +58,6 @@ public class landingMenu extends Menu implements FunctionalMenu{
 				}else{
 					run = false;
 				}
-				System.out.println("["+x+"]"+"["+posY+"]"+"["+z+"]");
 				posY--;
 				height++;
 			}while(run);
@@ -72,7 +71,7 @@ public class landingMenu extends Menu implements FunctionalMenu{
 			System.err.println("ship is broken");
 		}
 
-		return "landing not implemented yet!\nPress 'm' to get back.";
+		return "landing failed!\nPress 'm' to get back.";
 	}
 
 }
