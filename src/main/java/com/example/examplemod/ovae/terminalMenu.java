@@ -87,6 +87,12 @@ public class terminalMenu {
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
 						world.setBlockState(newPos, Blocks.redstone_block.getDefaultState());
 					}
+
+					//Place the redstone_block
+					if((x==0) && (y==2)){
+						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
+						world.setBlockState(newPos, Blocks.ladder.getDefaultState());
+					}
 				}
 			}
 			chat.clearChat();
