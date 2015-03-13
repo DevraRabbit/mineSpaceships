@@ -1,6 +1,6 @@
 package energyStrategySystem;
 
-public interface EnergyC {
+public interface IEnergyC {
 	
 	
 	/**

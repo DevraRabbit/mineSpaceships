@@ -284,7 +284,7 @@ public class Spaceship implements Serializable{
 	private void removeSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.remove(state, pos);
+			assembler.remove(state.getBlock(), pos);
 		}
 	}
 	
@@ -295,7 +295,7 @@ public class Spaceship implements Serializable{
 	private void addSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.put(state, pos);
+			assembler.put(state.getBlock(), pos);
 		}
 	}
 	

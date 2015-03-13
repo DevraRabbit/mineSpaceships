@@ -1,6 +1,6 @@
 package energyStrategySystem;
 
-public class EnergyProducer implements EnergyC{
+public class EnergyProducer implements IEnergyC{
 	private int producedEnergy;
 	private boolean status;
 	private int prior;

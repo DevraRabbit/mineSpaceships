@@ -17,19 +17,19 @@ public class EnergyStrategySystem {
 	/**
 	 * saves consumer in status On
 	 */
-	private final ArrayList<EnergyC> consumerList;
+	private final ArrayList<IEnergyC> consumerList;
 	
 	
 	/**
 	 * saves producer in status On
 	 */
-	private final ArrayList<EnergyC> producerList;
+	private final ArrayList<IEnergyC> producerList;
 	
 	
 	/**
 	 * save all producers and consumers in status off and on
 	 */
-	private final ArrayList<EnergyC> allList;
+	private final ArrayList<IEnergyC> allList;
 	
 	
 	/**
@@ -38,10 +38,10 @@ public class EnergyStrategySystem {
 	 */
 	public EnergyStrategySystem(){
 		energy=0;
-		consumerList= new ArrayList<EnergyC>();
-		producerList= new ArrayList<EnergyC>();	
+		consumerList= new ArrayList<IEnergyC>();
+		producerList= new ArrayList<IEnergyC>();	
 		
-		allList= new ArrayList<EnergyC>();
+		allList= new ArrayList<IEnergyC>();
 	}
 	
 	/**
@@ -53,11 +53,11 @@ public class EnergyStrategySystem {
 		String out="";
 		out= "Energy in System:" +energy +'\n';
 		out=out +"EnergyConsumer" +'\n';
-		for(EnergyC e: consumerList){
+		for(IEnergyC e: consumerList){
 			out=out +"Energy: " +e.getEnergy() +" Priority: " +e.getPriority() +'\n';
 		}
 		out=out +"EnergyProducer" +'\n';
-		for(EnergyC e: producerList){
+		for(IEnergyC e: producerList){
 			out=out +"Energy: " +e.getEnergy() +" Priority: " +e.getPriority() + '\n';
 		}
 		
@@ -70,7 +70,7 @@ public class EnergyStrategySystem {
 	 * @param e Producer or Consumer to be added
 	 * @return String: was adding successful?
 	 */
-	public String add(EnergyC e){
+	public String add(IEnergyC e){
 		if(allList.contains(e)==false){
 		allList.add(e);
 		return "added to System" +'\n';
@@ -83,7 +83,7 @@ public class EnergyStrategySystem {
 	 * @param e Consumer or Producer to be switched on
 	 * @return Was switching successful?
 	 */
-	public String switchOn(EnergyC e){
+	public String switchOn(IEnergyC e){
 		if(allList.contains(e)==true){
 		if(e.getEnergy()>0){
 			return this.switchOnProducer(e);
@@ -104,7 +104,7 @@ public class EnergyStrategySystem {
 	 * @param e Consumer or Producer
 	 * @return was switching successful?
 	 */
-	public String switchOff(EnergyC e){
+	public String switchOff(IEnergyC e){
 		if(allList.contains(e)==true){
 		if(e.getEnergy()>0){
 			return this.switchOffProducer(e);
@@ -127,7 +127,7 @@ public class EnergyStrategySystem {
 	 * @param c Consumer to switch On
 	 * @return was switching successful?
 	 */
-	private String switchOnConsumer(EnergyC c){
+	private String switchOnConsumer(IEnergyC c){
 		if(allList.contains(c)==false){
 			return "not in System"+'\n';
 		}
@@ -146,7 +146,7 @@ public class EnergyStrategySystem {
 	 * @param p Producer to be added
 	 * @return was adding successful?
 	 */
-	private String switchOnProducer(EnergyC p){
+	private String switchOnProducer(IEnergyC p){
 		String toReturn="";
 		if(allList.contains(p)==false){
 			return "not in System";
@@ -167,7 +167,7 @@ public class EnergyStrategySystem {
 	 * @param c Consumer
 	 * @return was switching successful?
 	 */
-	private String switchOffConsumer(EnergyC c){
+	private String switchOffConsumer(IEnergyC c){
 		
 		energy=energy-c.getEnergy();
 		for(int i=0; i<consumerList.size(); i++){
@@ -184,7 +184,7 @@ public class EnergyStrategySystem {
 	 * @param p Producer to switch off
 	 * @return was switching succesful?
 	 */
-	private String switchOffProducer(EnergyC p){
+	private String switchOffProducer(IEnergyC p){
 		String toReturn="";
 		if(0>=energy-p.getEnergy()){
 			toReturn+=forceSwitchOffConsumer(java.lang.Math.abs(energy-p.getEnergy()));
@@ -205,7 +205,7 @@ public class EnergyStrategySystem {
 	 * @param toRemove energy missing
 	 */
 	private String forceSwitchOffConsumer(int toRemove){
-		ArrayList<EnergyC> removeList= new ArrayList<EnergyC>();
+		ArrayList<IEnergyC> removeList= new ArrayList<IEnergyC>();
 		String toReturn="";
 		
 		for(int i=0; i<consumerList.size(); i++){
@@ -235,7 +235,7 @@ public class EnergyStrategySystem {
 			} 				
 		}
 		
-		for(EnergyC e: removeList ){
+		for(IEnergyC e: removeList ){
 			
 			for(int l=0; l<consumerList.size(); l++){
 				if(e.equals(consumerList.get(l))){
@@ -259,11 +259,11 @@ public class EnergyStrategySystem {
 	 */
 	private String forceSwitchOnConsumer(int toAdd){
 		String toReturn="";
-		ArrayList<EnergyC> consumer= new ArrayList();
+		ArrayList<IEnergyC> consumer= new ArrayList();
 		sortPriority(allList);
 		Collections.reverse(allList);
-		for(Iterator<EnergyC> iterator=allList.iterator(); iterator.hasNext();){
-			EnergyC next= iterator.next();
+		for(Iterator<IEnergyC> iterator=allList.iterator(); iterator.hasNext();){
+			IEnergyC next= iterator.next();
 			if(next.getEnergy()>=toAdd&&next.getEnergy()<=0){
 				consumer.add(next);
 				toAdd-=next.getEnergy();
@@ -271,7 +271,7 @@ public class EnergyStrategySystem {
 			
 		}
 		
-		for(EnergyC c: consumer){
+		for(IEnergyC c: consumer){
 			toReturn+=switchOnConsumer(c);
 		}
 		
@@ -286,9 +286,9 @@ public class EnergyStrategySystem {
 	 * @param l ArrayList to sort
 	 */
 	private void sortPriority(ArrayList l){
-		Collections.sort(l, new Comparator<EnergyC>(){
+		Collections.sort(l, new Comparator<IEnergyC>(){
 			@Override
-	        public int compare(EnergyC e1, EnergyC e2)
+	        public int compare(IEnergyC e1, IEnergyC e2)
 	        {
 				Integer i1= new Integer(e1.getPriority());
 				Integer i2 = new Integer(e2.getPriority());
