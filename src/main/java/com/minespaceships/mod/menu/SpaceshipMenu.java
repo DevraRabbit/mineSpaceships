@@ -6,7 +6,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * A default menu structure.
  * @author ovae.
- * @version 20150221
+ * @version 20150313.
  */
 public class SpaceshipMenu {
 

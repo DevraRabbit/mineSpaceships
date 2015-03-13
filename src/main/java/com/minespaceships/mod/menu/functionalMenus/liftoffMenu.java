@@ -42,7 +42,7 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 			if(ship == null) {
 				terminal.display("liftoff: Please initialise the Spaceship first", true);
 			}
-			ship.move(terminal.getChatRegisterEntity(), position);
+			ship.move(position);
 			return ">> Liftoff <<\nPress 'm' to get back.";
 		}catch(Exception e){
 			System.err.println("ship is broken");

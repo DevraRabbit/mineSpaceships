@@ -5,6 +5,9 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.input.Keyboard;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,11 +15,17 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
+/**
+ * 
+ * @author DevraRabbit ,jh0ker, ovae.
+ * @version 20150313.
+ */
 public class CustomGuiChat extends GuiChat{
 	private EntityPlayer player;
 	private ChatRegisterEntity entity;
-	
+
 	/**
 	 * Creates a custom GUI that opens a steady interface for the player to communicate with the entity
 	 * @param player
@@ -67,16 +76,16 @@ public class CustomGuiChat extends GuiChat{
 		if(clear){
 			this.clearChat();
 		}
-		
 		this.mc.thePlayer.addChatComponentMessage(new ChatComponentText(message));
 	}
+
 	/**
 	 * Clears the chat.
 	 */
 	public void clearChat(){
 		this.mc.ingameGUI.getChatGUI().clearChatMessages();
 	}
-	
+
 	/**
 	 * @return ChatRegisterEntity entity
 	 */

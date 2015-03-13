@@ -61,7 +61,7 @@ public class Menu{
 	 * Returns the menu in where you are currently in.
 	 * Returns {@code null} if the input was not and id, menu position or the menu name.
 	 */
-	public Menu switchMenu(String name, CustomGuiChat terminal){
+	public Menu switchMenu(final String name, final CustomGuiChat terminal){
 		if(name.equals(null)){
 			throw new IllegalArgumentException("The menu name can not he null");
 		}

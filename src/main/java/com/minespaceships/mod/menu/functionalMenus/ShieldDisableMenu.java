@@ -39,8 +39,8 @@ public class ShieldDisableMenu extends Menu implements FunctionalMenu{
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		try{
-			World world = terminal.getChatRegisterEntity().getRemoteWorld();
-			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getRemoteWorld());
+			World world = terminal.getChatRegisterEntity().getWorld();
+			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 			if(ship == null) {
 				terminal.display("move: Please initialise the Spaceship first", true);
 			}

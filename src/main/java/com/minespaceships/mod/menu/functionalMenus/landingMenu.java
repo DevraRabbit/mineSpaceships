@@ -38,8 +38,8 @@ public class landingMenu extends Menu implements FunctionalMenu{
 	public String activate(String command, CustomGuiChat terminal) {
 		try{
 			double x,y,z;
-			World world = terminal.getChatRegisterEntity().getRemoteWorld();
-			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getRemoteWorld());
+			World world = terminal.getChatRegisterEntity().getWorld();
+			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 			if(ship == null) {
 				terminal.display("move: Please initialise the Spaceship first", true);
 			}
@@ -64,7 +64,7 @@ public class landingMenu extends Menu implements FunctionalMenu{
 
 			//(double)x, (double)y, (double)z
 			BlockPos position = new BlockPos(x, y-height+2, z);
-			ship.move(terminal.getChatRegisterEntity(), position);
+			ship.move(position);
 
 			return ">> landing <<\nPress 'm' to get back.";
 		}catch(Exception e){

@@ -36,40 +36,45 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ChatRegisterEntity extends TileEntity {	
+/**
+ * 
+ * @author DevraRabbit ,jh0ker, ovae.
+ * @version 20150313.
+ */
+public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
-	
+
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
-	
+
 	public ChatRegisterEntity() {
-		super();		
+		super();
 	}
+
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
-		}
+	}
+
 	@Override
 	public void invalidate(){
 		super.invalidate();
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1)
-	{
-	   super.writeToNBT(par1); 
+	public void writeToNBT(NBTTagCompound par1){
+		super.writeToNBT(par1); 
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1)
-	{
-	   super.readFromNBT(par1);
+	public void readFromNBT(NBTTagCompound par1){
+		super.readFromNBT(par1);
 	}
 
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
-	 */	
+	 */
 	@SideOnly(Side.CLIENT)
 	public void Activate(EntityPlayer player){
 		//check if the player is our local player, so one cannot open a console for another player
@@ -80,6 +85,12 @@ public class ChatRegisterEntity extends TileEntity {
 			makeTerminal(player);
 		}
 	}
+
+	/**
+	 * Makes a new Terminal.
+	 * @param player
+	 * @return terminal
+	 */
 	@SideOnly(Side.CLIENT)
 	private CustomGuiChat makeTerminal(EntityPlayer player) {
 		CustomGuiChat terminal;
@@ -108,13 +119,14 @@ public class ChatRegisterEntity extends TileEntity {
 		}
 		return terminal;
 	}
+
 	/**
 	 * Executes the given command, regardless who committed it.
 	 * @param command
 	 */
 	public void onCommand(String command){
-		
 	}
+
 	/**
 	 * Executing the given command considering the player that sent it.
 	 * @param command
@@ -122,12 +134,11 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void onCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		
+
 		if(side == Side.CLIENT) {
-		MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
-		
-		//display the menu.
-		spaceshipMenu.display(command, makeTerminal(player));
+			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
+			//display the menu.
+			spaceshipMenu.display(command, makeTerminal(player));
 		} else if (side == Side.SERVER) {
 			//define a very first command to see if it works.
 			if(command.equals("hello")){
@@ -162,7 +173,11 @@ public class ChatRegisterEntity extends TileEntity {
 		}
 	}
 
+	/**
+	 * Returns the spaceship.
+	 * @return spaceship
+	 */
 	public Spaceship getShip() {
 		return Shipyard.getShipyard().getShip(pos, worldObj);
-	}	
+	}
 }

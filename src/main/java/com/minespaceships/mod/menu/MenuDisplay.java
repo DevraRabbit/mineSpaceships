@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Spaceship;
