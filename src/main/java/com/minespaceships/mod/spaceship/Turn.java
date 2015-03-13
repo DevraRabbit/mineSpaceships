@@ -131,7 +131,7 @@ public class Turn {
 			if (currentFacing instanceof EnumFacing) {
 				switch ((EnumFacing)currentFacing) {
 				case NORTH :
-					return direction(steps % 4) ;
+					return direction((0 + steps) % 4) ;
 				case EAST :
 					return direction((1 + steps) % 4);
 				case SOUTH :
@@ -147,6 +147,37 @@ public class Turn {
 				 * If it is turned left or right by 90 degrees, it changes from X to Z (indices 0 and 2) or the other way round. */
 				int axisOrd = ((BlockLog.EnumAxis) currentFacing).ordinal();
 				return steps % 2 != 0 && (isHorizontal((BlockLog.EnumAxis)currentFacing)) ? axis(Z_ORD - axisOrd) : currentFacing;
+			} else if (currentFacing instanceof BlockLever.EnumOrientation) {
+				switch ((EnumOrientation)currentFacing) {
+				case NORTH :
+					/* convert EnumFacing.NORTH to EnumOrientation.NORTH.
+					Param entityFacing of forFacings method is irrelevant, just has to be there.
+					Same goes for EAST, SOUTH and WEST. */
+					return EnumOrientation.forFacings(direction(steps % 4), EnumFacing.UP);
+				case EAST :
+					return EnumOrientation.forFacings(direction((1 + steps) % 4), EnumFacing.UP);
+				case SOUTH :
+					return EnumOrientation.forFacings(direction((2 + steps) % 4), EnumFacing.UP);
+				case WEST :
+					return EnumOrientation.forFacings(direction((3 + steps) % 4), EnumFacing.UP);
+				case UP_X :
+				case UP_Z :
+					if (steps % 2 == 0) {
+						return currentFacing;
+					} else {
+						// switches between UP_X and UP_Z using their meta integers.
+						return EnumOrientation.byMetadata(11 - ((EnumOrientation)currentFacing).getMetadata());
+					}
+				case DOWN_X :
+				case DOWN_Z :
+					if (steps % 2 == 0) {
+						return currentFacing;
+					} else {
+						// switches between DOWN_X and DOWN_Z using their meta integers.
+						return EnumOrientation.byMetadata(7 - ((EnumOrientation)currentFacing).getMetadata());
+					}
+				}
+				
 			}
 		}
 		return null;
