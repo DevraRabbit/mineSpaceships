@@ -96,7 +96,7 @@ public class ChatRegisterEntity extends TileEntity {
 		CustomGuiChat terminal;
 		terminal = new CustomGuiChat(player, this);
 		
-		//Initialise a default menu for testing reasons
+		//Initialise the menu structure.
 		if(!SpaceshipMenu.getRunBefore()){
 			SpaceshipMenu.initMenu(terminal);
 		}
