@@ -52,7 +52,7 @@ public class terminalMenu {
 			player.addChatComponentMessage(new ChatComponentText(player.toString()));
 		}
 		if(command.equals("melon")){
-			World world = chatEntity.getRemoteWorld();
+			World world = chatEntity.getWorld();
 			BlockPos pos = player.getPosition();
 			int size=5;
 			for(int x=0;x<size;x++){

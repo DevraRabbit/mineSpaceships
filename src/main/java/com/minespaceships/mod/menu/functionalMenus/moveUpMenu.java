@@ -50,7 +50,7 @@ public class moveUpMenu extends Menu implements FunctionalParamMenu{
 			y = terminal.getChatRegisterEntity().getPos().getY() +Double.parseDouble(command);
 			z = terminal.getChatRegisterEntity().getPos().getZ();
 			try{
-				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getRemoteWorld());
+				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 				//(double)x, (double)y, (double)z
 				BlockPos position = new BlockPos(x, y, z);
 
