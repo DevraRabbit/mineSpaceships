@@ -7,6 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.util.PhaserUtils;
+
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -150,6 +153,25 @@ public class SpaceshipCommands {
 	public static void debug(String command, final ChatRegisterEntity commandBlock){
 		if(command.equals("debug blockMap")){
 			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getWorld()).debugMap();;
+		}
+	}
+
+	public static void shoot(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+		command = command.substring("shoot".length()).replaceAll("\\s", "");
+	
+		player.addChatComponentMessage(new ChatComponentText("IMMA FIRING MAH PHAZ0R!!"));
+		
+		Pattern poffset = Pattern.compile("([-+]?[0-9]*\\.*[0-9]+);([-+]?[0-9]*\\.*[0-9]+);([-+]?[0-9]*\\.*[0-9]+)");
+		Matcher moffset = poffset.matcher(command);
+		
+		if(moffset.matches()) {
+			Vec3 vec_dir = new Vec3(Double.valueOf(moffset.group(1)), Double.valueOf(moffset.group(2)), Double.valueOf(moffset.group(3)));
+			
+			PhaserUtils.shoot(commandBlock.getPos(), vec_dir, 10, 100, worldObj);
+			player.addChatComponentMessage(new ChatComponentText("Fired Phaser in direction (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
+		} else {
+			player.addChatComponentMessage(new ChatComponentText("shoot: Error processing intput"));
+			player.addChatComponentMessage(new ChatComponentText("usage: shoot #;#;#"));
 		}
 	}
 }

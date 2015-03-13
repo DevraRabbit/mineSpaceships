@@ -3,8 +3,8 @@ package com.minespaceships.mod.overhead;
 import java.util.regex.*;
 
 import com.example.examplemod.ovae.terminalMenu;
-import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
@@ -48,7 +48,7 @@ public class ChatRegisterEntity extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
-	}
+		}
 	@Override
 	public void invalidate(){
 		super.invalidate();
@@ -72,7 +72,6 @@ public class ChatRegisterEntity extends TileEntity {
 	 */	
 	@SideOnly(Side.CLIENT)
 	public void Activate(EntityPlayer player){
-		CustomGuiChat terminal = null;
 		//check if the player is our local player, so one cannot open a console for another player
 		//on the server
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
@@ -158,7 +157,7 @@ public class ChatRegisterEntity extends TileEntity {
 			} else if(command.equals("status")) {
 				SpaceshipCommands.status(worldObj, this, player, getShip());
 			}
-			terminalMenu.onCommand(command, player);
+			terminalMenu.onCommand(command, player, this, makeTerminal(player));
 			SpaceshipCommands.debug(command, this);
 		}
 	}

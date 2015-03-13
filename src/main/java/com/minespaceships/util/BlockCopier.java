@@ -28,6 +28,7 @@ public class BlockCopier {
 		TileEntity ent = worldIn.getTileEntity(origin);
 		if(ent != null){
 			worldIn.removeTileEntity(origin);
+			//ent.setPos(target);
 			moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
 		}
 	}
@@ -42,7 +43,7 @@ public class BlockCopier {
 				for(int i = 0; i < invOrigin.getSizeInventory(); i++){
 					invTarget.setInventorySlotContents(i, invOrigin.getStackInSlot(i));
 				}
-			}			
+			}
 		} else {
 			throw new IllegalArgumentException("Not the same entity types!");
 		}
