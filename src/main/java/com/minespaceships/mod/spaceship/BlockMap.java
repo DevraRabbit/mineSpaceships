@@ -55,15 +55,27 @@ public class BlockMap {
 		impendEdges(pos.subtract(origin), world);
 		
 		ArrayList<BlockPos> neighbours= getNeighboursInRectangle(pos);
-		boolean outer= false;
+		boolean hasOuterNeighbour= false;
+		boolean hasInnerNeighbour=false;
+		BlockPos innerNeighbour=null;
 		for(BlockPos p:neighbours){
 			if(outerBlocks.containsKey(p)){
-				outer=true;
-				break;				
+				hasOuterNeighbour=true;						
+			}
+			if(innerBlocks.containsKey(p)){
+				hasInnerNeighbour=true;	
+				innerNeighbour=p;
 			}
 		}
 		
-		if(outer){
+		
+		
+		if(hasOuterNeighbour&&hasInnerNeighbour){
+			checkInnerRoom(innerNeighbour);
+			
+		}
+		
+		if(hasOuterNeighbour){
 			outerBlocks.put(pos, true);
 		}else{
 			innerBlocks.put(pos, true);
@@ -124,6 +136,25 @@ public class BlockMap {
 			for(BlockPos p: getNeighboursInRectangle(aktPos)){
 				checkRoom(p);
 			}
+		}
+	}
+	
+	private void checkInnerRoom(BlockPos aktPos){
+		ArrayList<BlockPos> juniorInnerBlocks= new ArrayList();
+		recCheckInnerRoom(aktPos, juniorInnerBlocks);
+		for(BlockPos p: juniorInnerBlocks){
+			innerBlocks.remove(p);
+			outerBlocks.put(p, true);
+		}
+	}
+	
+	private void recCheckInnerRoom(BlockPos aktPos, ArrayList<BlockPos> list){
+		if(!map.containsKey(aktPos)){
+			list.add(aktPos);
+			for(BlockPos p: getNeighboursInRectangle(aktPos)){
+				recCheckInnerRoom(p, list);
+			}
+			 
 		}
 	}
 	
