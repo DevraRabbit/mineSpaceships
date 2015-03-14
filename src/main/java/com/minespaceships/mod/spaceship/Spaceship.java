@@ -55,7 +55,7 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
 		initializeBase();
-	}	
+	}
 	@Deprecated
 	public Spaceship(int[] originMeasurement){
 		world = (WorldServer)MinecraftServer.getServer().getEntityWorld();
