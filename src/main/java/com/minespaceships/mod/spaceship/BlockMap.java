@@ -185,6 +185,8 @@ public class BlockMap {
 		}
 		map = nextMap;
 		this.origin = Turn.getRotatedPos(this.origin, origin, new BlockPos(0,0,0), turn);
+		this.maxPos = Turn.getRotatedPos(this.maxPos, origin, new BlockPos(0,0,0), turn);
+		this.minPos = Turn.getRotatedPos(this.minPos, origin, new BlockPos(0,0,0), turn);
 	}
 	
 	public void showDebug(World world){
