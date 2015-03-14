@@ -59,7 +59,7 @@ public class CommandMessage implements IMessage {
 	            	
 	            	command = moffset.group(3);
 	            	
-	            	((ChatRegisterEntity)world.getTileEntity(pos)).onCommand(command, ctx.getServerHandler().playerEntity);
+	            	((ChatRegisterEntity)world.getTileEntity(pos)).executeCommand(command, ctx.getServerHandler().playerEntity);
 	            } catch (Exception e) {
 	            	return null;
 	            }

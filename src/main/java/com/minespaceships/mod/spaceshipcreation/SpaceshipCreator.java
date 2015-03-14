@@ -3,13 +3,15 @@ package com.minespaceships.mod.spaceshipcreation;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.minespaceships.util.Vec3Op;
+
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class SpaceshipCreator {
 	public static void onCommand(String command, World worldIn, BlockPos pos){
 		if(command.equals("build ship")){
-			//createSpaceship(worldIn, pos.subtract(new BlockPos(10,10,10)), pos.add(new BlockPos(10,10,10)), 3, 0.2f, 0.9f, new Random(123));
+			//createSpaceship(worldIn, Vec3Op.subtract(pos, new BlockPos(10,10,10)), pos.add(new BlockPos(10,10,10)), 3, 0.2f, 0.9f, new Random(123));
 		}
 	}
 	public static ArrayList<BuildElement> FillElement(World worldIn, BuildElement element, float subsetChance, float fillingChance, float symmetryChance, Random random){
@@ -24,14 +26,14 @@ public class SpaceshipCreator {
 			}
 			nextElements.add(smallerElement);
 			if(random.nextFloat() < symmetryChance){
-				//BlockPos symmetryPos = new BlockPos(element.getSpan().getX() - pos.subtract(element.min).getX(), 0, 0);    DOES NOT WORK!
+				//BlockPos symmetryPos = new BlockPos(element.getSpan().getX() - Vec3Op.subtract(pos, element.min).getX(), 0, 0);    DOES NOT WORK!
 				//nextElements.add(smallerElement.getTransposedElement(symmetryPos));
 			}
 		}
 		return nextElements;
 	}
 	public static BuildElement getSmallerElement(BuildElement element, BlockPos pos, Random random){
-		BlockPos span = element.max.subtract(element.min);
+		BlockPos span = Vec3Op.subtract(element.max, element.min);
 		BlockPos newSpan = new BlockPos((float)(span.getX())*random.nextFloat(), (float)(span.getX())*random.nextFloat(), (float)(span.getX())*random.nextFloat());
 		return new RectangleBuildElement(
 				new BlockPos(pos.getX()-newSpan.getX()/2,
