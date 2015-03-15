@@ -1,16 +1,20 @@
 package com.minespaceships.mod;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,8 +63,21 @@ public class CommandMessage implements IMessage {
 	            	
 	            	command = moffset.group(3);
 	            	
-	            	((ChatRegisterEntity)world.getTileEntity(pos)).executeCommand(command, ctx.getServerHandler().playerEntity);
+	            	ChatRegisterEntity ent = ((ChatRegisterEntity)world.getTileEntity(pos));
+	            	if(ent != null){
+	            		ent.executeCommand(command, ctx.getServerHandler().playerEntity);
+	            	} else {
+	            		int i = 0;
+	            	}
+	            	
+	            	List players = ((WorldServer)world).playerEntities;
+	            	for(Object o : players){
+	            		if(o instanceof EntityPlayerMP){
+	    	            	MineSpaceships.network.sendTo(message, (EntityPlayerMP)o);
+	            		}
+	            	}	            	            	
 	            } catch (Exception e) {
+	            	e.printStackTrace();
 	            	return null;
 	            }
             }

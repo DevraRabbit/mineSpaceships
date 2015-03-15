@@ -48,7 +48,7 @@ public class ChatRegisterEntity extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
-		}
+	}
 	@Override
 	public void invalidate(){
 		super.invalidate();
@@ -128,6 +128,7 @@ public class ChatRegisterEntity extends TileEntity {
 			
 			//display the menu.
 			spaceshipMenu.display(command, makeTerminal(player));
+			terminalMenu.onCommand(command, player, this, makeTerminal(player));
 		}
 	}
 	
@@ -166,7 +167,6 @@ public class ChatRegisterEntity extends TileEntity {
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
 		}
-		terminalMenu.onCommand(command, player, this, makeTerminal(player));
 		SpaceshipCommands.debug(command, this);
 	}
 }
