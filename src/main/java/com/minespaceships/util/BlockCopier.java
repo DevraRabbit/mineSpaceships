@@ -24,7 +24,7 @@ public class BlockCopier {
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, int dir, boolean copyEntity){
 		IBlockState newState = worldIn.getBlockState(origin);
 		if (dir != 0) newState = Turn.turn(worldIn, origin, dir);
-		worldIn.setBlockState(target, newState, 2);		
+		worldIn.setBlockState(target, newState, 0);		
 		TileEntity ent = worldIn.getTileEntity(origin);
 		if(ent != null){
 			worldIn.removeTileEntity(origin);
