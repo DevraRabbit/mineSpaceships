@@ -42,7 +42,7 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 			z = Double.valueOf(matcher.group(3));
 
 			try{
-				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getRemoteWorld());
+				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 				//(double)x, (double)y, (double)z
 				BlockPos position = new BlockPos(x, y, z);
 				if(ship == null) {
