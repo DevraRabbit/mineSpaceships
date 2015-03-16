@@ -232,7 +232,7 @@
         }
     ],
     "textures": {
-        "texture": "",
+        "texture": " ",
         "iron_block": "blocks/iron_block",
         "stone": "blocks/stone",
         "stone_slab_top": "blocks/stone_slab_top",
