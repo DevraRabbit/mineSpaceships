@@ -5,7 +5,9 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
@@ -24,6 +26,7 @@ public class CommonProxy {
      */
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+    	MineSpaceships.network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
     	//register our game objects so Minecraft knows how to use them.
     	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
     	GameRegistry.registerBlock(new EnergyBlock(), "EnergyBlock");

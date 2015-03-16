@@ -47,11 +47,7 @@ public class MineSpaceships
      */
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-    	
-
-        network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
-        network.registerMessage(CommandMessage.Handler.class, CommandMessage.class, 0, Side.SERVER);
-    	
+    	           	
     	Singleton = this;    	
     	proxy.preInit(event);
     }
