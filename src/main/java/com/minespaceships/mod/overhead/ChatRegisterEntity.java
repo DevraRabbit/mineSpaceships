@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * 
  * @author DevraRabbit ,jh0ker, ovae.
- * @version 20150313.
+ * @version 20150317.
  */
 public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
@@ -112,12 +112,15 @@ public class ChatRegisterEntity extends TileEntity {
 		//open our console. 
 		Minecraft.getMinecraft().displayGuiScreen(terminal);
 
+		/*if(Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld()) == null){
+			System.out.println("no ship.");
+		}
 		if(terminal.getChatRegisterEntity().getShip() == null){
 			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
-		}else{
+		}else{*/
 			//Print out the menu in the console.
 			spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
-		}
+		//}
 		return terminal;
 	}
 
@@ -131,8 +134,7 @@ public class ChatRegisterEntity extends TileEntity {
 		if(side == Side.CLIENT) {
 			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
 			//display the menu.
-			spaceshipMenu.display(command, makeTerminal(player));
-			terminalMenu.onCommand(command, player, this, makeTerminal(player));
+			spaceshipMenu.display(command, this.terminal);
 		}
 	}
 
@@ -144,6 +146,12 @@ public class ChatRegisterEntity extends TileEntity {
 	 * Executes a command unrelated if Server or client side.
 	 */
 	public void executeCommand(String command, EntityPlayer player){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if(side == Side.CLIENT){
+			//display the menu.
+			spaceshipMenu.display(command, this.terminal);
+			terminalMenu.onCommand(command, player, this, this.terminal);
+		}
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
@@ -171,6 +179,16 @@ public class ChatRegisterEntity extends TileEntity {
 			}
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
+		}
+
+		if(command.equals(SpaceshipCommands.help)){
+			SpaceshipCommands.help(player);
+		}
+		else if(command.equals(SpaceshipCommands.land)){
+			SpaceshipCommands.land(terminal);
+		}
+		else if(command.equals(SpaceshipCommands.liftoff)){
+			SpaceshipCommands.liftoff(terminal);
 		}
 		SpaceshipCommands.debug(command, this);
 	}

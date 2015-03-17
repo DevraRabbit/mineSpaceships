@@ -8,6 +8,7 @@ import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
+import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
  * Move the spaceship position up.
@@ -31,26 +32,8 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
-		/*
-		try{
-			double x,y,z;
-			x = terminal.getChatRegisterEntity().getPos().getX();
-			y = terminal.getChatRegisterEntity().getPos().getY()+20;
-			z = terminal.getChatRegisterEntity().getPos().getZ();
-			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-			BlockPos position = new BlockPos(x, y, z);
-
-			if(ship == null) {
-				terminal.display("liftoff: Please initialise the Spaceship first", true);
-			}
-			ship.move(position);
-			return ">> Liftoff <<\nPress 'm' to get back.";
-		}catch(Exception e){
-			System.err.println("ship is broken");
-		}
-		return "liftoff failed!";
-		*/
-		return "liftoff";
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.liftoff, terminal.getPlayerEntity());
+		return SpaceshipCommands.liftoff(terminal);
 	}
 
 }

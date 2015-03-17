@@ -43,10 +43,8 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 		if(command.equals(null)){
 			return "command can not be null.";
 		}
-		//command = "move back "+command;
-		//MineSpaceships.network.sendToServer(new CommandMessage(terminal.getChatRegisterEntity().getPos().toLong()+","+terminal.getChatRegisterEntity().getWorld().provider.getDimensionId()+","+ command));
-		terminal.getChatRegisterEntity().onCommand("move back "+command, terminal.getPlayerEntity());
-		return "move back failed!";
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveBack+" "+command, terminal.getPlayerEntity());
+		return SpaceshipCommands.moveBack+" "+command;
 	}
 
 }

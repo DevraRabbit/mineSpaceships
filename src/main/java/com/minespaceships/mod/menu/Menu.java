@@ -130,13 +130,14 @@ public class Menu{
 				return selectedMenu.childrenList.get(position);
 			}
 		}catch(IndexOutOfBoundsException e){
-			System.err.println("IndexOutOfBoundsException appeared");
+			System.err.println("IndexOutOfBoundsException appeared"+e.getStackTrace());
+			//System.out.println(e.getStackTrace());
 		}catch(IllegalArgumentException f){
-			System.err.println("IllegalArgumentException appeared");
+			System.err.println("IllegalArgumentException appeared"+f.getStackTrace());
 		}catch(NullPointerException g){
-			System.err.println("NullPointerException appeared");
+			System.err.println("NullPointerException appeared"+g.getStackTrace());
 		}catch(Exception h){
-			System.err.println("Exception appeared");
+			System.err.println("Exception appeared"+h.getStackTrace());
 		}
 		return null;
 	}
