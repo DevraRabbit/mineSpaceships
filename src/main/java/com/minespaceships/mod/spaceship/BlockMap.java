@@ -22,9 +22,13 @@ public class BlockMap {
 	private HashMap<BlockPos, Boolean> spannedRectangle;
 	private HashMap<BlockPos, Boolean> innerBlocks;
 	private boolean rekHelper = true;
+	private static int ff = 0;   //*****************REMOVE
 			
 	public BlockMap(BlockPos originPoint){
 		map = new HashMap<BlockPos, Boolean>();
+		outerBlocks = new HashMap<BlockPos, Boolean>();
+		innerBlocks = new HashMap<BlockPos, Boolean>();
+		spannedRectangle = new HashMap<BlockPos, Boolean>();
 		maxPos = new BlockPos(0,0,0);
 		minPos = new BlockPos(0,0,0);
 		origin = originPoint;
@@ -41,10 +45,11 @@ public class BlockMap {
 	public void add(BlockPos pos){
 		map.put(pos.subtract(origin), true);
 		resize(pos.subtract(origin));
-		
+		spanRectangle();
+		recalculateOuterBlocks();
+		calculateOuterOutBlocks();
 		outerBlocks.remove(pos);
 		innerBlocks.remove(pos);
-		
 		boolean hasOuterBlock=false;
 		for(BlockPos p: getNeighbours(pos)){
 			if(outerBlocks.containsKey(p)){
@@ -54,10 +59,7 @@ public class BlockMap {
 		}
 		if(hasOuterBlock){
 		checkAfterAdding(pos);
-		}
-		
-		
-		
+		}		
 	}
 	
 	public boolean contains(BlockPos pos){
@@ -65,14 +67,11 @@ public class BlockMap {
 	}
 	
 	public void remove(BlockPos pos, World world){
-		map.remove(pos.subtract(origin));
-		impendEdges(pos.subtract(origin), world);
-		
 		ArrayList<BlockPos> neighbours= getNeighbours(pos);
 		boolean hasOuterNeighbour= false;
 		boolean hasInnerNeighbour=false;
 		BlockPos innerNeighbour=null;
-		for(BlockPos p:neighbours){
+		for(BlockPos p : neighbours){
 			if(outerBlocks.containsKey(p)){
 				hasOuterNeighbour=true;						
 			}
@@ -80,20 +79,18 @@ public class BlockMap {
 				hasInnerNeighbour=true;	
 				innerNeighbour=p;
 			}
-		}
-		
-		
-		
-		if(hasOuterNeighbour&&hasInnerNeighbour){
-			checkInnerRoom(innerNeighbour);
-			
-		}
-		
+		}		
+		if(hasOuterNeighbour && hasInnerNeighbour){
+			checkInnerRoom(innerNeighbour);			
+		}		
 		if(hasOuterNeighbour){
 			outerBlocks.put(pos, true);
-		}else{
+		}
+		else{
 			innerBlocks.put(pos, true);
 		}
+		map.remove(pos.subtract(origin));
+		impendEdges(pos.subtract(origin), world);
 	}
 	
 	public BlockPos getMaxPos(){
@@ -119,16 +116,14 @@ public class BlockMap {
 	 */
 	public void refreshVolumeBlocks()
 	{
-		outerBlocks = new HashMap(); 	//initializes outerBlocks
-		outerOutBlocks = new HashMap();
-		spannedRectangle = new HashMap();
-		calculateOuterOutBlocks();
+		calculateOuterOutBlocks();  //initializes outerBlocks
 		spanRectangle();
+		outerBlocks.clear();
 		for(BlockPos l : outerOutBlocks.keySet())
 		{
 			checkRoom(l);
 		}
-		innerBlocks = null; 	//initializes innerBlocks
+		innerBlocks.clear(); 	//initializes innerBlocks
 		for(BlockPos l : spannedRectangle.keySet())
 		{
 			if(!map.containsKey(l) && !outerBlocks.containsKey(l))
@@ -138,9 +133,7 @@ public class BlockMap {
 		}
 	}
 	
-	
-	
-	
+
 	
 	private void checkRoom(BlockPos aktPos)
 	{
@@ -149,6 +142,16 @@ public class BlockMap {
 			outerBlocks.put(aktPos, true);
 			for(BlockPos p: getNeighbours(aktPos)){
 				checkRoom(p);
+			}
+		}
+	}
+	
+	private void recalculateOuterBlocks()
+	{
+		for(BlockPos p : spannedRectangle.keySet()){
+			if(!innerBlocks.containsKey(p) && !map.containsKey(p) && !outerBlocks.containsKey(p))
+			{
+				outerBlocks.put(p, true);
 			}
 		}
 	}
@@ -191,8 +194,8 @@ public class BlockMap {
 	private void recCheckAfterAdding(BlockPos pos, HashMap possibleInnerRoom){
 		if(!map.containsKey(pos)&& !possibleInnerRoom.containsKey(pos)){
 			if(outerOutBlocks.containsKey(pos)){
-				possibleInnerRoom.clear();
 				rekHelper = false;
+				possibleInnerRoom.clear();
 				return;
 			}
 			possibleInnerRoom.put(pos, true);
@@ -437,19 +440,33 @@ public class BlockMap {
 	}
 	
 	public void showDebug(World world){
-		refreshVolumeBlocks();
-		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
-		Set<BlockPos> keys = outerBlocks.keySet();
-		for(BlockPos pos : keys){
-			positions.add(pos.add(origin));
-		}
-		for(BlockPos po : positions)
-		{
-			world.setBlockState(po, Block.getStateById(4));
-		}
+		
+	
+			if(ff == 0)
+			{
+				refreshVolumeBlocks();
+				ff = 1;
+			}
+			else
+			{
+				ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
+				Set<BlockPos> keys = outerBlocks.keySet();
+				for(BlockPos pos : keys){
+					positions.add(pos.add(origin));
+				}
+				for(BlockPos po : positions)
+				{
+					world.setBlockState(po, Block.getStateById(2));
+				}
+				ff = 0;
+			
+			}
+
+		
+		
 	}
 	
-	public void showDebug11(World world){
+	public void showDebugOld(World world){
 		ArrayList<BlockPos> positions = getPositions();
 		for(BlockPos pos : positions){
 			world.setBlockState(pos, Block.getStateById(2));
