@@ -179,6 +179,7 @@ public class Shipyard {
 			String ship = "";
 			while(scanner.hasNext()){
 				shipString += scanner.next();
+				shipString+="\n";
 			}			
 			scanner.close();
 			return shipString;
