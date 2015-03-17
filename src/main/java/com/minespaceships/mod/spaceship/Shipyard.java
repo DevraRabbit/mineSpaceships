@@ -137,27 +137,62 @@ public class Shipyard {
 	@SubscribeEvent
 	@SideOnly(Side.SERVER)
 	public void safe(WorldEvent.Save event){
-		NBTTagCompound compound = event.world.getWorldInfo().getNBTTagCompound();
-		String shipsString = "";		
-		for(Spaceship ship : ships){	
-			if(ship.getWorld().provider.getDimensionId() == event.world.provider.getDimensionId()){
-				shipsString+= ship.toData();
-				shipsString+= SPACESHIP_TAG+"\n";
-			}
+		BufferedWriter writer = null;
+		File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
+		try {
+			new File(MineSpaceships.SpaceshipSavePath).mkdirs();
+			f.createNewFile();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
 		}
-		compound.setString(SPACESHIP_TAG, shipsString);
+		try {
+			writer = new BufferedWriter(new FileWriter(f));
+			for(Spaceship ship : ships){				
+				writer.write(ship.toData());
+				writer.write(SPACESHIP_TAG+"\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			try {
+				writer.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 	}
 	@SubscribeEvent
-	//@SideOnly(Side.SERVER)
+	@SideOnly(Side.SERVER)
 	public void load(WorldEvent.Load event){
-		ships.clear();		
-		NBTTagCompound compound = event.world.getWorldInfo().getNBTTagCompound();
-		String shipsString = compound.getString(SPACESHIP_TAG);
+		String ships = loadShips(event.world);
+		if(ships != null){load(ships, event.world);}
+	}
+	public String loadShips(World world){
+		Scanner scanner = null;
+		String shipString = "";
+		File f = new File(MineSpaceships.SpaceshipSavePath + world.getWorldInfo().getWorldName());
+		try {
+			scanner = new Scanner(f);
+			
+			String ship = "";
+			while(scanner.hasNext()){
+				shipString += scanner.next();
+			}			
+			scanner.close();
+			return shipString;
+			
+		} catch (FileNotFoundException e) {
+			return null;
+		}
+	}
+	public void load(String shipString, World world){
+		ships.clear();
 		Scanner scanner = null;
 		try {
-			scanner = new Scanner(shipsString);
+			scanner = new Scanner(shipString);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return;
 		}
 		if(scanner != null){
@@ -168,7 +203,7 @@ public class Shipyard {
 					ship += line + "\n";
 				} else {
 					try{
-						addShip(new Spaceship(ship, event.world));
+						addShip(new Spaceship(ship, world));
 					} catch (Exception e){
 						System.out.println("Could not initialize Ship");
 					}
@@ -176,6 +211,6 @@ public class Shipyard {
 				}
 			}
 			scanner.close();
-		}		
+		}	
 	}
 }

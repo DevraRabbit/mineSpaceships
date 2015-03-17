@@ -26,9 +26,7 @@ public class ShipSyncHandler implements IMessageHandler<CommandMessage, IMessage
     public IMessage onMessage(CommandMessage message, MessageContext ctx) {
     	Side side = FMLCommonHandler.instance().getEffectiveSide();
     	
-    	World world = Minecraft.getMinecraft().theWorld;
-    	world.getWorldInfo().getNBTTagCompound().setString(Shipyard.SPACESHIP_TAG, message.getText());
-    	MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(world));
+    	Shipyard.getShipyard().load(message.getText(), Minecraft.getMinecraft().theWorld);
     	
         return null;
     }

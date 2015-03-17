@@ -16,7 +16,7 @@ public class PlayerTracker{
 	@SideOnly(Side.SERVER)
 	public void onPlayerJoin(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityPlayer){
-			String ships = event.world.getWorldInfo().getNBTTagCompound().getString(Shipyard.SPACESHIP_TAG);
+			String ships = Shipyard.getShipyard().loadShips(event.world);
 			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);
 		}
 	}
