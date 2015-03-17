@@ -80,10 +80,13 @@ public class Menu{
 
 			//For special menus with parameters
 			if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
-				FunctionalParamMenu menu = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
-				menu.activate(name, terminal);
-				selectedMenu =((Menu) menu).getMother().getMother();
-				return ((Menu) menu).getMother().getMother();
+				Menu temp = (Menu) selectedMenu.getChildrenList().get(0);
+				if(selectedMenu.equals(temp.getMenuName())){
+					FunctionalParamMenu menu = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
+					menu.activate(name, terminal);
+					selectedMenu =((Menu) menu).getMother();
+					return ((Menu) menu).getMother();
+				}
 			}
 
 			/*

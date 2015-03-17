@@ -36,6 +36,7 @@ public class landingMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
+		/*
 		try{
 			double x,y,z;
 			World world = terminal.getChatRegisterEntity().getWorld();
@@ -72,6 +73,8 @@ public class landingMenu extends Menu implements FunctionalMenu{
 		}
 
 		return "landing failed!\nPress 'm' to get back.";
+		*/
+		return "land";
 	}
 
 }

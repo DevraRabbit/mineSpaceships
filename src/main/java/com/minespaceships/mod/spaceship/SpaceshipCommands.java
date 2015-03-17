@@ -20,10 +20,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.World;
 
 /**
- * @author jannes
- *
+ * @author jannes, ovae.
+ * @version 20150313.
  */
 public class SpaceshipCommands {
+	public static String initAuto ="init auto";
 
 	public static void init(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
 		if(command.equals("init auto")){

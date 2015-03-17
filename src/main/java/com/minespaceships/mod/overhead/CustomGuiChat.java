@@ -59,7 +59,6 @@ public class CustomGuiChat extends GuiChat{
 			else if(keyCode == 28 || keyCode == 156) {
 				//to commit a command, we send it to the entity and clear the input
 				String command = this.inputField.getText().trim();
-				entity.onCommand(command);
 				entity.onCommand(command, player);
 				this.inputField.setText("");
 			}
@@ -106,5 +105,13 @@ public class CustomGuiChat extends GuiChat{
 	 */
 	public void setTileEntity(TileEntity tileEntity){
 		this.entity = (ChatRegisterEntity) tileEntity;
+	}
+
+	/**
+	 * Returns the player entity.
+	 * @return player
+	 */
+	public EntityPlayer getPlayerEntity(){
+		return this.player;
 	}
 }

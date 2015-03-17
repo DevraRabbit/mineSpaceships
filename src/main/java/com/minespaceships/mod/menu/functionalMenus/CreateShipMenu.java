@@ -8,6 +8,7 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
+import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
  * Menu witch will create a new spaceship.
@@ -32,8 +33,10 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		try {
-			Spaceship spaceship = terminal.getChatRegisterEntity().getShip();
-			Shipyard.getShipyard().createShip(terminal.getChatRegisterEntity().getPos() , terminal.getChatRegisterEntity().getWorld());
+			//Spaceship ship = terminal.getChatRegisterEntity().getShip();
+			//Initialise the ship for the server.
+			terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.initAuto, null);
+			//Shipyard.getShipyard().createShip(terminal.getChatRegisterEntity().getPos() , terminal.getChatRegisterEntity().getWorld());
 			String out="";
 			out+= EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\n"
 				+"Press 'Esc' and reopen the menu.";

@@ -31,6 +31,7 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
+		/*
 		try{
 			double x,y,z;
 			x = terminal.getChatRegisterEntity().getPos().getX();
@@ -48,6 +49,8 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 			System.err.println("ship is broken");
 		}
 		return "liftoff failed!";
+		*/
+		return "liftoff";
 	}
 
 }

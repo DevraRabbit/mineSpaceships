@@ -4,8 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -41,28 +43,9 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 		if(command.equals(null)){
 			return "command can not be null.";
 		}
-
-		double x,y,z;
-		Pattern pattern = Pattern.compile("\\d*");
-		Matcher matcher = pattern.matcher(command);
-		if(matcher.matches()){
-			x = terminal.getChatRegisterEntity().getPos().getX() - Double.parseDouble(command);
-			y = terminal.getChatRegisterEntity().getPos().getY();
-			z = terminal.getChatRegisterEntity().getPos().getZ();
-
-			try{
-				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-				//(double)x, (double)y, (double)z
-				BlockPos position = new BlockPos(x, y, z);
-				if(ship == null) {
-					terminal.display("move: Please initialise the Spaceship first", true);
-				}
-				ship.move(position);
-				return ">> move back <<\nPress 'm' to get back.";
-			}catch(Exception e){
-				System.err.println("ship is broken");
-			}
-		}
+		//command = "move back "+command;
+		//MineSpaceships.network.sendToServer(new CommandMessage(terminal.getChatRegisterEntity().getPos().toLong()+","+terminal.getChatRegisterEntity().getWorld().provider.getDimensionId()+","+ command));
+		terminal.getChatRegisterEntity().onCommand("move back "+command, terminal.getPlayerEntity());
 		return "move back failed!";
 	}
 

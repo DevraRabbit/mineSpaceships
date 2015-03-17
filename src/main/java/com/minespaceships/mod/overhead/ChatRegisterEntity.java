@@ -44,6 +44,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
+	private CustomGuiChat terminal;
 
 	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
 
@@ -82,7 +83,7 @@ public class ChatRegisterEntity extends TileEntity {
 		if(player.equals(Minecraft.getMinecraft().thePlayer)){
 			//initialise the terminal
 			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			makeTerminal(player);
+			this.terminal = makeTerminal(player);
 		}
 	}
 
@@ -99,32 +100,25 @@ public class ChatRegisterEntity extends TileEntity {
 		//Initialise the menu structure.
 		if(!SpaceshipMenu.getRunBefore()){
 			SpaceshipMenu.initMenu(terminal);
-		}
+		}/*
 		if(!NoSpaceshipEntityMenu.getRunBefore()){
 			NoSpaceshipEntityMenu.initMenu(terminal);
-		}
+		}*/
 
 		//initialise the menu display.
 		spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
-		noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
+		//noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
 
 		//open our console. 
 		Minecraft.getMinecraft().displayGuiScreen(terminal);
 
-		if(terminal.getChatRegisterEntity().getShip() == null){
+		/*if(terminal.getChatRegisterEntity().getShip() == null){
 			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
-		}else{
+		}else{*/
 			//Print out the menu in the console.
 			spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
-		}
+		//}
 		return terminal;
-	}
-
-	/**
-	 * Executes the given command, regardless who committed it.
-	 * @param command
-	 */
-	public void onCommand(String command){
 	}
 
 	/**
@@ -138,7 +132,7 @@ public class ChatRegisterEntity extends TileEntity {
 		if(side == Side.CLIENT) {
 			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
 			//display the menu.
-			spaceshipMenu.display(command, makeTerminal(player));
+			spaceshipMenu.display(command, this.terminal);
 		} else if (side == Side.SERVER) {
 			//define a very first command to see if it works.
 			if(command.equals("hello")){
@@ -168,7 +162,7 @@ public class ChatRegisterEntity extends TileEntity {
 			} else if(command.equals("status")) {
 				SpaceshipCommands.status(worldObj, this, player, getShip());
 			}
-			terminalMenu.onCommand(command, player, this, makeTerminal(player));
+			terminalMenu.onCommand(command, player, this, this.terminal);
 			SpaceshipCommands.debug(command, this);
 		}
 	}
