@@ -12,6 +12,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
@@ -136,41 +137,27 @@ public class Shipyard {
 	@SubscribeEvent
 	@SideOnly(Side.SERVER)
 	public void safe(WorldEvent.Save event){
-		BufferedWriter writer = null;
-		File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
-		try {
-			new File(MineSpaceships.SpaceshipSavePath).mkdirs();
-			f.createNewFile();
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		try {
-			writer = new BufferedWriter(new FileWriter(f));
-			for(Spaceship ship : ships){				
-				writer.write(ship.toData());
-				writer.write(SPACESHIP_TAG+"\n");
+		NBTTagCompound compound = event.world.getWorldInfo().getNBTTagCompound();
+		String shipsString = "";		
+		for(Spaceship ship : ships){	
+			if(ship.getWorld().provider.getDimensionId() == event.world.provider.getDimensionId()){
+				shipsString+= ship.toData();
+				shipsString+= SPACESHIP_TAG+"\n";
 			}
-			writer.close();
-		} catch (IOException e) {
-			try {
-				writer.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
 		}
+		compound.setString(SPACESHIP_TAG, shipsString);
 	}
 	@SubscribeEvent
-	@SideOnly(Side.SERVER)
+	//@SideOnly(Side.SERVER)
 	public void load(WorldEvent.Load event){
-		ships.clear();
+		ships.clear();		
+		NBTTagCompound compound = event.world.getWorldInfo().getNBTTagCompound();
+		String shipsString = compound.getString(SPACESHIP_TAG);
 		Scanner scanner = null;
-		File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
 		try {
-			scanner = new Scanner(f);
-		} catch (FileNotFoundException e) {
+			scanner = new Scanner(shipsString);
+		} catch (Exception e) {
+			e.printStackTrace();
 			return;
 		}
 		if(scanner != null){

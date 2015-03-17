@@ -10,6 +10,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
     	MineSpaceships.network.registerMessage(CommandMessage.HandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
+    	MineSpaceships.spaceshipNetwork.registerMessage(ShipSyncHandler.class, CommandMessage.class, 0, Side.CLIENT);
     }
 
     @Override
