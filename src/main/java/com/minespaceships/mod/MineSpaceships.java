@@ -47,8 +47,7 @@ public class MineSpaceships
      * @param event
      */
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-    	           	
+    public void preInit(FMLPreInitializationEvent event) {    	           	
     	Singleton = this;    	
     	proxy.preInit(event);
     }

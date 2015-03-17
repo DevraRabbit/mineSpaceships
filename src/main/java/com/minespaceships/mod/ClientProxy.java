@@ -1,5 +1,7 @@
 package com.minespaceships.mod;
 
+import com.minespaceships.mod.events.PlayerTracker;
+
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -10,7 +12,8 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
     	MineSpaceships.network.registerMessage(CommandMessage.HandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
-    	MineSpaceships.spaceshipNetwork.registerMessage(ShipSyncHandler.class, CommandMessage.class, 0, Side.CLIENT);
+    	MineSpaceships.spaceshipNetwork.registerMessage(ShipSyncHandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
+    	MineSpaceships.spaceshipNetwork.registerMessage(ShipSyncHandlerServer.class, CommandMessage.class, 0, Side.SERVER);
     }
 
     @Override

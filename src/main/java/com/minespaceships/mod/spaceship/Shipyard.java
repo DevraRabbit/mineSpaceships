@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.event.*;
 
+import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
@@ -40,6 +41,10 @@ public class Shipyard {
 			singleton = new Shipyard();
 		}
 		return singleton;
+	}
+	
+	public int getShipCount(){
+		return ships.size();
 	}
 	
 	public void addShip(Spaceship ship){
@@ -169,6 +174,12 @@ public class Shipyard {
 		String ships = loadShips(event.world);
 		if(ships != null){load(ships, event.world);}
 	}
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void loadClient(WorldEvent.Load event){
+		//MineSpaceships.spaceshipNetwork.sendToServer(new CommandMessage(event.world.provider.getDimensionId()+""));
+	}
+	@SideOnly(Side.SERVER)
 	public String loadShips(World world){
 		Scanner scanner = null;
 		String shipString = "";

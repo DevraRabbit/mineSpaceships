@@ -20,14 +20,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.spaceship.Shipyard;
 
-public class ShipSyncHandler implements IMessageHandler<CommandMessage, IMessage>  {
+public class ShipSyncHandlerClient implements IMessageHandler<CommandMessage, IMessage>  {
 	
     @Override
     public IMessage onMessage(CommandMessage message, MessageContext ctx) {
     	Side side = FMLCommonHandler.instance().getEffectiveSide();
-    	
-    	Shipyard.getShipyard().load(message.getText(), Minecraft.getMinecraft().theWorld);
-    	
+    	Shipyard.getShipyard().load(message.getText(), Minecraft.getMinecraft().theWorld);    	
         return null;
     }
 }
