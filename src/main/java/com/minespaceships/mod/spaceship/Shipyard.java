@@ -49,7 +49,7 @@ public class Shipyard {
 	
 	public void addShip(Spaceship ship){
 		if(ship != null){
-			if(!ships.contains(ship) && ship.getNavigatorCount() > 0){
+			if(!ships.contains(ship)){ //&& ship.getNavigatorCount() > 0){        //Doesn't work when getting onto Server as all ship blocks are air then.
 				Iterator<Spaceship> shipIt = ships.iterator();
 				while(shipIt.hasNext()){
 					Spaceship nextShip = shipIt.next();

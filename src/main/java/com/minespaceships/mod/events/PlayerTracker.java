@@ -18,9 +18,9 @@ public class PlayerTracker {
 	@SideOnly(Side.SERVER)
 	public void onPlayerJoin(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityPlayer){
-//			String ships = Shipyard.getShipyard().loadShips(event.world);
-//			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);
-//			sendShipRequest();
+			String ships = Shipyard.getShipyard().loadShips(event.world);
+			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);
+			//sendShipRequest();
 		}
 	}
 //	@SubscribeEvent
