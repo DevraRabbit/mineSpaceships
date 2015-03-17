@@ -55,7 +55,7 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
 		initializeBase();
-	}	
+	}
 	@Deprecated
 	public Spaceship(int[] originMeasurement){
 		world = (WorldServer)MinecraftServer.getServer().getEntityWorld();
@@ -116,8 +116,8 @@ public class Spaceship implements Serializable{
 	
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
-		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
-		BlockPos maxSpan = blockMap.getMaxPos().subtract(origin);
+		BlockPos minSpan = Vec3Op.subtract(blockMap.getMinPos(), origin);
+		BlockPos maxSpan = Vec3Op.subtract(blockMap.getMaxPos(), origin);
 		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
 				origin.getX(), origin.getY(), origin.getZ(),
 				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
@@ -140,7 +140,7 @@ public class Spaceship implements Serializable{
 	@Deprecated
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
 		blockMap = new BlockMap(minPos);
-		BlockPos span = ((BlockPos) maxPos).subtract(minPos);
+		BlockPos span = Vec3Op.subtract(((BlockPos) maxPos), minPos);
 		for(int x = 0; x <= span.getX(); x++){
 			for(int y = 0; y <= span.getY(); y++){
 				for(int z = 0; z <= span.getZ(); z++){
@@ -153,10 +153,10 @@ public class Spaceship implements Serializable{
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin), 0, world);
+		moveTo(Vec3Op.subtract(position, origin), 0, world);
 	}
 	public void setTarget(BlockPos position, World world){
-		moveTo(position.subtract(origin), world);
+		moveTo(Vec3Op.subtract(position, origin), world);
 	}
 	public void moveTo(BlockPos addDirection) {
 		moveTo(addDirection, world, 0);
@@ -284,7 +284,7 @@ public class Spaceship implements Serializable{
 	private void removeSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.remove(state, pos);
+			assembler.remove(state.getBlock(), pos);
 		}
 	}
 	
@@ -295,7 +295,7 @@ public class Spaceship implements Serializable{
 	private void addSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.put(state, pos);
+			assembler.put(state.getBlock(), pos);
 		}
 	}
 	

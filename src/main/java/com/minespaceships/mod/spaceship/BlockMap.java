@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.minespaceships.util.Vec3Op;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
@@ -33,17 +35,17 @@ public class BlockMap {
 	}
 	
 	public void add(BlockPos pos){
-		map.put(pos.subtract(origin), true);
-		resize(pos.subtract(origin));
+		map.put(Vec3Op.subtract(pos, origin), true);
+		resize(Vec3Op.subtract(pos, origin));
 	}
 	
 	public boolean contains(BlockPos pos){
-		return map.containsKey(pos.subtract(origin));
+		return map.containsKey(Vec3Op.subtract(pos, origin));
 	}
 	
 	public void remove(BlockPos pos){
-		map.remove(pos.subtract(origin));
-		impendEdges(pos.subtract(origin));
+		map.remove(Vec3Op.subtract(pos, origin));
+		impendEdges(Vec3Op.subtract(pos, origin));
 	}
 	
 	public BlockPos getMaxPos(){
@@ -85,10 +87,10 @@ public class BlockMap {
 	}
 	
 	private void impendEdges(BlockPos pos){
-		BlockPos span = maxPos.subtract(minPos);
+		BlockPos span = Vec3Op.subtract(maxPos, minPos);
 		if(pos.getX() == maxPos.getX()){
 			if(!otherInYZPane(span.getX())){
-				maxPos = maxPos.subtract(new BlockPos(1,0,0));
+				maxPos = Vec3Op.subtract(maxPos, new BlockPos(1,0,0));
 			}
 		} else if(pos.getX() == minPos.getX()){
 			if(!otherInYZPane(0)){
@@ -97,7 +99,7 @@ public class BlockMap {
 		}
 		if(pos.getY() == maxPos.getY()){
 			if(!otherInXZPane(span.getY())){
-				maxPos = maxPos.subtract(new BlockPos(0,1,0));
+				maxPos = Vec3Op.subtract(maxPos, new BlockPos(0,1,0));
 			}
 		} else if(pos.getY() == minPos.getY()){
 			if(!otherInXZPane(0)){
@@ -106,7 +108,7 @@ public class BlockMap {
 		}
 		if(pos.getZ() == maxPos.getZ()){
 			if(!otherInXYPane(span.getZ())){
-				maxPos = maxPos.subtract(new BlockPos(0,0,1));
+				maxPos = Vec3Op.subtract(maxPos, new BlockPos(0,0,1));
 			}
 		} else if(pos.getZ() == minPos.getZ()){
 			if(!otherInXYPane(0)){
@@ -116,7 +118,7 @@ public class BlockMap {
 	}
 	
 	private boolean otherInYZPane(int index){
-		BlockPos span = maxPos.subtract(minPos);
+		BlockPos span = Vec3Op.subtract(maxPos, minPos);
 		for(int y = 0; y < span.getY(); y++){
 			for(int z = 0; z < span.getZ(); z++){
 				BlockPos pos = minPos.add(minPos.getX()+index, minPos.getY()+y, minPos.getZ()+z).add(origin);
@@ -129,7 +131,7 @@ public class BlockMap {
 	}
 	
 	private boolean otherInXZPane(int index){
-		BlockPos span = maxPos.subtract(minPos);
+		BlockPos span = Vec3Op.subtract(maxPos, minPos);
 		for(int x = 0; x < span.getX(); x++){
 			for(int z = 0; z < span.getZ(); z++){
 				BlockPos pos = minPos.add(minPos.getX()+x, minPos.getY()+index, minPos.getZ()+z).add(origin);
@@ -142,7 +144,7 @@ public class BlockMap {
 	}
 	
 	private boolean otherInXYPane(int index){
-		BlockPos span = maxPos.subtract(minPos);
+		BlockPos span = Vec3Op.subtract(maxPos, minPos);
 		for(int x = 0; x < span.getX(); x++){
 			for(int y = 0; y < span.getY(); y++){
 				BlockPos pos = minPos.add(minPos.getX()+x, minPos.getY()+y, minPos.getZ()+index).add(origin);
@@ -175,7 +177,7 @@ public class BlockMap {
 	}
 	
 	public void rotate(BlockPos origin, int turn){
-		BlockPos rotateOrigin = origin.subtract(this.origin);
+		BlockPos rotateOrigin = Vec3Op.subtract(origin, this.origin);
 		Set<BlockPos> posSet = map.keySet();
 		HashMap nextMap = new HashMap<BlockPos, Boolean>();
 		for(Iterator<BlockPos> it = posSet.iterator(); it.hasNext();){
@@ -185,6 +187,8 @@ public class BlockMap {
 		}
 		map = nextMap;
 		this.origin = Turn.getRotatedPos(this.origin, origin, new BlockPos(0,0,0), turn);
+		this.maxPos = Turn.getRotatedPos(this.maxPos, origin, new BlockPos(0,0,0), turn);
+		this.minPos = Turn.getRotatedPos(this.minPos, origin, new BlockPos(0,0,0), turn);
 	}
 	
 	public void showDebug(World world){

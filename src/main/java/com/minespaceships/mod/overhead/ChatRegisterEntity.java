@@ -100,24 +100,24 @@ public class ChatRegisterEntity extends TileEntity {
 		//Initialise the menu structure.
 		if(!SpaceshipMenu.getRunBefore()){
 			SpaceshipMenu.initMenu(terminal);
-		}/*
+		}
 		if(!NoSpaceshipEntityMenu.getRunBefore()){
 			NoSpaceshipEntityMenu.initMenu(terminal);
-		}*/
+		}
 
 		//initialise the menu display.
 		spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
-		//noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
+		noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
 
 		//open our console. 
 		Minecraft.getMinecraft().displayGuiScreen(terminal);
 
-		/*if(terminal.getChatRegisterEntity().getShip() == null){
+		if(terminal.getChatRegisterEntity().getShip() == null){
 			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
-		}else{*/
+		}else{
 			//Print out the menu in the console.
 			spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
-		//}
+		}
 		return terminal;
 	}
 
@@ -128,50 +128,50 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void onCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
-
 		if(side == Side.CLIENT) {
 			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
 			//display the menu.
-			spaceshipMenu.display(command, this.terminal);
-		} else if (side == Side.SERVER) {
-			//define a very first command to see if it works.
-			if(command.equals("hello")){
-				//send something to the player to see if we get a feedback from our command.
-				player.addChatComponentMessage(new ChatComponentText("I love you!"));
-			//Define the 'calc' command, which parses a math expression
-			} else if(command.startsWith("calc")) {
-				Calculator.calc(command, player);
-			} else if (command.startsWith("init")) {
-				SpaceshipCommands.init(command, worldObj, this, player, getShip());
-			} else if (command.startsWith("move")) {
-				SpaceshipCommands.move(command, worldObj, this, player, getShip());
-			} else if (command.equals("test1")) {
-				SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", worldObj, this, player, getShip());
-				SpaceshipCommands.move("move 0;15;0", worldObj, this, player, getShip());
-			} else if (command.startsWith("turn ")) {
-				command = command.substring(4).trim();
-				if (command.equals("left")) {
-					Turn.ninetyDeg(worldObj, pos, Turn.LEFT);
-				} else if (command.equals("right")) {
-					Turn.ninetyDeg(worldObj, pos, Turn.RIGHT);
-				} else if (command.equals("around")) {
-					Turn.around(worldObj, pos);
-				} else {
-					player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
-				}
-			} else if(command.equals("status")) {
-				SpaceshipCommands.status(worldObj, this, player, getShip());
-			}
-			terminalMenu.onCommand(command, player, this, this.terminal);
-			SpaceshipCommands.debug(command, this);
+			spaceshipMenu.display(command, makeTerminal(player));
+			terminalMenu.onCommand(command, player, this, makeTerminal(player));
 		}
 	}
 
-	/**
-	 * Returns the spaceship.
-	 * @return spaceship
-	 */
 	public Spaceship getShip() {
 		return Shipyard.getShipyard().getShip(pos, worldObj);
+	}
+
+	/**
+	 * Executes a command unrelated if Server or client side.
+	 */
+	public void executeCommand(String command, EntityPlayer player){
+		//define a very first command to see if it works.
+		if(command.equals("hello")){
+			//send something to the player to see if we get a feedback from our command.
+			player.addChatComponentMessage(new ChatComponentText("I love you!"));
+		//Define the 'calc' command, which parses a math expression
+		} else if(command.startsWith("calc")) {
+			Calculator.calc(command, player);
+		} else if (command.startsWith("init")) {
+			SpaceshipCommands.init(command, worldObj, this, player, getShip());
+		} else if (command.startsWith("move")) {
+			SpaceshipCommands.move(command, worldObj, this, player, getShip());
+		} else if (command.equals("test1")) {
+			SpaceshipCommands.init("init -4;-4;-4 to 4;4;4", worldObj, this, player, getShip());
+			SpaceshipCommands.move("move 0;15;0", worldObj, this, player, getShip());
+		} else if (command.startsWith("turn ")) {
+			command = command.substring(4).trim();
+			if (command.equals("left")) {
+				Turn.ninetyDeg(worldObj, pos, Turn.LEFT);
+			} else if (command.equals("right")) {
+				Turn.ninetyDeg(worldObj, pos, Turn.RIGHT);
+			} else if (command.equals("around")) {
+				Turn.around(worldObj, pos);
+			} else {
+				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
+			}
+		} else if(command.equals("status")) {
+			SpaceshipCommands.status(worldObj, this, player, getShip());
+		}
+		SpaceshipCommands.debug(command, this);
 	}
 }

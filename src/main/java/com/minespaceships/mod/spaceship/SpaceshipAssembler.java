@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.minespaceships.util.Vec3Op;
+
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 
@@ -19,9 +22,9 @@ public class SpaceshipAssembler {
 	public void setOrigin(BlockPos pos){
 		origin = pos;
 	}
-	public void put(IBlockState state, BlockPos pos){
-		BlockPos part = pos.subtract(origin);
-		Class c = state.getBlock().getClass();
+	public void put(Block state, BlockPos pos){
+		BlockPos part = Vec3Op.subtract(pos, origin);
+		Class c = state.getClass();
 		if(!parts.containsKey(c)){
 			parts.put(c, new ArrayList<BlockPos>());
 		}
@@ -29,9 +32,9 @@ public class SpaceshipAssembler {
 			parts.get(c).add(part);
 		}
 	}
-	public void remove(IBlockState state, BlockPos pos){
-		BlockPos part = pos.subtract(origin);
-		ArrayList<BlockPos> toremove = parts.get(state.getBlock().getClass());
+	public void remove(Block state, BlockPos pos){
+		BlockPos part = Vec3Op.subtract(pos, origin);
+		ArrayList<BlockPos> toremove = parts.get(state.getClass());
 		if(toremove != null){
 			toremove.remove(part);
 		}

@@ -14,4 +14,7 @@ public class Vec3Op{
 	public static BlockPos scale(BlockPos vec, double ratio){
 		return new BlockPos((double)vec.getX() * ratio, (double)vec.getY() * ratio, (double)vec.getY() * ratio);
 	}
+	public static BlockPos subtract(BlockPos vec1, BlockPos vec2){
+		return new BlockPos(vec1.getX() - vec2.getX(), vec1.getY() - vec2.getY(), vec1.getZ() - vec2.getZ());
+	}
 }
