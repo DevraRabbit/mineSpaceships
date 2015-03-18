@@ -112,10 +112,17 @@ public class ChatRegisterEntity extends TileEntity {
 		//open our console. 
 		Minecraft.getMinecraft().displayGuiScreen(terminal);
 
-		/*if(Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld()) == null){
-			System.out.println("no ship.");
+		try{
+			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
+			if(ship == null){
+				System.out.println("!!! >>NO SHIP.");
+			}else{
+				System.out.println("!!! >>YA SHIP."); 
+			}
+		}catch(Exception e){
+			
 		}
-		if(terminal.getChatRegisterEntity().getShip() == null){
+		/*if(terminal.getChatRegisterEntity().getShip() == null){
 			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
 		}else{*/
 			//Print out the menu in the console.

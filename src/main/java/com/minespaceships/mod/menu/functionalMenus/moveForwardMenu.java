@@ -41,7 +41,7 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 		if(command.equals(null)){
 			return "command can not be null.";
 		}
-
+		/*
 		double x,y,z;
 		Pattern pattern = Pattern.compile("\\d*");
 		Matcher matcher = pattern.matcher(command);
@@ -63,7 +63,9 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 				System.err.println("ship is broken");
 			}
 		}
-		return "move forward failed!";
+		return "move forward failed!";*/
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveForward+" "+command, terminal.getPlayerEntity());
+		return SpaceshipCommands.moveForward+" "+command;
 	}
 
 }

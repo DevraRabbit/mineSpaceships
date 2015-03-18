@@ -32,7 +32,7 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
-		try {
+		/*try {
 			//Spaceship ship = terminal.getChatRegisterEntity().getShip();
 			//Initialise the ship for the server.
 			terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.initAuto, null);
@@ -50,6 +50,9 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 			+EnumChatFormatting.RED+">> Initialise spaceship failed <<"
 			+ "\nPress 'Esc' to close the menu.";
 		return out;
+		*/
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.initAuto, null);
+		return SpaceshipCommands.initAuto;
 	}
 
 }
