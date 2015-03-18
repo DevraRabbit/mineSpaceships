@@ -12,8 +12,10 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
@@ -49,7 +51,7 @@ public class Shipyard {
 	
 	public void addShip(Spaceship ship){
 		if(ship != null){
-			if(!ships.contains(ship)){ //&& ship.getNavigatorCount() > 0){        //Doesn't work when getting onto Server as all ship blocks are air then.
+			if(!ships.contains(ship) && ship.getNavigatorCount() > 0){
 				Iterator<Spaceship> shipIt = ships.iterator();
 				while(shipIt.hasNext()){
 					Spaceship nextShip = shipIt.next();
@@ -109,7 +111,6 @@ public class Shipyard {
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
 				if (ship.isNeighboringBlock(pos)) {
-					Minecraft.getMinecraft().thePlayer.sendChatMessage("Block is added");
 					ship.addBlock(pos);
 					break;
 				}
@@ -122,20 +123,20 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void getBlockInfo(final BlockPos pos, final World world) {
+	public void getBlockInfo(final BlockPos pos, final EntityPlayer player, final World world) {
 		if (ships.isEmpty()) {
-			Minecraft.getMinecraft().thePlayer.sendChatMessage("false - no ships existing");
+			player.addChatComponentMessage(new ChatComponentText("false - no ships existing"));
 			return;
 		}
 		
 		for (Spaceship ship: ships) {
 			if (ship.containsBlock(pos)) {
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("block part of \""+ship.toString()+"\"");
+				player.addChatComponentMessage(new ChatComponentText("block part of \""+ship.toString()+"\""));
 				return;
 			}
 		}
 		
-		Minecraft.getMinecraft().thePlayer.sendChatMessage("block not part of a ship");
+		player.addChatComponentMessage(new ChatComponentText("block not part of a ship"));
 	}
 	
 	
