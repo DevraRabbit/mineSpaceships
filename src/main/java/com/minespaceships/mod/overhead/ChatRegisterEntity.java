@@ -167,6 +167,8 @@ public class ChatRegisterEntity extends TileEntity {
 			}
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
+		} else if(command.startsWith("shoot")) {
+			SpaceshipCommands.shoot(command, worldObj, this, player, getShip());
 		}
 		SpaceshipCommands.debug(command, this);
 	}
