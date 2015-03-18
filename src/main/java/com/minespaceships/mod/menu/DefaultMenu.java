@@ -8,7 +8,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  * @author ovae.
  * @version 20150221
  */
-public class SpaceshipMenu {
+public class DefaultMenu {
 
 	//Is necessary to now if the DefaultMenu was initialise before.
 	private static boolean runBefore;
@@ -66,6 +66,7 @@ public class SpaceshipMenu {
 	private static Menu moveDownFuncMenu;
 	
 	private static Menu liftoffMenu;
+	private static Menu liftoffFuncMenu;
 	private static Menu landingMenu;
 
 	/**
@@ -80,7 +81,7 @@ public class SpaceshipMenu {
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		createShip = new CreateShipMenu("recreate spaceship");
+		createShip = new CreateShipMenu("create spaceship");
 		navigation = new Menu("spaceship navigation");
 		armour = new Menu("weapons");
 		protection = new Menu("protection");
@@ -94,35 +95,38 @@ public class SpaceshipMenu {
 
 		moveForwardMenu = new Menu("move forward");
 		out = "";
-		out +="Please type in how may blocks you want to move forward.";
+		out +="move forward functional menu";
 		moveForwardFuncMenu = new moveForwardMenu(out);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
-		out +="Please type in how may blocks you want to move back.";
+		out +="move back functional menu";
 		moveBackFuncMenu = new moveBackMenu(out);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
-		out +="Please type in how may blocks you want to move right.";
+		out +="move right functional menu";
 		moveRightFuncMenu = new moveRightMenu(out);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
-		out +="Please type in how may blocks you want to move left.";
+		out +="move left functional menu";
 		moveLeftFuncMenu = new moveLeftMenu(out);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
-		out +="Please type in how may blocks you want to move up.";
+		out +="move up functional menu";
 		moveUpFuncMenu = new moveUpMenu(out);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
-		out +="Please type in how may blocks you want to move down.";
+		out +="move down functional menu";
 		moveDownFuncMenu = new moveDownMenu(out);
 
-		liftoffMenu = new liftoffMenu("liftoff");
+		liftoffMenu = new Menu("liftoff");
+		out = "";
+		out +="liftoff functional menu";
+		liftoffFuncMenu = new liftoffMenu(out);
 		landingMenu = new landingMenu("landing");
 
 		out = "";
@@ -151,8 +155,10 @@ public class SpaceshipMenu {
 			navigation.addSubMenu(moveDownMenu);
 				moveDownMenu.addSubMenu(moveDownFuncMenu);
 			navigation.addSubMenu(liftoffMenu);
+				liftoffMenu.addSubMenu(liftoffFuncMenu);
 			navigation.addSubMenu(landingMenu);
-
+				
+			
 		root.addSubMenu(armour);
 			armour.addSubMenu(phaserMenu);
 			armour.addSubMenu(torpedoMenu);

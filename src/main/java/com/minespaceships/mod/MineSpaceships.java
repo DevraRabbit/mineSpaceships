@@ -2,6 +2,11 @@ package com.minespaceships.mod;
 
 import java.io.File;
 
+import com.minespaceships.mod.CommandMessage.HandlerClient;
+import com.minespaceships.mod.CommandMessage.HandlerServer;
+import com.minespaceships.mod.Generator.WorldGenFloatingIslandsSmall;
+import com.minespaceships.mod.Generator.WorldGeneratorAsteroid;
+import com.minespaceships.mod.Generator.WorldGeneratorTest;
 import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
@@ -13,11 +18,15 @@ import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -38,6 +47,12 @@ public class MineSpaceships
     
     private static int navigatorBlockId = 1000;
     
+   
+   
+    
+    
+    
+    
     @SidedProxy(clientSide="com.minespaceships.mod.ClientProxy", serverSide="com.minespaceships.mod.ServerProxy")
     public static CommonProxy proxy;
     
@@ -47,7 +62,11 @@ public class MineSpaceships
      */
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-    	           	
+    	
+
+        network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
+        network.registerMessage(HandlerServer.class, CommandMessage.class, 0, Side.SERVER);
+    	
     	Singleton = this;    	
     	proxy.preInit(event);
     }
