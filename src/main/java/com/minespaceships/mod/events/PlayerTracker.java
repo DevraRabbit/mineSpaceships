@@ -22,6 +22,7 @@ public class PlayerTracker {
 	@SideOnly(Side.SERVER)
 	public void onPlayerJoin(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityPlayer){
+			MinecraftForge.EVENT_BUS.post(new Save(event.world));
 			Shipyard.getShipyard().safe(new Save(event.world));
 			String ships = Shipyard.getShipyard().loadShips(event.world);
 			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);

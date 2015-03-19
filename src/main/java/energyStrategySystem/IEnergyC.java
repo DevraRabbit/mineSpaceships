@@ -1,9 +1,11 @@
 package energyStrategySystem;
 
+import com.minespaceships.mod.spaceship.ISpaceshipPart;
+
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
-public interface IEnergyC {
+public interface IEnergyC extends ISpaceshipPart {
 	
 	
 	/**

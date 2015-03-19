@@ -33,10 +33,15 @@ public class EnergyStrategySystem {
 		ArrayList<BlockPos> energyPositions = assembler.getParts(IEnergyC.class);
 		float energy=0;
 		for(BlockPos p: energyPositions){
-			IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
-			if(energyBlock.getStatus(p, world)){
-				energy+= energyBlock.getEnergy();
-			}			
+			Block block = world.getBlockState(p).getBlock();
+			if(block instanceof IEnergyC){
+				IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
+				if(energyBlock.getStatus(p, world)){
+					energy+= energyBlock.getEnergy();
+				}		
+			} else {
+				//TODO: implement reload Bug where all blocks are air
+			}
 		}
 		return energy;		
 	}
@@ -49,7 +54,7 @@ public class EnergyStrategySystem {
 		float energy=getEnergy();
 		if(energy<0){
 			//for(int i=0;)
-			//TODO: implement Block shutdown
+			//TODO: implement Block shutdown. Important! DO NOT SHUT DOWN OR CALCULATE WITH AIR BLOCKS! (regarding reloading)
 		}
 	}
 	
@@ -79,11 +84,14 @@ public class EnergyStrategySystem {
 		}
 	
 		for(BlockPos p: blockPosList){
-			IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
-			for(ArrayList<Class> b: priorityList){
-				for(Class c: b){
-					if(c.isAssignableFrom(energyBlock.getClass())){
-						//TODO: implement addition here
+			Block block = world.getBlockState(p).getBlock();
+			if(block instanceof IEnergyC){
+				IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
+				for(ArrayList<Class> b: priorityList){
+					for(Class c: b){
+						if(c.isAssignableFrom(energyBlock.getClass())){
+							//TODO: implement addition here
+						}
 					}
 				}
 			}

@@ -24,6 +24,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ActivatableBlock extends Block implements ISpaceshipPart, IEnergyC {
 	public static final String activatedName = "activated";
@@ -194,16 +196,20 @@ public abstract class ActivatableBlock extends Block implements ISpaceshipPart, 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
+		if(playerIn != null && playerIn.isSneaking()){
+			return false;
+		}
 		Spaceship ship = Shipyard.getShipyard().getShip(pos, worldIn);
 		if((Boolean) state.getValue(ACTIVATED)){
 			setStatus(false, pos, worldIn);
 		} else {
-			if(ship != null && ship.hasEnergyFor(this)){
+			if(ship != null &&
+					ship.hasEnergyFor(this)){
 				setStatus(true, pos, worldIn);	
 			}
 		}
 		if(ship != null) ship.onEnergyChange();
-        return false;
+        return true;
     }
 	@Override
 	protected BlockState createBlockState()
@@ -211,7 +217,7 @@ public abstract class ActivatableBlock extends Block implements ISpaceshipPart, 
         return new BlockState(this, new IProperty[] {FACING, ACTIVATED});
     }
 	public IBlockState getNewBlockState(IBlockState state, boolean active){
-		return this.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVATED, active);
+		return this.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVATED, Boolean.valueOf(active));
 	}
 
 	@Override
@@ -221,6 +227,6 @@ public abstract class ActivatableBlock extends Block implements ISpaceshipPart, 
 
 	@Override
 	public void setStatus(boolean b, BlockPos pos, World world) {
-		world.setBlockState(pos, getNewBlockState(world.getBlockState(pos), b));		
+		world.setBlockState(pos, getNewBlockState(world.getBlockState(pos), b), 3);		
 	}	
 }
