@@ -28,28 +28,36 @@ public class CommandMessage implements IMessage {
     public CommandMessage() { }
 
     public CommandMessage(String text) {
-        this.text = text;
+        this.setText(text);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        text = ByteBufUtils.readUTF8String(buf); // this class is very useful in general for writing more complex objects
+        setText(ByteBufUtils.readUTF8String(buf)); // this class is very useful in general for writing more complex objects
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, text);
+        ByteBufUtils.writeUTF8String(buf, getText());
     }
 
-    public static class HandlerServer implements IMessageHandler<CommandMessage, IMessage> {
+    public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public static class HandlerServer implements IMessageHandler<CommandMessage, IMessage> {
         
         @Override
         public IMessage onMessage(CommandMessage message, MessageContext ctx) {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
-            System.out.println(String.format("Received %s from %s", message.text, ctx.getServerHandler().playerEntity.getDisplayName()));
+            System.out.println(String.format("Received %s from %s", message.getText(), ctx.getServerHandler().playerEntity.getDisplayName()));
             
     		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*)");
-    		Matcher moffset = poffset.matcher(message.text);
+    		Matcher moffset = poffset.matcher(message.getText());
             
             BlockPos pos = null;
             World world = null;
@@ -91,10 +99,10 @@ public class CommandMessage implements IMessage {
         @Override
         public IMessage onMessage(CommandMessage message, MessageContext ctx) {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
-            System.out.println(String.format("Received %s from %s", message.text, Minecraft.getMinecraft().thePlayer.getDisplayName()));
+            System.out.println(String.format("Received %s from %s", message.getText(), Minecraft.getMinecraft().thePlayer.getDisplayName()));
             
     		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*)");
-    		Matcher moffset = poffset.matcher(message.text);
+    		Matcher moffset = poffset.matcher(message.getText());
             
             BlockPos pos = null;
             World world = null;

@@ -12,7 +12,10 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
@@ -21,6 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.event.*;
 
+import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
@@ -39,6 +43,10 @@ public class Shipyard {
 			singleton = new Shipyard();
 		}
 		return singleton;
+	}
+	
+	public int getShipCount(){
+		return ships.size();
 	}
 	
 	public void addShip(Spaceship ship){
@@ -103,7 +111,6 @@ public class Shipyard {
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
 				if (ship.isNeighboringBlock(pos)) {
-					Minecraft.getMinecraft().thePlayer.sendChatMessage("Block is added");
 					ship.addBlock(pos);
 					break;
 				}
@@ -116,20 +123,20 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void getBlockInfo(final BlockPos pos, final World world) {
+	public void getBlockInfo(final BlockPos pos, final EntityPlayer player, final World world) {
 		if (ships.isEmpty()) {
-			Minecraft.getMinecraft().thePlayer.sendChatMessage("false - no ships existing");
+			player.addChatComponentMessage(new ChatComponentText("false - no ships existing"));
 			return;
 		}
 		
 		for (Spaceship ship: ships) {
 			if (ship.containsBlock(pos)) {
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("block part of \""+ship.toString()+"\"");
+				player.addChatComponentMessage(new ChatComponentText("block part of \""+ship.toString()+"\""));
 				return;
 			}
 		}
 		
-		Minecraft.getMinecraft().thePlayer.sendChatMessage("block not part of a ship");
+		player.addChatComponentMessage(new ChatComponentText("block not part of a ship"));
 	}
 	
 	
@@ -165,12 +172,40 @@ public class Shipyard {
 	@SubscribeEvent
 	@SideOnly(Side.SERVER)
 	public void load(WorldEvent.Load event){
-		ships.clear();
+		String ships = loadShips(event.world);
+		if(ships != null){load(ships, event.world);}
+	}
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void loadClient(WorldEvent.Load event){
+		//MineSpaceships.spaceshipNetwork.sendToServer(new CommandMessage(event.world.provider.getDimensionId()+""));
+	}
+	@SideOnly(Side.SERVER)
+	public String loadShips(World world){
 		Scanner scanner = null;
-		File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
+		String shipString = "";
+		File f = new File(MineSpaceships.SpaceshipSavePath + world.getWorldInfo().getWorldName());
 		try {
 			scanner = new Scanner(f);
+			
+			String ship = "";
+			while(scanner.hasNext()){
+				shipString += scanner.next();
+				shipString+="\n";
+			}			
+			scanner.close();
+			return shipString;
+			
 		} catch (FileNotFoundException e) {
+			return null;
+		}
+	}
+	public void load(String shipString, World world){
+		ships.clear();
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(shipString);
+		} catch (Exception e) {
 			return;
 		}
 		if(scanner != null){
@@ -181,7 +216,7 @@ public class Shipyard {
 					ship += line + "\n";
 				} else {
 					try{
-						addShip(new Spaceship(ship, event.world));
+						addShip(new Spaceship(ship, world));
 					} catch (Exception e){
 						System.out.println("Could not initialize Ship");
 					}
@@ -189,6 +224,6 @@ public class Shipyard {
 				}
 			}
 			scanner.close();
-		}		
+		}	
 	}
 }

@@ -44,6 +44,7 @@ public class Spaceship implements Serializable{
 	private World world;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
+	private boolean isResolved = true;
 	
 	private boolean canBeRemoved = true;
 	
@@ -85,8 +86,10 @@ public class Spaceship implements Serializable{
 		initializeBase();
 	}
 	private void initializeBase(){
-		assembler = new SpaceshipAssembler(blockMap.getOrigin());
-		refreshParts();
+		if(assembler == null){
+			assembler = new SpaceshipAssembler(blockMap.getOrigin());
+			refreshParts();
+		}
 		Shipyard.getShipyard().addShip(this);
 	}
 	
@@ -284,7 +287,7 @@ public class Spaceship implements Serializable{
 	private void removeSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.remove(state.getBlock(), pos);
+			assembler.remove(state.getBlock().getClass(), pos);
 		}
 	}
 	
@@ -295,7 +298,7 @@ public class Spaceship implements Serializable{
 	private void addSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.put(state.getBlock(), pos);
+			assembler.put(state.getBlock().getClass(), pos);
 		}
 	}
 	
@@ -317,13 +320,37 @@ public class Spaceship implements Serializable{
 		for(BlockPos pos : positions){
 			data += pos.toLong()+"\n";
 		}
+		Set<Class> parts = assembler.getTypes();
+		for(Class c : parts){
+			data += c.getName()+"\n";
+			positions = assembler.getParts(c);
+			for(BlockPos pos : positions){
+				data += pos.toLong()+"\n";
+			}
+		}
 		return data;
 	}
 	public void fromData(String data) throws Exception{
 		String[] lines = data.split("\n");		
-		blockMap = new BlockMap(BlockPos.fromLong(Long.parseLong(lines[0])));
-		for(int i = 1; i < lines.length; i++){
-			blockMap.add(BlockPos.fromLong(Long.parseLong(lines[i])));			
+		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
+		blockMap = new BlockMap(ori);
+		assembler = new SpaceshipAssembler(ori);
+		this.origin = ori;
+		Class addedClass = null;
+		for(String s : lines){
+			if(addedClass == null){
+				try{
+					blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+				} catch(Exception e){
+					addedClass = Class.forName(s);
+				}
+			} else {
+				try{
+					assembler.put(addedClass, BlockPos.fromLong(Long.parseLong(s)));		
+				} catch(Exception e){
+					addedClass = Class.forName(s);
+				}
+			}
 		}
 	}
 	public boolean measuresEquals(Spaceship ship){
