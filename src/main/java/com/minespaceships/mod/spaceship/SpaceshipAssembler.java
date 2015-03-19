@@ -49,7 +49,7 @@ public class SpaceshipAssembler {
 		for(Class cls : classes){
 			if(c.isAssignableFrom(cls)){
 				instances.addAll(parts.get(cls));
-			}
+			}S
 		}
 		for(ListIterator<BlockPos> it = instances.listIterator(); it.hasNext();){
 			BlockPos pos = it.next();

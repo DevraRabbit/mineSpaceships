@@ -40,6 +40,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class Spaceship implements Serializable{
 	private BlockPos origin;
@@ -176,8 +178,9 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		//move the entities first to avoid long waiting times and weird bugs
-		moveEntities(addDirection, turn);
+		if(side == Side.CLIENT)moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
 		//list of positions that need to be removed in revers order to prevent other blocks from cracking
@@ -227,15 +230,16 @@ public class Spaceship implements Serializable{
 		while(reverseRemoval.hasPrevious()){
 			BlockCopier.removeBlock(world, reverseRemoval.previous());
 		}
-		//move the entities and move the ships measurements  moveEntities(addDirection, turn);
-		
+		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
+		if(side == Side.SERVER)moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}
 	
 	private void moveMeasurements(BlockPos addDirection, int turn){
 		if(turn != 0){blockMap.rotate(origin, turn);}
-		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));		
+		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
+		//TODO: rotate assembler
 		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
@@ -260,6 +264,7 @@ public class Spaceship implements Serializable{
 				ent.setRotationYawHead((float) (ent.rotationYaw+Math.PI));
 				break;
 			}
+			//ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 		}
 	}
