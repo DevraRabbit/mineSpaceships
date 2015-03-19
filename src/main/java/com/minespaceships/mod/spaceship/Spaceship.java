@@ -18,6 +18,8 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
+import energyStrategySystem.EnergyStrategySystem;
+import energyStrategySystem.IEnergyC;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
@@ -44,6 +46,7 @@ public class Spaceship implements Serializable{
 	private World world;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
+	private EnergyStrategySystem energySystem;
 	private boolean isResolved = true;
 	
 	private boolean canBeRemoved = true;
@@ -90,6 +93,7 @@ public class Spaceship implements Serializable{
 			assembler = new SpaceshipAssembler(blockMap.getOrigin());
 			refreshParts();
 		}
+		energySystem = new EnergyStrategySystem(assembler, world);
 		Shipyard.getShipyard().addShip(this);
 	}
 	
@@ -300,6 +304,12 @@ public class Spaceship implements Serializable{
 		if(state.getBlock() instanceof ISpaceshipPart){
 			assembler.put(state.getBlock().getClass(), pos);
 		}
+	}
+	public void onEnergyChange(){
+		energySystem.refresh();
+	}
+	public boolean hasEnergyFor(IEnergyC producer){
+		return energySystem.canBeActivated(producer);
 	}
 	
 	public void refreshParts(){

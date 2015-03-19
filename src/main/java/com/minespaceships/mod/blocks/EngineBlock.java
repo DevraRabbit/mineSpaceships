@@ -34,4 +34,9 @@ public class EngineBlock extends ActivatableBlock {
         this.setCreativeTab(CreativeTabs.tabMisc);
         EntityAnimal ea = new EntityCow(null);
 	}
+
+	@Override
+	public int getEnergy() {
+		return -1;
+	}
 }

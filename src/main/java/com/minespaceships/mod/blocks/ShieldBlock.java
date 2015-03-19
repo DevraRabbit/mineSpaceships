@@ -17,4 +17,9 @@ public class ShieldBlock extends ActivatableBlock {
 	public EnumWorldBlockLayer getBlockLayer() {
 		return EnumWorldBlockLayer.TRANSLUCENT;
 	}
+	
+	@Override
+	public int getEnergy() {
+		return -1;
+	}
 }
