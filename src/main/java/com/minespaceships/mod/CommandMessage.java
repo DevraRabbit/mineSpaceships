@@ -72,19 +72,20 @@ public class CommandMessage implements IMessage {
 	            	world = MinecraftServer.getServer().worldServerForDimension(dimension);
 	            	
 	            	command = moffset.group(3);
-	            	
-	            	ChatRegisterEntity ent = ((ChatRegisterEntity)world.getTileEntity(pos));
-	            	if(ent != null){
-            			ent.executeCommand(command, ctx.getServerHandler().playerEntity);
-	            	} else {
-	            		int i = 0;
-	            	}
+	            	//send it first so not everyone has to wait for the Server
 	            	List players = ((WorldServer)world).playerEntities;
 	            	for(Object o : players){
 	            		if(o instanceof EntityPlayerMP){
 	    	            	MineSpaceships.network.sendTo(message, (EntityPlayerMP)o);
 	            		}
 	            	}	
+	            	
+	            	ChatRegisterEntity ent = ((ChatRegisterEntity)world.getTileEntity(pos));
+	            	if(ent != null){
+            			ent.executeCommand(command, ctx.getServerHandler().playerEntity);
+	            	} else {
+	            		int i = 0;
+	            	}	            	
 	            } catch (Exception e) {
 	            	e.printStackTrace();
 	            	return null;
