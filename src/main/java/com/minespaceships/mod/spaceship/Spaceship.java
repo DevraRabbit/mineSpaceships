@@ -176,6 +176,8 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		//move the entities first to avoid long waiting times and weird bugs
+		moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
 		//list of positions that need to be removed in revers order to prevent other blocks from cracking
@@ -225,8 +227,8 @@ public class Spaceship implements Serializable{
 		while(reverseRemoval.hasPrevious()){
 			BlockCopier.removeBlock(world, reverseRemoval.previous());
 		}
-		//move the entities and move the ships measurements  
-		moveEntities(addDirection, turn);
+		//move the entities and move the ships measurements  moveEntities(addDirection, turn);
+		
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}
