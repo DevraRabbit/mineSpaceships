@@ -14,7 +14,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
 /**
  * A menu for the shield activate functionality.
  * @author ovae.
- * @version 20150312.
+ * @version 20150320.
  */
 public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 
@@ -93,10 +93,6 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 			System.err.println("ship is broken");
 		}
 		return "shield activate failed!\nPress 'm' to get back.";
-		/*
-		terminal.getChatRegisterEntity().getWorld().setRainStrength( 0f);
-		return ">> shield activated <<\nPress 'm' to get back.";
-		*/
 	}
 
 }

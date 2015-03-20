@@ -13,7 +13,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position up.
  * @author ovae.
- * @version 20150312.
+ * @version 20150320.
  */
 public class liftoffMenu extends Menu implements FunctionalMenu{
 
@@ -33,7 +33,7 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.liftoff, terminal.getPlayerEntity());
-		return SpaceshipCommands.liftoff(terminal);
+		return SpaceshipCommands.liftoff;
 	}
 
 }

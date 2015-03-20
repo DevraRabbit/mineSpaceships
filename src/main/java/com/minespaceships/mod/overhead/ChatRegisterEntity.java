@@ -40,7 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * 
  * @author DevraRabbit ,jh0ker, ovae.
- * @version 20150317.
+ * @version 20150320.
  */
 public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
@@ -113,22 +113,12 @@ public class ChatRegisterEntity extends TileEntity {
 		//open our console. 
 		Minecraft.getMinecraft().displayGuiScreen(terminal);
 
-		try{
-			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-			if(ship == null){
-				System.out.println("!!! >>NO SHIP.");
-			}else{
-				System.out.println("!!! >>YA SHIP."); 
-			}
-		}catch(Exception e){
-			
-		}
-		/*if(terminal.getChatRegisterEntity().getShip() == null){
+		if(Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld()) == null){
 			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
-		}else{*/
+		}else{
 			//Print out the menu in the console.
 			spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
-		//}
+		}
 		return terminal;
 	}
 
@@ -157,7 +147,7 @@ public class ChatRegisterEntity extends TileEntity {
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		if(side == Side.CLIENT){
 			//display the menu.
-			spaceshipMenu.display(command, this.terminal);
+		//	spaceshipMenu.display(command, this.terminal);
 			terminalMenu.onCommand(command, player, this, this.terminal);
 		}
 		//define a very first command to see if it works.

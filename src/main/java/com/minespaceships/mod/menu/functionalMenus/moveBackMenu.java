@@ -18,7 +18,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position back.
  * @author ovae.
- * @version 20150312.
+ * @version 20150320.
  */
 public class moveBackMenu extends Menu implements FunctionalParamMenu{
 
@@ -44,7 +44,7 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 			return "command can not be null.";
 		}
 		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveBack+" "+command, terminal.getPlayerEntity());
-		return SpaceshipCommands.moveBack+" "+command;
+		return SpaceshipCommands.moveBack;
 	}
 
 }

@@ -1,0 +1,21 @@
+[16:46:59] [Server thread/INFO]: Starting minecraft server version 1.8
+[16:47:05] [Server thread/INFO]: Loading properties
+[16:47:05] [Server thread/INFO]: Default game type: SURVIVAL
+[16:47:05] [Server thread/INFO]: Generating keypair
+[16:47:05] [Server thread/INFO]: Starting Minecraft server on *:25565
+[16:47:06] [Server thread/INFO]: Preparing level "world"
+[16:47:06] [Server thread/INFO]: Preparing start region for level 0
+[16:47:08] [Server thread/INFO]: Preparing spawn area: 30%
+[16:47:08] [Server thread/INFO]: Done (2.743s)! For help, type "help" or "?"
+[16:47:45] [User Authenticator #1/INFO]: UUID of player Ovae is 558fd25b-0372-432a-a986-a9f0e7457404
+[16:47:46] [Server thread/INFO]: Ovae[/127.0.0.1:42243] logged in with entity id 331 at (197.06626346647724, 115.0, 354.2484310453827)
+[16:47:46] [Server thread/INFO]: Ovae joined the game
+[16:47:51] [Server thread/WARN]: Can't keep up! Did the system time change, or is the server overloaded? Running 2031ms behind, skipping 40 tick(s)
+[16:49:58] [Server thread/INFO]: [Ovae: Set the time to 1000]
+[16:51:38] [Server thread/INFO]: Ovae lost connection: TextComponent{text='Disconnected', siblings=[], style=Style{hasParent=false, color=null, bold=null, italic=null, underlined=null, obfuscated=null, clickEvent=null, hoverEvent=null, insertion=null}}
+[16:51:38] [Server thread/INFO]: Ovae left the game
+[16:51:43] [User Authenticator #2/INFO]: UUID of player Ovae is 558fd25b-0372-432a-a986-a9f0e7457404
+[16:51:43] [Server thread/INFO]: Ovae[/127.0.0.1:42344] logged in with entity id 10945 at (208.71877783554808, 136.0, 353.42993812218333)
+[16:51:43] [Server thread/INFO]: Ovae joined the game
+[16:52:05] [Server thread/INFO]: Ovae lost connection: TextComponent{text='Disconnected', siblings=[], style=Style{hasParent=false, color=null, bold=null, italic=null, underlined=null, obfuscated=null, clickEvent=null, hoverEvent=null, insertion=null}}
+[16:52:05] [Server thread/INFO]: Ovae left the game

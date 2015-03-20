@@ -19,7 +19,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
 /**
  * A menu for the shields disable functionality.
  * @author ovae.
- * @version 20150312.
+ * @version 20150320.
  */
 public class ShieldDisableMenu extends Menu implements FunctionalMenu{
 
@@ -97,11 +97,6 @@ public class ShieldDisableMenu extends Menu implements FunctionalMenu{
 			System.err.println("ship is broken");
 		}
 		return "shield disable failed!\nPress 'm' to get back.";
-		/*
-		//Let it rain
-		terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
-		return ">> shield disabled <<\nPress 'm' to get back.";
-		*/
 	}
 
 }

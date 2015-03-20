@@ -13,7 +13,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  * This menu is the help menu witch explains to the user how to
  * use the menu structure and how to navigate in it.
  * @author ovae.
- * @version 20150312.
+ * @version 20150320.
  */
 public class HelpMenu extends Menu implements FunctionalMenu{
 
