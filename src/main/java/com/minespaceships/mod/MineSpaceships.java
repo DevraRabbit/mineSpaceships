@@ -35,6 +35,7 @@ public class MineSpaceships
     public static final String VERSION = "1.0";
     public static final String SpaceshipSavePath = "./Spaceships/";
     public static SimpleNetworkWrapper network;
+    public static SimpleNetworkWrapper spaceshipNetwork;
     
     private static int navigatorBlockId = 1000;
     
@@ -46,12 +47,7 @@ public class MineSpaceships
      * @param event
      */
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-    	
-
-        network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
-        network.registerMessage(CommandMessage.Handler.class, CommandMessage.class, 0, Side.SERVER);
-    	
+    public void preInit(FMLPreInitializationEvent event) {    	           	
     	Singleton = this;    	
     	proxy.preInit(event);
     }

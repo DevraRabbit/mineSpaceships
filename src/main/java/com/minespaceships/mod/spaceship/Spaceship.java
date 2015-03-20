@@ -18,6 +18,8 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
+import energyStrategySystem.EnergyStrategySystem;
+import energyStrategySystem.IEnergyC;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
@@ -38,12 +40,16 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class Spaceship implements Serializable{
 	private BlockPos origin;
 	private World world;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
+	private EnergyStrategySystem energySystem;
+	private boolean isResolved = true;
 	
 	private boolean canBeRemoved = true;
 	
@@ -55,7 +61,7 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
 		initializeBase();
-	}	
+	}
 	@Deprecated
 	public Spaceship(int[] originMeasurement){
 		world = (WorldServer)MinecraftServer.getServer().getEntityWorld();
@@ -85,8 +91,11 @@ public class Spaceship implements Serializable{
 		initializeBase();
 	}
 	private void initializeBase(){
-		assembler = new SpaceshipAssembler(blockMap.getOrigin());
-		refreshParts();
+		if(assembler == null){
+			assembler = new SpaceshipAssembler(blockMap.getOrigin());
+			refreshParts();
+		}
+		energySystem = new EnergyStrategySystem(assembler, world);
 		Shipyard.getShipyard().addShip(this);
 	}
 	
@@ -116,8 +125,8 @@ public class Spaceship implements Serializable{
 	
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
-		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
-		BlockPos maxSpan = blockMap.getMaxPos().subtract(origin);
+		BlockPos minSpan = Vec3Op.subtract(blockMap.getMinPos(), origin);
+		BlockPos maxSpan = Vec3Op.subtract(blockMap.getMaxPos(), origin);
 		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
 				origin.getX(), origin.getY(), origin.getZ(),
 				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
@@ -140,7 +149,7 @@ public class Spaceship implements Serializable{
 	@Deprecated
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
 		blockMap = new BlockMap(minPos);
-		BlockPos span = ((BlockPos) maxPos).subtract(minPos);
+		BlockPos span = Vec3Op.subtract(((BlockPos) maxPos), minPos);
 		for(int x = 0; x <= span.getX(); x++){
 			for(int y = 0; y <= span.getY(); y++){
 				for(int z = 0; z <= span.getZ(); z++){
@@ -153,10 +162,10 @@ public class Spaceship implements Serializable{
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin), world, Turn.LEFT);
+		moveTo(Vec3Op.subtract(position, origin), 0, world);
 	}
 	public void setTarget(BlockPos position, World world){
-		moveTo(position.subtract(origin), world);
+		moveTo(Vec3Op.subtract(position, origin), world);
 	}
 	public void moveTo(BlockPos addDirection) {
 		moveTo(addDirection, world, 0);
@@ -169,6 +178,9 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		//move the entities first to avoid long waiting times and weird bugs
+		if(side == Side.CLIENT)moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
 		//list of positions that need to be removed in revers order to prevent other blocks from cracking
@@ -218,15 +230,16 @@ public class Spaceship implements Serializable{
 		while(reverseRemoval.hasPrevious()){
 			BlockCopier.removeBlock(world, reverseRemoval.previous());
 		}
-		//move the entities and move the ships measurements  
-		moveEntities(addDirection, turn);
+		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
+		if(side == Side.SERVER)moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}
 	
 	private void moveMeasurements(BlockPos addDirection, int turn){
 		if(turn != 0){blockMap.rotate(origin, turn);}
-		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));		
+		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
+		//TODO: rotate assembler
 		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
@@ -251,6 +264,7 @@ public class Spaceship implements Serializable{
 				ent.setRotationYawHead((float) (ent.rotationYaw+Math.PI));
 				break;
 			}
+			//ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 		}
 	}
@@ -284,7 +298,7 @@ public class Spaceship implements Serializable{
 	private void removeSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.remove(state, pos);
+			assembler.remove(state.getBlock().getClass(), pos);
 		}
 	}
 	
@@ -295,8 +309,14 @@ public class Spaceship implements Serializable{
 	private void addSpaceshipPart(BlockPos pos){
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.put(state, pos);
+			assembler.put(state.getBlock().getClass(), pos);
 		}
+	}
+	public void onEnergyChange(){
+		energySystem.refresh();
+	}
+	public boolean hasEnergyFor(IEnergyC producer){
+		return energySystem.canBeActivated(producer);
 	}
 	
 	public void refreshParts(){
@@ -317,13 +337,37 @@ public class Spaceship implements Serializable{
 		for(BlockPos pos : positions){
 			data += pos.toLong()+"\n";
 		}
+		Set<Class> parts = assembler.getTypes();
+		for(Class c : parts){
+			data += c.getName()+"\n";
+			positions = assembler.getParts(c);
+			for(BlockPos pos : positions){
+				data += pos.toLong()+"\n";
+			}
+		}
 		return data;
 	}
 	public void fromData(String data) throws Exception{
 		String[] lines = data.split("\n");		
-		blockMap = new BlockMap(BlockPos.fromLong(Long.parseLong(lines[0])));
-		for(int i = 1; i < lines.length; i++){
-			blockMap.add(BlockPos.fromLong(Long.parseLong(lines[i])));			
+		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
+		blockMap = new BlockMap(ori);
+		assembler = new SpaceshipAssembler(ori);
+		this.origin = ori;
+		Class addedClass = null;
+		for(String s : lines){
+			if(addedClass == null){
+				try{
+					blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+				} catch(Exception e){
+					addedClass = Class.forName(s);
+				}
+			} else {
+				try{
+					assembler.put(addedClass, BlockPos.fromLong(Long.parseLong(s)));		
+				} catch(Exception e){
+					addedClass = Class.forName(s);
+				}
+			}
 		}
 	}
 	public boolean measuresEquals(Spaceship ship){
