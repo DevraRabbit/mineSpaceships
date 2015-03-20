@@ -87,18 +87,20 @@ public class EnergyStrategySystem {
 			Block block = world.getBlockState(p).getBlock();
 			if(block instanceof IEnergyC){
 				IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
-				for(ArrayList<Class> b: priorityList){
-					for(Class c: b){
+				for( int i=0; i<priorityList.size(); i++) { // in stead of for(ArrayList<Class> b: priorityList){
+					for(Class c: priorityList.get(i)){
 						if(c.isAssignableFrom(energyBlock.getClass())){
-							//TODO: implement addition here
+							posPriorityList.get(i).add(p); //right?
 						}
 					}
 				}
-			}
-			
-		}
+			}			
+	}
 		return posPriorityList;		
 	}
+
+	
+
 	
 }
 	
