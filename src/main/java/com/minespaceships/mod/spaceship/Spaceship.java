@@ -15,6 +15,7 @@ import javax.vecmath.Vector3d;
 import com.google.common.collect.ImmutableList;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
@@ -46,6 +47,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class Spaceship implements Serializable{
 	private BlockPos origin;
 	private World world;
+	private WorldMock analysingWorld;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
 	private EnergyStrategySystem energySystem;
@@ -96,6 +98,7 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
+		analysingWorld = new WorldMock(world);
 		Shipyard.getShipyard().addShip(this);
 	}
 	
