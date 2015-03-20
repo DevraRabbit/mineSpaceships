@@ -22,7 +22,6 @@ public class BlockMap {
 	private HashMap<BlockPos, Boolean> spannedRectangle;
 	private HashMap<BlockPos, Boolean> innerBlocks;
 	private boolean rekHelper = true;
-	private boolean callAdding = false;
 	private static int ff = 0;   //*****************REMOVE
 			
 	public BlockMap(BlockPos originPoint){
@@ -46,7 +45,6 @@ public class BlockMap {
 	public void add(BlockPos pos){
 		map.put(pos.subtract(origin), true);
 		resize(pos.subtract(origin));
-		pos = pos.subtract(origin);
 		spanRectangle();
 		recalculateOuterBlocks();
 		calculateOuterOutBlocks();
@@ -60,7 +58,6 @@ public class BlockMap {
 			}
 		}
 		if(hasOuterBlock){
-			if(callAdding )
 		checkAfterAdding(pos);
 		}		
 	}
@@ -70,9 +67,6 @@ public class BlockMap {
 	}
 	
 	public void remove(BlockPos pos, World world){
-		map.remove(pos.subtract(origin));
-		impendEdges(pos.subtract(origin), world);
-		pos = pos.subtract(origin);
 		ArrayList<BlockPos> neighbours= getNeighbours(pos);
 		boolean hasOuterNeighbour= false;
 		boolean hasInnerNeighbour=false;
@@ -95,7 +89,8 @@ public class BlockMap {
 		else{
 			innerBlocks.put(pos, true);
 		}
-	
+		map.remove(pos.subtract(origin));
+		impendEdges(pos.subtract(origin), world);
 	}
 	
 	public BlockPos getMaxPos(){
@@ -121,9 +116,6 @@ public class BlockMap {
 	 */
 	public void refreshVolumeBlocks()
 	{
-		if(!callAdding){
-			callAdding = true;
-		}
 		calculateOuterOutBlocks();  //initializes outerBlocks
 		spanRectangle();
 		outerBlocks.clear();
@@ -200,8 +192,7 @@ public class BlockMap {
 	}
 	
 	private void recCheckAfterAdding(BlockPos pos, HashMap possibleInnerRoom){
-		if(!map.containsKey(pos)&& !possibleInnerRoom.containsKey(pos))
-		{
+		if(!map.containsKey(pos)&& !possibleInnerRoom.containsKey(pos)){
 			if(outerOutBlocks.containsKey(pos)){
 				rekHelper = false;
 				possibleInnerRoom.clear();
@@ -215,6 +206,8 @@ public class BlockMap {
 			}
 			
 		}
+		
+		
 	}
 	
 	private ArrayList<BlockPos> getNeighbours(BlockPos aktPos){
