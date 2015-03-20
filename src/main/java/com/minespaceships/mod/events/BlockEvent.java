@@ -65,7 +65,7 @@ public class BlockEvent {
 		if (event.isCanceled()) return;
 		World world = event.world;
 		BlockPos pos = event.pos;
-
+		
 		Shipyard.getShipyard().blockPlaced(pos, world);
 	}
 	
@@ -89,7 +89,7 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		if (world.isRemote) {
-			Shipyard.getShipyard().getBlockInfo(pos, world);
+			Shipyard.getShipyard().getBlockInfo(pos,event.entityPlayer, world);
 		}
 	}
 }

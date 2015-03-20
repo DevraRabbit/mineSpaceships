@@ -2,7 +2,9 @@ package com.minespaceships.mod.menu;
 
 import java.util.ArrayList;
 
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Spaceship;
@@ -48,7 +50,7 @@ public class MenuDisplay {
 			return EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.";
 		}
 		if(menu instanceof FunctionalMenu){
-			return ((FunctionalMenu)menu).activate(command);
+			return ((FunctionalMenu)menu).activate(command, terminal);
 		}
 
 		root.setSelectedMenu(menu);
@@ -58,6 +60,15 @@ public class MenuDisplay {
 		int position = 1;
 		ArrayList<Menu> list = menu.getChildrenList();
 		for(Menu child: list){
+
+			/*
+			if(terminal.getChatRegisterEntity().isInvalid()){
+				BlockPos pos = terminal.getChatRegisterEntity().getPos();
+				World world = terminal.getChatRegisterEntity().getRemoteWorld();
+				terminal.setTileEntity(world.getTileEntity(pos));
+			}
+			*/
+
 			if(child instanceof FunctionalMenu || child instanceof FunctionalParamMenu){
 				out+= "    "+EnumChatFormatting.GREEN+"["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
 			}else{
@@ -72,12 +83,12 @@ public class MenuDisplay {
 	 * Displays the current selected menu.
 	 * @param command
 	 */
-	public void display(final String command){
+	public void display(final String command, CustomGuiChat terminal){
 		if(command.trim().isEmpty()){
 			terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", true);
 			return;
 		}
-		terminal.display(preparingOutput(root.switchMenu(command),command),true);
+		terminal.display(preparingOutput(root.switchMenu(command, terminal),command),true);
 	}
 
 	/**

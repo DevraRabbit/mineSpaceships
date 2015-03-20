@@ -16,20 +16,13 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
  */
 public class ShieldDisableMenu extends Menu implements FunctionalMenu{
 
-	//The terminal to write in.
-	private CustomGuiChat terminal;
-
 	/**
 	 * Creates a new menu, for the shields disable functionality.
 	 * @param name
 	 * @param terminal
 	 */
-	public ShieldDisableMenu(String name, CustomGuiChat terminal) {
+	public ShieldDisableMenu(String name) {
 		super(name);
-		if(terminal.equals(null)){
-			throw new IllegalArgumentException("terminal can not be null");
-		}
-		this.terminal = terminal;
 	}
 
 	/**
@@ -37,9 +30,9 @@ public class ShieldDisableMenu extends Menu implements FunctionalMenu{
 	 * @param command
 	 */
 	@Override
-	public String activate(String command) {
+	public String activate(String command, CustomGuiChat terminal) {
 		//Let it rain
-		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
+		terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
 		return ">> shield disabled <<\nPress 'm' to get back.";
 	}
 

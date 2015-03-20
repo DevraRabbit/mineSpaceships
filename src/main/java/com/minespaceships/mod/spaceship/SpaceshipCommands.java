@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.util.PhaserUtils;
 
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +17,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.World;
 
 /**
  * @author jannes
@@ -24,7 +25,7 @@ import net.minecraft.world.WorldServer;
  */
 public class SpaceshipCommands {
 
-	public static void init(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
+	public static void init(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
 		if(command.equals("init auto")){
 			try {
 				ChatRegisterEntity ent = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()));
@@ -52,7 +53,7 @@ public class SpaceshipCommands {
 		}
 	}
 	
-	public static void move(String command, final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+	public static void move(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		command = command.substring("move".length()).replaceAll("\\s", "");
 		
 		if((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()) != null){
@@ -101,7 +102,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos vec_move = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			ship.setTarget(vec_move.add(ship.getOrigin()));
-			commandBlock.setPos(commandBlock.getPos().add(vec_move));
+			//commandBlock.setPos(commandBlock.getPos().add(vec_move));
 			
 			player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
 		} else {
@@ -110,7 +111,7 @@ public class SpaceshipCommands {
 		}
 	}
 		
-	public static void status(final WorldServer worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+	public static void status(final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		
 		if((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()) != null){
 			ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
@@ -151,7 +152,30 @@ public class SpaceshipCommands {
 	
 	public static void debug(String command, final ChatRegisterEntity commandBlock){
 		if(command.equals("debug blockMap")){
-			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getRemoteWorld()).debugMap();
+
+		//	Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getRemoteWorld()).debugMap();
+
+			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getWorld()).debugMap();
+		}
+	}
+
+	public static void shoot(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
+		command = command.substring("shoot".length()).replaceAll("\\s", "");
+	
+		player.addChatComponentMessage(new ChatComponentText("IMMA FIRING MAH PHAZ0R!!"));
+		
+		Pattern poffset = Pattern.compile("([-+]?[0-9]*\\.*[0-9]+);([-+]?[0-9]*\\.*[0-9]+);([-+]?[0-9]*\\.*[0-9]+)");
+		Matcher moffset = poffset.matcher(command);
+		
+		if(moffset.matches()) {
+			Vec3 vec_dir = new Vec3(Double.valueOf(moffset.group(1)), Double.valueOf(moffset.group(2)), Double.valueOf(moffset.group(3)));
+			
+			PhaserUtils.shoot(commandBlock.getPos(), vec_dir, 10, 100, worldObj);
+			player.addChatComponentMessage(new ChatComponentText("Fired Phaser in direction (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
+		} else {
+			player.addChatComponentMessage(new ChatComponentText("shoot: Error processing intput"));
+			player.addChatComponentMessage(new ChatComponentText("usage: shoot #;#;#"));
+
 		}
 	}
 }

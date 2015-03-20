@@ -24,7 +24,6 @@ import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -42,57 +41,66 @@ import net.minecraft.world.WorldServer;
 
 public class Spaceship implements Serializable{
 	private BlockPos origin;
-	private WorldServer worldS;
+	private World world;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
+	private boolean isResolved = true;
 	
 	private boolean canBeRemoved = true;
 	
 	public static final int maxShipSize = 27000;
 
 	@Deprecated
-	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, WorldServer worldS){
+	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World world){
 		this.origin = origin;
-		this.worldS = worldS;
+		this.world = world;
 		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
 		initializeBase();
-	}	
+	}
 	@Deprecated
 	public Spaceship(int[] originMeasurement){
-		worldS = (WorldServer)MinecraftServer.getServer().getEntityWorld();
+		world = (WorldServer)MinecraftServer.getServer().getEntityWorld();
 		readOriginMeasurementArray(originMeasurement);
 		initializeBase();
 	}
 	
-	public Spaceship(BlockPos initial, WorldServer worldS) throws Exception{
+	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
-		blockMap = SpaceshipMath.getConnectedPositions(initial, Minecraft.getMinecraft().theWorld, maxShipSize);
+		blockMap = SpaceshipMath.getConnectedPositions(initial, world, maxShipSize);
 		if(blockMap == null){
 			throw new Exception("Ship is too huge or connected to the Ground");
 		}
 		this.origin = initial;
-		this.worldS = worldS;
+		this.world = world;
 		initializeBase();
 	}
-	public Spaceship(BlockMap blocks, WorldServer worldS){
+	public Spaceship(BlockMap blocks, World world){
 		blockMap = blocks;
-		this.worldS = worldS;
+		this.world = world;
 		initializeBase();
 	}	
-	public Spaceship(String s, WorldServer worldS)throws Exception {
+	public Spaceship(String s, World world)throws Exception {
 		this.fromData(s);
-		this.worldS = worldS;
+		this.world = world;
 		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
 	private void initializeBase(){
-		assembler = new SpaceshipAssembler(blockMap.getOrigin());
-		refreshParts();
+		if(assembler == null){
+			assembler = new SpaceshipAssembler(blockMap.getOrigin());
+			refreshParts();
+		}
 		Shipyard.getShipyard().addShip(this);
 	}
 	
 	public BlockPos getOrigin(){
 		return origin;
+	}
+	public BlockPos getMaxPos(){
+		return blockMap.getMaxPos();
+	}
+	public BlockPos getMinPos(){
+		return blockMap.getMinPos();
 	}
 	public boolean canBeRemoved(){
 		return canBeRemoved;
@@ -111,8 +119,8 @@ public class Spaceship implements Serializable{
 	
 	@Deprecated
 	public int[] getOriginMeasurementArray(){
-		BlockPos minSpan = blockMap.getMinPos().subtract(origin);
-		BlockPos maxSpan = blockMap.getMaxPos().subtract(origin);
+		BlockPos minSpan = Vec3Op.subtract(blockMap.getMinPos(), origin);
+		BlockPos maxSpan = Vec3Op.subtract(blockMap.getMaxPos(), origin);
 		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
 				origin.getX(), origin.getY(), origin.getZ(),
 				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
@@ -135,11 +143,11 @@ public class Spaceship implements Serializable{
 	@Deprecated
 	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
 		blockMap = new BlockMap(minPos);
-		BlockPos span = ((BlockPos) maxPos).subtract(minPos);
+		BlockPos span = Vec3Op.subtract(((BlockPos) maxPos), minPos);
 		for(int x = 0; x <= span.getX(); x++){
 			for(int y = 0; y <= span.getY(); y++){
 				for(int z = 0; z <= span.getZ(); z++){
-					//if(!worldS.isAirBlock(new BlockPos(x,y,z).add(minPos))){
+					//if(!world.isAirBlock(new BlockPos(x,y,z).add(minPos))){
 						blockMap.add(new BlockPos(x,y,z).add(minPos));
 					//}
 				}
@@ -148,18 +156,18 @@ public class Spaceship implements Serializable{
 		origin = Vec3Op.scale(span, 0.5);
 	}
 	public void setTarget(BlockPos position){
-		moveTo(position.subtract(origin), Turn.LEFT, worldS);
+		moveTo(Vec3Op.subtract(position, origin), 0, world);
 	}
-	public void setTarget(BlockPos position, WorldServer world){
-		moveTo(position.subtract(origin), world);
+	public void setTarget(BlockPos position, World world){
+		moveTo(Vec3Op.subtract(position, origin), world);
 	}
 	public void moveTo(BlockPos addDirection) {
-		moveTo(addDirection, worldS, 0);
-	}
-	public void moveTo(BlockPos addDirection, WorldServer world) {
 		moveTo(addDirection, world, 0);
 	}
-	public void moveTo(BlockPos addDirection, int turn, WorldServer world) {
+	public void moveTo(BlockPos addDirection, World world) {
+		moveTo(addDirection, world, 0);
+	}
+	public void moveTo(BlockPos addDirection, int turn, World world) {
 		moveTo(addDirection, world, turn);
 	}
 	
@@ -179,16 +187,18 @@ public class Spaceship implements Serializable{
 				BlockPos Pos = it.next();
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
-				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);			
-				EnumFacing facing = Turn.getFacing(state);
+				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);			
+				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
+				IBlockState neighborState = null;
 				if(facing != null){
-					facing = Turn.getNextFacing(facing, turn);
+					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
 					neighbor = nextPos.offset(facing.getOpposite());
+					neighborState = world.getBlockState(neighbor);
 				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos, turn);
+					BlockCopier.copyBlock(world, Pos, nextPos, turn);					
 					it.remove();
 					//remember to remove it
 					removal.add(Pos);
@@ -200,7 +210,7 @@ public class Spaceship implements Serializable{
 		if(!positions.isEmpty()){
 			for(BlockPos Pos : positions){
 				//force placement
-				BlockPos nextPos = Turn.getRotatedPos(world, Pos, this.origin, add, turn);	
+				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);	
 				BlockCopier.copyBlock(world, Pos, nextPos, turn);
 				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
 				removal.insertElementAt(Pos, 0);
@@ -212,7 +222,7 @@ public class Spaceship implements Serializable{
 			BlockCopier.removeBlock(world, reverseRemoval.previous());
 		}
 		//move the entities and move the ships measurements  
-		moveEntities(addDirection);
+		moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}
@@ -224,13 +234,26 @@ public class Spaceship implements Serializable{
 		origin = origin.add(addDirection);
 	}
 	@Deprecated
-	private void moveEntities(BlockPos addDirection){
-		List<Entity> entities = worldS.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos().add(1,1,1)));
+	private void moveEntities(BlockPos addDirection, int turn){
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos().add(1,1,1)));
 		for(Entity ent : entities){			
 			if(ent instanceof EntityPlayer){
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));
 			}
-			Vec3 newPos = ent.getPositionVector().add(new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ()));
+			Vec3 addDir = new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ());
+			Vec3 orig = new Vec3(origin.getX(), origin.getY(), origin.getZ());
+			Vec3 newPos = Turn.getRotatedPos(ent.getPositionVector(), orig, addDir, turn);
+			switch(turn){
+			case Turn.LEFT:
+				ent.setRotationYawHead((float) (ent.rotationYaw+Math.PI/2));
+				break;
+			case Turn.RIGHT:
+				ent.setRotationYawHead((float) (ent.rotationYaw-Math.PI/2));
+				break;
+			case Turn.AROUND:
+				ent.setRotationYawHead((float) (ent.rotationYaw+Math.PI));
+				break;
+			}
 			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 		}
 	}
@@ -241,12 +264,12 @@ public class Spaceship implements Serializable{
 		sb.append("minPosition: " + blockMap.getMinPos().toString());
 		sb.append("\nmaxPosition: " + blockMap.getMaxPos().toString());
 		sb.append("\norigin: " + origin.toString());
-		sb.append("\nworldServer: " + worldS == null ? "Not Known.\n" : "Known\n");
+		sb.append("\nworlderver: " + world == null ? "Not Known.\n" : "Known\n");
 		return sb.toString();
 	}
 	
-	public WorldServer getWorld() {
-		return this.worldS;
+	public World getWorld() {
+		return this.world;
 	}
 	
 	public Boolean containsBlock(BlockPos pos) {
@@ -254,7 +277,7 @@ public class Spaceship implements Serializable{
 	}
 	
 	public boolean removeBlock(BlockPos pos) {
-		this.blockMap.remove(pos, Minecraft.getMinecraft().theWorld);
+		this.blockMap.remove(pos);
 		removeSpaceshipPart(pos);
 		if(getNavigatorCount() <= 0){
 			return true;
@@ -262,9 +285,9 @@ public class Spaceship implements Serializable{
 		return false;
 	}
 	private void removeSpaceshipPart(BlockPos pos){
-		IBlockState state = worldS.getBlockState(pos);
+		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.remove(state, pos);
+			assembler.remove(state.getBlock().getClass(), pos);
 		}
 	}
 	
@@ -273,9 +296,9 @@ public class Spaceship implements Serializable{
 		addSpaceshipPart(pos);
 	}
 	private void addSpaceshipPart(BlockPos pos){
-		IBlockState state = worldS.getBlockState(pos);
+		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof ISpaceshipPart){
-			assembler.put(state, pos);
+			assembler.put(state.getBlock().getClass(), pos);
 		}
 	}
 	
@@ -297,21 +320,75 @@ public class Spaceship implements Serializable{
 		for(BlockPos pos : positions){
 			data += pos.toLong()+"\n";
 		}
+		Set<Class> parts = assembler.getTypes();
+		for(Class c : parts){
+			data += c.getName()+"\n";
+			positions = assembler.getParts(c);
+			for(BlockPos pos : positions){
+				data += pos.toLong()+"\n";
+			}
+		}
 		return data;
 	}
 	public void fromData(String data) throws Exception{
 		String[] lines = data.split("\n");		
-		blockMap = new BlockMap(BlockPos.fromLong(Long.parseLong(lines[0])));
-		for(int i = 1; i < lines.length; i++){
-			blockMap.add(BlockPos.fromLong(Long.parseLong(lines[i])));			
+		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
+		blockMap = new BlockMap(ori);
+		assembler = new SpaceshipAssembler(ori);
+		this.origin = ori;
+		Class addedClass = null;
+		for(String s : lines){
+			if(addedClass == null){
+				try{
+					blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+				} catch(Exception e){
+					addedClass = Class.forName(s);
+				}
+			} else {
+				try{
+					assembler.put(addedClass, BlockPos.fromLong(Long.parseLong(s)));		
+				} catch(Exception e){
+					addedClass = Class.forName(s);
+				}
+			}
 		}
 	}
 	public boolean measuresEquals(Spaceship ship){
 		return ship.blockMap.getMaxPos().equals(blockMap.getMaxPos()) &&
 				ship.blockMap.getMinPos().equals(blockMap.getMinPos()) &&
-				ship.getWorld() == worldS;
+				ship.getWorld() == world;
 	}
 	public void debugMap(){
-		blockMap.showDebug(worldS);
+		blockMap.showDebug(world);
+	}
+
+	/**
+	 * Moves the spaceship to a target position.
+	 * These method check also if the target position is a valid position.
+	 * @param position
+	 */
+	public void move(final BlockPos position){
+		if(position == null){
+			throw new IllegalArgumentException("The target position can not be null");
+		}
+
+		double x = position.getX();
+		double y = position.getY();
+		double z = position.getZ();
+		double maxWorldHeight = this.world.getHeight();
+		BlockPos maxShipHeight = getMaxPos();
+		BlockPos minShipHeight = getMinPos();
+		double shipHeight = maxShipHeight.getY()-minShipHeight.getY();
+
+		//Troubleshooting for the world height out of bounds.
+		if(position.getY() >= maxWorldHeight){
+			this.setTarget(new BlockPos(x,(maxWorldHeight-shipHeight),z));
+		}
+		if(position.getY() <= 0){
+			this.setTarget(new BlockPos(x,(0+shipHeight),z));
+		}
+
+		//Valid position
+		this.setTarget(new BlockPos(x,y,z));
 	}
 }
