@@ -459,7 +459,9 @@ public class BlockMap {
 			}
 			else
 			{
+				System.out.println("angefangen");
 				refreshVolumeBlocks();
+				System.out.println("beendet");
 				ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
 				Set<BlockPos> keys = outerBlocks.keySet();
 				for(BlockPos pos : keys){
