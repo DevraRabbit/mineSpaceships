@@ -185,7 +185,7 @@ public class WorldMock extends World {
     }
     @Override
     public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
-    {
+    {    	
         setBlocks.add(pos);
         return true;
     }

@@ -47,7 +47,6 @@ import net.minecraftforge.fml.relauncher.Side;
 public class Spaceship implements Serializable{
 	private BlockPos origin;
 	private World world;
-	private WorldMock analysingWorld;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
 	private EnergyStrategySystem energySystem;
@@ -98,7 +97,6 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
-		analysingWorld = new WorldMock(world);
 		Shipyard.getShipyard().addShip(this);
 	}
 	
@@ -182,6 +180,7 @@ public class Spaceship implements Serializable{
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		WorldMock startMock = new WorldMock(world);
 		//move the entities first to avoid long waiting times and weird bugs
 		if(side == Side.CLIENT)moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
@@ -209,11 +208,13 @@ public class Spaceship implements Serializable{
 					neighborState = world.getBlockState(neighbor);
 				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
-					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos, turn);					
-					it.remove();
-					//remember to remove it
-					removal.add(Pos);
+					if(tryCopy(startMock, Pos, nextPos, turn)){
+						//build the buildable block
+						BlockCopier.copyBlock(world, Pos, nextPos, turn);					
+						it.remove();
+						//remember to remove it
+						removal.add(Pos);
+					}
 				} 
 			}
 			i--;
@@ -237,6 +238,11 @@ public class Spaceship implements Serializable{
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
+	}
+	
+	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
+		BlockCopier.copyBlock(startWorld, start, end, turn);	
+		return startWorld.nextRemovedBlocks().size() == 0;
 	}
 	
 	private void moveMeasurements(BlockPos addDirection, int turn){
