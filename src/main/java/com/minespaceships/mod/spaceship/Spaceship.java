@@ -257,6 +257,7 @@ public class Spaceship implements Serializable{
 		} catch (Exception e){
 			System.out.println("An Error occured during Block Check. Moving anyway");
 		}
+		startWorld.nextSetBlocks();
 		return startWorld.nextRemovedBlocks().size() > 1;
 	}
 	private boolean tryRemove(WorldMock startWorld, BlockPos end){
