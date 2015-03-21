@@ -39,7 +39,7 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		
-		Shipyard.getShipyard().blockBroken(pos, world);
+		Shipyard.getShipyard(event.world).blockRemoved(pos, world);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		
-		Shipyard.getShipyard().blockPlaced(pos, world);
+		Shipyard.getShipyard(event.world).blockPlaced(pos, world);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		
-		Shipyard.getShipyard().blockPlaced(pos, world);
+		Shipyard.getShipyard(event.world).blockPlaced(pos, world);
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class BlockEvent {
 		World world = event.world;
 		List<BlockPos> posList = event.getAffectedBlocks();
 		for(BlockPos pos: posList) {
-			Shipyard.getShipyard().blockBroken(pos, world);
+			Shipyard.getShipyard(event.world).blockRemoved(pos, world);
 		}
 	}
 	
@@ -89,7 +89,7 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		if (world.isRemote) {
-			Shipyard.getShipyard().getBlockInfo(pos,event.entityPlayer, world);
+			Shipyard.getShipyard(event.world).getBlockInfo(pos,event.entityPlayer, world);
 		}
 	}
 }

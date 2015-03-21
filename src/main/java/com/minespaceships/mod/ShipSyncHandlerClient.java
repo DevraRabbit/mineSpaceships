@@ -24,8 +24,8 @@ public class ShipSyncHandlerClient implements IMessageHandler<CommandMessage, IM
 	
     @Override
     public IMessage onMessage(CommandMessage message, MessageContext ctx) {
-    	Side side = FMLCommonHandler.instance().getEffectiveSide();
-    	Shipyard.getShipyard().load(message.getText(), Minecraft.getMinecraft().theWorld);    	
+//    	Side side = FMLCommonHandler.instance().getEffectiveSide();
+//    	Shipyard.getShipyard().load(message.getText(), Minecraft.getMinecraft().theWorld);    	
         return null;
     }
 }

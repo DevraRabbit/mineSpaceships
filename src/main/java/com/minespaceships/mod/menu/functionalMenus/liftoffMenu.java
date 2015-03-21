@@ -29,7 +29,7 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 			x = terminal.getChatRegisterEntity().getPos().getX();
 			y = terminal.getChatRegisterEntity().getPos().getY()+20;
 			z = terminal.getChatRegisterEntity().getPos().getZ();
-			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
+			Spaceship ship = Shipyard.getShipyard(terminal.getChatRegisterEntity().getWorld()).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 			BlockPos position = new BlockPos(x, y, z);
 
 			if(ship == null) {

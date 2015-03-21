@@ -16,13 +16,13 @@ public class ShipSyncHandlerServer implements IMessageHandler<CommandMessage, IM
 	
     @Override
     public IMessage onMessage(CommandMessage message, MessageContext ctx) {
-    	Side side = FMLCommonHandler.instance().getEffectiveSide();
-    	int shipCount = Integer.parseInt(message.getText());
-    	if(shipCount != Shipyard.getShipyard().getShipCount()){
-	    	World world = ctx.getServerHandler().playerEntity.worldObj;
-	    	String ships = Shipyard.getShipyard().loadShips(world);
-			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), ctx.getServerHandler().playerEntity);
-    	}
+//    	Side side = FMLCommonHandler.instance().getEffectiveSide();
+//    	int shipCount = Integer.parseInt(message.getText());
+//    	if(shipCount != Shipyard.getShipyard().getShipCount()){
+//	    	World world = ctx.getServerHandler().playerEntity.worldObj;
+//	    	String ships = Shipyard.getShipyard().loadShips(world);
+//			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), ctx.getServerHandler().playerEntity);
+//    	}
     	
         return null;
     }

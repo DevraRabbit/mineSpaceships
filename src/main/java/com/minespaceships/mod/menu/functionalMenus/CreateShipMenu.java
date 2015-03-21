@@ -33,7 +33,7 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	public String activate(String command, CustomGuiChat terminal) {
 		try {
 			Spaceship spaceship = terminal.getChatRegisterEntity().getShip();
-			Shipyard.getShipyard().createShip(terminal.getChatRegisterEntity().getPos() , terminal.getChatRegisterEntity().getWorld());
+			Shipyard.getShipyard(terminal.getChatRegisterEntity().getWorld()).createShip(terminal.getChatRegisterEntity().getPos() , terminal.getChatRegisterEntity().getWorld());
 			String out="";
 			out+= EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\n"
 				+"Press 'Esc' and reopen the menu.";

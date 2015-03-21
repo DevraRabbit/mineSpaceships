@@ -22,10 +22,10 @@ public class PlayerTracker {
 	@SideOnly(Side.SERVER)
 	public void onPlayerJoin(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityPlayer){
-			MinecraftForge.EVENT_BUS.post(new Save(event.world));
-			Shipyard.getShipyard().safe(new Save(event.world));
-			String ships = Shipyard.getShipyard().loadShips(event.world);
-			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);
+//			MinecraftForge.EVENT_BUS.post(new Save(event.world));
+//			Shipyard.getShipyard(event.world).safe(new Save(event.world));
+//			String ships = Shipyard.getShipyard().loadShips(event.world);
+//			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);
 			//sendShipRequest();
 		}
 	}
@@ -43,6 +43,6 @@ public class PlayerTracker {
 //	}
 	
 	public static void sendShipRequest(){
-		MineSpaceships.spaceshipNetwork.sendToServer(new CommandMessage(Shipyard.getShipyard().getShipCount()+""));
+		//MineSpaceships.spaceshipNetwork.sendToServer(new CommandMessage(Shipyard.getShipyard().getShipCount()+""));
 	}
 }

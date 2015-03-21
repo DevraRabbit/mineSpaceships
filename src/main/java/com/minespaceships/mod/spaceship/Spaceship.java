@@ -98,7 +98,7 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
-		Shipyard.getShipyard().addShip(this);
+		Shipyard.getShipyard(world).addShip(this);
 	}
 	
 	public BlockPos getOrigin(){

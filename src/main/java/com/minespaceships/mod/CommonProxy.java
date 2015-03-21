@@ -40,7 +40,6 @@ public class CommonProxy {
     	// Register event listener
     	// http://www.minecraftforum.net/forums/archive/tutorials/931112-forge-4-x-events-howto
     	MinecraftForge.EVENT_BUS.register(new BlockEvent());
-    	MinecraftForge.EVENT_BUS.register(Shipyard.getShipyard());
     	MinecraftForge.EVENT_BUS.register(new PlayerTracker());
     }
     

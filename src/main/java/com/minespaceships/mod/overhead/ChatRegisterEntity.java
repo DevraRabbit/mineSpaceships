@@ -134,7 +134,7 @@ public class ChatRegisterEntity extends TileEntity {
 	}
 	
 	public Spaceship getShip() {
-		return Shipyard.getShipyard().getShip(pos, worldObj);
+		return Shipyard.getShipyard(worldObj).getShip(pos, worldObj);
 	}	
 	/**
 	 * Executes a command unrelated if Server or client side.
