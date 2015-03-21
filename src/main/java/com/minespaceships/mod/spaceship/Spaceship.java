@@ -15,6 +15,7 @@ import javax.vecmath.Vector3d;
 import com.google.common.collect.ImmutableList;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
@@ -179,6 +180,7 @@ public class Spaceship implements Serializable{
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		WorldMock startMock = new WorldMock(world);
 		//move the entities first to avoid long waiting times and weird bugs
 		if(side == Side.CLIENT)moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
@@ -206,11 +208,13 @@ public class Spaceship implements Serializable{
 					neighborState = world.getBlockState(neighbor);
 				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
-					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos, turn);					
-					it.remove();
-					//remember to remove it
-					removal.add(Pos);
+					if(tryCopy(startMock, Pos, nextPos, turn)){
+						//build the buildable block
+						BlockCopier.copyBlock(world, Pos, nextPos, turn);					
+						it.remove();
+						//remember to remove it
+						removal.add(Pos);
+					}
 				} 
 			}
 			i--;
@@ -225,15 +229,43 @@ public class Spaceship implements Serializable{
 				removal.insertElementAt(Pos, 0);
 			}
 		}
-		//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+		for(int j = 0; j < 3 && !removal.isEmpty(); j++){
+			//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+			ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+			while(reverseRemoval.hasPrevious()){
+				BlockPos prev = reverseRemoval.previous();
+				if(tryRemove(startMock, prev)){
+					BlockCopier.removeBlock(world, prev);
+				}
+			}
+		}
+		//remove the ones that didn't pass
 		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
 		while(reverseRemoval.hasPrevious()){
-			BlockCopier.removeBlock(world, reverseRemoval.previous());
+			BlockPos prev = reverseRemoval.previous();
+			BlockCopier.removeBlock(world, prev);
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
+	}
+	
+	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
+		try{
+			BlockCopier.copyBlock(startWorld, start, end, turn);	
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
+		return startWorld.nextRemovedBlocks().size() > 1;
+	}
+	private boolean tryRemove(WorldMock startWorld, BlockPos end){
+		try{
+			BlockCopier.removeBlock(startWorld, end);	
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
+		return startWorld.nextRemovedBlocks().size() == 0;
 	}
 	
 	private void moveMeasurements(BlockPos addDirection, int turn){
