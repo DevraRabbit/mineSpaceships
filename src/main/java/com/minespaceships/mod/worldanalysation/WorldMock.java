@@ -82,7 +82,7 @@ public class WorldMock extends World {
 	private ArrayList<BlockPos> tileEntityRemoved;
 	
 	public WorldMock(World infoContainer) {
-		super(null, null, null, null, true);
+		super(null, null,infoContainer.provider, null, true);
 		world = infoContainer;
 		setBlocks = new ArrayList<BlockPos>();
 		removedBlocks = new ArrayList<BlockPos>();

@@ -229,10 +229,21 @@ public class Spaceship implements Serializable{
 				removal.insertElementAt(Pos, 0);
 			}
 		}
-		//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+		for(int j = 0; j < 3 && !removal.isEmpty(); j++){
+			//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+			ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+			while(reverseRemoval.hasPrevious()){
+				BlockPos prev = reverseRemoval.previous();
+				if(tryRemove(startMock, prev)){
+					BlockCopier.removeBlock(world, prev);
+				}
+			}
+		}
+		//remove the ones that didn't pass
 		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
 		while(reverseRemoval.hasPrevious()){
-			BlockCopier.removeBlock(world, reverseRemoval.previous());
+			BlockPos prev = reverseRemoval.previous();
+			BlockCopier.removeBlock(world, prev);
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
@@ -241,7 +252,19 @@ public class Spaceship implements Serializable{
 	}
 	
 	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
-		BlockCopier.copyBlock(startWorld, start, end, turn);	
+		try{
+			BlockCopier.copyBlock(startWorld, start, end, turn);	
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
+		return startWorld.nextRemovedBlocks().size() > 1;
+	}
+	private boolean tryRemove(WorldMock startWorld, BlockPos end){
+		try{
+			BlockCopier.removeBlock(startWorld, end);	
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
 		return startWorld.nextRemovedBlocks().size() == 0;
 	}
 	
