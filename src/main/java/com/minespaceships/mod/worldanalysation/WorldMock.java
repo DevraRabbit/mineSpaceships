@@ -201,7 +201,7 @@ public class WorldMock extends World {
     		removedBlocks.add(pos);
     	}
         newState.getBlock().onBlockAdded(this, pos, newState);
-        notifyNeighborsOfStateChange(pos, newState.getBlock());
+        this.notifyNeighborsOfStateChange(pos, newState.getBlock());
         return true;
     }
 
@@ -211,7 +211,7 @@ public class WorldMock extends World {
     public boolean setBlockToAir(BlockPos pos)
     {
         removedBlocks.add(pos);
-        notifyNeighborsOfStateChange(pos, Block.getStateById(0).getBlock());
+        //notifyNeighborsOfStateChange(pos, Block.getStateById(0).getBlock());
         return true;
     }
     @Override

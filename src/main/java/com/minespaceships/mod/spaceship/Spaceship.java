@@ -24,6 +24,7 @@ import energyStrategySystem.IEnergyC;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
+import net.minecraft.block.BlockWallSign;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -202,11 +203,12 @@ public class Spaceship implements Serializable{
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
-				if(facing != null){
-					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
-					neighbor = nextPos.offset(facing.getOpposite());
-					neighborState = world.getBlockState(neighbor);
-				}
+				facing = null;
+//				if(facing != null){
+//					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
+//					neighbor = nextPos.offset(facing.getOpposite());
+//					neighborState = world.getBlockState(neighbor);
+//				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					if(tryCopy(startMock, Pos, nextPos, turn)){
 						//build the buildable block
@@ -258,15 +260,27 @@ public class Spaceship implements Serializable{
 			System.out.println("An Error occured during Block Check. Moving anyway");
 		}
 		startWorld.nextSetBlocks();
-		return startWorld.nextRemovedBlocks().size() > 1;
+		boolean out = startWorld.nextRemovedBlocks().size() == 0;
+		return out;
 	}
 	private boolean tryRemove(WorldMock startWorld, BlockPos end){
 		try{
-			BlockCopier.removeBlock(startWorld, end);	
+//			if(startWorld.getBlockState(end).getBlock() instanceof BlockWallSign){
+//				int i = 0;
+//			}
+			BlockCopier.removeBlock(startWorld, end);			
+			startWorld.notifyNeighborsOfStateChange(end, Block.getStateById(0).getBlock());
 		} catch (Exception e){
 			System.out.println("An Error occured during Block Check. Moving anyway");
 		}
-		return startWorld.nextRemovedBlocks().size() == 0;
+		startWorld.nextSetBlocks();
+		int size = startWorld.nextRemovedBlocks().size();
+		if(size ==1){
+			return size == 1;
+		} else {
+			IBlockState state = startWorld.getBlockState(end);
+			return size == 1;
+		}
 	}
 	
 	private void moveMeasurements(BlockPos addDirection, int turn){
