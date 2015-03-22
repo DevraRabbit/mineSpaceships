@@ -3,6 +3,7 @@ package com.minespaceships.mod.events;
 import java.util.List;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -39,7 +40,11 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		
-		Shipyard.getShipyard(event.world).blockRemoved(pos, world);
+		if(Shipyard.getShipyard(event.world).removeBlock(pos, world)){
+			if(!world.isRemote){
+				event.getPlayer().addChatComponentMessage(new ChatComponentText("Block removed"));
+			}
+		}
 	}
 	
 	/**
@@ -52,7 +57,11 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		
-		Shipyard.getShipyard(event.world).blockPlaced(pos, world);
+		if(Shipyard.getShipyard(event.world).placeBlock(pos, world)){
+			if(!world.isRemote){
+				event.player.addChatComponentMessage(new ChatComponentText("Block added"));
+			}
+		}
 	}
 	
 	/**
@@ -66,7 +75,11 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		
-		Shipyard.getShipyard(event.world).blockPlaced(pos, world);
+		if(Shipyard.getShipyard(event.world).placeBlock(pos, world)){
+			if(!world.isRemote){
+				event.player.addChatComponentMessage(new ChatComponentText("Block added"));
+			}
+		}
 	}
 	
 	/**
@@ -79,7 +92,7 @@ public class BlockEvent {
 		World world = event.world;
 		List<BlockPos> posList = event.getAffectedBlocks();
 		for(BlockPos pos: posList) {
-			Shipyard.getShipyard(event.world).blockRemoved(pos, world);
+			Shipyard.getShipyard(event.world).removeBlock(pos, world);
 		}
 	}
 	
@@ -88,8 +101,8 @@ public class BlockEvent {
 		if (event.isCanceled()) return;
 		World world = event.world;
 		BlockPos pos = event.pos;
-		if (world.isRemote) {
-			Shipyard.getShipyard(event.world).getBlockInfo(pos,event.entityPlayer, world);
+		if (!world.isRemote) {
+			Shipyard.getShipyard(event.world).sendBlockInfo(pos,event.entityPlayer, world);
 		}
 	}
 }

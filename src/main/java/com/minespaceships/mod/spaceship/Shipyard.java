@@ -35,8 +35,6 @@ public class Shipyard {
 	public static final String SPACESHIP_TAG = "//Spaceship";
 	public static final String COMPOUND_KEY_BASE = "Shipyard";
 	
-	private ShipyardSaveCompound saveCompound;
-	
 	private Vector<Spaceship> ships;
 	private World world;
 	
@@ -81,13 +79,11 @@ public class Shipyard {
 					}
 				}
 				ships.add(ship);
-				saveCompound.markDirty();
 			}
 		}
 	}
 	public void removeShip(Spaceship ship){
 		ships.remove(ship);
-		saveCompound.markDirty();
 	}
 	
 	public Spaceship getShip(BlockPos pos, World world){
@@ -112,16 +108,20 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void blockRemoved(final BlockPos pos, final World world) {
+	public boolean removeBlock(final BlockPos pos, final World world) {
+		boolean hasRemoved = false;
 		for (Iterator<Spaceship> it = ships.iterator(); it.hasNext();) {
 			Spaceship ship = it.next();
 			if (ship.getWorld() == world) {
 				if (ship.containsBlock(pos)) {
-					if(ship.removeBlock(pos)){it.remove();}
-					saveCompound.markDirty();
+					if(ship.removeBlock(pos)){
+						it.remove();
+					}
+					hasRemoved = true;
 				}
 			}
 		}
+		return hasRemoved;
 	}
 	
 	/**
@@ -129,18 +129,16 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void blockPlaced(final BlockPos pos, final World world) {
-		if (ships.isEmpty()) return;
-		
+	public boolean placeBlock(final BlockPos pos, final World world) {
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
 				if (ship.isNeighboringBlock(pos)) {
 					ship.addBlock(pos);
-					saveCompound.markDirty();
-					break;
+					return true;
 				}
 			}
-		}		
+		}	
+		return false;
 	}
 	
 	/**
@@ -148,7 +146,7 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void getBlockInfo(final BlockPos pos, final EntityPlayer player, final World world) {
+	public void sendBlockInfo(final BlockPos pos, final EntityPlayer player, final World world) {
 		if (ships.isEmpty()) {
 			player.addChatComponentMessage(new ChatComponentText("false - no ships existing"));
 			return;
@@ -210,6 +208,5 @@ public class Shipyard {
 	public void writeToNBT(NBTTagCompound nbt) {
 		System.out.println("Saving Shipyard on World "+world.getWorldInfo().getWorldName());
 		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe());
-		saveCompound.setDirty(false);
 	}
 }
