@@ -69,7 +69,6 @@ public class ChatRegisterEntity extends TileEntity {
 			par1.setString(yard.getCompoundKey(), Shipyard.spaceshipToReadableData(ship));
 		}
 	    super.writeToNBT(par1); 
-	    this.markDirty();
 	}
 
 	@Override
