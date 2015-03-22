@@ -41,7 +41,7 @@ public class Shipyard {
 	private World world;
 	
 	protected Shipyard(World world) {
-		COMPOUND_KEY = COMPOUND_KEY_BASE;// + world.provider.getDimensionId();
+		COMPOUND_KEY = COMPOUND_KEY_BASE + world.provider.getDimensionId();
 		this.world = world;
 		ships = new Vector<Spaceship>();
 		MapStorage storage = world.getPerWorldStorage();
@@ -49,6 +49,7 @@ public class Shipyard {
 		if(saveCompound == null){
 			saveCompound = new ShipyardSaveCompound(COMPOUND_KEY);
 		}
+		saveCompound.setShipyard(this);
 		storage.setData(COMPOUND_KEY, saveCompound);
 	}
 	
@@ -95,10 +96,10 @@ public class Shipyard {
 	
 	@Deprecated
 	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World worldS){
-		new Spaceship(minSpan, origin, maxSpan, worldS);
+		addShip(new Spaceship(minSpan, origin, maxSpan, worldS));
 	}
 	public void createShip(BlockPos initial, World worldS) throws Exception{
-		new Spaceship(initial, worldS);
+		addShip(new Spaceship(initial, worldS));
 	}
 	
 	/**
@@ -195,7 +196,6 @@ public class Shipyard {
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt) {
-		Shipyard syard = Shipyard.getShipyard(world);
 		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
 		String ships = nbt.getString(COMPOUND_KEY);
 		load(ships);
