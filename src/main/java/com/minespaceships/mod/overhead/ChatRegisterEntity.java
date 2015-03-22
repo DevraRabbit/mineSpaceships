@@ -9,6 +9,7 @@ import com.minespaceships.mod.events.PlayerTracker;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
+import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
@@ -25,6 +26,9 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -41,7 +45,7 @@ public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
 	
-	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
+	private static String dimension = "dimension";
 	
 	public ChatRegisterEntity() {
 		super();		
@@ -57,15 +61,38 @@ public class ChatRegisterEntity extends TileEntity {
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1)
-	{
-	   super.writeToNBT(par1); 
+	{		
+		Shipyard yard = Shipyard.getShipyard(worldObj);
+		Spaceship ship = yard.getShip(pos, worldObj);
+		if(ship != null){
+			par1.setInteger(dimension, worldObj.provider.getDimensionId());
+			par1.setString(yard.getCompoundKey(), Shipyard.spaceshipToReadableData(ship));
+		}
+	    super.writeToNBT(par1); 
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1)
 	{
-	   super.readFromNBT(par1);
+		int id = par1.getInteger(dimension);
+		String data = par1.getString(Shipyard.getCompoundKey(id));
+		if(!data.isEmpty()){
+			AllShipyards.putData(id, data);
+		}
+	    super.readFromNBT(par1);
 	}
+	@Override
+   public Packet getDescriptionPacket()
+   {
+       NBTTagCompound syncData = new NBTTagCompound();
+       this.writeToNBT(syncData);
+       return new S35PacketUpdateTileEntity(this.pos, 1, syncData);
+   }
+   @Override
+   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+   {
+	   readFromNBT(pkt.getNbtCompound());
+   }
 
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player

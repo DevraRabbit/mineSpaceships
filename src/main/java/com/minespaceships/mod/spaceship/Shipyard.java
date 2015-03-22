@@ -14,6 +14,7 @@ import java.util.Vector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -33,7 +34,6 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 public class Shipyard {
 	public static final String SPACESHIP_TAG = "//Spaceship";
 	public static final String COMPOUND_KEY_BASE = "Shipyard";
-	private String COMPOUND_KEY = "";
 	
 	private ShipyardSaveCompound saveCompound;
 	
@@ -41,16 +41,21 @@ public class Shipyard {
 	private World world;
 	
 	protected Shipyard(World world) {
-		COMPOUND_KEY = COMPOUND_KEY_BASE + world.provider.getDimensionId();
 		this.world = world;
 		ships = new Vector<Spaceship>();
-		MapStorage storage = world.getPerWorldStorage();
-		saveCompound = (ShipyardSaveCompound) storage.loadData(ShipyardSaveCompound.class, COMPOUND_KEY);
-		if(saveCompound == null){
-			saveCompound = new ShipyardSaveCompound(COMPOUND_KEY);
-		}
-		saveCompound.setShipyard(this);
-		storage.setData(COMPOUND_KEY, saveCompound);
+//		MapStorage storage = world.getPerWorldStorage();
+//		saveCompound = (ShipyardSaveCompound) storage.loadData(ShipyardSaveCompound.class, COMPOUND_KEY);
+//		if(saveCompound == null){
+//			saveCompound = new ShipyardSaveCompound(COMPOUND_KEY);
+//		}
+//		saveCompound.setShipyard(this);
+//		storage.setData(COMPOUND_KEY, saveCompound);
+	}
+	public String getCompoundKey(){
+		return getCompoundKey(world.provider.getDimensionId());
+	}
+	public static String getCompoundKey(int dimension){
+		return COMPOUND_KEY_BASE+dimension;
 	}
 	
 	public World getWorld(){
@@ -162,14 +167,15 @@ public class Shipyard {
 	public String safe(){
 		String shipString = "";
 		for(Spaceship ship : ships){				
-			shipString += ship.toData();
-			shipString += SPACESHIP_TAG+"\n";
+			shipString += spaceshipToReadableData(ship);
 		}
 		return shipString;
 	}
+	public static String spaceshipToReadableData(Spaceship ship){
+		return ship.toData() + SPACESHIP_TAG+"\n";
+	}
 	
-	public void load(String shipString){
-		ships.clear();
+	public void loadShips(String shipString){
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(shipString);
@@ -194,16 +200,16 @@ public class Shipyard {
 			scanner.close();
 		}	
 	}
-	
+
 	public void readFromNBT(NBTTagCompound nbt) {
 		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
-		String ships = nbt.getString(COMPOUND_KEY);
-		load(ships);
+		String ships = nbt.getString(getCompoundKey(world.provider.getDimensionId()));
+		loadShips(ships);
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
 		System.out.println("Saving Shipyard on World "+world.getWorldInfo().getWorldName());
-		nbt.setString(COMPOUND_KEY, safe());
+		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe());
 		saveCompound.setDirty(false);
 	}
 }
