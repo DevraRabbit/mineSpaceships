@@ -4,6 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 
 import com.minespaceships.mod.menu.FunctionalParamMenu;
@@ -16,7 +18,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position forward.
  * @author ovae.
- * @version 20150312.
+ * @version 20150323.
  */
 public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 
@@ -34,7 +36,7 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, CustomGuiChat terminal) {
+	public String activate(final String command, CustomGuiChat terminal) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}
@@ -42,28 +44,8 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 			return "command can not be null.";
 		}
 
-		double x,y,z;
-		Pattern pattern = Pattern.compile("\\d*");
-		Matcher matcher = pattern.matcher(command);
-		if(matcher.matches()){
-			x = terminal.getChatRegisterEntity().getPos().getX() + Double.parseDouble(command);
-			y = terminal.getChatRegisterEntity().getPos().getY();
-			z = terminal.getChatRegisterEntity().getPos().getZ();
-			try{
-				Spaceship ship = Shipyard.getShipyard(terminal.getChatRegisterEntity().getWorld()).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-				//(double)x, (double)y, (double)z
-				BlockPos position = new BlockPos(x, y, z);
-
-				if(ship == null) {
-					terminal.display("move: Please initialise the Spaceship first", true);
-				}
-				ship.move(terminal.getChatRegisterEntity(), position);
-				return ">> move forward <<\nPress 'm' to get back.";
-			}catch(Exception e){
-				System.err.println("ship is broken");
-			}
-		}
-		return "move forward failed!";
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveForward+" "+command, terminal.getPlayerEntity());
+		return "";
 	}
 
 }

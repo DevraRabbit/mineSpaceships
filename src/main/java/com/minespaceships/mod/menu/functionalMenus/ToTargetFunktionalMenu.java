@@ -16,7 +16,7 @@ import scala.reflect.api.Types.ThisTypeExtractor;
 /**
  * A new functional menu, for the 'to target' functionality.
  * @author ovae.
- * @version 20150312.
+ * @version 20150320.
  */
 public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 
@@ -61,13 +61,12 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 					if(ship == null) {
 						terminal.display("move: Please initialise the Spaceship first", true);
 					}
-					ship.move(terminal.getChatRegisterEntity(), position);
+					ship.move(position);
 					return ">> to target <<\nPress 'm' to get back.";
 				}catch(Exception e){
 					System.err.println("ship is broken");
 				}
 			}
-
 		}catch(NullPointerException f){
 			System.err.println("NullPointerException: regex failed");
 		}catch(IllegalArgumentException g){

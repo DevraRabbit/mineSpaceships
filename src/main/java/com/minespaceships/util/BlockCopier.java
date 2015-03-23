@@ -29,14 +29,10 @@ public class BlockCopier {
 		TileEntity ent = worldIn.getTileEntity(origin);
 		if(ent != null){
 			worldIn.removeTileEntity(origin);
-<<<<<<< HEAD
-			moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
-=======
 			ent.validate();
 			//moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
 			worldIn.setTileEntity(target, ent);
 			int i = 0;
->>>>>>> 63e12adf33cdbd2a911dffa27fe153b1f279adb8
 		}
 	}
 	public static void moveEntityInformation(TileEntity entOrigin, TileEntity entTarget){
