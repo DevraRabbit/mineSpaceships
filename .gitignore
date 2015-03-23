@@ -27,7 +27,7 @@ hs_err_pid*
 /forge-*-changelog.txt
 /src/main/java/com/example/examplemod/ExampleMod.java
 
-Files that were created by the minecraft server
+#Files that were created by the minecraft server
 banned-ips.json
 banned-players.json
 logs/
