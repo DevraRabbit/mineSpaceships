@@ -87,8 +87,9 @@ public class Spaceship implements Serializable{
 		initializeBase();
 	}	
 	public Spaceship(String s, World world)throws Exception {
-		this.fromData(s);
 		this.world = world;
+		//world needs to be loaded first to prevent null pointer
+		this.fromData(s);
 		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
@@ -404,7 +405,7 @@ public class Spaceship implements Serializable{
 		for(String s : lines){
 			if(addedClass == null){
 				try{
-					blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+					this.addBlock(BlockPos.fromLong(Long.parseLong(s)));		
 				} catch(Exception e){
 					addedClass = Class.forName(s);
 				}

@@ -74,7 +74,9 @@ public class ChatRegisterEntity extends TileEntity {
 		Spaceship ship = yard.getShip(pos, worldObj);
 		if(ship != null){
 			par1.setInteger(dimension, worldObj.provider.getDimensionId());
-			par1.setString(yard.getCompoundKey(), Shipyard.spaceshipToReadableData(ship));
+			String data = Shipyard.spaceshipToReadableData(ship);
+			System.out.println("Writing ship "+data.substring(0, 10)+"..."+" into NBT");
+			par1.setString(yard.getCompoundKey(), data);
 		}
 		super.writeToNBT(par1); 
 		this.markDirty();
@@ -85,20 +87,25 @@ public class ChatRegisterEntity extends TileEntity {
 		int id = par1.getInteger(dimension);
 		String data = par1.getString(Shipyard.getCompoundKey(id));
 		if(!data.isEmpty()){
+			System.out.println("Reading ship "+data.substring(0, 10)+"..."+" from NBT");
 			AllShipyards.putData(id, data);
 		}
 		super.readFromNBT(par1);
+		this.markDirty();
 	}
 
+	@SideOnly(Side.SERVER)
 	@Override
 	public Packet getDescriptionPacket(){
 		NBTTagCompound syncData = new NBTTagCompound();
 		this.writeToNBT(syncData);
+		System.out.println("Send Packet!");
 		return new S35PacketUpdateTileEntity(this.pos, 1, syncData);
 	}
-
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
+		System.out.println("Recieved Packet!");
 		readFromNBT(pkt.getNbtCompound());
 	}
 

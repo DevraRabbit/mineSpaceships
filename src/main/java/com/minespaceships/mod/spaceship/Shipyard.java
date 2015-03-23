@@ -76,9 +76,11 @@ public class Shipyard {
 					Spaceship nextShip = shipIt.next();
 					if(nextShip.measuresEquals(ship)){
 						shipIt.remove();
-					}
+						System.out.println("Removed ship due to ship overloading");
+					}					
 				}
 				ships.add(ship);
+				System.out.println("Added ship to the Shipyard");
 			}
 		}
 	}
@@ -88,7 +90,8 @@ public class Shipyard {
 	
 	public Spaceship getShip(BlockPos pos, World world){
 		for(Spaceship ship : ships){
-			if(ship.containsBlock(pos) && ship.getWorld() == world){
+			if(ship.containsBlock(pos) && 
+					ship.getWorld() == world){
 				return ship;
 			}
 		}
@@ -202,11 +205,13 @@ public class Shipyard {
 	public void readFromNBT(NBTTagCompound nbt) {
 		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
 		String ships = nbt.getString(getCompoundKey(world.provider.getDimensionId()));
+		System.out.println("Loading ship :"+ ships.substring(0, 10) + "...");
 		loadShips(ships);
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
-		System.out.println("Saving Shipyard on World "+world.getWorldInfo().getWorldName());
-		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe());
+		String safe = safe();		
+		System.out.println("Saving "+safe.substring(0, 10) + "..."+" in Shipyard on World "+world.getWorldInfo().getWorldName());
+		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe);
 	}
 }
