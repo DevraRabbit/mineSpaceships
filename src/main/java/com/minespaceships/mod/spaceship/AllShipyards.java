@@ -52,6 +52,11 @@ public class AllShipyards {
 		}
 		return null;
 	}
+	public static void clearAll(){
+		for(Shipyard s: shipyards){
+			s.clear();
+		}
+	}
 	
 //	public static void readFromNBT(NBTTagCompound nbt) {
 //		for(Shipyard shipyard : shipyards){

@@ -91,7 +91,7 @@ public class Shipyard {
 	public Spaceship getShip(BlockPos pos, World world){
 		for(Spaceship ship : ships){
 			if(ship.containsBlock(pos) && 
-					ship.getWorld() == world){
+					ship.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
 				return ship;
 			}
 		}
@@ -200,6 +200,10 @@ public class Shipyard {
 			}
 			scanner.close();
 		}	
+	}
+	
+	public void clear(){
+		ships.clear();
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
