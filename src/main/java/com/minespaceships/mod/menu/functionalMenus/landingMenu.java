@@ -20,7 +20,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Lands the spaceship.
  * @author ovae.
- * @version 20150320.
+ * @version 20150323.
  */
 public class landingMenu extends Menu implements FunctionalMenu{
 
@@ -39,8 +39,15 @@ public class landingMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
+		if(command.trim().isEmpty()){
+			return "command can not be empty.";
+		}
+		if(command.equals(null)){
+			return "command can not be null.";
+		}
+
 		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.land, terminal.getPlayerEntity());
-		return SpaceshipCommands.land;
+		return SpaceshipCommands.land+" not implementes yet.\nPress m to get back.";
 	}
 
 }

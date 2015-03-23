@@ -219,13 +219,14 @@ public class SpaceshipCommands {
 		return out;
 	}
 
-	public static String land(final CustomGuiChat terminal){
+	public static void land(final CustomGuiChat terminal){
+		/*
 		try{
 			double x,y,z;
 			World world = terminal.getChatRegisterEntity().getWorld();
 			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 			if(ship == null) {
-				terminal.display("move: Please initialise the Spaceship first", true);
+				//return "Please initialise the spaceship first";
 			}
 			x = terminal.getChatRegisterEntity().getPos().getX();
 			y = terminal.getChatRegisterEntity().getPos().getY();
@@ -249,30 +250,11 @@ public class SpaceshipCommands {
 			//(double)x, (double)y, (double)z
 			BlockPos position = new BlockPos(x, y-height+2, z);
 			ship.move(position);
-			return "land succesfull.\nPress 'm' to get back.";
+			//return "land successful.\nPress 'm' to get back.";
 		}catch(Exception e){
-			System.err.println("ship is broken");
+			//return "While trying to land an error occurred: "+e;
 		}
-		return "landing failed.\nPress 'm' to get back.";
+		*/
 	}
 
-	public static String liftoff(final CustomGuiChat terminal){
-		try{
-			double x,y,z;
-			x = terminal.getChatRegisterEntity().getPos().getX();
-			y = terminal.getChatRegisterEntity().getPos().getY()+20;
-			z = terminal.getChatRegisterEntity().getPos().getZ();
-			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-			BlockPos position = new BlockPos(x, y, z);
-
-			if(ship == null) {
-				terminal.display("liftoff: Please initialise the Spaceship first", true);
-			}
-			ship.move(position);
-			return ">> Liftoff <<\nPress 'm' to get back.";
-		}catch(Exception e){
-			System.err.println("ship is broken");
-		}
-		return "liftoff failed!\nPress 'm' to get back.";
-	}
 }

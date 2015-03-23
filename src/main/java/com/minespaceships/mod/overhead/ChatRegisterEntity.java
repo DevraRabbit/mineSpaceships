@@ -187,9 +187,7 @@ public class ChatRegisterEntity extends TileEntity {
 		else if(command.equals(SpaceshipCommands.land)){
 			SpaceshipCommands.land(terminal);
 		}
-		else if(command.equals(SpaceshipCommands.liftoff)){
-			SpaceshipCommands.liftoff(terminal);
-		}
+
 		SpaceshipCommands.debug(command, this);
 	}
 }

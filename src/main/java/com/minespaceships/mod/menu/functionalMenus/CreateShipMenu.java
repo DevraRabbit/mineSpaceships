@@ -13,7 +13,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Menu witch will create a new spaceship.
  * @author ovae.
- * @version 20150320.
+ * @version 20150323.
  */
 public class CreateShipMenu extends Menu implements FunctionalMenu{
 
@@ -32,6 +32,13 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
+		if(command.trim().isEmpty()){
+			return "command can not be empty.";
+		}
+		if(command.equals(null)){
+			return "command can not be null.";
+		}
+
 		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.initAuto, null);
 		return EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\nPress 'Esc' and reopen the menu.";
 	}

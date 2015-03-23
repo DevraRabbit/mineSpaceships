@@ -121,31 +121,37 @@ public class SpaceshipMenu {
 		moveForwardMenu = new Menu("move forward");
 		out = "";
 		out +="Please type in how may blocks you want to move forward.";
+		out +="The input must beginn with an #\n";
 		moveForwardFuncMenu = new moveForwardMenu(out);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
 		out +="Please type in how may blocks you want to move back.";
+		out +="The input must beginn with an #\n";
 		moveBackFuncMenu = new moveBackMenu(out);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
 		out +="Please type in how may blocks you want to move right.";
+		out +="The input must beginn with an #\n";
 		moveRightFuncMenu = new moveRightMenu(out);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
 		out +="Please type in how may blocks you want to move left.";
+		out +="The input must beginn with an #\n";
 		moveLeftFuncMenu = new moveLeftMenu(out);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
 		out +="Please type in how may blocks you want to move up.";
+		out +="The input must beginn with an #\n";
 		moveUpFuncMenu = new moveUpMenu(out);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
 		out +="Please type in how may blocks you want to move down.";
+		out +="The input must beginn with an #\n";
 		moveDownFuncMenu = new moveDownMenu(out);
 
 		liftoffMenu = new liftoffMenu("liftoff");

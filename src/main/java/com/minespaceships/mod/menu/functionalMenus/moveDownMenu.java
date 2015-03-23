@@ -16,7 +16,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position down.
  * @author ovae.
- * @version 20150320.
+ * @version 20150323.
  */
 public class moveDownMenu extends Menu implements FunctionalParamMenu{
 
@@ -41,6 +41,7 @@ public class moveDownMenu extends Menu implements FunctionalParamMenu{
 		if(command.equals(null)){
 			return "command can not be null.";
 		}
+
 		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveDown+" "+command, terminal.getPlayerEntity());
 		return SpaceshipCommands.moveDown+" "+command;
 	}

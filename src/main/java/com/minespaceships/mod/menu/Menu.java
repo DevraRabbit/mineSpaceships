@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Spaceship;
+import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
  * The Menu class implements a menu structure and the ability
@@ -61,7 +62,7 @@ public class Menu{
 	 * Returns the menu in where you are currently in.
 	 * Returns {@code null} if the input was not and id, menu position or the menu name.
 	 */
-	public Menu switchMenu(final String name, final CustomGuiChat terminal){
+	public Menu switchMenu(String name, final CustomGuiChat terminal){
 		if(name.equals(null)){
 			throw new IllegalArgumentException("The menu name can not he null");
 		}
@@ -78,14 +79,15 @@ public class Menu{
 				}
 			}
 
-			//For special menus with parameters
-			if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
-				Menu temp = (Menu) selectedMenu.getChildrenList().get(0);
-				if(selectedMenu.equals(temp.getMenuName())){
+			//For a single character in put.
+			if(name.startsWith("#")){
+				name = name.replaceAll("#", "");
+				if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
+					Menu temp = (Menu) selectedMenu.getChildrenList().get(0);
 					FunctionalParamMenu menu = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
 					menu.activate(name, terminal);
-					selectedMenu =((Menu) menu).getMother();
-					return ((Menu) menu).getMother();
+					selectedMenu = ((Menu) menu).getMother().getMother();
+					return ((Menu) menu).getMother().getMother();
 				}
 			}
 
