@@ -1,22 +1,20 @@
-[12:57:40] [Server thread/INFO]: Starting minecraft server version 1.8
-[12:57:46] [Server thread/INFO]: Loading properties
-[12:57:46] [Server thread/INFO]: Default game type: SURVIVAL
-[12:57:46] [Server thread/INFO]: Generating keypair
-[12:57:46] [Server thread/INFO]: Starting Minecraft server on *:25565
-[12:57:46] [Server thread/INFO]: Preparing level "world"
-[12:57:49] [Server thread/INFO]: Preparing start region for level 0
-[12:57:50] [Server thread/INFO]: Preparing spawn area: 20%
-[12:57:51] [Server thread/INFO]: Preparing spawn area: 95%
-[12:57:51] [Server thread/INFO]: Done (4.428s)! For help, type "help" or "?"
-[12:58:15] [User Authenticator #1/INFO]: UUID of player Ovae is 558fd25b-0372-432a-a986-a9f0e7457404
-[12:58:16] [Server thread/INFO]: Ovae[/127.0.0.1:41625] logged in with entity id 306 at (278.6311768214257, 102.0, 332.6723026117301)
-[12:58:16] [Server thread/INFO]: Ovae joined the game
-[12:58:45] [Server thread/INFO]: [Ovae: Set the time to 1000]
-[12:58:54] [Server thread/INFO]: Ovae lost connection: TextComponent{text='Disconnected', siblings=[], style=Style{hasParent=false, color=null, bold=null, italic=null, underlined=null, obfuscated=null, clickEvent=null, hoverEvent=null, insertion=null}}
-[12:58:54] [Server thread/INFO]: Ovae left the game
-[12:59:08] [Server thread/INFO]: Stopping server
-[12:59:08] [Server thread/INFO]: Saving players
-[12:59:08] [Server thread/INFO]: Saving worlds
-[12:59:08] [Server thread/INFO]: Saving chunks for level 'world'/Overworld
-[12:59:08] [Server thread/INFO]: Saving chunks for level 'world'/Nether
-[12:59:08] [Server thread/INFO]: Saving chunks for level 'world'/The End
+[13:05:12] [Server thread/INFO]: Starting minecraft server version 1.8
+[13:05:19] [Server thread/INFO]: Loading properties
+[13:05:19] [Server thread/INFO]: Default game type: SURVIVAL
+[13:05:19] [Server thread/INFO]: Generating keypair
+[13:05:19] [Server thread/INFO]: Starting Minecraft server on *:25565
+[13:05:20] [Server thread/INFO]: Preparing level "world"
+[13:05:22] [Server thread/INFO]: Preparing start region for level 0
+[13:05:23] [Server thread/INFO]: Preparing spawn area: 26%
+[13:05:24] [Server thread/INFO]: Done (4.178s)! For help, type "help" or "?"
+[13:05:31] [User Authenticator #1/INFO]: UUID of player Ovae is 558fd25b-0372-432a-a986-a9f0e7457404
+[13:05:32] [Server thread/INFO]: Ovae[/127.0.0.1:41758] logged in with entity id 312 at (278.15839689732894, 102.0, 332.7325314121008)
+[13:05:32] [Server thread/INFO]: Ovae joined the game
+[13:05:51] [Server thread/INFO]: Ovae lost connection: TextComponent{text='Disconnected', siblings=[], style=Style{hasParent=false, color=null, bold=null, italic=null, underlined=null, obfuscated=null, clickEvent=null, hoverEvent=null, insertion=null}}
+[13:05:51] [Server thread/INFO]: Ovae left the game
+[13:05:55] [Server thread/INFO]: Stopping server
+[13:05:55] [Server thread/INFO]: Saving players
+[13:05:55] [Server thread/INFO]: Saving worlds
+[13:05:55] [Server thread/INFO]: Saving chunks for level 'world'/Overworld
+[13:05:55] [Server thread/INFO]: Saving chunks for level 'world'/Nether
+[13:05:55] [Server thread/INFO]: Saving chunks for level 'world'/The End
