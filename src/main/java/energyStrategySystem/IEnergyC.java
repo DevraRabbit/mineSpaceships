@@ -1,6 +1,11 @@
 package energyStrategySystem;
 
-public interface IEnergyC {
+import com.minespaceships.mod.spaceship.ISpaceshipPart;
+
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+
+public interface IEnergyC extends ISpaceshipPart {
 	
 	
 	/**
@@ -10,17 +15,11 @@ public interface IEnergyC {
 	int getEnergy();
 	
 	/**
-	 *
-	 * @return Priority 1, 2 or 3
-	 */
-	int getPriority();
-	
-	/**
 	 * 
 	 * @return Status, false wenn ausgeschaltet.
 	 */
-	boolean getStatus();
+	boolean getStatus(BlockPos pos, World world);
 	
-	void setStatus(boolean b);
+	void setStatus(boolean b, BlockPos pos, World world);
 
 }

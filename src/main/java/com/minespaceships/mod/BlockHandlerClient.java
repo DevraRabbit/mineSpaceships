@@ -17,15 +17,27 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
+import com.minespaceships.mod.events.BlockEvent;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.spaceship.Shipyard;
 
-public class ShipSyncHandlerClient implements IMessageHandler<CommandMessage, IMessage>  {
+public class BlockHandlerClient implements IMessageHandler<CommandMessage, IMessage>  {
 	
     @Override
     public IMessage onMessage(CommandMessage message, MessageContext ctx) {
-    	Side side = FMLCommonHandler.instance().getEffectiveSide();
-    	Shipyard.getShipyard().load(message.getText(), Minecraft.getMinecraft().theWorld);    	
+    	String[] parts = message.getText().split(",");
+    	try{
+    		BlockPos pos = BlockPos.fromLong(Long.parseLong(parts[0]));
+    		int id = Integer.parseInt(parts[1]);    		
+    		boolean placed = Boolean.parseBoolean(parts[2]);
+    		if(id == Minecraft.getMinecraft().theWorld.provider.getDimensionId()){
+    			if(placed)  BlockEvent.placeBlock(pos, Minecraft.getMinecraft().theWorld);
+    			if(!placed) BlockEvent.removeBlock(pos, Minecraft.getMinecraft().theWorld);
+    		}
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
         return null;
     }
 }

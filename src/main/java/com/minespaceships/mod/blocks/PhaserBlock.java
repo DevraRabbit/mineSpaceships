@@ -12,4 +12,9 @@ public class PhaserBlock extends ActivatableBlock {
 		this.setUnlocalizedName("Phaser");
         this.setCreativeTab(CreativeTabs.tabMisc);
 	}
+	
+	@Override
+	public int getEnergy() {
+		return -1;
+	}
 }

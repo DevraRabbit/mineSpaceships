@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
+import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Spaceship;
 
@@ -60,15 +65,6 @@ public class MenuDisplay {
 		int position = 1;
 		ArrayList<Menu> list = menu.getChildrenList();
 		for(Menu child: list){
-
-			/*
-			if(terminal.getChatRegisterEntity().isInvalid()){
-				BlockPos pos = terminal.getChatRegisterEntity().getPos();
-				World world = terminal.getChatRegisterEntity().getRemoteWorld();
-				terminal.setTileEntity(world.getTileEntity(pos));
-			}
-			*/
-
 			if(child instanceof FunctionalMenu || child instanceof FunctionalParamMenu){
 				out+= "    "+EnumChatFormatting.GREEN+"["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
 			}else{

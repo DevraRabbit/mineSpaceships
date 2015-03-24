@@ -15,12 +15,16 @@ import javax.vecmath.Vector3d;
 import com.google.common.collect.ImmutableList;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
+import energyStrategySystem.EnergyStrategySystem;
+import energyStrategySystem.IEnergyC;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
+import net.minecraft.block.BlockWallSign;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -38,12 +42,15 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class Spaceship implements Serializable{
 	private BlockPos origin;
 	private World world;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
+	private EnergyStrategySystem energySystem;
 	private boolean isResolved = true;
 	
 	private boolean canBeRemoved = true;
@@ -80,8 +87,9 @@ public class Spaceship implements Serializable{
 		initializeBase();
 	}	
 	public Spaceship(String s, World world)throws Exception {
-		this.fromData(s);
 		this.world = world;
+		//world needs to be loaded first to prevent null pointer
+		this.fromData(s);
 		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
@@ -90,7 +98,8 @@ public class Spaceship implements Serializable{
 			assembler = new SpaceshipAssembler(blockMap.getOrigin());
 			refreshParts();
 		}
-		Shipyard.getShipyard().addShip(this);
+		energySystem = new EnergyStrategySystem(assembler, world);
+		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
 	public BlockPos getOrigin(){
@@ -172,8 +181,11 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
-		
 		blockMap.refreshVolumeBlocks(); //******************************ADDED
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		WorldMock startMock = new WorldMock(world);
+		//move the entities first to avoid long waiting times and weird bugs
+		if(side == Side.CLIENT)moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
 		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
@@ -194,17 +206,20 @@ public class Spaceship implements Serializable{
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
-				if(facing != null){
-					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
-					neighbor = nextPos.offset(facing.getOpposite());
-					neighborState = world.getBlockState(neighbor);
-				}
+				facing = null;
+//				if(facing != null){
+//					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
+//					neighbor = nextPos.offset(facing.getOpposite());
+//					neighborState = world.getBlockState(neighbor);
+//				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
-					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos, turn);					
-					it.remove();
-					//remember to remove it
-					removal.add(Pos);
+					if(tryCopy(startMock, Pos, nextPos, turn)){
+						//build the buildable block
+						BlockCopier.copyBlock(world, Pos, nextPos, turn);					
+						it.remove();
+						//remember to remove it
+						removal.add(Pos);
+					}
 				} 
 			}
 			i--;
@@ -219,24 +234,67 @@ public class Spaceship implements Serializable{
 				removal.insertElementAt(Pos, 0);
 			}
 		}
-		//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+		for(int j = 0; j < 3 && !removal.isEmpty(); j++){
+			//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+			ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+			while(reverseRemoval.hasPrevious()){
+				BlockPos prev = reverseRemoval.previous();
+				if(tryRemove(startMock, prev)){
+					BlockCopier.removeBlock(world, prev);
+				}
+			}
+		}
+		//remove the ones that didn't pass
 		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
 		while(reverseRemoval.hasPrevious()){
-			BlockCopier.removeBlock(world, reverseRemoval.previous());
+			BlockPos prev = reverseRemoval.previous();
+			BlockCopier.removeBlock(world, prev);
 		}
+
 		for(BlockPos pos : toRefill)
 		{
 			world.setBlockState(pos, Block.getStateById(8)); //************************************************************ADDED
 		}
-		//move the entities and move the ships measurements  
-		moveEntities(addDirection, turn);
+		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
+		if(side == Side.SERVER)moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}
 	
+	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
+		try{
+			BlockCopier.copyBlock(startWorld, start, end, turn);	
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
+		startWorld.nextSetBlocks();
+		boolean out = startWorld.nextRemovedBlocks().size() == 0;
+		return out;
+	}
+	private boolean tryRemove(WorldMock startWorld, BlockPos end){
+		try{
+//			if(startWorld.getBlockState(end).getBlock() instanceof BlockWallSign){
+//				int i = 0;
+//			}
+			BlockCopier.removeBlock(startWorld, end);			
+			startWorld.notifyNeighborsOfStateChange(end, Block.getStateById(0).getBlock());
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
+		startWorld.nextSetBlocks();
+		int size = startWorld.nextRemovedBlocks().size();
+		if(size ==1){
+			return size == 1;
+		} else {
+			IBlockState state = startWorld.getBlockState(end);
+			return size == 1;
+		}
+	}
+	
 	private void moveMeasurements(BlockPos addDirection, int turn){
 		if(turn != 0){blockMap.rotate(origin, turn);}
-		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));		
+		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
+		//TODO: rotate assembler
 		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
@@ -261,6 +319,7 @@ public class Spaceship implements Serializable{
 				ent.setRotationYawHead((float) (ent.rotationYaw+Math.PI));
 				break;
 			}
+			//ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 			ent.setPositionAndUpdate(newPos.xCoord, newPos.yCoord, newPos.zCoord);
 		}
 	}
@@ -308,6 +367,12 @@ public class Spaceship implements Serializable{
 			assembler.put(state.getBlock().getClass(), pos);
 		}
 	}
+	public void onEnergyChange(){
+		energySystem.refresh();
+	}
+	public boolean hasEnergyFor(IEnergyC producer){
+		return energySystem.canBeActivated(producer);
+	}
 	
 	public void refreshParts(){
 		assembler.clear();
@@ -347,7 +412,7 @@ public class Spaceship implements Serializable{
 		for(String s : lines){
 			if(addedClass == null){
 				try{
-					blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+					this.addBlock(BlockPos.fromLong(Long.parseLong(s)));		
 				} catch(Exception e){
 					addedClass = Class.forName(s);
 				}
@@ -374,7 +439,7 @@ public class Spaceship implements Serializable{
 	 * These method check also if the target position is a valid position.
 	 * @param position
 	 */
-	public void move(final BlockPos position){
+	public void move(BlockPos position){
 		if(position == null){
 			throw new IllegalArgumentException("The target position can not be null");
 		}

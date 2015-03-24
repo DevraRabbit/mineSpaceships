@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.*;
 
 public class CommandMessage implements IMessage {
@@ -33,7 +34,7 @@ public class CommandMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        setText(ByteBufUtils.readUTF8String(buf)); // this class is very useful in general for writing more complex objects
+        setText(ByteBufUtils.readUTF8String(buf));
     }
 
     @Override
@@ -48,7 +49,7 @@ public class CommandMessage implements IMessage {
 	public void setText(String text) {
 		this.text = text;
 	}
-
+	@SideOnly(Side.SERVER)
 	public static class HandlerServer implements IMessageHandler<CommandMessage, IMessage> {
         
         @Override
@@ -72,19 +73,20 @@ public class CommandMessage implements IMessage {
 	            	world = MinecraftServer.getServer().worldServerForDimension(dimension);
 	            	
 	            	command = moffset.group(3);
-	            	
-	            	ChatRegisterEntity ent = ((ChatRegisterEntity)world.getTileEntity(pos));
-	            	if(ent != null){
-            			ent.executeCommand(command, ctx.getServerHandler().playerEntity);
-	            	} else {
-	            		int i = 0;
-	            	}
+	            	//send it first so not everyone has to wait for the Server
 	            	List players = ((WorldServer)world).playerEntities;
 	            	for(Object o : players){
 	            		if(o instanceof EntityPlayerMP){
 	    	            	MineSpaceships.network.sendTo(message, (EntityPlayerMP)o);
 	            		}
 	            	}	
+	            	
+	            	ChatRegisterEntity ent = ((ChatRegisterEntity)world.getTileEntity(pos));
+	            	if(ent != null){
+            			ent.executeCommand(command, ctx.getServerHandler().playerEntity);
+	            	} else {
+	            		int i = 0;
+	            	}	            	
 	            } catch (Exception e) {
 	            	e.printStackTrace();
 	            	return null;
@@ -93,7 +95,7 @@ public class CommandMessage implements IMessage {
             return null; // no response in this case
         }
     }  
-    
+	@SideOnly(Side.CLIENT)
     public static class HandlerClient implements IMessageHandler<CommandMessage, IMessage> {
         
         @Override

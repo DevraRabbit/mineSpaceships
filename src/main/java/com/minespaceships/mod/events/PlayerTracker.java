@@ -2,6 +2,7 @@ package com.minespaceships.mod.events;
 
 import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
+import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,15 +23,17 @@ public class PlayerTracker {
 	@SideOnly(Side.SERVER)
 	public void onPlayerJoin(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityPlayer){
-			Shipyard.getShipyard().safe(new Save(event.world));
-			String ships = Shipyard.getShipyard().loadShips(event.world);
-			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);
+//			MinecraftForge.EVENT_BUS.post(new Save(event.world));
+//			Shipyard.getShipyard(event.world).safe(new Save(event.world));
+//			String ships = Shipyard.getShipyard().loadShips(event.world);
+//			MineSpaceships.spaceshipNetwork.sendTo(new CommandMessage(ships), (EntityPlayerMP)event.entity);
 			//sendShipRequest();
 		}
 	}
 	@SubscribeEvent
-	@SideOnly(Side.SERVER)
-	public void onPlayerLeave(PlayerLoggedOutEvent event){
+	@SideOnly(Side.CLIENT)
+	public void onPlayerLeave(WorldEvent.Unload event){
+		AllShipyards.clearAll();
 	}
 //	@SubscribeEvent
 //	public void onTick(TickEvent.ClientTickEvent event){
@@ -42,6 +45,6 @@ public class PlayerTracker {
 //	}
 	
 	public static void sendShipRequest(){
-		MineSpaceships.spaceshipNetwork.sendToServer(new CommandMessage(Shipyard.getShipyard().getShipCount()+""));
+		//MineSpaceships.spaceshipNetwork.sendToServer(new CommandMessage(Shipyard.getShipyard().getShipCount()+""));
 	}
 }

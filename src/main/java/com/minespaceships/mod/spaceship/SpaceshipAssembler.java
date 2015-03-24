@@ -47,7 +47,7 @@ public class SpaceshipAssembler {
 		ArrayList<BlockPos> instances = new ArrayList<BlockPos>();
 		Set<Class> classes = parts.keySet();
 		for(Class cls : classes){
-			if(cls.isAssignableFrom(c)){
+			if(c.isAssignableFrom(cls)){
 				instances.addAll(parts.get(cls));
 			}
 		}
