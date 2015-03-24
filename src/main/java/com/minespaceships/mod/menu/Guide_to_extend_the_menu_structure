@@ -1,0 +1,47 @@
+============ A guide to create own menus ============
+
+Create a new class for your menu. Use the 
+'com.minespaceships.mod.menu.functionalMenus' package
+for your class. Your menu must extends the class Menu,
+out of the com.minespaceships.mod.menu package.
+If your menu should handle parameters implements the
+FunctionalParamMenu interface, otherwise implement
+the FunctionalMenu interface.
+
+The class get a public constructor and a active
+method witch returns a String. The constructor
+get's the menus name as an parameter, witch is passed
+straight to the super class. Otherwise the constructor
+should not do anything.
+
+Both interfaces implement the same methods, but they
+are used to distinguish menus with parameters and
+those with no parameters.
+For both interfaces the activate method has the
+parameter's: String command, CustomGuiChat terminal.
+The method must have the annotation '@Override'.
+
+If you have implemented the FunctionMenu interface:
+
+If you have implemented the FunctionPramMenu interface:
+
+
+===== Implement the menu in the menu structure ======
+
+
+
+======================= Files =======================
+packages:
+=========
+com.minespaceships.mod.menu
+com.minespaceships.mod.menu.functionalMenus
+
+Class path:
+===========
+com.minespaceships.mod.menu.Menu
+com.minespaceships.mod.menu.SpaceshipMenu
+
+Interface path:
+===============
+com.minespaceships.mod.menu.FunctionalMenu
+com.minespaceships.mod.menu.FunctionalParamMenu
