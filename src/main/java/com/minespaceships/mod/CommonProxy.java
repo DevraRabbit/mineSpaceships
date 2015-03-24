@@ -29,6 +29,7 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
     	MineSpaceships.network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
     	MineSpaceships.spaceshipNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("Spaceships");
+    	MineSpaceships.blockChangeEvents = NetworkRegistry.INSTANCE.newSimpleChannel("BlockChanges");
     	//register our game objects so Minecraft knows how to use them.
     	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
     	GameRegistry.registerBlock(new EnergyBlock(), "EnergyBlock");
