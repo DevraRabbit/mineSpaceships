@@ -23,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -190,9 +191,36 @@ public abstract class ActivatableBlock extends Block implements ISpaceshipPart, 
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(ACTIVATED, false);
+    {		
+		if(getEnergy() > 0){
+			return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(ACTIVATED, true);
+		} else {
+			return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(ACTIVATED, false);
+		}
     }
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state){
+		sendEnergyChange(worldIn, pos);
+	}
+	@Override
+	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+    {
+		sendEnergyChange(world, pos);
+        return super.removedByPlayer(world, pos, player, willHarvest);
+    }
+	@Override
+	public void onBlockExploded(World world, BlockPos pos, Explosion explosion){
+		sendEnergyChange(world, pos);
+		super.onBlockExploded(world, pos, explosion);
+	}
+	private void sendEnergyChange(World worldIn, BlockPos pos){
+		if(getEnergy() != 0){
+			Spaceship ship = Shipyard.getShipyard(worldIn).getShip(pos, worldIn);
+			if(ship != null){
+				ship.onEnergyChange();
+			}
+		}
+	}
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
@@ -201,14 +229,14 @@ public abstract class ActivatableBlock extends Block implements ISpaceshipPart, 
 		}
 		Spaceship ship = Shipyard.getShipyard(worldIn).getShip(pos, worldIn);
 		if((Boolean) state.getValue(ACTIVATED)){
-			setStatus(false, pos, worldIn);
+			setStatus(false, pos, worldIn, true);
 		} else {
 			if(ship != null &&
 					ship.hasEnergyFor(this)){
-				setStatus(true, pos, worldIn);	
+				setStatus(true, pos, worldIn, true);	
 			}
 		}
-		if(ship != null) ship.onEnergyChange();
+		sendEnergyChange(worldIn, pos);
         return true;
     }
 	@Override
@@ -226,7 +254,10 @@ public abstract class ActivatableBlock extends Block implements ISpaceshipPart, 
 	}
 
 	@Override
-	public void setStatus(boolean b, BlockPos pos, World world) {
+	public void setStatus(boolean b, BlockPos pos, World world, boolean sendChange) {
+		if(sendChange && getStatus(pos, world) != b){
+			sendEnergyChange(world, pos);
+		}
 		world.setBlockState(pos, getNewBlockState(world.getBlockState(pos), b), 3);		
 	}	
 }

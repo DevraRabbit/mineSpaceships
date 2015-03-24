@@ -30,6 +30,10 @@ public class EnergyStrategySystem {
 	}
 	
 	public float getEnergy(){
+		return getEnergy(true);
+	}
+	
+	public float getEnergy(boolean mindStatus){
 		ArrayList<BlockPos> energyPositions = assembler.getParts(IEnergyC.class);
 		System.out.println("Recieved "+energyPositions.size()+" IEnergyC. "+ (energyPositions.size() > 0 ? energyPositions.get(0) : "No Positions found!"));
 		float energy=0;
@@ -37,7 +41,8 @@ public class EnergyStrategySystem {
 			Block block = world.getBlockState(p).getBlock();
 			if(block instanceof IEnergyC){
 				IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
-				if(energyBlock.getStatus(p, world)){
+				//unly ignore status when it is a producer as we want to know how much energy can be produced
+				if(energyBlock.getStatus(p, world) || (!mindStatus && energyBlock.getEnergy() > 0)){
 					energy+= energyBlock.getEnergy();
 				}		
 			} else {
@@ -47,16 +52,51 @@ public class EnergyStrategySystem {
 		System.out.println("Calculated "+energy+" Energy");
 		return energy;		
 	}
-	
 	public boolean canBeActivated(IEnergyC energyBlock){
-		return getEnergy()+energyBlock.getEnergy()>=0;		
+		//don't mind wether the energygenerators are on
+		return getEnergy(false)+energyBlock.getEnergy()>=0;		
+	}
+	public void refresh(){
+		refresh(true);
 	}
 	
-	public void refresh(){
+	public void refresh(boolean autoactivate){
 		float energy=getEnergy();
-		if(energy<0){
-			//for(int i=0;)
-			//TODO: implement Block shutdown. Important! DO NOT SHUT DOWN OR CALCULATE WITH AIR BLOCKS! (regarding reloading)
+		if(energy != 0){
+			ArrayList<BlockPos> energyPositions = assembler.getParts(IEnergyC.class);
+			//activate producers
+			for(BlockPos p: energyPositions){
+				Block block = world.getBlockState(p).getBlock();
+				if(block instanceof IEnergyC){
+					IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
+					if(energyBlock.getEnergy() > 0){
+						float nextEnergy = energyBlock.getStatus(p, world) ? energy - energyBlock.getEnergy() : energy + energyBlock.getEnergy();					
+						if((nextEnergy > energy) && autoactivate){
+							energyBlock.setStatus(!energyBlock.getStatus(p, world), p, world, false);
+							energy = nextEnergy;
+						}
+					}
+				} else {
+					//TODO: implement reload Bug where all blocks are air
+				}
+			}
+			// deactivate/activate consumers
+			for(BlockPos p: energyPositions){
+				Block block = world.getBlockState(p).getBlock();
+				if(block instanceof IEnergyC){
+					IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
+					if(energyBlock.getEnergy() < 0){
+						boolean nextStatus = energyBlock.getStatus(p, world);
+						float nextEnergy = nextStatus ? energy - energyBlock.getEnergy() : energy + energyBlock.getEnergy();					
+						if((Math.abs(nextEnergy) < Math.abs(energy)) || (!autoactivate && energy < 0 && nextEnergy > energy)){
+							energyBlock.setStatus(!nextStatus, p, world, false);
+							energy = nextEnergy;
+						}
+					}
+				} else {
+					//TODO: implement reload Bug where all blocks are air
+				}
+			}
 		}
 	}
 	

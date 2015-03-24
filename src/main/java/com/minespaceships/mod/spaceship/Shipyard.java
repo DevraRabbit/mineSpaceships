@@ -38,6 +38,10 @@ public class Shipyard {
 	private Vector<Spaceship> ships;
 	private World world;
 	
+	public enum BlockChangeStatus{
+		NO_CHANGE, CHANGE, SHIP_REMOVED;
+	}
+	
 	protected Shipyard(World world) {
 		this.world = world;
 		ships = new Vector<Spaceship>();
@@ -111,20 +115,22 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public boolean removeBlock(final BlockPos pos, final World world) {
+	public BlockChangeStatus removeBlock(final BlockPos pos, final World world) {
 		boolean hasRemoved = false;
+		boolean removedShip = false;
 		for (Iterator<Spaceship> it = ships.iterator(); it.hasNext();) {
 			Spaceship ship = it.next();
 			if (ship.getWorld() == world) {
 				if (ship.containsBlock(pos)) {
 					if(ship.removeBlock(pos)){
 						it.remove();
+						removedShip = true;
 					}
 					hasRemoved = true;
 				}
 			}
 		}
-		return hasRemoved;
+		return hasRemoved ? (removedShip ? BlockChangeStatus.SHIP_REMOVED : BlockChangeStatus.CHANGE) : BlockChangeStatus.NO_CHANGE;
 	}
 	
 	/**
@@ -132,16 +138,16 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public boolean placeBlock(final BlockPos pos, final World world) {
+	public BlockChangeStatus placeBlock(final BlockPos pos, final World world) {
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
 				if (ship.isNeighboringBlock(pos)) {
 					ship.addBlock(pos);
-					return true;
+					return BlockChangeStatus.CHANGE;
 				}
 			}
 		}	
-		return false;
+		return BlockChangeStatus.NO_CHANGE;
 	}
 	
 	/**
