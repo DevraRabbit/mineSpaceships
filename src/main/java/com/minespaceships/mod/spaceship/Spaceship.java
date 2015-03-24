@@ -193,7 +193,7 @@ public class Spaceship implements Serializable{
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
-		ArrayList<BlockPos> positions = blockMap.getPositions();	
+		ArrayList<BlockPos> positions = blockMap.getPositionsWithInnerBlocks();	
 		int i = 3;
 		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  //*************************************************ADDED
 		while(!positions.isEmpty() && i > 0){

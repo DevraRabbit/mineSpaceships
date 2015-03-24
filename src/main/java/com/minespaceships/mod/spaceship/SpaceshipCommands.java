@@ -52,6 +52,7 @@ public class SpaceshipCommands {
 					Shipyard.getShipyard(worldObj).createShip(commandBlock.getPos(), worldObj);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				player.addChatComponentMessage(new ChatComponentText(e.toString()));
 			}
 			return;
