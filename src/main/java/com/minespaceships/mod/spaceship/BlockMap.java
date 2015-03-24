@@ -31,6 +31,7 @@ public class BlockMap {
 	public BlockMap(BlockPos originPoint){
 		map = new HashMap<BlockPos, Boolean>();
 		outerBlocks = new HashMap<BlockPos, Boolean>();
+		outerOutBlocks = new HashMap<BlockPos, Boolean>();
 		innerBlocks = new HashMap<BlockPos, Boolean>();
 		spannedRectangle = new HashMap<BlockPos, Boolean>();
 		maxPos = new BlockPos(0,0,0);
@@ -167,7 +168,7 @@ public class BlockMap {
 	public void refreshVolumeBlocks()
 	{
 		System.out.println("refreshing...........");
-		if(hasToRefresh)
+		if(true) // ******************************************CHANGE TO hastorefresh
 		{
 			calculateOuterOutBlocks();  //initializes outerBlocks
 			spanRectangle();
@@ -179,7 +180,7 @@ public class BlockMap {
 			innerBlocks.clear(); 	//initializes innerBlocks
 			for(BlockPos l : spannedRectangle.keySet())
 			{
-				if(!map.containsKey(l) && !outerBlocks.containsKey(l))
+				if(!map.containsKey(l) && !outerBlocks.containsKey(l))           //***DEBUG** innerblocks are in map..
 				{
 					innerBlocks.put(l, true);
 				}
@@ -368,9 +369,18 @@ public class BlockMap {
 		for(BlockPos pos : keys){
 			positions.add(pos.add(origin));
 		}
+		return positions;
+	}
+	
+	public ArrayList<BlockPos> getPositionsWithInnerBlocks(){
+		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
+		Set<BlockPos> keys = map.keySet();
+		for(BlockPos pos : keys){
+			positions.add(pos.add(origin));
+		}
 		for(BlockPos pos : innerBlocks.keySet())
 		{
-			positions.add(pos.add(origin));           ///*****************************************ADDED
+			positions.add(pos.add(origin));          
 		}
 		return positions;
 	}
