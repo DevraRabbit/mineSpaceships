@@ -22,11 +22,11 @@ public class EnergyStrategySystem {
 	private SpaceshipAssembler assembler;
 	private World world;
 	private ArrayList<ArrayList<Class>> priorityList;
+	private boolean hasRefreshed = false;
 	
 	public EnergyStrategySystem (SpaceshipAssembler assembler, World world){
 		this.assembler = assembler;
 		this.world= world;
-		refresh();
 	}
 	
 	public float getEnergy(){
@@ -34,8 +34,12 @@ public class EnergyStrategySystem {
 	}
 	
 	public float getEnergy(boolean mindStatus){
+		if(!hasRefreshed) {
+			hasRefreshed = true;
+			refresh();		
+		}
 		ArrayList<BlockPos> energyPositions = assembler.getParts(IEnergyC.class);
-		System.out.println("Recieved "+energyPositions.size()+" IEnergyC. "+ (energyPositions.size() > 0 ? energyPositions.get(0) : "No Positions found!"));
+		//System.out.println("Recieved "+energyPositions.size()+" IEnergyC. "+ (energyPositions.size() > 0 ? energyPositions.get(0) : "No Positions found!"));
 		float energy=0;
 		for(BlockPos p: energyPositions){
 			Block block = world.getBlockState(p).getBlock();
@@ -49,7 +53,7 @@ public class EnergyStrategySystem {
 				//TODO: implement reload Bug where all blocks are air
 			}
 		}
-		System.out.println("Calculated "+energy+" Energy");
+		//System.out.println("Calculated "+energy+" Energy");
 		return energy;		
 	}
 	public boolean canBeActivated(IEnergyC energyBlock){
@@ -57,7 +61,7 @@ public class EnergyStrategySystem {
 		return getEnergy(false)+energyBlock.getEnergy()>=0;		
 	}
 	public void refresh(){
-		refresh(true);
+		refresh(false);
 	}
 	
 	public void refresh(boolean autoactivate){
@@ -86,11 +90,14 @@ public class EnergyStrategySystem {
 				if(block instanceof IEnergyC){
 					IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
 					if(energyBlock.getEnergy() < 0){
-						boolean nextStatus = energyBlock.getStatus(p, world);
-						float nextEnergy = nextStatus ? energy - energyBlock.getEnergy() : energy + energyBlock.getEnergy();					
-						if((Math.abs(nextEnergy) < Math.abs(energy)) || (!autoactivate && energy < 0 && nextEnergy > energy)){
-							energyBlock.setStatus(!nextStatus, p, world, false);
-							energy = nextEnergy;
+						boolean nextStatus = !energyBlock.getStatus(p, world);
+						float nextEnergy = nextStatus ? energy + energyBlock.getEnergy() : energy - energyBlock.getEnergy();					
+						if((Math.abs(nextEnergy) < Math.abs(energy))){
+							if(autoactivate || !autoactivate && nextStatus == false){
+								energyBlock.setStatus(nextStatus, p, world, false);
+								energy = nextEnergy;
+								System.out.println("Activated "+energyBlock.getClass().getName()+" to "+energy+" Energy");
+							}
 						}
 					}
 				} else {

@@ -12,7 +12,7 @@ public class AllShipyards {
 	public static Shipyard getShipyard(World world){
 		for(Shipyard s : shipyards){
 			if(s.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
-				System.out.println("Got Shipyard with id "+  world.provider.getDimensionId()+ " out of " +shipyards.size()+ "Shipyards");
+				//System.out.println("Got Shipyard with id "+  world.provider.getDimensionId()+ " out of " +shipyards.size()+ "Shipyards");
 				return s;				
 			}
 		}
@@ -22,7 +22,7 @@ public class AllShipyards {
 		int id = world.provider.getDimensionId();
 		//Load buffered Data
 		if(bufferedData.containsKey(id)){
-			System.out.println("Loading duffered data into new shipyard");
+			System.out.println("Loading buffered data into new shipyard");
 			s.loadShips(bufferedData.get(id));
 			bufferedData.remove(id);
 		}
