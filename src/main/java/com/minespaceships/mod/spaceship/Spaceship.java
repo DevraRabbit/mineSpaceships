@@ -285,10 +285,10 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveMeasurements(BlockPos addDirection, int turn){
-		if(turn != 0){blockMap.rotate(origin, turn);}
+		blockMap.rotate(origin, turn);
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
-		//TODO: rotate assembler
-		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
+		assembler.rotate(origin,  turn);
+		assembler.setOrigin(assembler.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
 	@Deprecated
@@ -405,7 +405,8 @@ public class Spaceship implements Serializable{
 		for(String s : lines){
 			if(addedClass == null){
 				try{
-					this.addBlock(BlockPos.fromLong(Long.parseLong(s)));		
+					//need to press this directly into the block map. Otherwise minecraft tries to lead the chunk and ends up in an infinite loop.
+					this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
 				} catch(Exception e){
 					addedClass = Class.forName(s);
 				}
