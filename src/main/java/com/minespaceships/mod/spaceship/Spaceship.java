@@ -172,15 +172,18 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		
+		blockMap.refreshVolumeBlocks(); //******************************ADDED
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
-		//list of positions that need to be removed in revers order to prevent other blocks from cracking
+		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
 		Vector<BlockPos> removal = new Vector<BlockPos>();
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
 		ArrayList<BlockPos> positions = blockMap.getPositions();	
 		int i = 3;
+		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  //*************************************************ADDED
 		while(!positions.isEmpty() && i > 0){
 			Iterator<BlockPos> it = positions.iterator();
 			while(it.hasNext()){
@@ -220,6 +223,10 @@ public class Spaceship implements Serializable{
 		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
 		while(reverseRemoval.hasPrevious()){
 			BlockCopier.removeBlock(world, reverseRemoval.previous());
+		}
+		for(BlockPos pos : toRefill)
+		{
+			world.setBlockState(pos, Block.getStateById(8)); //************************************************************ADDED
 		}
 		//move the entities and move the ships measurements  
 		moveEntities(addDirection, turn);

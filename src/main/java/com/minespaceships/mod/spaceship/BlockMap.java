@@ -10,6 +10,7 @@ import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSponge;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -45,11 +46,47 @@ public class BlockMap {
 		origin = pos;
 	}
 	
+	public ArrayList<BlockPos> getBlocksToRefill(World world)
+	{
+		int y = minPos.getY();
+		boolean setToWater = false;
+		ArrayList<BlockPos> toWater = new ArrayList();
+		for(BlockPos p : outerBlocks.keySet())
+		{
+			
+			if(world.getBlockState(p.add(origin)).getBlock().getMaterial() == Material.water)
+			{
+				setToWater = true;
+				if(p.getY() > y){
+					y = p.getY();
+				}
+			}
+		}
+		if(setToWater)
+		{
+			for(BlockPos p : map.keySet())
+			{
+				if(p.getY() <= y)
+				{
+					toWater.add(p.add(origin));
+				}
+			}
+			for(BlockPos p : innerBlocks.keySet())
+			{
+				if(p.getY() <= y)
+				{
+					toWater.add(p.add(origin));
+				}
+			}
+		}
+		return toWater;
+	}
+	
 	public void add(BlockPos pos){
 
-		map.put(pos.subtract(origin), true);
-		resize(pos.subtract(origin));
-		pos = pos.subtract(origin);
+		map.put(Vec3Op.subtract(pos, origin), true);
+		resize(Vec3Op.subtract(pos, origin));
+		pos = Vec3Op.subtract(pos, origin);
 		outerBlocks.remove(pos);
 		innerBlocks.remove(pos);
 		boolean hasOuterBlock=false;
@@ -59,12 +96,10 @@ public class BlockMap {
 				break;
 			}
 		}
-		if(hasOuterBlock){
+		if(hasOuterBlock || outerOutBlocks.containsKey(pos)){
 			hasToRefresh = true;
 		}		
-
-		map.put(Vec3Op.subtract(pos, origin), true);
-		resize(Vec3Op.subtract(pos, origin));
+		refreshVolumeBlocks();
 
 	}
 	
@@ -73,10 +108,10 @@ public class BlockMap {
 	}
 	
 
-	public void remove(BlockPos pos, World world){
-		map.remove(pos.subtract(origin));
-		impendEdges(pos.subtract(origin));
-		pos = pos.subtract(origin);
+	public void remove(BlockPos pos){
+		map.remove(Vec3Op.subtract(pos, origin));
+		impendEdges(Vec3Op.subtract(pos, origin));
+		pos = Vec3Op.subtract(pos, origin);
 		ArrayList<BlockPos> neighbours= getNeighbours(pos);
 		boolean hasOuterNeighbour= false;
 		boolean hasInnerNeighbour=false;
@@ -99,14 +134,9 @@ public class BlockMap {
 		else{
 			innerBlocks.put(pos, true);
 		}
-		}
-		
-
-	public void remove(BlockPos pos){
-		map.remove(Vec3Op.subtract(pos, origin));
-		impendEdges(Vec3Op.subtract(pos, origin));
-
+		refreshVolumeBlocks();
 	}
+
 	
 	public BlockPos getMaxPos(){
 		return maxPos.add(origin);
@@ -136,6 +166,7 @@ public class BlockMap {
 	 */
 	public void refreshVolumeBlocks()
 	{
+		System.out.println("refreshing...........");
 		if(hasToRefresh)
 		{
 			calculateOuterOutBlocks();  //initializes outerBlocks
@@ -155,6 +186,7 @@ public class BlockMap {
 			}
 		}
 		hasToRefresh = false;
+		System.out.println("..........refreshed!");
 	}
 	
 
@@ -336,6 +368,10 @@ public class BlockMap {
 		for(BlockPos pos : keys){
 			positions.add(pos.add(origin));
 		}
+		for(BlockPos pos : innerBlocks.keySet())
+		{
+			positions.add(pos.add(origin));           ///*****************************************ADDED
+		}
 		return positions;
 	}
 	
@@ -468,18 +504,9 @@ public class BlockMap {
 	public void showDebug(World world){
 		
 	
-			if(ff == 0 )
-			{
-				refreshVolumeBlocks();
-				ff = 1;
-			}
-			else
-			{
-				System.out.println("angefangen");
-				refreshVolumeBlocks();
-				System.out.println("beendet");
+				
 				ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
-				Set<BlockPos> keys = outerBlocks.keySet();
+				Set<BlockPos> keys = innerBlocks.keySet();
 				for(BlockPos pos : keys){
 					positions.add(pos.add(origin));
 				}
@@ -489,7 +516,7 @@ public class BlockMap {
 				}
 				
 			
-			}
+			
 
 		
 		
