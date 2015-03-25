@@ -24,3 +24,17 @@ hs_err_pid*
 /build.gradle
 /.project
 *.classpath
+/forge-*-changelog.txt
+/src/main/java/com/example/examplemod/ExampleMod.java
+
+#Files that were created by the minecraft server
+banned-ips.json
+banned-players.json
+logs/
+ops.json
+eula.txt
+server.properties
+usercache.json
+usernamecache.json
+whitelist.json
+/world

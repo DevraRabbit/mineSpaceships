@@ -1,18 +1,30 @@
 package com.minespaceships.mod.blocks;
 
-import com.minespaceships.mod.ExampleMod;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.spaceship.ISpaceshipPart;
+import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockButton;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockStone;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
@@ -23,16 +35,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class NavigatorBlock extends Block implements ITileEntityProvider{
+public class NavigatorBlock extends BlockStairs implements ITileEntityProvider, ISpaceshipPart{
 	/**
 	 * Block to implement an interface for the Spaceships
 	 * @param name The display name of the block
 	 */
-    public NavigatorBlock(String name) {
+    public NavigatorBlock() {
     	//Make a Block with certain attributes. Sponge for example is a quite soft block. Does not affect
     	//the texture of the block.
-    	super(Material.sponge);
-    	this.setUnlocalizedName(name);
+    	super(new BlockPlanks().getDefaultState());
+    	this.setUnlocalizedName("NavigatorBlock");
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
     /**
@@ -44,19 +56,31 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
     	//we do things locally or on the server. In this case we act on the client.
     	if(worldIn.isRemote){
     		//Send the player a message. This is the common way of sending texts to a single player using the chat.
-			 ChatComponentText text = new ChatComponentText("Opening Console");
-			 playerIn.addChatComponentMessage(text);	 
-			 //Get the TileEntity from the world, which is the object that is associated to the position
-			 //of our block and that can execute extra code. In our example this is opening a console.
-			 TileEntity entity = worldIn.getTileEntity(pos);
-			 if(entity instanceof ChatRegisterEntity){
-				 //Activate the entity
-				 ((ChatRegisterEntity)entity).Activate(playerIn);
-			 }			 
-    	 }
-    	 //returns true to prevent placing a block (which would be the default behavior for rightclicking)
-    	 return true;  
+			ChatComponentText text = new ChatComponentText("Opening Console");
+			playerIn.addChatComponentMessage(text);	 
+			//Get the TileEntity from the world, which is the object that is associated to the position
+			//of our block and that can execute extra code. In our example this is opening a console.
+			TileEntity entity = worldIn.getTileEntity(pos);
+			if(entity instanceof ChatRegisterEntity){
+				//Activate the entity
+				((ChatRegisterEntity)entity).Activate(playerIn);
+			}
+    	} else {
+    		//instantiate the remote worlds tile entity
+    		worldIn.getTileEntity(pos);
+    	}
+    	//returns true to prevent placing a block (which would be the default behavior for rightclicking)
+    	return true;
     }
+    @Override
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){    	
+    	return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
+    }
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+    	super.breakBlock(worldIn, pos, state);
+    }
+
     /**
      * @returns the TileEntity associated with this block. This way Minecraft can register it into the world
      */
@@ -65,5 +89,18 @@ public class NavigatorBlock extends Block implements ITileEntityProvider{
 		//As this block has the tileEntity that opens our console we return it so it gets placed wherever
 		//the Block is placed.
 		return new ChatRegisterEntity();
-	}    
+	}
+	
+	@Override
+    public boolean isFullBlock()
+    {
+        return false;
+    }
+
+	@Override
+	public boolean isFullCube()
+    {
+        return false;
+    }	
+
 }
