@@ -13,7 +13,10 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
+import com.minespaceships.mod.blocks.PhaserBlock;
+import com.minespaceships.mod.blocks.ShieldBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
@@ -167,6 +170,26 @@ public class Spaceship implements Serializable{
 		}
 		origin = Vec3Op.scale(span, 0.5);
 	}
+	public void activatePhasers(){
+		energySystem.changeAll(PhaserBlock.class, true);
+	}
+	public void deactivatePhasers(){
+		energySystem.changeAll(PhaserBlock.class, false);
+	}
+	public void activateShields(){
+		energySystem.changeAll(ShieldBlock.class, true);
+	}
+	public void deactivateShields(){
+		energySystem.changeAll(ShieldBlock.class, false);
+	}
+	public void activateEngines(){
+		energySystem.changeAll(EngineBlock.class, true);
+	}
+	public void deactivateEngines(){
+		energySystem.changeAll(EngineBlock.class, false);
+	}
+	
+	
 	public void setTarget(BlockPos position){
 		moveTo(Vec3Op.subtract(position, origin), 0, world);
 	}
