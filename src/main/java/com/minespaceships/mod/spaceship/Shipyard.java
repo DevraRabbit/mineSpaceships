@@ -7,8 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Vector;
 
 import net.minecraft.client.Minecraft;
@@ -171,57 +173,34 @@ public class Shipyard {
 		player.addChatComponentMessage(new ChatComponentText("block not part of a ship"));
 	}
 	
-	public String safe(){
-		String shipString = "";
-		for(Spaceship ship : ships){				
-			shipString += spaceshipToReadableData(ship);
+	public void loadShips(HashMap<NBTTagCompound, String> compounds){
+		Set<NBTTagCompound> keys = compounds.keySet();
+		for(NBTTagCompound c : keys){
+			loadShip(c, compounds.get(c));
 		}
-		return shipString;
 	}
-	public static String spaceshipToReadableData(Spaceship ship){
-		return ship.toData() + SPACESHIP_TAG+"\n";
-	}
-	
-	public void loadShips(String shipString){
-		Scanner scanner = null;
+	public void loadShip(NBTTagCompound compound, String key){
 		try {
-			scanner = new Scanner(shipString);
+			addShip(new Spaceship(compound, key, world));
 		} catch (Exception e) {
-			return;
+			System.out.println("Could not initialize ship!");
 		}
-		if(scanner != null){
-			String ship = "";
-			while(scanner.hasNext()){
-				String line = scanner.next();
-				if(!line.equals(SPACESHIP_TAG)){
-					ship += line + "\n";
-				} else {
-					try{
-						addShip(new Spaceship(ship, world));
-					} catch (Exception e){
-						System.out.println("Could not initialize Ship");
-					}
-					ship = "";
-				}
-			}
-			scanner.close();
-		}	
 	}
 	
 	public void clear(){
 		ships.clear();
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
-		String ships = nbt.getString(getCompoundKey(world.provider.getDimensionId()));
-		System.out.println("Loading ship :"+ ships.substring(0, 10) + "...");
-		loadShips(ships);
-	}
-
-	public void writeToNBT(NBTTagCompound nbt) {
-		String safe = safe();		
-		System.out.println("Saving "+safe.substring(0, 10) + "..."+" in Shipyard on World "+world.getWorldInfo().getWorldName());
-		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe);
-	}
+//	public void readFromNBT(NBTTagCompound nbt) {
+//		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
+//		String ships = nbt.getString(getCompoundKey(world.provider.getDimensionId()));
+//		System.out.println("Loading ship :"+ ships.substring(0, 10) + "...");
+//		loadShips(ships);
+//	}
+//
+//	public void writeToNBT(NBTTagCompound nbt) {
+//		String safe = safe();		
+//		System.out.println("Saving "+safe.substring(0, 10) + "..."+" in Shipyard on World "+world.getWorldInfo().getWorldName());
+//		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe);
+//	}
 }

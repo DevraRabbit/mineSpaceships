@@ -30,6 +30,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
@@ -52,6 +53,8 @@ public class Spaceship implements Serializable{
 	private SpaceshipAssembler assembler;
 	private EnergyStrategySystem energySystem;
 	private boolean isResolved = true;
+	
+	private static final String positionsKey = "Positions";
 	
 	private boolean canBeRemoved = true;
 	
@@ -86,10 +89,10 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		initializeBase();
 	}	
-	public Spaceship(String s, World world)throws Exception {
+	public Spaceship(NBTTagCompound s, String firstKey, World world)throws Exception {
 		this.world = world;
 		//world needs to be loaded first to prevent null pointer
-		this.fromData(s);
+		this.readFromNBT(s, firstKey);
 		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
@@ -378,7 +381,7 @@ public class Spaceship implements Serializable{
 	public boolean isNeighboringBlock(final BlockPos pos) {
 		return this.blockMap.isNeighbor(pos);
 	}
-	public String toData(){
+	public String positionsToString(){
 		String data = "";
 		ArrayList<BlockPos> positions = blockMap.getPositions();
 		data += blockMap.getOrigin().toLong()+"\n";
@@ -395,7 +398,7 @@ public class Spaceship implements Serializable{
 		}
 		return data;
 	}
-	public void fromData(String data) throws Exception{
+	public void positionsFromString(String data) throws Exception{
 		String[] lines = data.split("\n");		
 		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
 		blockMap = new BlockMap(ori);
@@ -456,5 +459,16 @@ public class Spaceship implements Serializable{
 
 		//Valid position
 		this.setTarget(new BlockPos(x,y,z));
+	}
+	public void readFromNBT(NBTTagCompound c, String firstKey){
+		String data = c.getString(firstKey+positionsKey);
+		try {
+			positionsFromString(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void writeToNBT(NBTTagCompound c, String firstKey){
+		c.setString(firstKey+positionsKey, positionsToString());
 	}
 }

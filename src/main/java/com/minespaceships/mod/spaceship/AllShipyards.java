@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 
 public class AllShipyards {
 	private static ArrayList<Shipyard> shipyards = new ArrayList<Shipyard>();
-	private static HashMap<Integer, String> bufferedData = new HashMap<Integer, String>();
+	private static HashMap<Integer, HashMap<NBTTagCompound, String>> bufferedData = new HashMap<Integer, HashMap<NBTTagCompound, String>>();
 	public static Shipyard getShipyard(World world){
 		for(Shipyard s : shipyards){
 			if(s.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
@@ -29,18 +29,16 @@ public class AllShipyards {
 		return s;
 	}
 	
-	public static void putData(int dimension, String Data){
+	public static void putData(int dimension, NBTTagCompound compound, String key){
 		Shipyard syard = getShipyardById(dimension);
 		if(syard != null){
 			System.out.println("Loaded recieved data directly into shipyard with id "+dimension);
-			syard.loadShips(Data);
+			syard.loadShip(compound, key);
 		} else {
 			if(!bufferedData.containsKey(dimension)){
-				bufferedData.put(dimension, "");
+				bufferedData.put(dimension, new HashMap<NBTTagCompound, String>());
 			}
-			String prevData = bufferedData.get(dimension);
-			Data += prevData;
-			bufferedData.put(dimension, Data);
+			bufferedData.get(dimension).put(compound, key);
 			System.out.println("Buffered shipdata on id "+dimension);
 		}
 	}
