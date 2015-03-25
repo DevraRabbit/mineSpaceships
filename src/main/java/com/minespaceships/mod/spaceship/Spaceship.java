@@ -260,6 +260,7 @@ public class Spaceship implements Serializable{
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
+		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 	}

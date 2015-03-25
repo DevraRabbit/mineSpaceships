@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 public class AllShipyards {
 	private static ArrayList<Shipyard> shipyards = new ArrayList<Shipyard>();
 	private static HashMap<Integer, HashMap<NBTTagCompound, String>> bufferedData = new HashMap<Integer, HashMap<NBTTagCompound, String>>();
+	
 	public static Shipyard getShipyard(World world){
 		for(Shipyard s : shipyards){
 			if(s.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
@@ -54,6 +55,8 @@ public class AllShipyards {
 		for(Shipyard s: shipyards){
 			s.clear();
 		}
+		shipyards.clear();
+		bufferedData.clear();
 	}
 	
 //	public static void readFromNBT(NBTTagCompound nbt) {
