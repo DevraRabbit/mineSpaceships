@@ -7,30 +7,49 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.util.PhaserUtils;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.World;
 
 /**
- * @author jannes
- *
+ * @author jannes, ovae.
+ * @version 20150313.
  */
 public class SpaceshipCommands {
+	//initialise the spaceship
+	public static String initAuto ="init auto";
+	//move the spaceship
+	public static String moveForward = "move forward";
+	public static String moveBack = "move back";
+	public static String moveUp = "move up";
+	public static String moveDown ="move down";
+	public static String land ="land";
+	public static String liftoff = "liftoff";
+	//spaceship functions
+	public static String shieldDisable = "shield disable";
+	public static String shieldActivate = "shiels activate";
+
+	//other commands
+	public static String help = "help";
 
 	public static void init(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship) {
 		if(command.equals("init auto")){
 			try {
 				ChatRegisterEntity ent = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos()));
 				if(ent != null){
-					Shipyard.getShipyard().createShip(commandBlock.getPos(), worldObj);
+					Shipyard.getShipyard(worldObj).createShip(commandBlock.getPos(), worldObj);
 				}
 			} catch (Exception e) {
 				player.addChatComponentMessage(new ChatComponentText(e.toString()));
@@ -44,7 +63,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
-			Shipyard.getShipyard().createShip(from, commandBlock.getPos(), to, worldObj);
+			Shipyard.getShipyard(worldObj).createShip(from, commandBlock.getPos(), to, worldObj);
 			
 			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
 		} else {
@@ -152,7 +171,7 @@ public class SpaceshipCommands {
 	
 	public static void debug(String command, final ChatRegisterEntity commandBlock){
 		if(command.equals("debug blockMap")){
-			Shipyard.getShipyard().getShip(commandBlock.getPos(), commandBlock.getWorld()).debugMap();;
+			Shipyard.getShipyard(commandBlock.getWorld()).getShip(commandBlock.getPos(), commandBlock.getWorld()).debugMap();;
 		}
 	}
 
@@ -174,4 +193,68 @@ public class SpaceshipCommands {
 			player.addChatComponentMessage(new ChatComponentText("usage: shoot #;#;#"));
 		}
 	}
+
+	public static String help(final EntityPlayer player){
+		String out="";
+		out+=EnumChatFormatting.GOLD+" "+EnumChatFormatting.BOLD+"]--HELP--[\n\n"
+		+"  "+EnumChatFormatting.YELLOW+"Menu structure:\n"
+		+"    ]--Menuname (menu id)--[\n"
+		+"        [position] sub menu name (sub menu id)\n"
+		+'\n'
+		+"  "+EnumChatFormatting.YELLOW+"Menu navigation:\n"
+		+"   You can navigate in three different ways: \n"
+		+"    -by the name of the Menu \n"
+		+"    -by id and the number in brakets e.g. id2 \n"
+		+"    -by the number for the submenu order.\n"
+		+'\n'
+		+"  "+EnumChatFormatting.YELLOW+"Menu colours:\n"
+		+"    -"+EnumChatFormatting.GOLD+"Gold: header\n"
+		+"    -"+EnumChatFormatting.WHITE+"White : normal menus\n"
+		+"    -"+EnumChatFormatting.GREEN+"Green:  menus with a functinality\n"
+		+"    -"+EnumChatFormatting.RED+"Red: error"
+		+'\n'
+		+EnumChatFormatting.RED+"\n   To get back in the parent menu, you can either\n"
+		+EnumChatFormatting.RED+"    enter 'm','up' or 'parent'.";
+		player.addChatComponentMessage(new ChatComponentText(out));
+		return out;
+	}
+
+	public static void land(final CustomGuiChat terminal){
+		/*
+		try{
+			double x,y,z;
+			World world = terminal.getChatRegisterEntity().getWorld();
+			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
+			if(ship == null) {
+				//return "Please initialise the spaceship first";
+			}
+			x = terminal.getChatRegisterEntity().getPos().getX();
+			y = terminal.getChatRegisterEntity().getPos().getY();
+			z = terminal.getChatRegisterEntity().getPos().getZ();
+			BlockPos minPos = ship.getMinPos();
+
+			int height=0;
+			boolean run = true;
+			int posY= minPos.getY()-1;
+			do{
+				IBlockState current = world.getBlockState(new BlockPos(x,posY,z));
+				if(current == Blocks.air.getDefaultState()){
+					run = true;
+				}else{
+					run = false;
+				}
+				posY--;
+				height++;
+			}while(run);
+
+			//(double)x, (double)y, (double)z
+			BlockPos position = new BlockPos(x, y-height+2, z);
+			ship.move(position);
+			//return "land successful.\nPress 'm' to get back.";
+		}catch(Exception e){
+			//return "While trying to land an error occurred: "+e;
+		}
+		*/
+	}
+
 }

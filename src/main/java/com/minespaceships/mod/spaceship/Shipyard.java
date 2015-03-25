@@ -14,9 +14,12 @@ import java.util.Vector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSavedData;
+import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,19 +33,35 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 
 public class Shipyard {
 	public static final String SPACESHIP_TAG = "//Spaceship";
+	public static final String COMPOUND_KEY_BASE = "Shipyard";
 	
 	private Vector<Spaceship> ships;
-	private static Shipyard singleton;
+	private World world;
 	
-	protected Shipyard() {
+	protected Shipyard(World world) {
+		this.world = world;
 		ships = new Vector<Spaceship>();
+//		MapStorage storage = world.getPerWorldStorage();
+//		saveCompound = (ShipyardSaveCompound) storage.loadData(ShipyardSaveCompound.class, COMPOUND_KEY);
+//		if(saveCompound == null){
+//			saveCompound = new ShipyardSaveCompound(COMPOUND_KEY);
+//		}
+//		saveCompound.setShipyard(this);
+//		storage.setData(COMPOUND_KEY, saveCompound);
+	}
+	public String getCompoundKey(){
+		return getCompoundKey(world.provider.getDimensionId());
+	}
+	public static String getCompoundKey(int dimension){
+		return COMPOUND_KEY_BASE+dimension;
 	}
 	
-	public static Shipyard getShipyard(){
-		if(singleton == null){
-			singleton = new Shipyard();
-		}
-		return singleton;
+	public World getWorld(){
+		return world;
+	}
+	
+	public static Shipyard getShipyard(World world){
+		return AllShipyards.getShipyard(world);
 	}
 	
 	public int getShipCount(){
@@ -57,9 +76,11 @@ public class Shipyard {
 					Spaceship nextShip = shipIt.next();
 					if(nextShip.measuresEquals(ship)){
 						shipIt.remove();
-					}
+						System.out.println("Removed ship due to ship overloading");
+					}					
 				}
 				ships.add(ship);
+				System.out.println("Added ship to the Shipyard");
 			}
 		}
 	}
@@ -69,7 +90,8 @@ public class Shipyard {
 	
 	public Spaceship getShip(BlockPos pos, World world){
 		for(Spaceship ship : ships){
-			if(ship.containsBlock(pos) && ship.getWorld() == world){
+			if(ship.containsBlock(pos) && 
+					ship.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
 				return ship;
 			}
 		}
@@ -78,10 +100,10 @@ public class Shipyard {
 	
 	@Deprecated
 	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World worldS){
-		new Spaceship(minSpan, origin, maxSpan, worldS);
+		addShip(new Spaceship(minSpan, origin, maxSpan, worldS));
 	}
 	public void createShip(BlockPos initial, World worldS) throws Exception{
-		new Spaceship(initial, worldS);
+		addShip(new Spaceship(initial, worldS));
 	}
 	
 	/**
@@ -89,15 +111,20 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void blockBroken(final BlockPos pos, final World world) {
+	public boolean removeBlock(final BlockPos pos, final World world) {
+		boolean hasRemoved = false;
 		for (Iterator<Spaceship> it = ships.iterator(); it.hasNext();) {
 			Spaceship ship = it.next();
 			if (ship.getWorld() == world) {
 				if (ship.containsBlock(pos)) {
-					if(ship.removeBlock(pos)){it.remove();}
+					if(ship.removeBlock(pos)){
+						it.remove();
+					}
+					hasRemoved = true;
 				}
 			}
 		}
+		return hasRemoved;
 	}
 	
 	/**
@@ -105,17 +132,16 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void blockPlaced(final BlockPos pos, final World world) {
-		if (ships.isEmpty()) return;
-		
+	public boolean placeBlock(final BlockPos pos, final World world) {
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
 				if (ship.isNeighboringBlock(pos)) {
 					ship.addBlock(pos);
-					break;
+					return true;
 				}
 			}
-		}		
+		}	
+		return false;
 	}
 	
 	/**
@@ -123,7 +149,7 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public void getBlockInfo(final BlockPos pos, final EntityPlayer player, final World world) {
+	public void sendBlockInfo(final BlockPos pos, final EntityPlayer player, final World world) {
 		if (ships.isEmpty()) {
 			player.addChatComponentMessage(new ChatComponentText("false - no ships existing"));
 			return;
@@ -139,69 +165,18 @@ public class Shipyard {
 		player.addChatComponentMessage(new ChatComponentText("block not part of a ship"));
 	}
 	
-	
-	@SubscribeEvent
-	@SideOnly(Side.SERVER)
-	public void safe(WorldEvent.Save event){
-		BufferedWriter writer = null;
-		File f = new File(MineSpaceships.SpaceshipSavePath + event.world.getWorldInfo().getWorldName());
-		try {
-			new File(MineSpaceships.SpaceshipSavePath).mkdirs();
-			f.createNewFile();
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		try {
-			writer = new BufferedWriter(new FileWriter(f));
-			for(Spaceship ship : ships){				
-				writer.write(ship.toData());
-				writer.write(SPACESHIP_TAG+"\n");
-			}
-			writer.close();
-		} catch (IOException e) {
-			try {
-				writer.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-	}
-	@SubscribeEvent
-	@SideOnly(Side.SERVER)
-	public void load(WorldEvent.Load event){
-		String ships = loadShips(event.world);
-		if(ships != null){load(ships, event.world);}
-	}
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void loadClient(WorldEvent.Load event){
-		//MineSpaceships.spaceshipNetwork.sendToServer(new CommandMessage(event.world.provider.getDimensionId()+""));
-	}
-	@SideOnly(Side.SERVER)
-	public String loadShips(World world){
-		Scanner scanner = null;
+	public String safe(){
 		String shipString = "";
-		File f = new File(MineSpaceships.SpaceshipSavePath + world.getWorldInfo().getWorldName());
-		try {
-			scanner = new Scanner(f);
-			
-			String ship = "";
-			while(scanner.hasNext()){
-				shipString += scanner.next();
-				shipString+="\n";
-			}			
-			scanner.close();
-			return shipString;
-			
-		} catch (FileNotFoundException e) {
-			return null;
+		for(Spaceship ship : ships){				
+			shipString += spaceshipToReadableData(ship);
 		}
+		return shipString;
 	}
-	public void load(String shipString, World world){
-		ships.clear();
+	public static String spaceshipToReadableData(Spaceship ship){
+		return ship.toData() + SPACESHIP_TAG+"\n";
+	}
+	
+	public void loadShips(String shipString){
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(shipString);
@@ -225,5 +200,22 @@ public class Shipyard {
 			}
 			scanner.close();
 		}	
+	}
+	
+	public void clear(){
+		ships.clear();
+	}
+
+	public void readFromNBT(NBTTagCompound nbt) {
+		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
+		String ships = nbt.getString(getCompoundKey(world.provider.getDimensionId()));
+		System.out.println("Loading ship :"+ ships.substring(0, 10) + "...");
+		loadShips(ships);
+	}
+
+	public void writeToNBT(NBTTagCompound nbt) {
+		String safe = safe();		
+		System.out.println("Saving "+safe.substring(0, 10) + "..."+" in Shipyard on World "+world.getWorldInfo().getWorldName());
+		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe);
 	}
 }

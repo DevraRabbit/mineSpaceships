@@ -24,6 +24,7 @@ import energyStrategySystem.IEnergyC;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
+import net.minecraft.block.BlockWallSign;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -86,8 +87,9 @@ public class Spaceship implements Serializable{
 		initializeBase();
 	}	
 	public Spaceship(String s, World world)throws Exception {
-		this.fromData(s);
 		this.world = world;
+		//world needs to be loaded first to prevent null pointer
+		this.fromData(s);
 		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
@@ -97,7 +99,7 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
-		Shipyard.getShipyard().addShip(this);
+		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
 	public BlockPos getOrigin(){
@@ -202,11 +204,12 @@ public class Spaceship implements Serializable{
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
-				if(facing != null){
-					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
-					neighbor = nextPos.offset(facing.getOpposite());
-					neighborState = world.getBlockState(neighbor);
-				}
+				facing = null;
+//				if(facing != null){
+//					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
+//					neighbor = nextPos.offset(facing.getOpposite());
+//					neighborState = world.getBlockState(neighbor);
+//				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					if(tryCopy(startMock, Pos, nextPos, turn)){
 						//build the buildable block
@@ -257,22 +260,35 @@ public class Spaceship implements Serializable{
 		} catch (Exception e){
 			System.out.println("An Error occured during Block Check. Moving anyway");
 		}
-		return startWorld.nextRemovedBlocks().size() > 1;
+		startWorld.nextSetBlocks();
+		boolean out = startWorld.nextRemovedBlocks().size() == 0;
+		return out;
 	}
 	private boolean tryRemove(WorldMock startWorld, BlockPos end){
 		try{
-			BlockCopier.removeBlock(startWorld, end);	
+//			if(startWorld.getBlockState(end).getBlock() instanceof BlockWallSign){
+//				int i = 0;
+//			}
+			BlockCopier.removeBlock(startWorld, end);			
+			startWorld.notifyNeighborsOfStateChange(end, Block.getStateById(0).getBlock());
 		} catch (Exception e){
 			System.out.println("An Error occured during Block Check. Moving anyway");
 		}
-		return startWorld.nextRemovedBlocks().size() == 0;
+		startWorld.nextSetBlocks();
+		int size = startWorld.nextRemovedBlocks().size();
+		if(size ==1){
+			return size == 1;
+		} else {
+			IBlockState state = startWorld.getBlockState(end);
+			return size == 1;
+		}
 	}
 	
 	private void moveMeasurements(BlockPos addDirection, int turn){
-		if(turn != 0){blockMap.rotate(origin, turn);}
+		blockMap.rotate(origin, turn);
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
-		//TODO: rotate assembler
-		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
+		assembler.rotate(origin,  turn);
+		assembler.setOrigin(assembler.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
 	@Deprecated
@@ -389,7 +405,8 @@ public class Spaceship implements Serializable{
 		for(String s : lines){
 			if(addedClass == null){
 				try{
-					blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+					//need to press this directly into the block map. Otherwise minecraft tries to lead the chunk and ends up in an infinite loop.
+					this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
 				} catch(Exception e){
 					addedClass = Class.forName(s);
 				}
@@ -416,7 +433,7 @@ public class Spaceship implements Serializable{
 	 * These method check also if the target position is a valid position.
 	 * @param position
 	 */
-	public void move(final BlockPos position){
+	public void move(BlockPos position){
 		if(position == null){
 			throw new IllegalArgumentException("The target position can not be null");
 		}

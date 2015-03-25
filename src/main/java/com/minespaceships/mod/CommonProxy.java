@@ -29,6 +29,7 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
     	MineSpaceships.network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
     	MineSpaceships.spaceshipNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("Spaceships");
+    	MineSpaceships.blockChangeEvents = NetworkRegistry.INSTANCE.newSimpleChannel("BlockChanges");
     	//register our game objects so Minecraft knows how to use them.
     	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock");
     	GameRegistry.registerBlock(new EnergyBlock(), "EnergyBlock");
@@ -40,7 +41,6 @@ public class CommonProxy {
     	// Register event listener
     	// http://www.minecraftforum.net/forums/archive/tutorials/931112-forge-4-x-events-howto
     	MinecraftForge.EVENT_BUS.register(new BlockEvent());
-    	MinecraftForge.EVENT_BUS.register(Shipyard.getShipyard());
     	MinecraftForge.EVENT_BUS.register(new PlayerTracker());
     }
     

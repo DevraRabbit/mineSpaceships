@@ -199,7 +199,7 @@ public abstract class ActivatableBlock extends Block implements ISpaceshipPart, 
 		if(playerIn != null && playerIn.isSneaking()){
 			return false;
 		}
-		Spaceship ship = Shipyard.getShipyard().getShip(pos, worldIn);
+		Spaceship ship = Shipyard.getShipyard(worldIn).getShip(pos, worldIn);
 		if((Boolean) state.getValue(ACTIVATED)){
 			setStatus(false, pos, worldIn);
 		} else {

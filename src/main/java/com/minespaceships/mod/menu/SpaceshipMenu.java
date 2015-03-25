@@ -6,7 +6,7 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * A default menu structure.
  * @author ovae.
- * @version 20150221
+ * @version 20150313.
  */
 public class SpaceshipMenu {
 
@@ -51,21 +51,47 @@ public class SpaceshipMenu {
 
 	//Menu for all torpedo types.
 	private static Menu torpedoMenu;
-	
+
+	//Menu of the move forward command
 	private static Menu moveForwardMenu;
+
+	//Menu of the move forward command witch contains the functionality.
 	private static Menu moveForwardFuncMenu;
+
+	//Menu of the move back command.
 	private static Menu moveBackMenu;
+
+	//Menu for the move back command witch contains the functionality.
 	private static Menu moveBackFuncMenu;
+
+	//Menu of the move right command.
 	private static Menu moveRightMenu;
+
+	//Menu for the move right command witch contains the functionality.
 	private static Menu moveRightFuncMenu;
+
+	//Menu of the move left command.
 	private static Menu moveLeftMenu;
+
+	//Menu for the move left command witch contains the functionality.
 	private static Menu moveLeftFuncMenu;
+
+	//Menu of the move up command.
 	private static Menu moveUpMenu;
+
+	//Menu for the move up command witch contains the functionality.
 	private static Menu moveUpFuncMenu;
+
+	//Menu of the move down command.
 	private static Menu moveDownMenu;
+
+	//Menu for the move down command witch contains the functionality.
 	private static Menu moveDownFuncMenu;
-	
+
+	//Menu for the liftoff functionality.
 	private static Menu liftoffMenu;
+
+	//Menu for the landing functionality.
 	private static Menu landingMenu;
 
 	/**
@@ -95,31 +121,37 @@ public class SpaceshipMenu {
 		moveForwardMenu = new Menu("move forward");
 		out = "";
 		out +="Please type in how may blocks you want to move forward.";
+		out +="The input must begin with an #\n";
 		moveForwardFuncMenu = new moveForwardMenu(out);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
 		out +="Please type in how may blocks you want to move back.";
+		out +="The input must begin with an #\n";
 		moveBackFuncMenu = new moveBackMenu(out);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
 		out +="Please type in how may blocks you want to move right.";
+		out +="The input must begin with an #\n";
 		moveRightFuncMenu = new moveRightMenu(out);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
 		out +="Please type in how may blocks you want to move left.";
+		out +="The input must begin with an #\n";
 		moveLeftFuncMenu = new moveLeftMenu(out);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
 		out +="Please type in how may blocks you want to move up.";
+		out +="The input must begin with an #\n";
 		moveUpFuncMenu = new moveUpMenu(out);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
 		out +="Please type in how may blocks you want to move down.";
+		out +="The input must begin with an #\n";
 		moveDownFuncMenu = new moveDownMenu(out);
 
 		liftoffMenu = new liftoffMenu("liftoff");

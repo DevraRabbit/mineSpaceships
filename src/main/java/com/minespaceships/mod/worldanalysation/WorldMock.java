@@ -3,9 +3,11 @@ package com.minespaceships.mod.worldanalysation;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -75,24 +77,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WorldMock extends World {
 
 	private World world;
-	private ArrayList<BlockPos> setBlocks;
+	private HashMap<BlockPos, IBlockState> setBlocks;
 	private ArrayList<BlockPos> removedBlocks;
 	private ArrayList<BlockPos> lightChangedBlocks;
 	private ArrayList<BlockPos> tileEntityAdded;
 	private ArrayList<BlockPos> tileEntityRemoved;
+	private ArrayList<Entity> entityAdded;
 	
 	public WorldMock(World infoContainer) {
 		super(null, null,infoContainer.provider, null, true);
 		world = infoContainer;
-		setBlocks = new ArrayList<BlockPos>();
+		setBlocks = new HashMap<BlockPos, IBlockState>();
 		removedBlocks = new ArrayList<BlockPos>();
 		lightChangedBlocks = new ArrayList<BlockPos>();
 		tileEntityAdded = new ArrayList<BlockPos>();
 		tileEntityRemoved = new ArrayList<BlockPos>();
+		entityAdded = new ArrayList<Entity>();
 	}	
 	
-	public ArrayList<BlockPos> nextSetBlocks(){
-		ArrayList<BlockPos> out = (ArrayList<BlockPos>) setBlocks.clone();
+	public Set<BlockPos> nextSetBlocks(){
+		Set<BlockPos> out = setBlocks.keySet();
 		setBlocks.clear();
 		return out;
 	}
@@ -192,12 +196,12 @@ public class WorldMock extends World {
     public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
     {    	
     	if(newState.getBlock().getMaterial() != Material.air){
-    		setBlocks.add(pos);
+    		setBlocks.put(pos, newState);
     	} else {
     		removedBlocks.add(pos);
     	}
         newState.getBlock().onBlockAdded(this, pos, newState);
-        notifyNeighborsOfStateChange(pos, newState.getBlock());
+        this.notifyNeighborsOfStateChange(pos, newState.getBlock());
         return true;
     }
 
@@ -207,7 +211,7 @@ public class WorldMock extends World {
     public boolean setBlockToAir(BlockPos pos)
     {
         removedBlocks.add(pos);
-        notifyNeighborsOfStateChange(pos, Block.getStateById(0).getBlock());
+        //notifyNeighborsOfStateChange(pos, Block.getStateById(0).getBlock());
         return true;
     }
     @Override
@@ -298,6 +302,9 @@ public class WorldMock extends World {
     @Override
     public IBlockState getBlockState(BlockPos pos)
     {
+    	if(setBlocks.containsKey(pos)){
+    		return setBlocks.get(pos);
+    	}
         return world.getBlockState(pos);
     }
     @Override
