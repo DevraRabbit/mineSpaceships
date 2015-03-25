@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -13,8 +14,13 @@ import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.spaceship.Shipyard;
+import com.minespaceships.mod.spaceship.Shipyard.BlockChangeStatus;
 
 // http://www.minecraftforge.net/wiki/Event_Reference#BlockEvent
 public class BlockEvent {
@@ -39,29 +45,38 @@ public class BlockEvent {
 		if (event.isCanceled()) return;
 		World world = event.world;
 		BlockPos pos = event.pos;
-		
-		if(Shipyard.getShipyard(event.world).removeBlock(pos, world)){
-			if(!world.isRemote){
-				event.getPlayer().addChatComponentMessage(new ChatComponentText("Block removed"));
-			}
+		sendBlockChange(pos, world, false);
+		if(removeBlock(pos, world) == BlockChangeStatus.CHANGE){
+			event.getPlayer().addChatComponentMessage(new ChatComponentText("Block removed"));
+		} else if (removeBlock(pos, world) == BlockChangeStatus.SHIP_REMOVED){
+			event.getPlayer().addChatComponentMessage(new ChatComponentText("Ship removed"));
 		}
+	}
+	public static BlockChangeStatus removeBlock(BlockPos pos, World world){
+		return Shipyard.getShipyard(world).removeBlock(pos, world);			
+	}
+	@SideOnly(Side.SERVER)
+	public static void sendBlockChange(BlockPos pos, World world, boolean blockPlaced){
+		MineSpaceships.blockChangeEvents.sendToAll(new CommandMessage(pos.toLong()+","+world.provider.getDimensionId()+","+blockPlaced));
 	}
 	
 	/**
 	 * Calls blockPlaced to add block to ships block list if placed
 	 * block is next to a ship
 	 */
+	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onPlaceEvent(final PlaceEvent event) {
 		if (event.isCanceled()) return;	
 		World world = event.world;
 		BlockPos pos = event.pos;
-		
-		if(Shipyard.getShipyard(event.world).placeBlock(pos, world)){
-			if(!world.isRemote){
-				event.player.addChatComponentMessage(new ChatComponentText("Block added"));
-			}
+		sendBlockChange(pos, world, true);
+		if(placeBlock(pos, world) == BlockChangeStatus.CHANGE){
+			event.player.addChatComponentMessage(new ChatComponentText("Block added"));
 		}
+	}
+	public static BlockChangeStatus placeBlock(BlockPos pos, World world){
+		return Shipyard.getShipyard(world).placeBlock(pos, world);			
 	}
 	
 	/**
@@ -69,16 +84,15 @@ public class BlockEvent {
 	 * block is next to a ship
 	 * see http://www.minecraftforge.net/forum/index.php?topic=24376.0
 	 */
+	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onMultiPlaceEvent(final MultiPlaceEvent event) {
 		if (event.isCanceled()) return;
 		World world = event.world;
 		BlockPos pos = event.pos;
-		
-		if(Shipyard.getShipyard(event.world).placeBlock(pos, world)){
-			if(!world.isRemote){
-				event.player.addChatComponentMessage(new ChatComponentText("Block added"));
-			}
+		sendBlockChange(pos, world, true);
+		if(placeBlock(pos, world) == BlockChangeStatus.CHANGE){
+			event.player.addChatComponentMessage(new ChatComponentText("Block added"));
 		}
 	}
 	
@@ -86,16 +100,18 @@ public class BlockEvent {
 	 * Calls blockBroken for each block affected by explosion,
 	 * to remove the blocks from ships block list if member of a ship
 	 */
+	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onExplosionEvent(final ExplosionEvent.Detonate event) {
 		if (event.isCanceled()) return;
 		World world = event.world;
 		List<BlockPos> posList = event.getAffectedBlocks();
 		for(BlockPos pos: posList) {
-			Shipyard.getShipyard(event.world).removeBlock(pos, world);
+			sendBlockChange(pos, world, false);
+			removeBlock(pos, world);
 		}
 	}
-	
+	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onUseHoeEvent(final UseHoeEvent event) {
 		if (event.isCanceled()) return;

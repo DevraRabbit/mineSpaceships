@@ -36,6 +36,7 @@ public class MineSpaceships
     public static final String SpaceshipSavePath = "./Spaceships/";
     public static SimpleNetworkWrapper network;
     public static SimpleNetworkWrapper spaceshipNetwork;
+    public static SimpleNetworkWrapper blockChangeEvents;
     
     private static int navigatorBlockId = 1000;
     

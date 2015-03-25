@@ -2,6 +2,7 @@ package com.minespaceships.mod.events;
 
 import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
+import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,8 +31,9 @@ public class PlayerTracker {
 		}
 	}
 	@SubscribeEvent
-	@SideOnly(Side.SERVER)
-	public void onPlayerLeave(PlayerLoggedOutEvent event){
+	@SideOnly(Side.CLIENT)
+	public void onPlayerLeave(WorldEvent.Unload event){
+		AllShipyards.clearAll();
 	}
 //	@SubscribeEvent
 //	public void onTick(TickEvent.ClientTickEvent event){

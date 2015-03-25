@@ -7,8 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Vector;
 
 import net.minecraft.client.Minecraft;
@@ -37,6 +39,10 @@ public class Shipyard {
 	
 	private Vector<Spaceship> ships;
 	private World world;
+	
+	public enum BlockChangeStatus{
+		NO_CHANGE, CHANGE, SHIP_REMOVED;
+	}
 	
 	protected Shipyard(World world) {
 		this.world = world;
@@ -76,9 +82,11 @@ public class Shipyard {
 					Spaceship nextShip = shipIt.next();
 					if(nextShip.measuresEquals(ship)){
 						shipIt.remove();
-					}
+						System.out.println("Removed ship due to ship overloading");
+					}					
 				}
 				ships.add(ship);
+				System.out.println("Added ship to the Shipyard");
 			}
 		}
 	}
@@ -88,7 +96,8 @@ public class Shipyard {
 	
 	public Spaceship getShip(BlockPos pos, World world){
 		for(Spaceship ship : ships){
-			if(ship.containsBlock(pos) && ship.getWorld() == world){
+			if(ship.containsBlock(pos) && 
+					ship.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
 				return ship;
 			}
 		}
@@ -108,20 +117,22 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public boolean removeBlock(final BlockPos pos, final World world) {
+	public BlockChangeStatus removeBlock(final BlockPos pos, final World world) {
 		boolean hasRemoved = false;
+		boolean removedShip = false;
 		for (Iterator<Spaceship> it = ships.iterator(); it.hasNext();) {
 			Spaceship ship = it.next();
 			if (ship.getWorld() == world) {
 				if (ship.containsBlock(pos)) {
 					if(ship.removeBlock(pos)){
 						it.remove();
+						removedShip = true;
 					}
 					hasRemoved = true;
 				}
 			}
 		}
-		return hasRemoved;
+		return hasRemoved ? (removedShip ? BlockChangeStatus.SHIP_REMOVED : BlockChangeStatus.CHANGE) : BlockChangeStatus.NO_CHANGE;
 	}
 	
 	/**
@@ -129,16 +140,16 @@ public class Shipyard {
 	 * @param pos BlockPos
 	 * @param world World
 	 */
-	public boolean placeBlock(final BlockPos pos, final World world) {
+	public BlockChangeStatus placeBlock(final BlockPos pos, final World world) {
 		for (Spaceship ship: ships) {
 			if (ship.getWorld() == world) {
 				if (ship.isNeighboringBlock(pos)) {
 					ship.addBlock(pos);
-					return true;
+					return BlockChangeStatus.CHANGE;
 				}
 			}
 		}	
-		return false;
+		return BlockChangeStatus.NO_CHANGE;
 	}
 	
 	/**
@@ -162,51 +173,34 @@ public class Shipyard {
 		player.addChatComponentMessage(new ChatComponentText("block not part of a ship"));
 	}
 	
-	public String safe(){
-		String shipString = "";
-		for(Spaceship ship : ships){				
-			shipString += spaceshipToReadableData(ship);
+	public void loadShips(HashMap<NBTTagCompound, String> compounds){
+		Set<NBTTagCompound> keys = compounds.keySet();
+		for(NBTTagCompound c : keys){
+			loadShip(c, compounds.get(c));
 		}
-		return shipString;
 	}
-	public static String spaceshipToReadableData(Spaceship ship){
-		return ship.toData() + SPACESHIP_TAG+"\n";
+	public void loadShip(NBTTagCompound compound, String key){
+		try {
+			addShip(new Spaceship(compound, key, world));
+		} catch (Exception e) {
+			System.out.println("Could not initialize ship!");
+		}
 	}
 	
-	public void loadShips(String shipString){
-		Scanner scanner = null;
-		try {
-			scanner = new Scanner(shipString);
-		} catch (Exception e) {
-			return;
-		}
-		if(scanner != null){
-			String ship = "";
-			while(scanner.hasNext()){
-				String line = scanner.next();
-				if(!line.equals(SPACESHIP_TAG)){
-					ship += line + "\n";
-				} else {
-					try{
-						addShip(new Spaceship(ship, world));
-					} catch (Exception e){
-						System.out.println("Could not initialize Ship");
-					}
-					ship = "";
-				}
-			}
-			scanner.close();
-		}	
+	public void clear(){
+		ships.clear();
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
-		String ships = nbt.getString(getCompoundKey(world.provider.getDimensionId()));
-		loadShips(ships);
-	}
-
-	public void writeToNBT(NBTTagCompound nbt) {
-		System.out.println("Saving Shipyard on World "+world.getWorldInfo().getWorldName());
-		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe());
-	}
+//	public void readFromNBT(NBTTagCompound nbt) {
+//		System.out.println("Loading Shipyard on World "+world.getWorldInfo().getWorldName());
+//		String ships = nbt.getString(getCompoundKey(world.provider.getDimensionId()));
+//		System.out.println("Loading ship :"+ ships.substring(0, 10) + "...");
+//		loadShips(ships);
+//	}
+//
+//	public void writeToNBT(NBTTagCompound nbt) {
+//		String safe = safe();		
+//		System.out.println("Saving "+safe.substring(0, 10) + "..."+" in Shipyard on World "+world.getWorldInfo().getWorldName());
+//		nbt.setString(getCompoundKey(world.provider.getDimensionId()), safe);
+//	}
 }
