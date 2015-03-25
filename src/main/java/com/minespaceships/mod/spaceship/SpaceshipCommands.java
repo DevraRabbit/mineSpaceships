@@ -52,6 +52,7 @@ public class SpaceshipCommands {
 					Shipyard.getShipyard(worldObj).createShip(commandBlock.getPos(), worldObj);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				player.addChatComponentMessage(new ChatComponentText(e.toString()));
 			}
 			return;
@@ -171,7 +172,9 @@ public class SpaceshipCommands {
 	
 	public static void debug(String command, final ChatRegisterEntity commandBlock){
 		if(command.equals("debug blockMap")){
+
 			Shipyard.getShipyard(commandBlock.getWorld()).getShip(commandBlock.getPos(), commandBlock.getWorld()).debugMap();;
+
 		}
 	}
 
@@ -191,6 +194,7 @@ public class SpaceshipCommands {
 		} else {
 			player.addChatComponentMessage(new ChatComponentText("shoot: Error processing intput"));
 			player.addChatComponentMessage(new ChatComponentText("usage: shoot #;#;#"));
+
 		}
 	}
 

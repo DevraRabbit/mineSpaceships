@@ -20,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.spaceship.Shipyard;
+import com.minespaceships.mod.spaceship.Shipyard.BlockChangeStatus;
 
 // http://www.minecraftforge.net/wiki/Event_Reference#BlockEvent
 public class BlockEvent {
@@ -45,13 +46,13 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		sendBlockChange(pos, world, false);
-		if(removeBlock(pos, world)){
-			if(!world.isRemote){
-				event.getPlayer().addChatComponentMessage(new ChatComponentText("Block removed"));
-			}
+		if(removeBlock(pos, world) == BlockChangeStatus.CHANGE){
+			event.getPlayer().addChatComponentMessage(new ChatComponentText("Block removed"));
+		} else if (removeBlock(pos, world) == BlockChangeStatus.SHIP_REMOVED){
+			event.getPlayer().addChatComponentMessage(new ChatComponentText("Ship removed"));
 		}
 	}
-	public static boolean removeBlock(BlockPos pos, World world){
+	public static BlockChangeStatus removeBlock(BlockPos pos, World world){
 		return Shipyard.getShipyard(world).removeBlock(pos, world);			
 	}
 	@SideOnly(Side.SERVER)
@@ -70,13 +71,11 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		sendBlockChange(pos, world, true);
-		if(placeBlock(pos, world)){
-			if(!world.isRemote){
-				event.player.addChatComponentMessage(new ChatComponentText("Block added"));
-			}
+		if(placeBlock(pos, world) == BlockChangeStatus.CHANGE){
+			event.player.addChatComponentMessage(new ChatComponentText("Block added"));
 		}
 	}
-	public static boolean placeBlock(BlockPos pos, World world){
+	public static BlockChangeStatus placeBlock(BlockPos pos, World world){
 		return Shipyard.getShipyard(world).placeBlock(pos, world);			
 	}
 	
@@ -92,12 +91,8 @@ public class BlockEvent {
 		World world = event.world;
 		BlockPos pos = event.pos;
 		sendBlockChange(pos, world, true);
-		if(placeBlock(pos, world)){
-			if(!world.isRemote){
-				event.player.addChatComponentMessage(new ChatComponentText("Block added"));
-			} else {
-				event.player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.DARK_AQUA+"Block added"));
-			}
+		if(placeBlock(pos, world) == BlockChangeStatus.CHANGE){
+			event.player.addChatComponentMessage(new ChatComponentText("Block added"));
 		}
 	}
 	
