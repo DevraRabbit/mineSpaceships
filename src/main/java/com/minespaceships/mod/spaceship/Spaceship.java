@@ -184,19 +184,21 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		blockMap.refreshVolumeBlocks(); //******************************ADDED
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		WorldMock startMock = new WorldMock(world);
 		//move the entities first to avoid long waiting times and weird bugs
 		if(side == Side.CLIENT)moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
-		//list of positions that need to be removed in revers order to prevent other blocks from cracking
+		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
 		Vector<BlockPos> removal = new Vector<BlockPos>();
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
-		ArrayList<BlockPos> positions = blockMap.getPositions();	
+		ArrayList<BlockPos> positions = blockMap.getPositionsWithInnerBlocks();	
 		int i = 3;
+		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  //*************************************************ADDED
 		while(!positions.isEmpty() && i > 0){
 			Iterator<BlockPos> it = positions.iterator();
 			while(it.hasNext()){
@@ -250,6 +252,11 @@ public class Spaceship implements Serializable{
 		while(reverseRemoval.hasPrevious()){
 			BlockPos prev = reverseRemoval.previous();
 			BlockCopier.removeBlock(world, prev);
+		}
+
+		for(BlockPos pos : toRefill)
+		{
+			world.setBlockState(pos, Block.getStateById(8)); //************************************************************ADDED
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
