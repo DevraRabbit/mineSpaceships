@@ -15,6 +15,7 @@ import javax.vecmath.Vector3d;
 import com.google.common.collect.ImmutableList;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
 import com.minespaceships.util.Vec3Op;
 
@@ -23,11 +24,13 @@ import energyStrategySystem.IEnergyC;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
+import net.minecraft.block.BlockWallSign;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
@@ -50,6 +53,8 @@ public class Spaceship implements Serializable{
 	private SpaceshipAssembler assembler;
 	private EnergyStrategySystem energySystem;
 	private boolean isResolved = true;
+	
+	private static final String positionsKey = "Positions";
 	
 	private boolean canBeRemoved = true;
 	
@@ -84,9 +89,10 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		initializeBase();
 	}	
-	public Spaceship(String s, World world)throws Exception {
-		this.fromData(s);
+	public Spaceship(NBTTagCompound s, String firstKey, World world)throws Exception {
 		this.world = world;
+		//world needs to be loaded first to prevent null pointer
+		this.readFromNBT(s, firstKey);
 		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
@@ -96,7 +102,7 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
-		Shipyard.getShipyard().addShip(this);
+		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
 	public BlockPos getOrigin(){
@@ -178,18 +184,21 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		blockMap.refreshVolumeBlocks(); //******************************ADDED
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		WorldMock startMock = new WorldMock(world);
 		//move the entities first to avoid long waiting times and weird bugs
 		if(side == Side.CLIENT)moveEntities(addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
-		//list of positions that need to be removed in revers order to prevent other blocks from cracking
+		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
 		Vector<BlockPos> removal = new Vector<BlockPos>();
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
-		ArrayList<BlockPos> positions = blockMap.getPositions();	
+		ArrayList<BlockPos> positions = blockMap.getPositionsWithInnerBlocks();	
 		int i = 3;
+		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  //*************************************************ADDED
 		while(!positions.isEmpty() && i > 0){
 			Iterator<BlockPos> it = positions.iterator();
 			while(it.hasNext()){
@@ -200,17 +209,20 @@ public class Spaceship implements Serializable{
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
-				if(facing != null){
-					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
-					neighbor = nextPos.offset(facing.getOpposite());
-					neighborState = world.getBlockState(neighbor);
-				}
+				facing = null;
+//				if(facing != null){
+//					facing = (EnumFacing)Turn.getNextFacing(facing, turn);
+//					neighbor = nextPos.offset(facing.getOpposite());
+//					neighborState = world.getBlockState(neighbor);
+//				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
-					//build the buildable block
-					BlockCopier.copyBlock(world, Pos, nextPos, turn);					
-					it.remove();
-					//remember to remove it
-					removal.add(Pos);
+					if(tryCopy(startMock, Pos, nextPos, turn)){
+						//build the buildable block
+						BlockCopier.copyBlock(world, Pos, nextPos, turn);					
+						it.remove();
+						//remember to remove it
+						removal.add(Pos);
+					}
 				} 
 			}
 			i--;
@@ -225,10 +237,26 @@ public class Spaceship implements Serializable{
 				removal.insertElementAt(Pos, 0);
 			}
 		}
-		//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+		for(int j = 0; j < 3 && !removal.isEmpty(); j++){
+			//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+			ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+			while(reverseRemoval.hasPrevious()){
+				BlockPos prev = reverseRemoval.previous();
+				if(tryRemove(startMock, prev)){
+					BlockCopier.removeBlock(world, prev);
+				}
+			}
+		}
+		//remove the ones that didn't pass
 		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
 		while(reverseRemoval.hasPrevious()){
-			BlockCopier.removeBlock(world, reverseRemoval.previous());
+			BlockPos prev = reverseRemoval.previous();
+			BlockCopier.removeBlock(world, prev);
+		}
+
+		for(BlockPos pos : toRefill)
+		{
+			world.setBlockState(pos, Block.getStateById(8)); //************************************************************ADDED
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
@@ -236,11 +264,41 @@ public class Spaceship implements Serializable{
 		canBeRemoved = true;
 	}
 	
+	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
+		try{
+			BlockCopier.copyBlock(startWorld, start, end, turn);	
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
+		startWorld.nextSetBlocks();
+		boolean out = startWorld.nextRemovedBlocks().size() == 0;
+		return out;
+	}
+	private boolean tryRemove(WorldMock startWorld, BlockPos end){
+		try{
+//			if(startWorld.getBlockState(end).getBlock() instanceof BlockWallSign){
+//				int i = 0;
+//			}
+			BlockCopier.removeBlock(startWorld, end);			
+			startWorld.notifyNeighborsOfStateChange(end, Block.getStateById(0).getBlock());
+		} catch (Exception e){
+			System.out.println("An Error occured during Block Check. Moving anyway");
+		}
+		startWorld.nextSetBlocks();
+		int size = startWorld.nextRemovedBlocks().size();
+		if(size ==1){
+			return size == 1;
+		} else {
+			IBlockState state = startWorld.getBlockState(end);
+			return size == 1;
+		}
+	}
+	
 	private void moveMeasurements(BlockPos addDirection, int turn){
-		if(turn != 0){blockMap.rotate(origin, turn);}
+		blockMap.rotate(origin, turn);
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
-		//TODO: rotate assembler
-		assembler.setOrigin(blockMap.getOrigin().add(addDirection));
+		assembler.rotate(origin,  turn);
+		assembler.setOrigin(assembler.getOrigin().add(addDirection));
 		origin = origin.add(addDirection);
 	}
 	@Deprecated
@@ -330,7 +388,7 @@ public class Spaceship implements Serializable{
 	public boolean isNeighboringBlock(final BlockPos pos) {
 		return this.blockMap.isNeighbor(pos);
 	}
-	public String toData(){
+	public String positionsToString(){
 		String data = "";
 		ArrayList<BlockPos> positions = blockMap.getPositions();
 		data += blockMap.getOrigin().toLong()+"\n";
@@ -347,7 +405,7 @@ public class Spaceship implements Serializable{
 		}
 		return data;
 	}
-	public void fromData(String data) throws Exception{
+	public void positionsFromString(String data) throws Exception{
 		String[] lines = data.split("\n");		
 		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
 		blockMap = new BlockMap(ori);
@@ -357,7 +415,8 @@ public class Spaceship implements Serializable{
 		for(String s : lines){
 			if(addedClass == null){
 				try{
-					blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+					//need to press this directly into the block map. Otherwise minecraft tries to lead the chunk and ends up in an infinite loop.
+					this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
 				} catch(Exception e){
 					addedClass = Class.forName(s);
 				}
@@ -384,7 +443,7 @@ public class Spaceship implements Serializable{
 	 * These method check also if the target position is a valid position.
 	 * @param position
 	 */
-	public void move(final BlockPos position){
+	public void move(BlockPos position){
 		if(position == null){
 			throw new IllegalArgumentException("The target position can not be null");
 		}
@@ -407,5 +466,16 @@ public class Spaceship implements Serializable{
 
 		//Valid position
 		this.setTarget(new BlockPos(x,y,z));
+	}
+	public void readFromNBT(NBTTagCompound c, String firstKey){
+		String data = c.getString(firstKey+positionsKey);
+		try {
+			positionsFromString(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void writeToNBT(NBTTagCompound c, String firstKey){
+		c.setString(firstKey+positionsKey, positionsToString());
 	}
 }

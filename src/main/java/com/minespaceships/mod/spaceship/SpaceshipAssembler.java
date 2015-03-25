@@ -3,6 +3,7 @@ package com.minespaceships.mod.spaceship;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,9 @@ public class SpaceshipAssembler {
 	}
 	public void setOrigin(BlockPos pos){
 		origin = pos;
+	}
+	public BlockPos getOrigin(){
+		return origin;
 	}
 	public Set<Class> getTypes(){
 		return parts.keySet();
@@ -49,7 +53,7 @@ public class SpaceshipAssembler {
 		for(Class cls : classes){
 			if(c.isAssignableFrom(cls)){
 				instances.addAll(parts.get(cls));
-			}S
+			}
 		}
 		for(ListIterator<BlockPos> it = instances.listIterator(); it.hasNext();){
 			BlockPos pos = it.next();
@@ -57,6 +61,20 @@ public class SpaceshipAssembler {
 			it.add(pos.add(origin));
 		}
 		return instances;
+	}
+	public void rotate(BlockPos origin, int turn){
+		if(turn == 0) return;
+		BlockPos rotateOrigin = Vec3Op.subtract(origin, this.origin);
+		Set<Class> classSet = parts.keySet();
+		for(Class c : classSet){
+			ArrayList<BlockPos> nextPositions = new ArrayList<BlockPos>();
+			List<BlockPos> momPositions = parts.get(c);
+			for(BlockPos pos : momPositions){
+				nextPositions.add(Turn.getRotatedPos(pos, origin, new BlockPos(0,0,0), turn));
+			}
+			parts.put(c,  nextPositions);
+		}
+		this.origin = Turn.getRotatedPos(this.origin, origin, new BlockPos(0,0,0), turn);
 	}
 	public void clear(){
 		parts.clear();

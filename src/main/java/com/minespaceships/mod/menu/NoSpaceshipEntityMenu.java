@@ -25,7 +25,7 @@ public class NoSpaceshipEntityMenu{
 		rootMenu.addSubMenu(initMenu);
 		runBefore = true;
 	}
-	
+
 	/**
 	 * Returns the root menu.
 	 * @return root
@@ -33,7 +33,7 @@ public class NoSpaceshipEntityMenu{
 	public static Menu getRootMenu(){
 		return rootMenu;
 	}
-	
+
 	/**
 	 * Returns a boolean runBefore.
 	 * @return runBefore

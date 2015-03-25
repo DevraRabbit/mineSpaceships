@@ -7,17 +7,23 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 /**
  * Move the spaceship position to the left.
  * @author ovae.
- * @version 20150310.
+ * @version 20150320.
  */
 public class moveLeftMenu extends Menu implements FunctionalParamMenu{
-	
-	//The terminal to write in.
-	private CustomGuiChat terminal;
-	
+
+	/**
+	 * Creates a new moveLeftmenu.
+	 * @param name
+	 */
 	public moveLeftMenu(String name) {
 		super(name);
 	}
 
+	/**
+	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 * @param terminal
+	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		// TODO Auto-generated method stub

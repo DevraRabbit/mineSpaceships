@@ -4,8 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -16,14 +18,23 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position back.
  * @author ovae.
- * @version 20150310.
+ * @version 20150323.
  */
 public class moveBackMenu extends Menu implements FunctionalParamMenu{
 
+	/**
+	 * Creates a new moveBackMenu.
+	 * @param name
+	 */
 	public moveBackMenu(String name) {
 		super(name);
 	}
 
+	/**
+	 * The functionality of the menu is activated by this method.
+	 * @param command
+	 * @param terminal
+	 */
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
 		if(command.trim().isEmpty()){
@@ -33,29 +44,8 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 			return "command can not be null.";
 		}
 
-		double x,y,z;
-		Pattern pattern = Pattern.compile("([\\-\\+]?[0-9]*[\\.]?[0-9]+);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*);[\\s*]?([\\-\\+]?[0-9]*[\\.]?[0-9]*)");
-		Matcher matcher = pattern.matcher(command);
-		if(matcher.matches()){
-			x = Double.valueOf(matcher.group(1));
-			y = Double.valueOf(matcher.group(2));
-			z = Double.valueOf(matcher.group(3));
-
-			try{
-				Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-				//(double)x, (double)y, (double)z
-				BlockPos position = new BlockPos(x, y, z);
-				if(ship == null) {
-					terminal.display("move: Please initialise the Spaceship first", true);
-				}
-				ship.move(position);
-
-				return ">> To target <<";
-			}catch(Exception e){
-				System.err.println("ship is broken");
-			}
-		}
-		return "move back not implemented yet!";
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveBack+" "+command, terminal.getPlayerEntity());
+		return SpaceshipCommands.moveBack;
 	}
 
 }

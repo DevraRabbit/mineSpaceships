@@ -60,7 +60,7 @@ public class terminalMenu {
 					//Place the wool blocks
 					if(!((x==0 && y==0) || (x==0 && y==size-1) || (x==size-1 && y==0) || (x==size-1 && y==4) || (x==0) && (y==2))){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
-						world.setBlockState(newPos, Blocks.wool.getDefaultState());
+						world.setBlockState(newPos, Blocks.melon_block.getDefaultState());
 					}
 
 					//Place the navigator block
@@ -69,23 +69,16 @@ public class terminalMenu {
 						world.setBlockState(newPos, NavigatorBlock.getStateById(198));
 					}
 
-					/*//Place the phaser
-					if((x==size-1) && (y==1) || (x==size-1) && (y==3)){
-						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+4, pos.getZ()+y);
-						world.setBlockState(newPos, PhaserBlock.getStateById(200));
-					}
-
-					//Place EngineBlocks
-					if((x==0) && (y==1) || (x==0) && (y==size)){
-						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y-1);
-						EngineBlock engine = new EngineBlock();
-						world.setBlockState(newPos, EngineBlock.getStateById(203));
-					}*/
-
 					//Place the redstone_block
 					if((x==3) && (y==2)){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
 						world.setBlockState(newPos, Blocks.redstone_block.getDefaultState());
+					}
+
+					//Place a ladder
+					if((x==0) && (y==2)){
+						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
+						world.setBlockState(newPos, Blocks.ladder.getDefaultState());
 					}
 				}
 			}
@@ -93,6 +86,7 @@ public class terminalMenu {
 			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.GREEN+"Basic spaceship spawned."));
 			chat.display("\nPress 'm' to get back.", false);
 		}
+
 	}
 
 }
