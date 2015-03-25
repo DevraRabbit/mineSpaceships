@@ -23,6 +23,8 @@ public class BlockMap {
 	private HashMap<BlockPos, Boolean> outerBlocks; 
 	private HashMap<BlockPos, Boolean> outerOutBlocks;
 	private HashMap<BlockPos, Boolean> spannedRectangle;
+	
+	
 	private HashMap<BlockPos, Boolean> innerBlocks;
 	private boolean rekHelper = true;
 	private static int ff = 0;   //*****************REMOVE
@@ -34,7 +36,7 @@ public class BlockMap {
 		outerOutBlocks = new HashMap<BlockPos, Boolean>();
 		innerBlocks = new HashMap<BlockPos, Boolean>();
 		spannedRectangle = new HashMap<BlockPos, Boolean>();
-		maxPos = new BlockPos(0,0,0);
+	  	maxPos = new BlockPos(0,0,0);
 		minPos = new BlockPos(0,0,0);
 		origin = originPoint;
 	}
@@ -48,11 +50,12 @@ public class BlockMap {
 	}
 	
 	public ArrayList<BlockPos> getBlocksToRefill(World world)
-	{
-		int y = minPos.getY();
+	{	HashMap<BlockPos, Boolean> nextToShipBlocks;
+		int y = minPos.getY() - 1;
 		boolean setToWater = false;
 		ArrayList<BlockPos> toWater = new ArrayList();
-		for(BlockPos p : outerBlocks.keySet())
+		nextToShipBlocks= calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1), new BlockPos(maxPos.getX()+1, maxPos.getY()+1, maxPos.getZ()+1));
+		for(BlockPos p : nextToShipBlocks.keySet())
 		{
 			
 			if(world.getBlockState(p.add(origin)).getBlock().getMaterial() == Material.water)
@@ -90,6 +93,7 @@ public class BlockMap {
 		pos = Vec3Op.subtract(pos, origin);
 		outerBlocks.remove(pos);
 		innerBlocks.remove(pos);
+		calculateOuterOutBlocks();
 		boolean hasOuterBlock=false;
 		for(BlockPos p: getNeighbours(pos)){
 			if(outerBlocks.containsKey(p)){
@@ -126,7 +130,7 @@ public class BlockMap {
 				innerNeighbour=p;
 			}
 		}		
-		if(hasOuterNeighbour && hasInnerNeighbour){
+		if(hasOuterNeighbour && hasInnerNeighbour || outerOutBlocks.containsKey(pos)){
 			hasToRefresh = true;
 		}		
 		if(hasOuterNeighbour){
@@ -167,8 +171,7 @@ public class BlockMap {
 	 */
 	public void refreshVolumeBlocks()
 	{
-		System.out.println("refreshing...........");
-		if(true) // ******************************************CHANGE TO hastorefresh
+		if(hasToRefresh) 
 		{
 			calculateOuterOutBlocks();  //initializes outerBlocks
 			spanRectangle();
@@ -180,14 +183,13 @@ public class BlockMap {
 			innerBlocks.clear(); 	//initializes innerBlocks
 			for(BlockPos l : spannedRectangle.keySet())
 			{
-				if(!map.containsKey(l) && !outerBlocks.containsKey(l))           //***DEBUG** innerblocks are in map..
+				if(!map.containsKey(l) && !outerBlocks.containsKey(l))           
 				{
 					innerBlocks.put(l, true);
 				}
 			}
 		}
 		hasToRefresh = false;
-		System.out.println("..........refreshed!");
 	}
 	
 
@@ -280,7 +282,11 @@ public class BlockMap {
 		
 	}
 	
-	private void calculateOuterOutBlocks()
+	private void calculateOuterOutBlocks(){
+		this.outerOutBlocks= calculateFrameBlocks(minPos, maxPos);
+	}
+	
+	private HashMap<BlockPos, Boolean> calculateFrameBlocks(BlockPos minPos, BlockPos maxPos)
 	{
 		HashMap<BlockPos, Boolean> aktList = new HashMap();
 		{
@@ -344,7 +350,7 @@ public class BlockMap {
 			}
 		}
 		}
-		this.outerOutBlocks = aktList;
+		return aktList;
 	}
 	
 	private void spanRectangle()
@@ -362,6 +368,8 @@ public class BlockMap {
 		}
 		this.spannedRectangle = aktList;
 	}
+	
+	
 	
 	public ArrayList<BlockPos> getPositions(){
 		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
@@ -516,8 +524,8 @@ public class BlockMap {
 	
 				
 				ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
-				Set<BlockPos> keys = innerBlocks.keySet();
-				for(BlockPos pos : keys){
+	
+				for(BlockPos pos : calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()){
 					positions.add(pos.add(origin));
 				}
 				for(BlockPos po : positions)
