@@ -514,9 +514,9 @@ public class Spaceship implements Serializable{
 		return pos.getX() >= min.getX() &&
 				pos.getY() >= min.getY() &&
 				pos.getZ() >= min.getZ() &&
-				pos.getX() < max.getX() &&
-				pos.getY() < max.getY() &&
-				pos.getZ() < max.getZ();
+				pos.getX() <= max.getX() &&
+				pos.getY() <= max.getY() &&
+				pos.getZ() <= max.getZ();
 	}
 	public void readFromNBT(NBTTagCompound c, String firstKey){
 		String data = c.getString(firstKey+positionsKey);
