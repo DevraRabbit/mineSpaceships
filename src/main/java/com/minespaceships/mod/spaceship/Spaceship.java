@@ -13,7 +13,10 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
+import com.minespaceships.mod.blocks.PhaserBlock;
+import com.minespaceships.mod.blocks.ShieldBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
@@ -31,6 +34,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
@@ -54,6 +58,8 @@ public class Spaceship implements Serializable{
 	private SpaceshipAssembler assembler;
 	private EnergyStrategySystem energySystem;
 	private boolean isResolved = true;
+	
+	private static final String positionsKey = "Positions";
 	
 	private boolean canBeRemoved = true;
 	
@@ -88,10 +94,10 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		initializeBase();
 	}	
-	public Spaceship(String s, World world)throws Exception {
+	public Spaceship(NBTTagCompound s, String firstKey, World world)throws Exception {
 		this.world = world;
 		//world needs to be loaded first to prevent null pointer
-		this.fromData(s);
+		this.readFromNBT(s, firstKey);
 		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
@@ -166,6 +172,26 @@ public class Spaceship implements Serializable{
 		}
 		origin = Vec3Op.scale(span, 0.5);
 	}
+	public void activatePhasers(){
+		energySystem.changeAll(PhaserBlock.class, true);
+	}
+	public void deactivatePhasers(){
+		energySystem.changeAll(PhaserBlock.class, false);
+	}
+	public void activateShields(){
+		energySystem.changeAll(ShieldBlock.class, true);
+	}
+	public void deactivateShields(){
+		energySystem.changeAll(ShieldBlock.class, false);
+	}
+	public void activateEngines(){
+		energySystem.changeAll(EngineBlock.class, true);
+	}
+	public void deactivateEngines(){
+		energySystem.changeAll(EngineBlock.class, false);
+	}
+	
+	
 	public void setTarget(BlockPos position){
 		moveTo(Vec3Op.subtract(position, origin), 0, world);
 	}
@@ -269,6 +295,7 @@ public class Spaceship implements Serializable{
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
+		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 		
@@ -406,7 +433,7 @@ public class Spaceship implements Serializable{
 	public boolean isNeighboringBlock(final BlockPos pos) {
 		return this.blockMap.isNeighbor(pos);
 	}
-	public String toData(){
+	public String positionsToString(){
 		String data = "";
 		ArrayList<BlockPos> positions = blockMap.getPositions();
 		data += blockMap.getOrigin().toLong()+"\n";
@@ -423,7 +450,7 @@ public class Spaceship implements Serializable{
 		}
 		return data;
 	}
-	public void fromData(String data) throws Exception{
+	public void positionsFromString(String data) throws Exception{
 		String[] lines = data.split("\n");		
 		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
 		blockMap = new BlockMap(ori);
@@ -484,5 +511,16 @@ public class Spaceship implements Serializable{
 
 		//Valid position
 		this.setTarget(new BlockPos(x,y,z));
+	}
+	public void readFromNBT(NBTTagCompound c, String firstKey){
+		String data = c.getString(firstKey+positionsKey);
+		try {
+			positionsFromString(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void writeToNBT(NBTTagCompound c, String firstKey){
+		c.setString(firstKey+positionsKey, positionsToString());
 	}
 }

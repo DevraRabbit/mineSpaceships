@@ -1,0 +1,66 @@
+========================= A guide to create own menus =========================
+
+Create a new class for your menu. Use the 
+'com.minespaceships.mod.menu.functionalMenus' package for your class. Your menu
+must extends the class Menu, out of the com.minespaceships.mod.menu package.
+If your menu should handle parameters implements the FunctionalParamMenu 
+interface, otherwise implement the FunctionalMenu interface.
+
+The class get a public constructor and a active method witch returns a String.
+The constructor get's the menus name as an parameter, witch is passed straight
+to the super class. Otherwise the constructor should not do anything.
+
+Both interfaces implement the same methods, but they are used to distinguish
+menus with parameters and those with no parameters. For both interfaces the
+activate method has the parameters: String command and CustomGuiChat terminal.
+The method must have the annotation '@Override'.
+
+In the activate method:
+   call on the ChatRegisterEntity the onCommand method. The first parameter of
+   the onComman ....
+   
+
+A) If you have implemented the FunctionMenu interface:
+    
+B) If you have implemented the FunctionPramMenu interface:
+    
+
+===================== Integration into the menu structure =====================
+
+A) Menu without parameters:
+   For your menu create an static attribute in the class SpaceshipMenu.
+   Use for the attribute the Menu type, but when you initialise the menu, in
+   the initMenu method, then use the type of the class you have created.
+   Now select the parent menu of your menu and add it as an sub menu, like
+   this:  parenMenu.addSubMenu(yourMenu);
+   
+
+
+B) Menu with parameters:
+   To get the use input as an parameter you must create two menus.
+   Your menu and a wrapper menu for it. The wrapper menu is a menu of the type
+   Menu. It will contain your menu.
+
+   The wrapper menu get as it's label a short and concise description what your
+   menu should do.
+
+   Your menu get as it's label a description, what and how the user should
+   enter its parameter. It is important that the program recognises a parameter
+   by the prefix char '#'.
+
+
+==================================== Files ====================================
+packages:
+=========
+com.minespaceships.mod.menu
+com.minespaceships.mod.menu.functionalMenus
+
+Class path:
+===========
+com.minespaceships.mod.menu.Menu
+com.minespaceships.mod.menu.SpaceshipMenu
+
+Interface path:
+===============
+com.minespaceships.mod.menu.FunctionalMenu
+com.minespaceships.mod.menu.FunctionalParamMenu

@@ -6,8 +6,8 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 
 /**
  * If the navigation block has no spaceship entity, this menu is displayed.
- * @author ovae
- * @version 20150226
+ * @author ovae.
+ * @version 20150226.
  */
 public class NoSpaceshipEntityMenu{
 

@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * This class is a utility to detect parameter patterns in
  * a string.
  * @author ovae.
- * @version 20150222
+ * @version 20150222.
  */
 public class ParameterPattern {
 

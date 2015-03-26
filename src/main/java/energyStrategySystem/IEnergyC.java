@@ -20,6 +20,6 @@ public interface IEnergyC extends ISpaceshipPart {
 	 */
 	boolean getStatus(BlockPos pos, World world);
 	
-	void setStatus(boolean b, BlockPos pos, World world);
+	void setStatus(boolean b, BlockPos pos, World world, boolean sendChange);
 
 }
