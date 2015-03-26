@@ -31,6 +31,7 @@ public class EnergyStrategySystem {
 	
 	public float getEnergy(){
 		ArrayList<BlockPos> energyPositions = assembler.getParts(IEnergyC.class);
+		System.out.println("Recieved "+energyPositions.size()+" IEnergyC. "+ (energyPositions.size() > 0 ? energyPositions.get(0) : "No Positions found!"));
 		float energy=0;
 		for(BlockPos p: energyPositions){
 			Block block = world.getBlockState(p).getBlock();
@@ -43,6 +44,7 @@ public class EnergyStrategySystem {
 				//TODO: implement reload Bug where all blocks are air
 			}
 		}
+		System.out.println("Calculated "+energy+" Energy");
 		return energy;		
 	}
 	

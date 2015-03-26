@@ -505,6 +505,7 @@ public class BlockMap {
 	}
 	
 	public void rotate(BlockPos origin, int turn){
+		if(turn == 0) return;
 		BlockPos rotateOrigin = Vec3Op.subtract(origin, this.origin);
 		Set<BlockPos> posSet = map.keySet();
 		HashMap nextMap = new HashMap<BlockPos, Boolean>();
