@@ -80,22 +80,21 @@ public class Menu{
 				}
 			}
 
-				if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
-					//Get the selctedMenu
-					FunctionalParamMenu temp = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
-					selectedMenu = selectedMenu.getMother();
-					temp.activate(name, terminal);
+			if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
+				//Get the selctedMenu
+				FunctionalParamMenu temp = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
+				selectedMenu = selectedMenu.getMother();
+				temp.activate(name, terminal);
 
-					return selectedMenu.getMother();
-				}else{
-					//Changes the menu via sub menu position.
-					int position = Integer.parseInt(name);
-					if(position > 0 && position <= selectedMenu.childrenList.size()){
-						position -= 1;
-						return selectedMenu.childrenList.get(position);
-					}
+				return selectedMenu.getMother();
+			}else{
+				//Changes the menu via sub menu position.
+				int position = Integer.parseInt(name);
+				if(position > 0 && position <= selectedMenu.childrenList.size()){
+				position -= 1;
+				return selectedMenu.childrenList.get(position);
 				}
-			//}
+			}
 
 			/*
 			 * Changes the men via menu id,
