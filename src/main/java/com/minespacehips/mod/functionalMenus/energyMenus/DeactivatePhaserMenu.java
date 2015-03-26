@@ -6,6 +6,8 @@ import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.Spaceship;
+import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyType;
 
 public class DeactivatePhaserMenu extends Menu implements FunctionalMenu {
 
@@ -16,13 +18,8 @@ public class DeactivatePhaserMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
-		Spaceship ship = TerminalUtil.getShip(terminal);
-		if(ship != null){
-			ship.deactivatePhasers();
-			return EnumChatFormatting.GREEN+"Deactivating phasers!\n";
-		} else {
-			return EnumChatFormatting.RED+"No Spaceship\n";
-		}
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.activateCommand(false, EnergyType.phaser), terminal.getPlayerEntity());
+		return EnumChatFormatting.GREEN+"Deactivating phaser.\n";
 	}
 
 }

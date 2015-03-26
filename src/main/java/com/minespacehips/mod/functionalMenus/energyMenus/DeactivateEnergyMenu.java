@@ -10,6 +10,8 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
+import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyCommandType;
 
 public class DeactivateEnergyMenu extends Menu implements FunctionalMenu {
 
@@ -19,13 +21,8 @@ public class DeactivateEnergyMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
-		Spaceship ship = TerminalUtil.getShip(terminal);
-		if(ship != null){
-			ship.deactivateEverything();
-			return EnumChatFormatting.GREEN+"Shutting down.";
-		} else {
-			return EnumChatFormatting.RED+"No Spaceship\n";
-		}
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.EnergyCommand(EnergyCommandType.shutdown), terminal.getPlayerEntity());
+		return EnumChatFormatting.GREEN+"Shutting down.\n";
 	}
 
 }

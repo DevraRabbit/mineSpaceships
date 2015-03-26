@@ -10,6 +10,9 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
+import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyCommandType;
+import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyType;
 
 public class BalanceEnergyMenu extends Menu implements FunctionalMenu {
 
@@ -19,13 +22,8 @@ public class BalanceEnergyMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String activate(String command, CustomGuiChat terminal) {
-		Spaceship ship = TerminalUtil.getShip(terminal);
-		if(ship != null){
-			ship.balanceEnergy();
-			return EnumChatFormatting.GREEN+"Using all available energy!";
-		} else {
-			return EnumChatFormatting.RED+"No Spaceship\n";
-		}
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.EnergyCommand(EnergyCommandType.balance), terminal.getPlayerEntity());
+		return EnumChatFormatting.GREEN+"Using all available energy!\n";
 	}
 
 }
