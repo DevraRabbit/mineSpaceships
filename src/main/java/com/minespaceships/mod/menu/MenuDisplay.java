@@ -59,7 +59,7 @@ public class MenuDisplay {
 			return ((FunctionalMenu)menu).activate(command, terminal);
 		}
 
-		root.setSelectedMenu(menu);
+		root = menu;
 		//add the menu name
 		out += EnumChatFormatting.GOLD+" "+EnumChatFormatting.BOLD+"]--"+(menu.getMenuName().toUpperCase())+" ("+menu.getMenuID()+")--[\n\n";
 		//add all sub menus to the string.

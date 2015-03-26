@@ -25,9 +25,6 @@ public class Menu{
 	//The name of the menu.
 	private final String menuName;
 
-	//The currently selected Menu Object.
-	private static Menu selectedMenu;
-
 	/**
 	 * The menuIdcounter ensures that each new menu gets a unique id.
 	 * It contains the last assigned ID.
@@ -76,24 +73,21 @@ public class Menu{
 		try{
 			//parent menu
 			if(name.equals("m") || name.equals("up") || name.equals("parent")){
-				if(selectedMenu != null){
-					return selectedMenu.getMother();
-				}
+					return this.getMother();
 			}
 
-			if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
+			if(this.getChildrenList().get(0) instanceof FunctionalParamMenu){
 				//Get the selctedMenu
-				FunctionalParamMenu temp = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
-				selectedMenu = selectedMenu.getMother();
+				FunctionalParamMenu temp = (FunctionalParamMenu) this.getChildrenList().get(0);
 				temp.activate(name, terminal);
 
-				return selectedMenu.getMother();
+				return this.getMother();
 			}else{
 				//Changes the menu via sub menu position.
 				int position = Integer.parseInt(name);
-				if(position > 0 && position <= selectedMenu.childrenList.size()){
+				if(position > 0 && position <= this.childrenList.size()){
 				position -= 1;
-				return selectedMenu.childrenList.get(position);
+				return this.childrenList.get(position);
 				}
 			}
 
@@ -111,7 +105,6 @@ public class Menu{
 
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
-							selectedMenu = menu;
 							return menu;
 						}
 					}
@@ -125,7 +118,6 @@ public class Menu{
 			if(name.length() >= 4){
 				for(Menu menu : menuList){
 					if(menu.getMenuName().equals(name)){
-						selectedMenu = menu;
 						return menu;
 					}
 				}
@@ -200,24 +192,24 @@ public class Menu{
 		return this.childrenList;
 	}
 
-	/**
-	 * Set the selected menu.
-	 * @param menu
-	 */
-	public static void setSelectedMenu(final Menu menu){
-		if(menu.equals(null)){
-			throw new IllegalArgumentException("The selected menu can not be null.");
-		}
-		selectedMenu = menu;
-	}
-
-	/**
-	 * Returns the selected Menu.
-	 * @return selectedMenu
-	 */
-	public static Menu getSelectedMenu(){
-		return selectedMenu;
-	}
+//	/**
+//	 * Set the selected menu.
+//	 * @param menu
+//	 */
+//	public static void setSelectedMenu(final Menu menu){
+//		if(menu.equals(null)){
+//			throw new IllegalArgumentException("The selected menu can not be null.");
+//		}
+//		selectedMenu = menu;
+//	}
+//
+//	/**
+//	 * Returns the selected Menu.
+//	 * @return selectedMenu
+//	 */
+//	public static Menu getSelectedMenu(){
+//		return selectedMenu;
+//	}
 
 	/**
 	 * Returns the menus name.
