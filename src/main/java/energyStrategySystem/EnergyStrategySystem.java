@@ -124,6 +124,21 @@ public class EnergyStrategySystem {
 		refresh(false);
 	}
 	
+	public ArrayList<BlockPos> getActive(Class c, boolean active){
+		ArrayList<BlockPos> classList = assembler.getParts(c);
+		ArrayList<BlockPos> outList = new ArrayList<BlockPos>();
+		for(BlockPos p: classList){
+			Block block = world.getBlockState(p).getBlock();
+			if(block instanceof IEnergyC){
+				IEnergyC energyBlock=(IEnergyC)block;
+				if (energyBlock.getStatus(p, world)== active){
+					outList.add(p);
+				}
+			}			
+		}
+		return outList;
+	}
+	
 //	public void setAggressiveFocus(){
 //		priorityList.clear();
 //		

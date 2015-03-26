@@ -48,6 +48,9 @@ public class BlockMap {
 	public void setOrigin(BlockPos pos){
 		origin = pos;
 	}
+	public int getSize(){
+		return map.size();
+	}
 	
 	public ArrayList<BlockPos> getBlocksToRefill(World world)
 	{	HashMap<BlockPos, Boolean> nextToShipBlocks;
@@ -519,26 +522,26 @@ public class BlockMap {
 		this.maxPos = Turn.getRotatedPos(this.maxPos, origin, new BlockPos(0,0,0), turn);
 		this.minPos = Turn.getRotatedPos(this.minPos, origin, new BlockPos(0,0,0), turn);
 	}
+	public float getHardnessSum(World world){
+		Set<BlockPos> positions = map.keySet();
+		float blastResistance = 0;
+		for(BlockPos pos : positions){
+			Block block = world.getBlockState(pos.add(origin)).getBlock();
+			blastResistance += block.getBlockHardness(world, pos.add(origin));
+		}
+		return blastResistance;
+	}
 	
 	public void showDebug(World world){
-		
-	
-				
-				ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
-	
-				for(BlockPos pos : calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()){
-					positions.add(pos.add(origin));
-				}
-				for(BlockPos po : positions)
-				{
-					world.setBlockState(po, Block.getStateById(4));
-				}
-				
-			
-			
+		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
 
-		
-		
+		for(BlockPos pos : calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()){
+			positions.add(pos.add(origin));
+		}
+		for(BlockPos po : positions)
+		{
+			world.setBlockState(po, Block.getStateById(4));
+		}		
 	}
 	
 	public void showDebugOld(World world){

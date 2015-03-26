@@ -34,6 +34,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EngineBlock extends ActivatableBlock {	
+	public static final String engineSound = "portal.travel";
+	public static final float engineSoundVolume = 10;
+	public static final float engineSoundPitch = -300;
 	private int sound = 0;
 	public EngineBlock() {
 		super();
@@ -66,7 +69,7 @@ public class EngineBlock extends ActivatableBlock {
             if ((worldIn.getTotalWorldTime()+posRand.nextInt(50)) % 50 == 0)
             {
             	sound = 0;
-                worldIn.playSound(d0, d1, d2, "portal.travel", 10.0F, -300F, false);
+                worldIn.playSound(d0, d1, d2, engineSound, engineSoundVolume, engineSoundPitch, true);
             }
             sound++;
         }
