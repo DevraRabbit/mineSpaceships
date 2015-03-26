@@ -1,6 +1,7 @@
 package com.minespaceships.mod;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -17,6 +18,7 @@ import com.minespaceships.mod.blocks.ShieldBlock;
 import com.minespaceships.mod.events.BlockEvent;
 import com.minespaceships.mod.events.PlayerTracker;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 public class CommonProxy {
@@ -39,9 +41,9 @@ public class CommonProxy {
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
     	    	
     	// Register event listener
-    	// http://www.minecraftforum.net/forums/archive/tutorials/931112-forge-4-x-events-howto
     	MinecraftForge.EVENT_BUS.register(new BlockEvent());
     	MinecraftForge.EVENT_BUS.register(new PlayerTracker());
+    	FMLCommonHandler.instance().bus().register(new AllShipyards());
     }
     
     @EventHandler
