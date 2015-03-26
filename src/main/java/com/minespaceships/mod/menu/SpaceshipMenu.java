@@ -1,5 +1,6 @@
 package com.minespaceships.mod.menu;
 
+import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.*;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
@@ -19,23 +20,11 @@ public class SpaceshipMenu {
 	//Menu for the spaceship navigation.
 	private static Menu navigation;
 
-	//Menu for the spaceship armour.
-	private static Menu armour;
-
-	//Menu for all protective devices of the spaceship.
-	private static Menu protection;
-
 	//Menu if you need help
 	private static Menu help;
 
 	//Menu for the spaceship shield.
-	private static Menu shield;
-
-	//Menu which contains the ability to activate the shield
-	private static Menu activateShield;
-
-	//Menu which contains the ability to disable the shield
-	private static Menu disableShield;
+	private static Menu energySystem;
 
 	//Menu which contains the ability to set the spaceship to a target position.
 	private static Menu shipToTargetMenu;
@@ -45,13 +34,7 @@ public class SpaceshipMenu {
 
 	//Menu to create a new spaceship.
 	private static Menu createShip;
-
-	//Menu for all phaser types.
-	private static Menu phaserMenu;
-
-	//Menu for all torpedo types.
-	private static Menu torpedoMenu;
-
+	
 	//Menu of the move forward command
 	private static Menu moveForwardMenu;
 
@@ -108,15 +91,9 @@ public class SpaceshipMenu {
 		root = new Menu("Spaceship console");
 		createShip = new CreateShipMenu("recreate spaceship");
 		navigation = new Menu("spaceship navigation");
-		armour = new Menu("weapons");
-		protection = new Menu("protection");
 		help = new HelpMenu("help");
-		shield = new Menu("shield");
-		activateShield = new ShieldActivateMenu("activate shield");
-		disableShield = new ShieldDisableMenu("disable shield");
+		energySystem = new EnergyManagementMenu();
 		shipToTargetMenu = new Menu("to target");
-		phaserMenu = new Menu("phaser");
-		torpedoMenu = new Menu("torpedo");
 
 		moveForwardMenu = new Menu("move forward");
 		out = "";
@@ -168,8 +145,6 @@ public class SpaceshipMenu {
 		//Create the menu structure.
 		root.addSubMenu(createShip);
 		root.addSubMenu(navigation);
-			navigation.addSubMenu(shipToTargetMenu);
-				shipToTargetMenu.addSubMenu(shipToTargetFunc);
 			navigation.addSubMenu(moveForwardMenu);
 				moveForwardMenu.addSubMenu(moveForwardFuncMenu);
 			navigation.addSubMenu(moveBackMenu);
@@ -184,15 +159,8 @@ public class SpaceshipMenu {
 				moveDownMenu.addSubMenu(moveDownFuncMenu);
 			navigation.addSubMenu(liftoffMenu);
 			navigation.addSubMenu(landingMenu);
+		root.addSubMenu(energySystem);
 
-		root.addSubMenu(armour);
-			armour.addSubMenu(phaserMenu);
-			armour.addSubMenu(torpedoMenu);
-		root.addSubMenu(protection);
-		root.addSubMenu(help);
-			protection.addSubMenu(shield);
-			shield.addSubMenu(activateShield);
-			shield.addSubMenu(disableShield);
 		runBefore = true;
 	}
 

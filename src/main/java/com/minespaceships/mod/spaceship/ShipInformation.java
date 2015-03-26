@@ -5,7 +5,7 @@ public class ShipInformation {
 	public static float shieldFactor = 1;
 	
 	public static float getShipSpeed(Spaceship ship){
-		float hardness = ship.getHardness();
+		float hardness = getShipWeight(ship);
 		if(hardness != 0){
 			return (float)(ship.getActiveEnginesCount())/hardness;
 		} else {
@@ -15,9 +15,12 @@ public class ShipInformation {
 	public static float getShipShields(Spaceship ship){
 		int blockCount = ship.getSize();
 		if(blockCount != 0){
-			return ship.getActiveShieldsCount()/blockCount;
+			return (float)(ship.getActiveShieldsCount())/(float)(blockCount);
 		} else {
 			return 0;
 		}
+	}
+	public static float getShipWeight(Spaceship ship){
+		return ship.getHardness();
 	}
 }

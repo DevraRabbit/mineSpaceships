@@ -14,6 +14,7 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
@@ -194,6 +195,9 @@ public class Spaceship implements Serializable{
 	public int getEnginesCount(){
 		return assembler.getParts(EngineBlock.class).size();
 	}
+	public int getActiveGeneratorsCount(){
+		return energySystem.getActive(EnergyBlock.class, true).size();
+	}
 	public int getActivePhaserCount(){
 		return energySystem.getActive(PhaserBlock.class, true).size();
 	}
@@ -202,6 +206,13 @@ public class Spaceship implements Serializable{
 	}
 	public int getActiveEnginesCount(){
 		return energySystem.getActive(EngineBlock.class, true).size();
+	}	
+	
+	public float getCapacity(){
+		return energySystem.getEnergy(false);
+	}
+	public float getEnergy(){
+		return energySystem.getEnergy();
 	}
 	
 	public void activatePhasers(){
@@ -221,6 +232,13 @@ public class Spaceship implements Serializable{
 	}
 	public void deactivateEngines(){
 		energySystem.changeAll(EngineBlock.class, false);
+	}
+	
+	public void balanceEnergy(){
+		energySystem.refresh(true);
+	}
+	public void deactivateEverything(){
+		energySystem.changeAll(IEnergyC.class, false);
 	}
 	
 	
