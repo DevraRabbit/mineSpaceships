@@ -17,7 +17,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
 /**
  * This class displays a menu structure.
  * @author ovae.
- * @version 20150302
+ * @version 20150302.
  */
 public class MenuDisplay {
 

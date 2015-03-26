@@ -50,7 +50,6 @@ public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
 
-	
 	private static String dimension = "dimension";
 	private static String shipKey = "SpaceshipKey";
 	private CustomGuiChat terminal;
@@ -105,6 +104,7 @@ public class ChatRegisterEntity extends TileEntity {
 		System.out.println("Send Packet!");
 		return new S35PacketUpdateTileEntity(this.pos, 1, syncData);
 	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
@@ -136,7 +136,7 @@ public class ChatRegisterEntity extends TileEntity {
 	private CustomGuiChat makeTerminal(EntityPlayer player) {
 		CustomGuiChat terminal;
 		terminal = new CustomGuiChat(player, this);
-		
+
 		//Initialise the menu structure.
 		if(!SpaceshipMenu.getRunBefore()){
 			SpaceshipMenu.initMenu(terminal);

@@ -11,7 +11,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  * The Menu class implements a menu structure and the ability
  * to go through these structure out of menus and sub menus.
  * @author DieDiren, Sinan, ovae.
- * @verion 20150225
+ * @version 20150326.
  */
 public class Menu{
 
