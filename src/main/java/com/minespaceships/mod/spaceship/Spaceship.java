@@ -25,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.BlockWallSign;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -181,7 +183,9 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
-		blockMap.refreshVolumeBlocks(); //******************************ADDED
+		ArrayList<BlockPos> harderBlocks= new ArrayList(); //************Added collision
+		ArrayList<BlockPos> softerBlocks= new ArrayList(); //************* Added for collison
+		blockMap.refreshVolumeBlocks(); 
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		WorldMock startMock = new WorldMock(world);
 		//move the entities first to avoid long waiting times and weird bugs
@@ -195,7 +199,7 @@ public class Spaceship implements Serializable{
 		BlockPos add = new BlockPos(addDirection);
 		ArrayList<BlockPos> positions = blockMap.getPositionsWithInnerBlocks();	
 		int i = 3;
-		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  //*************************************************ADDED
+		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  
 		while(!positions.isEmpty() && i > 0){
 			Iterator<BlockPos> it = positions.iterator();
 			while(it.hasNext()){
@@ -214,6 +218,14 @@ public class Spaceship implements Serializable{
 //				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					if(tryCopy(startMock, Pos, nextPos, turn)){
+						if(world.getBlockState(nextPos).getBlock().getMaterial() != Material.water && world.getBlockState(nextPos).getBlock().getMaterial() != Material.air){
+							if(world.getBlockState(nextPos).getBlock().getExplosionResistance(null) >= world.getBlockState(Pos).getBlock().getExplosionResistance(null)){
+								harderBlocks.add(nextPos);
+							}
+							else{
+								softerBlocks.add(nextPos);
+							}
+						}
 						//build the buildable block
 						BlockCopier.copyBlock(world, Pos, nextPos, turn);					
 						it.remove();
@@ -259,7 +271,16 @@ public class Spaceship implements Serializable{
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
+		
+		for(BlockPos p : harderBlocks){
+			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
+		}
+		for(BlockPos p : softerBlocks){
+			world.createExplosion(null, (float)p.getX(), (float)p.getY(), (float)p.getZ(), 0.5F, true);
+		}
 	}
+	
+
 	
 	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
 		try{
