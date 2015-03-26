@@ -120,38 +120,38 @@ public class SpaceshipMenu {
 
 		moveForwardMenu = new Menu("move forward");
 		out = "";
-		out +="Please type in how may blocks you want to move forward.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    forward. The input must begin with an #         ";
 		moveForwardFuncMenu = new moveForwardMenu(out);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
-		out +="Please type in how may blocks you want to move back.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    back. The input must begin with an #             ";
 		moveBackFuncMenu = new moveBackMenu(out);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
-		out +="Please type in how may blocks you want to move right.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    right. The input must begin with an #            ";
 		moveRightFuncMenu = new moveRightMenu(out);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
-		out +="Please type in how may blocks you want to move left.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    left. The input must begin with an #             ";
 		moveLeftFuncMenu = new moveLeftMenu(out);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
-		out +="Please type in how may blocks you want to move up.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    up. The input must begin with an #               ";
 		moveUpFuncMenu = new moveUpMenu(out);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
-		out +="Please type in how may blocks you want to move down.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    down. The input must begin with an #             ";
 		moveDownFuncMenu = new moveDownMenu(out);
 
 		liftoffMenu = new liftoffMenu("liftoff");
