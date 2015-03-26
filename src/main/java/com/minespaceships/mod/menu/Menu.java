@@ -69,6 +69,7 @@ public class Menu{
 		if(name.trim().isEmpty()){
 			throw new IllegalArgumentException("The menu name can not be empty.");
 		}
+		name = name.trim();
 
 		int n;
 		try{
@@ -79,17 +80,22 @@ public class Menu{
 				}
 			}
 
-			//For a single character in put.
-			if(name.startsWith("#")){
-				name = name.replaceAll("#", "");
 				if(selectedMenu.getChildrenList().get(0) instanceof FunctionalParamMenu){
-					Menu temp = (Menu) selectedMenu.getChildrenList().get(0);
-					FunctionalParamMenu menu = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
-					menu.activate(name, terminal);
-					selectedMenu = ((Menu) menu).getMother().getMother();
-					return ((Menu) menu).getMother().getMother();
+					//Get the selctedMenu
+					FunctionalParamMenu temp = (FunctionalParamMenu) selectedMenu.getChildrenList().get(0);
+					selectedMenu = selectedMenu.getMother();
+					temp.activate(name, terminal);
+
+					return selectedMenu.getMother();
+				}else{
+					//Changes the menu via sub menu position.
+					int position = Integer.parseInt(name);
+					if(position > 0 && position <= selectedMenu.childrenList.size()){
+						position -= 1;
+						return selectedMenu.childrenList.get(position);
+					}
 				}
-			}
+			//}
 
 			/*
 			 * Changes the men via menu id,
@@ -125,12 +131,6 @@ public class Menu{
 				}
 			}
 
-			//Changes the menu via sub menu position.
-			int position = Integer.parseInt(name);
-			if(position > 0 && position <= selectedMenu.childrenList.size()){
-				position -= 1;
-				return selectedMenu.childrenList.get(position);
-			}
 		}catch(IndexOutOfBoundsException e){
 			System.err.println("IndexOutOfBoundsException appeared"+e.getStackTrace());
 			//System.out.println(e.getStackTrace());
