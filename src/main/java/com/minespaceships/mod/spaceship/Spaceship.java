@@ -65,6 +65,7 @@ public class Spaceship implements Serializable{
 	private boolean isResolved = true;
 	
 	private static final String positionsKey = "Positions";
+	private static final String containsTargetKey = "containsTarget";
 	private static final String targetPositionKey = "TargetPos";
 	private static final String targetTurnKey = "TargetTurn";
 	
@@ -664,6 +665,11 @@ public class Spaceship implements Serializable{
 	
 	public void readFromNBT(NBTTagCompound c, String firstKey){
 		String data = c.getString(firstKey+positionsKey);
+		if(c.getBoolean(containsTargetKey)){
+			BlockPos targetPos = BlockPos.fromLong(c.getLong(targetPositionKey));
+			int targetTurn = c.getInteger(targetTurnKey);
+			target = new MovementTarget(targetPos, targetTurn, world);
+		}
 		try {
 			positionsFromString(data);
 		} catch (Exception e) {
@@ -672,6 +678,13 @@ public class Spaceship implements Serializable{
 	}
 	public void writeToNBT(NBTTagCompound c, String firstKey){
 		c.setString(firstKey+positionsKey, positionsToString());
+		if(target != null){
+			c.setBoolean(containsTargetKey, true);
+			c.setLong(targetPositionKey, target.getTarget().toLong());
+			c.setInteger(targetTurnKey, target.getTurn());
+		} else {
+			c.setBoolean(containsTargetKey, false);
+		}
 	}
 	
 	
