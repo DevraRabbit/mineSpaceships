@@ -77,7 +77,7 @@ public abstract class CommonProxy {
 		MenuDisplay spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), menu);
 		MenuDisplay noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), menu);
 		entity.setSpaceshipMenu(spaceshipMenu);
-		entity.setSpaceshipMenu(noSpaceshipMenu);
+		entity.setNoSpaceshipMenu(noSpaceshipMenu);
     }
     
 }

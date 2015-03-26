@@ -61,13 +61,13 @@ public class ChatRegisterEntity extends TileEntity {
 		spaceshipMenu = display;
 	}
 	public void setNoSpaceshipMenu(MenuDisplay display){
-		spaceshipMenu = display;
+		noSpaceshipMenu = display;
 	}
 	public MenuDisplay getSpaceshipMenu(){
 		return spaceshipMenu;
 	}
 	public MenuDisplay getNoSpaceshipMenu(){
-		return spaceshipMenu;
+		return noSpaceshipMenu;
 	}
 
 	@Override
@@ -129,13 +129,8 @@ public class ChatRegisterEntity extends TileEntity {
 	 * @param player
 	 */
 	public void Activate(EntityPlayer player){
-		//check if the player is our local player, so one cannot open a console for another player
-		//on the server
-		if(player.equals(Minecraft.getMinecraft().thePlayer)){
-			//initialise the terminal
-			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			this.terminal = MineSpaceships.proxy.makeTerminal(player, this);
-		}
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		this.terminal = MineSpaceships.proxy.makeTerminal(player, this);
 	}
 
 	/**
@@ -159,14 +154,6 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void executeCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		//display the menu and make the menu commands (also works on Server)
-		spaceshipMenu.display(command, this.terminal);
-		
-		if(side == Side.CLIENT){
-			//display the menu.
-		//	spaceshipMenu.display(command, this.terminal);
-			terminalMenu.onCommand(command, player, this, this.terminal);
-		}
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
@@ -196,17 +183,19 @@ public class ChatRegisterEntity extends TileEntity {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
 		} else if(command.startsWith("shoot")) {
 			SpaceshipCommands.shoot(command, worldObj, this, player, getShip());
-		} else {
-			SpaceshipCommands.energy(command, worldObj, this, player, getShip());
-		}
-
-		if(command.equals(SpaceshipCommands.help)){
+		} else if(command.equals(SpaceshipCommands.help)){
 			SpaceshipCommands.help(player);
 		}
 		else if(command.equals(SpaceshipCommands.land)){
 			SpaceshipCommands.land(terminal);
 		}
-
+		else if(command.startsWith(SpaceshipCommands.energy)) {
+			SpaceshipCommands.energy(command, worldObj, this, player, getShip());
+		} else {
+			terminalMenu.onCommand(command, player, this, this.terminal);
+			//display the menu and make the menu commands (also works on Server)
+			spaceshipMenu.display(command, this.terminal);
+		}
 		SpaceshipCommands.debug(command, this);
 	}
 }

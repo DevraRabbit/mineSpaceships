@@ -51,25 +51,14 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider, 
      * Method that is called when the block is rightclicked
      */
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {    	 
-    	//Check if this code is executed on the client. It is sometimes important to check if
-    	//we do things locally or on the server. In this case we act on the client.
-    	if(worldIn.isRemote){
-    		//Send the player a message. This is the common way of sending texts to a single player using the chat.
-			ChatComponentText text = new ChatComponentText("Opening Console");
-			playerIn.addChatComponentMessage(text);	 
-			//Get the TileEntity from the world, which is the object that is associated to the position
-			//of our block and that can execute extra code. In our example this is opening a console.
-			TileEntity entity = worldIn.getTileEntity(pos);
-			if(entity instanceof ChatRegisterEntity){
-				//Activate the entity
-				((ChatRegisterEntity)entity).Activate(playerIn);
-			}
-    	} else {
-    		//instantiate the remote worlds tile entity
-    		worldIn.getTileEntity(pos);
-    	}
-    	//returns true to prevent placing a block (which would be the default behavior for rightclicking)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+		//Get the TileEntity from the world, which is the object that is associated to the position
+		//of our block and that can execute extra code. In our example this is opening a console.
+		TileEntity entity = worldIn.getTileEntity(pos);
+		if(entity instanceof ChatRegisterEntity){
+			//Activate the entity
+			((ChatRegisterEntity)entity).Activate(playerIn);
+		}
     	return true;
     }
     @Override
