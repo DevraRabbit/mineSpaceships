@@ -207,6 +207,9 @@ public class Spaceship implements Serializable{
 	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		if(!canMove(addDirection, world, turn)){
+			return;
+		}
 		blockMap.refreshVolumeBlocks(); //******************************ADDED
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		WorldMock startMock = new WorldMock(world);
@@ -490,6 +493,30 @@ public class Spaceship implements Serializable{
 
 		//Valid position
 		this.setTarget(new BlockPos(x,y,z));
+	}
+	public boolean canMove(BlockPos addDirection, World targetWorld, int turn){
+		if(world != targetWorld){
+			return true;
+		}
+		double maxWorldHeight = this.world.getHeight();
+		BlockPos maxPos = getMaxPos();
+		BlockPos minPos = getMinPos();
+		BlockPos nextMaxPos = Turn.getRotatedPos(maxPos, origin, addDirection, turn);
+		BlockPos nextMinPos = Turn.getRotatedPos(minPos, origin, addDirection, turn);
+		if(nextMaxPos.getY() > maxWorldHeight || nextMinPos.getY() < 0){
+			return false;
+		}
+		return !isInsideShipRectangle(nextMaxPos) && !isInsideShipRectangle(nextMinPos);
+	}
+	public boolean isInsideShipRectangle(BlockPos pos){
+		BlockPos max = getMaxPos();
+		BlockPos min = getMinPos();
+		return pos.getX() >= min.getX() &&
+				pos.getY() >= min.getY() &&
+				pos.getZ() >= min.getZ() &&
+				pos.getX() < max.getX() &&
+				pos.getY() < max.getY() &&
+				pos.getZ() < max.getZ();
 	}
 	public void readFromNBT(NBTTagCompound c, String firstKey){
 		String data = c.getString(firstKey+positionsKey);
