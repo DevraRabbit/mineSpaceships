@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
@@ -62,7 +63,7 @@ public class Menu{
 	 * Returns the menu in where you are currently in.
 	 * Returns {@code null} if the input was not and id, menu position or the menu name.
 	 */
-	public Menu switchMenu(String name, final CustomGuiChat terminal){
+	public Menu switchMenu(String name, final IMenuInterface terminal){
 		if(name.equals(null)){
 			throw new IllegalArgumentException("The menu name can not he null");
 		}

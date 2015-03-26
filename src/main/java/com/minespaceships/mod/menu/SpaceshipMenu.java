@@ -3,6 +3,7 @@ package com.minespaceships.mod.menu;
 import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.*;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 
 /**
  * A default menu structure.
@@ -81,7 +82,7 @@ public class SpaceshipMenu {
 	 * Initialise the menu structure.
 	 * @param terminal
 	 */
-	public static void initMenu(CustomGuiChat terminal){
+	public static void initMenu(IMenuInterface terminal){
 		if(terminal.equals(null)){
 			System.err.println("terminal can not be null.");
 		}

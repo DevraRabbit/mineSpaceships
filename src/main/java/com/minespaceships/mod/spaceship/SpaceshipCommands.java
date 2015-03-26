@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.util.PhaserUtils;
 
 import net.minecraft.block.state.IBlockState;
@@ -305,7 +306,7 @@ public class SpaceshipCommands {
 		return command;
 	}
 
-	public static void land(final CustomGuiChat terminal){
+	public static void land(final IMenuInterface terminal){
 		/*
 		try{
 			double x,y,z;

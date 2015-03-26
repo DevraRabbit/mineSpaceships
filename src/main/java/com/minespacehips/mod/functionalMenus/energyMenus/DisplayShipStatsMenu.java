@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
@@ -18,7 +19,7 @@ public class DisplayShipStatsMenu extends Menu implements FunctionalMenu {
 	}
 
 	@Override
-	public String activate(String command, CustomGuiChat terminal) {
+	public String activate(String command, IMenuInterface terminal) {
 		Spaceship ship = TerminalUtil.getShip(terminal);
 		if(ship != null){
 			float weight = ShipInformation.getShipWeight(ship);

@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
@@ -20,7 +21,7 @@ public class DeactivateEnergyMenu extends Menu implements FunctionalMenu {
 	}
 
 	@Override
-	public String activate(String command, CustomGuiChat terminal) {
+	public String activate(String command, IMenuInterface terminal) {
 		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.EnergyCommand(EnergyCommandType.shutdown), terminal.getPlayerEntity());
 		return EnumChatFormatting.GREEN+"Shutting down.\n";
 	}
