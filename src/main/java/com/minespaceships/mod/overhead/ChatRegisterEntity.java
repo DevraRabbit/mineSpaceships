@@ -218,6 +218,8 @@ public class ChatRegisterEntity extends TileEntity {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
 		} else if(command.startsWith("shoot")) {
 			SpaceshipCommands.shoot(command, worldObj, this, player, getShip());
+		} else {
+			SpaceshipCommands.energy(command, worldObj, this, player, getShip());
 		}
 
 		if(command.equals(SpaceshipCommands.help)){
