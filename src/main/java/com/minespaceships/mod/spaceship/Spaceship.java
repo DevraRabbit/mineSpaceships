@@ -265,6 +265,51 @@ public class Spaceship implements Serializable{
 		target = null;
 	}
 	
+	public EnumFacing getFacing(){
+		int north=0;
+		int south=0;
+		int east=0;
+		int west=0;
+		ArrayList<BlockPos> facingListActive= energySystem.getActive(EngineBlock.class, true);
+		ArrayList<BlockPos> facingListDeactive= energySystem.getActive(EngineBlock.class, false);
+		for (BlockPos p: facingListActive){			
+			EnumFacing e=Turn.getEnumFacing(world.getBlockState(p));
+			if(e==EnumFacing.NORTH){
+				north+=1;
+			} else if (e==EnumFacing.SOUTH){
+				south+=1;
+			} else if( e==EnumFacing.EAST){
+				east+=1;
+			}
+			else if( e==EnumFacing.WEST){
+				west+=1;
+			}		
+		}
+		for (BlockPos p: facingListDeactive){			
+			EnumFacing e=Turn.getEnumFacing(world.getBlockState(p));
+			if(e==EnumFacing.NORTH){
+				north+=1;
+			} else if (e==EnumFacing.SOUTH){
+				south+=1;
+			} else if( e==EnumFacing.EAST){
+				east+=1;
+			}
+			else if( e==EnumFacing.WEST){
+				west+=1;
+			}		
+		}
+		if(north>south&& north>west&& north> east){
+			return EnumFacing.NORTH;
+		} else if(south>north&&south>west&&south>east){
+			return EnumFacing.SOUTH;
+		} else if (east>north&&east>south&&east>west){
+			return EnumFacing.EAST;
+		} else if (west>north&&west>south&&west>east){
+			return EnumFacing.WEST;
+		}		
+		return EnumFacing.UP;		
+	}
+	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
 		if(!canMove(addDirection, world, turn)){
 			return;
@@ -398,7 +443,7 @@ public class Spaceship implements Serializable{
 			return size == 1;
 		}
 	}
-	
+		
 	private void moveMeasurements(BlockPos addDirection, int turn){
 		blockMap.rotate(origin, turn);
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
