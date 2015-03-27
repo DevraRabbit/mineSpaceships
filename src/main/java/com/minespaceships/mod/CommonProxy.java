@@ -26,6 +26,7 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.Shipyard;
+import com.minespaceships.mod.target.PhaserTileEntity;
 
 public abstract class CommonProxy {
 	 
@@ -45,6 +46,7 @@ public abstract class CommonProxy {
     	GameRegistry.registerBlock(new EngineBlock(), "EngineBlock");
     	GameRegistry.registerBlock(new ShieldBlock(), "ShieldBlock");
     	GameRegistry.registerTileEntity(ChatRegisterEntity.class, "ChatRegisterEntity");
+    	GameRegistry.registerTileEntity(PhaserTileEntity.class, "PhaserTileEntity");
     	    	
     	// Register event listener
     	MinecraftForge.EVENT_BUS.register(new BlockEvent());

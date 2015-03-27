@@ -32,6 +32,11 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	int delay;
 	BlockPos targetPos;
 	
+	public PhaserTileEntity(){
+		targetPos = null;
+		delay = 0;
+	}
+	
 	public void shoot(Target target, Spaceship ship){
 		BlockPos targetPos = target.getTarget();
 		BlockPos direction = Vec3Op.subtract(targetPos, pos);
@@ -95,7 +100,7 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 		if(delay <= 0){
 			if(targetPos != null && worldObj != null){
 				PhaserUtils.shoot(pos, targetPos, PhaserBlock.phaserStrength, PhaserBlock.phaserMaxRange, worldObj);
-				targetPos = null;
+				delay = phaserDelay;
 			}
 			delay = 0;
 		} else {
