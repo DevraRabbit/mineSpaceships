@@ -1,4 +1,4 @@
-package com.minespacehips.mod.functionalMenus.energyMenus;
+package com.minespaceships.mod.menu.functionalMenus.energyMenus;
 
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;

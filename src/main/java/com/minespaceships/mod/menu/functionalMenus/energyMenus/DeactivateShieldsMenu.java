@@ -1,4 +1,4 @@
-package com.minespacehips.mod.functionalMenus.energyMenus;
+package com.minespaceships.mod.menu.functionalMenus.energyMenus;
 
 import net.minecraft.util.EnumChatFormatting;
 
@@ -10,17 +10,17 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyType;
 
-public class ActivateEnginesMenu extends Menu implements FunctionalMenu {
+public class DeactivateShieldsMenu extends Menu implements FunctionalMenu {
 
-	public ActivateEnginesMenu() {
-		super("Activate Engines");
+	public DeactivateShieldsMenu() {
+		super("Deactivate Shields");
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.activateCommand(true, EnergyType.engines), terminal.getPlayerEntity());
-		return EnumChatFormatting.GREEN+"Turning up engines!\n";
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.activateCommand(false, EnergyType.shields), terminal.getPlayerEntity());
+		return EnumChatFormatting.GREEN+"Deactivating shields!\n";
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.minespacehips.mod.functionalMenus.energyMenus;
+package com.minespaceships.mod.menu.functionalMenus.energyMenus;
 
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;

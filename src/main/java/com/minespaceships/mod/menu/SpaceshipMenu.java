@@ -1,7 +1,7 @@
 package com.minespaceships.mod.menu;
 
-import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.*;
+import com.minespaceships.mod.menu.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 
