@@ -36,7 +36,7 @@ public class ShieldDisableMenu extends Menu implements FunktionalMenu{
 	 * 
 	 */
 	@Override
-	public String activate(String paramlist) {
+	public String activate(String paramlist, CustomGuiChat terminal) {
 		//Let it rain
 		this.terminal.getChatRegisterEntity().getWorld().setRainStrength( 2f);
 		return ">> shield disabled <<\nPress 'm' to get back.";
