@@ -1,5 +1,8 @@
 package energyStrategySystem;
 
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+
 public class EnergyProducer implements IEnergyC{
 	private int producedEnergy;
 	private boolean status;
@@ -38,6 +41,19 @@ public class EnergyProducer implements IEnergyC{
 	@Override
 	public String toString(){
 		return "Energy: " +producedEnergy +'\n';
+	}
+
+	@Override
+	public boolean getStatus(BlockPos pos, World world) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setStatus(boolean b, BlockPos pos, World world,
+			boolean sendChange) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

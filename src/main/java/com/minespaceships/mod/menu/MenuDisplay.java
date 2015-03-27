@@ -5,19 +5,25 @@ import java.util.ArrayList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
+import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
  * This class displays a menu structure.
  * @author ovae.
- * @version 20150302
+ * @version 20150302.
  */
 public class MenuDisplay {
 
 	//The terminal to write in.
-	private CustomGuiChat terminal;
+	private IMenuInterface terminal;
 
 	//The root of the menu structure.
 	private Menu root;
@@ -27,7 +33,7 @@ public class MenuDisplay {
 	 * @param root
 	 * @param terminal
 	 */
-	public MenuDisplay(final Menu root, final CustomGuiChat terminal){
+	public MenuDisplay(final Menu root, final IMenuInterface terminal){
 		if(root.equals(null)){
 			throw new IllegalArgumentException("root can not be null.");
 		}
@@ -53,22 +59,13 @@ public class MenuDisplay {
 			return ((FunctionalMenu)menu).activate(command, terminal);
 		}
 
-		root.setSelectedMenu(menu);
+		root = menu;
 		//add the menu name
 		out += EnumChatFormatting.GOLD+" "+EnumChatFormatting.BOLD+"]--"+(menu.getMenuName().toUpperCase())+" ("+menu.getMenuID()+")--[\n\n";
 		//add all sub menus to the string.
 		int position = 1;
 		ArrayList<Menu> list = menu.getChildrenList();
 		for(Menu child: list){
-
-			/*
-			if(terminal.getChatRegisterEntity().isInvalid()){
-				BlockPos pos = terminal.getChatRegisterEntity().getPos();
-				World world = terminal.getChatRegisterEntity().getRemoteWorld();
-				terminal.setTileEntity(world.getTileEntity(pos));
-			}
-			*/
-
 			if(child instanceof FunctionalMenu || child instanceof FunctionalParamMenu){
 				out+= "    "+EnumChatFormatting.GREEN+"["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
 			}else{
@@ -83,7 +80,7 @@ public class MenuDisplay {
 	 * Displays the current selected menu.
 	 * @param command
 	 */
-	public void display(final String command, CustomGuiChat terminal){
+	public void display(final String command, IMenuInterface terminal){
 		if(command.trim().isEmpty()){
 			terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", true);
 			return;
@@ -95,7 +92,7 @@ public class MenuDisplay {
 	 * Displays the root menu.
 	 * @param menu
 	 */
-	public void displayMain(final Menu menu){
+	public void displayMain(final Menu menu, CustomGuiChat terminal){
 		if(menu.equals(null)){
 			throw new IllegalArgumentException("Menu can not be null.");
 		}

@@ -45,11 +45,7 @@ public class BlockGenerator implements IWorldGenerator{
 				int posZ = chunkZ + random.nextInt(16);
 				
 				
-				WorldGenMinable wgm = new WorldGenMinable (blocktoGenerate.getDefaultState(),9);
-				WorldGenBlockBlob wgb = new WorldGenBlockBlob(Blocks.wool,9);
-				WorldGenSand wgs = new WorldGenSand(Blocks.coal_block, 30);
-//				WorldGeneratorTest wgt = new WorldGeneratorTest();	
-				
+				WorldGenMinable wgm = new WorldGenMinable (blocktoGenerate.getDefaultState(),9);				
 				wgm.generate(world, random, new BlockPos(posX, posY, posZ));
 				
 			}

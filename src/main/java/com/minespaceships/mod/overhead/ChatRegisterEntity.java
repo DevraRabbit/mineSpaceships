@@ -5,9 +5,11 @@ import java.util.regex.*;
 import com.example.examplemod.ovae.terminalMenu;
 import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
+import com.minespaceships.mod.events.PlayerTracker;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
+import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
@@ -24,6 +26,9 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -36,85 +41,98 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ChatRegisterEntity extends TileEntity {	
+/**
+ * 
+ * @author DevraRabbit ,jh0ker, ovae.
+ * @version 20150320.
+ */
+public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
-	
-	private static String recoverSpaceshipMeasures = "recoverSpaceshipMeasurements";
-	
+
+	private static String dimension = "dimension";
+	private static String shipKey = "SpaceshipKey";
+	private IMenuInterface terminal;
+
 	public ChatRegisterEntity() {
-		super();		
+		super();
 	}
+	public void setSpaceshipMenu(MenuDisplay display){
+		spaceshipMenu = display;
+	}
+	public void setNoSpaceshipMenu(MenuDisplay display){
+		noSpaceshipMenu = display;
+	}
+	public MenuDisplay getSpaceshipMenu(){
+		return spaceshipMenu;
+	}
+	public MenuDisplay getNoSpaceshipMenu(){
+		return noSpaceshipMenu;
+	}
+
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
 	}
+
 	@Override
 	public void invalidate(){
 		super.invalidate();
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1)
-	{
-	   super.writeToNBT(par1); 
+	public void writeToNBT(NBTTagCompound par1){
+		Shipyard yard = Shipyard.getShipyard(worldObj);
+		Spaceship ship = yard.getShip(pos, worldObj);
+		if(ship != null){
+			par1.setBoolean(shipKey, true);
+			par1.setInteger(dimension, worldObj.provider.getDimensionId());
+			System.out.println("Writing ship into NBT");
+			ship.writeToNBT(par1, shipKey);
+		} else {
+			par1.setBoolean(shipKey, false);
+		}
+		super.writeToNBT(par1); 
+		this.markDirty();
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1)
-	{
-	   super.readFromNBT(par1);
+	public void readFromNBT(NBTTagCompound par1){
+		int id = par1.getInteger(dimension);
+		boolean hasShip = par1.getBoolean(shipKey);
+		if(hasShip){
+			System.out.println("Reading ship from NBT");
+			AllShipyards.putData(id, par1, shipKey);
+		}
+		super.readFromNBT(par1);
+		this.markDirty();
+	}
+
+	@SideOnly(Side.SERVER)
+	@Override
+	public Packet getDescriptionPacket(){
+		NBTTagCompound syncData = new NBTTagCompound();
+		this.writeToNBT(syncData);
+		System.out.println("Send Packet!");
+		return new S35PacketUpdateTileEntity(this.pos, 1, syncData);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
+		System.out.println("Recieved Packet!");
+		readFromNBT(pkt.getNbtCompound());
 	}
 
 	/**
 	 * Activates the TileEntity and opens a custom chat to the player
 	 * @param player
-	 */	
-	@SideOnly(Side.CLIENT)
-	public void Activate(EntityPlayer player){
-		//check if the player is our local player, so one cannot open a console for another player
-		//on the server
-		if(player.equals(Minecraft.getMinecraft().thePlayer)){
-			//initialise the terminal
-			//terminal = new CustomGuiChat(player, (ChatRegisterEntity)remoteWorld.getTileEntity(pos));
-			makeTerminal(player);
-		}
-	}
-	@SideOnly(Side.CLIENT)
-	private CustomGuiChat makeTerminal(EntityPlayer player) {
-		CustomGuiChat terminal;
-		terminal = new CustomGuiChat(player, this);
-		
-		//Initialise a default menu for testing reasons
-		if(!SpaceshipMenu.getRunBefore()){
-			SpaceshipMenu.initMenu(terminal);
-		}
-		if(!NoSpaceshipEntityMenu.getRunBefore()){
-			NoSpaceshipEntityMenu.initMenu(terminal);
-		}
-
-		//initialise the menu display.
-		spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), terminal);
-		noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), terminal);
-
-		//open our console. 
-		Minecraft.getMinecraft().displayGuiScreen(terminal);
-
-		if(terminal.getChatRegisterEntity().getShip() == null){
-			noSpaceshipMenu.displayMain(NoSpaceshipEntityMenu.getRootMenu());
-		}else{
-			//Print out the menu in the console.
-			spaceshipMenu.displayMain(SpaceshipMenu.getRootMenu());
-		}
-		return terminal;
-	}
-	/**
-	 * Executes the given command, regardless who committed it.
-	 * @param command
 	 */
-	public void onCommand(String command){
-		
+	public void Activate(EntityPlayer player){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		this.terminal = MineSpaceships.proxy.makeTerminal(player, this);
 	}
+
 	/**
 	 * Executing the given command considering the player that sent it.
 	 * @param command
@@ -122,23 +140,20 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void onCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		
 		if(side == Side.CLIENT) {
 			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
-			
-			//display the menu.
-			spaceshipMenu.display(command, makeTerminal(player));
-			terminalMenu.onCommand(command, player, this, makeTerminal(player));
 		}
 	}
-	
+
 	public Spaceship getShip() {
-		return Shipyard.getShipyard().getShip(pos, worldObj);
-	}	
+		return Shipyard.getShipyard(worldObj).getShip(pos, worldObj);
+	}
+
 	/**
 	 * Executes a command unrelated if Server or client side.
 	 */
 	public void executeCommand(String command, EntityPlayer player){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
@@ -168,6 +183,18 @@ public class ChatRegisterEntity extends TileEntity {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
 		} else if(command.startsWith("shoot")) {
 			SpaceshipCommands.shoot(command, worldObj, this, player, getShip());
+		} else if(command.equals(SpaceshipCommands.help)){
+			SpaceshipCommands.help(player);
+		}
+		else if(command.equals(SpaceshipCommands.land)){
+			SpaceshipCommands.land(terminal);
+		}
+		else if(command.startsWith(SpaceshipCommands.energy)) {
+			SpaceshipCommands.energy(command, worldObj, this, player, getShip());
+		} else {
+			terminalMenu.onCommand(command, player, this, this.terminal);
+			//display the menu and make the menu commands (also works on Server)
+			spaceshipMenu.display(command, this.terminal);
 		}
 		SpaceshipCommands.debug(command, this);
 	}

@@ -2,6 +2,8 @@ package com.minespaceships.mod.blocks;
 
 import com.google.common.base.Predicate;
 import com.minespaceships.mod.spaceship.ISpaceshipPart;
+import com.minespaceships.mod.spaceship.Shipyard;
+import com.minespaceships.mod.spaceship.Spaceship;
 
 import energyStrategySystem.IEnergyC;
 import net.minecraft.block.Block;
@@ -17,12 +19,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ActivatableBlock extends Block implements ISpaceshipPart {
+public abstract class ActivatableBlock extends Block implements ISpaceshipPart, IEnergyC {
 	public static final String activatedName = "activated";
 	public static final PropertyBool ACTIVATED = PropertyBool.create(activatedName);
 	public static final PropertyDirection FACING = PropertyDirection.create("facing",  new Predicate()
@@ -185,8 +191,53 @@ public class ActivatableBlock extends Block implements ISpaceshipPart {
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {		
+		if(getEnergy() > 0){
+			return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(ACTIVATED, true);
+		} else {
+			return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(ACTIVATED, false);
+		}
+    }
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state){
+		sendEnergyChange(worldIn, pos);
+	}
+	@Override
+	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
-        return this.getDefaultState().withProperty(FACING, BlockPistonBase.getFacingFromEntity(worldIn, pos, placer)).withProperty(ACTIVATED, false);
+		sendEnergyChange(world, pos);
+        return super.removedByPlayer(world, pos, player, willHarvest);
+    }
+	@Override
+	public void onBlockExploded(World world, BlockPos pos, Explosion explosion){
+		sendEnergyChange(world, pos);
+		super.onBlockExploded(world, pos, explosion);
+	}
+	private void sendEnergyChange(World worldIn, BlockPos pos){
+		if(getEnergy() != 0){
+			Spaceship ship = Shipyard.getShipyard(worldIn).getShip(pos, worldIn);
+			if(ship != null){
+				ship.onEnergyChange();
+			}
+		}
+	}
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+		if(playerIn != null && playerIn.isSneaking()){
+			return false;
+		}
+		Spaceship ship = Shipyard.getShipyard(worldIn).getShip(pos, worldIn);
+		if((Boolean) state.getValue(ACTIVATED)){
+			setStatus(false, pos, worldIn, true);
+		} else {
+			if(ship != null &&
+					ship.hasEnergyFor(this)){
+				setStatus(true, pos, worldIn, true);	
+			}
+		}
+		sendEnergyChange(worldIn, pos);
+        return true;
     }
 	@Override
 	protected BlockState createBlockState()
@@ -194,6 +245,19 @@ public class ActivatableBlock extends Block implements ISpaceshipPart {
         return new BlockState(this, new IProperty[] {FACING, ACTIVATED});
     }
 	public IBlockState getNewBlockState(IBlockState state, boolean active){
-		return this.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVATED, active);
+		return this.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVATED, Boolean.valueOf(active));
 	}
+
+	@Override
+	public boolean getStatus(BlockPos pos, World world) {
+		return (Boolean) world.getBlockState(pos).getValue(ACTIVATED);
+	}
+
+	@Override
+	public void setStatus(boolean b, BlockPos pos, World world, boolean sendChange) {
+		if(sendChange && getStatus(pos, world) != b){
+			sendEnergyChange(world, pos);
+		}
+		world.setBlockState(pos, getNewBlockState(world.getBlockState(pos), b), 3);		
+	}	
 }

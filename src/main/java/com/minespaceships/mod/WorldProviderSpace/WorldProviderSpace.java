@@ -29,7 +29,7 @@ public class WorldProviderSpace extends WorldProvider{
 	
 	 public void registerWorldChunkManager()
 	    {
-	        this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.plains, 0.0F);
+	        this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.sky, 0.0F);
 	        this.dimensionId = 2;
 	        this.hasNoSky = false;
 	    }

@@ -3,6 +3,9 @@ package com.minespaceships.util;
 import java.util.List;
 
 import com.minespaceships.mod.overhead.PhaserEffect;
+import com.minespaceships.mod.spaceship.ShipInformation;
+import com.minespaceships.mod.spaceship.Shipyard;
+import com.minespaceships.mod.spaceship.Spaceship;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
@@ -43,6 +46,10 @@ public class PhaserUtils {
 			if (!world.isAirBlock(current) && !(world.getBlockState(current).getBlock() instanceof BlockFire)) {
 				strength -= world.getBlockState(current).getBlock()
 						.getBlockHardness(world, current);
+				Spaceship ship = Shipyard.getShipyard(world).getShip(current, world);
+				if(ship != null){
+					strength -= ShipInformation.getShipShields(ship);
+				}
 				if (strength >= 0) {
 					world.destroyBlock(current, false);
 					world.setBlockState(current, Blocks.fire.getDefaultState());

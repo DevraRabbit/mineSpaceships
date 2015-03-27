@@ -10,28 +10,34 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class BlockCopier {
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, int dir){
 		copyBlock(worldIn, origin, target, dir, true);
 	}
 	public static void copyBlock(World worldIn, BlockPos origin, BlockPos target, int dir, boolean copyEntity){
-		IBlockState newState = worldIn.getBlockState(origin);
-		if (dir != 0) newState = Turn.turn(worldIn, origin, dir);
-		worldIn.setBlockState(target, newState, 0);		
-		TileEntity ent = worldIn.getTileEntity(origin);
-		if(ent != null){
-			worldIn.removeTileEntity(origin);
-			ent.validate();
-			//moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
-			worldIn.setTileEntity(target, ent);
-			int i = 0;
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if(side == Side.SERVER || side == Side.CLIENT){
+			IBlockState newState = worldIn.getBlockState(origin);
+			if (dir != 0) newState = Turn.turn(worldIn, origin, dir);
+			worldIn.setBlockState(target, newState, 0);	
+			TileEntity ent = worldIn.getTileEntity(origin);
+			if(ent != null){
+				worldIn.removeTileEntity(origin);
+				ent.validate();
+				//moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
+				worldIn.setTileEntity(target, ent);
+				int i = 0;
+			}
 		}
 	}
 	public static void moveEntityInformation(TileEntity entOrigin, TileEntity entTarget){
@@ -64,7 +70,7 @@ public class BlockCopier {
 		}
 	}
 	public static void removeBlock(World worldIn, BlockPos target){
-		worldIn.setBlockToAir(target);
+		worldIn.setBlockState(target, Blocks.air.getDefaultState(), 0);
 	}	
 	
 }

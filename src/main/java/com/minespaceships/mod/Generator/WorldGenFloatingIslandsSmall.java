@@ -147,58 +147,8 @@ public class WorldGenFloatingIslandsSmall implements IWorldGenerator
 						i++;
 					}
 					
-				} 
-					
-				
-			}
-			
-//			world.setBlockState(gatepos,Blocks.stone.getDefaultState());
-//			world.setBlockState(gatepos.add(1, 0, 0),Blocks.stone.getDefaultState());
-//			
-//			gatepos = gatepos.add(0, 1, 0);
-//			
-//			world.setBlockState(gatepos.add(2,0, 0),Blocks.stone.getDefaultState());
-//			world.setBlockState(gatepos.add(-1,0, 0),Blocks.stone.getDefaultState());
-//			
-//			world.setBlockState(gatepos,Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos.add(1, 0, 0),Blocks.glass.getDefaultState());
-//			
-//			
-//			gatepos = gatepos.add(0, 1, 0);
-//			
-//			world.setBlockState(gatepos.add(3, 0, 0),Blocks.stone.getDefaultState());
-//			world.setBlockState(gatepos.add(-2, 0, 0),Blocks.stone.getDefaultState());
-//			
-//			world.setBlockState(gatepos.add(2,0, 0),Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos.add(-1,0, 0),Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos,Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos.add(1, 0, 0),Blocks.glass.getDefaultState());
-//			
-//			
-//			gatepos = gatepos.add(0, 1, 0);
-//			
-//			world.setBlockState(gatepos.add(3, 0, 0),Blocks.stone.getDefaultState());
-//			world.setBlockState(gatepos.add(-2, 0, 0),Blocks.stone.getDefaultState());
-//			
-//			world.setBlockState(gatepos.add(2,0, 0),Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos.add(-1,0, 0),Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos,Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos.add(1, 0, 0),Blocks.glass.getDefaultState());
-//			
-//			
-//			gatepos = gatepos.add(0, 1, 0);
-//			
-//			world.setBlockState(gatepos.add(2,0, 0),Blocks.stone.getDefaultState());
-//			world.setBlockState(gatepos.add(-1,0, 0),Blocks.stone.getDefaultState());
-//			
-//			world.setBlockState(gatepos.add(1,0, 0),Blocks.glass.getDefaultState());
-//			world.setBlockState(gatepos,Blocks.glass.getDefaultState());
-//			
-//			
-//			gatepos = gatepos.add(0, 1, 0);
-//			
-//			world.setBlockState(gatepos,Blocks.stone.getDefaultState());
-//			world.setBlockState(gatepos.add(1, 0, 0),Blocks.stone.getDefaultState());
+				} 									
+			}			
 		}
 	}
 	}

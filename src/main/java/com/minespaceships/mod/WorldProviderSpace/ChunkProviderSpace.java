@@ -1,7 +1,6 @@
 package com.minespaceships.mod.WorldProviderSpace;
 
 import com.google.common.collect.Lists;
-import com.minespaceships.mod.Generator.WorldGeneratorAsteroid;
 import com.minespaceships.mod.Generator.WorldGenFloatingIslandsSmall;
 
 import java.util.Iterator;
