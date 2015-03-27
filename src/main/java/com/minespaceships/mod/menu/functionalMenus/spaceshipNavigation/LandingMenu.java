@@ -1,5 +1,6 @@
 package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,8 +48,59 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 			return "command can not be null.";
 		}
 
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.land, terminal.getPlayerEntity());
-		return SpaceshipCommands.land+" not implementes yet.\nPress m to get back.";
+		ArrayList<BlockPos> lowestBlocks = new ArrayList<BlockPos>();
+		ArrayList<BlockPos> spacehipBlocks = new ArrayList<BlockPos>();
+		try{
+			double x,y,z;
+			World world = terminal.getChatRegisterEntity().getWorld();
+			Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
+			spacehipBlocks = ship.getPositions();
+
+			x = terminal.getChatRegisterEntity().getPos().getX();
+			y = terminal.getChatRegisterEntity().getPos().getY();
+			z = terminal.getChatRegisterEntity().getPos().getZ();
+			BlockPos minPos = ship.getMinPos();
+
+			//Check all blocks of the spaceship, how many air locks are under the ship.
+			for(BlockPos block : spacehipBlocks){
+				int height=0;
+				boolean run = true;
+				int posY= block.getY()-2;
+				IBlockState current;
+				do{
+					current = world.getBlockState(new BlockPos(x,posY,z));
+					if(current == Blocks.air.getDefaultState()){
+						run = true;
+					}else{
+						run = false;
+					}
+					posY--;
+					height++;
+				}while(run);
+				if(!spacehipBlocks.contains(current)){
+					lowestBlocks.add(new BlockPos(block.getX(), posY ,block.getZ()));
+				}
+			}
+
+			//Get lowest block of all.
+			BlockPos lowest = lowestBlocks.get(0);
+			for(BlockPos block : lowestBlocks){
+				if(!spacehipBlocks.contains(block)){
+					if(block.getY() >= lowest.getY()){
+						lowest = block;
+					}
+				}
+			}
+
+			//(double)x, (double)y, (double)z
+			//BlockPos position = new BlockPos(x, lowest.getY() , z);
+			ship.move(lowest);
+
+			return "land successful.\nPress 'm' to get back.";
+		}catch(Exception e){
+			return "While trying to land an error occurred: "+e;
+		}
+
 	}
 
 }
