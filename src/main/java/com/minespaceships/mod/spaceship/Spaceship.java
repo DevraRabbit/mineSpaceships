@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
@@ -13,6 +14,7 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
@@ -28,6 +30,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.BlockWallSign;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -41,9 +44,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -55,9 +60,14 @@ public class Spaceship implements Serializable{
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
 	private EnergyStrategySystem energySystem;
+	private MovementTarget target;
+	private Vec3 position;
 	private boolean isResolved = true;
 	
 	private static final String positionsKey = "Positions";
+	private static final String containsTargetKey = "containsTarget";
+	private static final String targetPositionKey = "TargetPos";
+	private static final String targetTurnKey = "TargetTurn";
 	
 	private boolean canBeRemoved = true;
 	
@@ -105,6 +115,7 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
+		position = new Vec3(origin.getX(), origin.getY(), origin.getZ());
 		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
@@ -121,9 +132,6 @@ public class Spaceship implements Serializable{
 		return canBeRemoved;
 	}
 	
-	public int getNavigatorCount(){
-		return assembler.getParts(NavigatorBlock.class).size();
-	}
 	public ArrayList<BlockPos> getPositions(){
 		return blockMap.getPositions();
 	}
@@ -170,6 +178,44 @@ public class Spaceship implements Serializable{
 		}
 		origin = Vec3Op.scale(span, 0.5);
 	}
+	public int getSize(){
+		return blockMap.getSize();
+	}
+	public float getHardness(){
+		return blockMap.getHardnessSum(world);
+	}	
+	public int getNavigatorCount(){
+		return assembler.getParts(NavigatorBlock.class).size();
+	}
+	public int getPhaserCount(){
+		return assembler.getParts(PhaserBlock.class).size();
+	}
+	public int getShieldsCount(){
+		return assembler.getParts(ShieldBlock.class).size();
+	}
+	public int getEnginesCount(){
+		return assembler.getParts(EngineBlock.class).size();
+	}
+	public int getActiveGeneratorsCount(){
+		return energySystem.getActive(EnergyBlock.class, true).size();
+	}
+	public int getActivePhaserCount(){
+		return energySystem.getActive(PhaserBlock.class, true).size();
+	}
+	public int getActiveShieldsCount(){
+		return energySystem.getActive(ShieldBlock.class, true).size();
+	}
+	public int getActiveEnginesCount(){
+		return energySystem.getActive(EngineBlock.class, true).size();
+	}	
+	
+	public float getCapacity(){
+		return energySystem.getEnergy(false);
+	}
+	public float getEnergy(){
+		return energySystem.getEnergy();
+	}
+	
 	public void activatePhasers(){
 		energySystem.changeAll(PhaserBlock.class, true);
 	}
@@ -189,12 +235,21 @@ public class Spaceship implements Serializable{
 		energySystem.changeAll(EngineBlock.class, false);
 	}
 	
+	public void balanceEnergy(){
+		energySystem.refresh(true);
+	}
+	public void deactivateEverything(){
+		energySystem.changeAll(IEnergyC.class, false);
+	}
+	
 	
 	public void setTarget(BlockPos position){
-		moveTo(Vec3Op.subtract(position, origin), 0, world);
+		//moveTo(Vec3Op.subtract(position, origin), 0, world);
+		target = new MovementTarget(position, 0, world);
 	}
-	public void setTarget(BlockPos position, World world){
-		moveTo(Vec3Op.subtract(position, origin), world);
+	public void setTarget(BlockPos position, int turn){
+		//moveTo(Vec3Op.subtract(position, origin), world);
+		target = new MovementTarget(position, turn, world);
 	}
 	public void moveTo(BlockPos addDirection) {
 		moveTo(addDirection, world, 0);
@@ -205,8 +260,62 @@ public class Spaceship implements Serializable{
 	public void moveTo(BlockPos addDirection, int turn, World world) {
 		moveTo(addDirection, world, turn);
 	}
+	public void moveToTarget(){
+		moveTo(target.getTarget(), target.getWorld(), target.getTurn());
+		target = null;
+	}
+	
+	public EnumFacing getFacing(){
+		int north=0;
+		int south=0;
+		int east=0;
+		int west=0;
+		ArrayList<BlockPos> facingListActive= energySystem.getActive(EngineBlock.class, true);
+		ArrayList<BlockPos> facingListDeactive= energySystem.getActive(EngineBlock.class, false);
+		for (BlockPos p: facingListActive){			
+			EnumFacing e=Turn.getEnumFacing(world.getBlockState(p));
+			if(e==EnumFacing.NORTH){
+				north+=1;
+			} else if (e==EnumFacing.SOUTH){
+				south+=1;
+			} else if( e==EnumFacing.EAST){
+				east+=1;
+			}
+			else if( e==EnumFacing.WEST){
+				west+=1;
+			}		
+		}
+		for (BlockPos p: facingListDeactive){			
+			EnumFacing e=Turn.getEnumFacing(world.getBlockState(p));
+			if(e==EnumFacing.NORTH){
+				north+=1;
+			} else if (e==EnumFacing.SOUTH){
+				south+=1;
+			} else if( e==EnumFacing.EAST){
+				east+=1;
+			}
+			else if( e==EnumFacing.WEST){
+				west+=1;
+			}		
+		}
+		if(north>south&& north>west&& north> east){
+			return EnumFacing.NORTH.getOpposite();
+		} else if(south>north&&south>west&&south>east){
+			return EnumFacing.SOUTH.getOpposite();
+		} else if (east>north&&east>south&&east>west){
+			return EnumFacing.EAST.getOpposite();
+		} else if (west>north&&west>south&&west>east){
+			return EnumFacing.WEST.getOpposite();
+		}		
+		return EnumFacing.UP;		
+	}
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
+		if(!canMove(addDirection, world, turn)){
+			return;
+		}
+		ArrayList<BlockPos> harderBlocks= new ArrayList(); //************Added collision
+		ArrayList<BlockPos> softerBlocks= new ArrayList(); //************* Added for collison		
 		blockMap.refreshVolumeBlocks(); //******************************ADDED
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		WorldMock startMock = new WorldMock(world);
@@ -221,7 +330,7 @@ public class Spaceship implements Serializable{
 		BlockPos add = new BlockPos(addDirection);
 		ArrayList<BlockPos> positions = blockMap.getPositionsWithInnerBlocks();	
 		int i = 3;
-		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  //*************************************************ADDED
+		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  
 		while(!positions.isEmpty() && i > 0){
 			Iterator<BlockPos> it = positions.iterator();
 			while(it.hasNext()){
@@ -240,6 +349,14 @@ public class Spaceship implements Serializable{
 //				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					if(tryCopy(startMock, Pos, nextPos, turn)){
+						if(world.getBlockState(nextPos).getBlock().getMaterial() != Material.water && world.getBlockState(nextPos).getBlock().getMaterial() != Material.air){
+							if(world.getBlockState(nextPos).getBlock().getExplosionResistance(null) >= world.getBlockState(Pos).getBlock().getExplosionResistance(null)){
+								harderBlocks.add(nextPos);
+							}
+							else{
+								softerBlocks.add(nextPos);
+							}
+						}
 						//build the buildable block
 						BlockCopier.copyBlock(world, Pos, nextPos, turn);					
 						it.remove();
@@ -286,7 +403,16 @@ public class Spaceship implements Serializable{
 		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
+		
+		for(BlockPos p : harderBlocks){
+			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
+		}
+		for(BlockPos p : softerBlocks){
+			world.createExplosion(null, (float)p.getX(), (float)p.getY(), (float)p.getZ(), 0.5F, true);
+		}
 	}
+	
+
 	
 	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
 		try{
@@ -317,7 +443,7 @@ public class Spaceship implements Serializable{
 			return size == 1;
 		}
 	}
-	
+		
 	private void moveMeasurements(BlockPos addDirection, int turn){
 		blockMap.rotate(origin, turn);
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
@@ -491,8 +617,104 @@ public class Spaceship implements Serializable{
 		//Valid position
 		this.setTarget(new BlockPos(x,y,z));
 	}
+	public boolean canMove(BlockPos addDirection, World targetWorld, int turn){
+		if(world != targetWorld){
+			return true;
+		}
+		double maxWorldHeight = this.world.getHeight();
+		BlockPos maxPos = getMaxPos();
+		BlockPos minPos = getMinPos();
+		BlockPos nextMaxPos = Turn.getRotatedPos(maxPos, origin, addDirection, turn);
+		BlockPos nextMinPos = Turn.getRotatedPos(minPos, origin, addDirection, turn);
+		if(nextMaxPos.getY() > maxWorldHeight || nextMinPos.getY() < 0){
+			return false;
+		}
+		return !isInsideShipRectangle(nextMaxPos) && !isInsideShipRectangle(nextMinPos);
+	}
+	public boolean isInsideShipRectangle(BlockPos pos){
+		BlockPos max = getMaxPos();
+		BlockPos min = getMinPos();
+		return pos.getX() >= min.getX() &&
+				pos.getY() >= min.getY() &&
+				pos.getZ() >= min.getZ() &&
+				pos.getX() <= max.getX() &&
+				pos.getY() <= max.getY() &&
+				pos.getZ() <= max.getZ();
+	}
+	public void update(){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		
+		Vector<BlockPos> movedPositions = move();
+		if(side == Side.CLIENT){
+			if(movedPositions != null){
+				Random rand = new Random();
+				for(BlockPos pos : movedPositions){					
+					world.spawnParticle(EnumParticleTypes.PORTAL, pos.getX()+rand.nextFloat(), pos.getY()+rand.nextFloat(), pos.getZ()+rand.nextFloat(), 0, 0, 0, new int[0]);
+					world.playSound(pos.getX(), pos.getY(), pos.getZ(), EngineBlock.engineSound, EngineBlock.engineSoundVolume, EngineBlock.engineSoundPitch, true);
+				}
+			}
+		}
+	}
+	private Vector<BlockPos> move(){
+		if(target != null){
+			if(world != target.getWorld()){
+				moveToTarget();
+				return null;
+			}
+			Vec3 targetVec = new Vec3(target.getTarget().getX(), target.getTarget().getY(), target.getTarget().getZ());
+			Vec3 direction = targetVec.subtract(position);
+			float distance = (float) direction.lengthVector();			
+			float traveledDistance = 0;
+			float speed = ShipInformation.getShipSpeed(this);
+			if(speed <= 0){
+				stop();
+				return null;
+			}
+			float directionAbs = 1;
+			if(speed <= 1){
+				direction = Vec3Op.scale(direction.normalize(), speed);
+				directionAbs = speed;
+			} else {
+				direction = direction.normalize();
+			}
+			Vector<BlockPos> movedPositions = new Vector<BlockPos>();
+			while(traveledDistance < speed && distance > 0) {
+				position = position.add(direction);
+				traveledDistance += directionAbs;
+				distance -= directionAbs;
+				movedPositions.add(new BlockPos(position));
+				BlockPos worldPos = new BlockPos(position);
+				Block block = world.getBlockState(worldPos).getBlock();
+				if(!containsBlock(worldPos) &&
+						block.getMaterial() != Material.air &&
+						!block.getMaterial().isLiquid()){
+					stop();
+					return movedPositions;
+				}				
+			}
+			if(distance <= 0){
+				stop();
+			}
+			return movedPositions;
+			
+		} else {
+			return null;
+		}
+	}
+	private void stop(){
+		BlockPos positionPos = new BlockPos(position);
+		BlockPos addDirection = Vec3Op.subtract(positionPos, origin);
+		moveTo(addDirection, world, target.getTurn());
+		target = null;
+	}
+	
 	public void readFromNBT(NBTTagCompound c, String firstKey){
 		String data = c.getString(firstKey+positionsKey);
+		if(c.getBoolean(containsTargetKey)){
+			BlockPos targetPos = BlockPos.fromLong(c.getLong(targetPositionKey));
+			int targetTurn = c.getInteger(targetTurnKey);
+			target = new MovementTarget(targetPos, targetTurn, world);
+		}
 		try {
 			positionsFromString(data);
 		} catch (Exception e) {
@@ -501,5 +723,14 @@ public class Spaceship implements Serializable{
 	}
 	public void writeToNBT(NBTTagCompound c, String firstKey){
 		c.setString(firstKey+positionsKey, positionsToString());
+		if(target != null){
+			c.setBoolean(containsTargetKey, true);
+			c.setLong(targetPositionKey, target.getTarget().toLong());
+			c.setInteger(targetTurnKey, target.getTurn());
+		} else {
+			c.setBoolean(containsTargetKey, false);
+		}
 	}
+	
+	
 }

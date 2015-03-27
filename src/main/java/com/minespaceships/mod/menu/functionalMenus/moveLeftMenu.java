@@ -3,6 +3,7 @@ package com.minespaceships.mod.menu.functionalMenus;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 
 /**
  * Move the spaceship position to the left.
@@ -25,7 +26,7 @@ public class moveLeftMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, CustomGuiChat terminal) {
+	public String activate(String command, IMenuInterface terminal) {
 		// TODO Auto-generated method stub
 		return "move left not implemented yet!";
 	}

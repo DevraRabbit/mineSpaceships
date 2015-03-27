@@ -22,7 +22,7 @@ import net.minecraft.util.EnumChatFormatting;
  * @author DevraRabbit ,jh0ker, ovae.
  * @version 20150313.
  */
-public class CustomGuiChat extends GuiChat{
+public class CustomGuiChat extends GuiChat implements IMenuInterface{
 	private EntityPlayer player;
 	private ChatRegisterEntity entity;
 

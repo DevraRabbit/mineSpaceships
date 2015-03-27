@@ -65,43 +65,41 @@ public class EnergyStrategySystem {
 	
 	public void refresh(boolean autoactivate){
 		float energy=getEnergy();
-		if(energy != 0){
-			ArrayList<BlockPos> energyPositions = assembler.getParts(IEnergyC.class);
-			//activate producers
-			for(BlockPos p: energyPositions){
-				Block block = world.getBlockState(p).getBlock();
-				if(block instanceof IEnergyC){
-					IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
-					if(energyBlock.getEnergy() > 0){
-						float nextEnergy = energyBlock.getStatus(p, world) ? energy - energyBlock.getEnergy() : energy + energyBlock.getEnergy();					
-						if((nextEnergy > energy) && autoactivate){
-							energyBlock.setStatus(!energyBlock.getStatus(p, world), p, world, false);
-							energy = nextEnergy;
-						}
+		ArrayList<BlockPos> energyPositions = assembler.getParts(IEnergyC.class);
+		//activate producers
+		for(BlockPos p: energyPositions){
+			Block block = world.getBlockState(p).getBlock();
+			if(block instanceof IEnergyC){
+				IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
+				if(energyBlock.getEnergy() > 0){
+					float nextEnergy = energyBlock.getStatus(p, world) ? energy - energyBlock.getEnergy() : energy + energyBlock.getEnergy();					
+					if((nextEnergy > energy)){ // && autoactivate){ //Maby later
+						energyBlock.setStatus(!energyBlock.getStatus(p, world), p, world, false);
+						energy = nextEnergy;
 					}
-				} else {
-					//TODO: implement reload Bug where all blocks are air
 				}
+			} else {
+				//TODO: implement reload Bug where all blocks are air
 			}
-			// deactivate/activate consumers
-			for(BlockPos p: energyPositions){
-				Block block = world.getBlockState(p).getBlock();
-				if(block instanceof IEnergyC){
-					IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
-					if(energyBlock.getEnergy() < 0){
-						boolean nextStatus = !energyBlock.getStatus(p, world);
-						float nextEnergy = nextStatus ? energy + energyBlock.getEnergy() : energy - energyBlock.getEnergy();					
-						if((Math.abs(nextEnergy) < Math.abs(energy))){
-							if(autoactivate || !autoactivate && nextStatus == false){
-								energyBlock.setStatus(nextStatus, p, world, false);
-								energy = nextEnergy;
-								System.out.println("Activated "+energyBlock.getClass().getName()+" to "+energy+" Energy");
-							}
+		}
+		// deactivate/activate consumers
+		for(BlockPos p: energyPositions){
+			Block block = world.getBlockState(p).getBlock();
+			if(block instanceof IEnergyC){
+				IEnergyC energyBlock=(IEnergyC) world.getBlockState(p).getBlock();
+				if(energyBlock.getEnergy() < 0){
+					boolean nextStatus = !energyBlock.getStatus(p, world);
+					float nextEnergy = nextStatus ? energy + energyBlock.getEnergy() : energy - energyBlock.getEnergy();					
+					if((Math.abs(nextEnergy) < Math.abs(energy))){
+						if(autoactivate || !autoactivate && nextStatus == false){
+							energyBlock.setStatus(nextStatus, p, world, false);
+							energy = nextEnergy;
+							System.out.println("Activated "+energyBlock.getClass().getName()+" to "+energy+" Energy");
 						}
 					}
-				} else {
-					//TODO: implement reload Bug where all blocks are air
 				}
+			} else {
+				//TODO: implement reload Bug where all blocks are air
 			}
 		}
 	}
@@ -113,7 +111,7 @@ public class EnergyStrategySystem {
 			if(block instanceof IEnergyC){
 				IEnergyC energyBlock=(IEnergyC)block;
 				if (energyBlock.getStatus(p, world)!=activate){
-					if(canBeActivated(energyBlock)){
+					if(canBeActivated(energyBlock) || !activate){
 						energyBlock.setStatus(activate, p, world, false);
 					} else{
 						break;
@@ -123,6 +121,25 @@ public class EnergyStrategySystem {
 		}
 		refresh(false);
 	}
+	
+	public ArrayList<BlockPos> getActive(Class c, boolean active){
+		ArrayList<BlockPos> classList = assembler.getParts(c);
+		ArrayList<BlockPos> outList = new ArrayList<BlockPos>();
+		for(BlockPos p: classList){
+			Block block = world.getBlockState(p).getBlock();
+			if(block instanceof IEnergyC){
+
+				IEnergyC energyBlock=(IEnergyC)block;
+				if (energyBlock.getStatus(p, world)== active){
+					outList.add(p);
+				}
+			}			
+		}
+		return outList;
+	}
+
+	
+
 	
 //	public void setAggressiveFocus(){
 //		priorityList.clear();

@@ -6,6 +6,7 @@ import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.block.BlockPlanks;
@@ -30,7 +31,7 @@ public class terminalMenu {
 	 * @param chatEntity
 	 * @param chat
 	 */
-	public static void onCommand(String command, EntityPlayer player, ChatRegisterEntity chatEntity, CustomGuiChat chat){
+	public static void onCommand(String command, EntityPlayer player, ChatRegisterEntity chatEntity, IMenuInterface chat){
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.

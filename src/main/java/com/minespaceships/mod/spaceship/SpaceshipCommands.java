@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.util.PhaserUtils;
 
 import net.minecraft.block.state.IBlockState;
@@ -18,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -37,9 +39,25 @@ public class SpaceshipCommands {
 	public static String moveDown ="move down";
 	public static String land ="land";
 	public static String liftoff = "liftoff";
+	//energy management
+	public static String energy = "energy";
+	public static String activate = "activate";
+	public static String deactivate = "deactivate";	
+	public static String phaser = "phaser";
+	public static String shields = "shields";
+	public static String engines = "engines";
+	public static String balance = "balance";
+	public static String shutdown = "shutdown";
 	//spaceship functions
 	public static String shieldDisable = "shield disable";
 	public static String shieldActivate = "shiels activate";
+	
+	public enum EnergyType{
+		phaser, shields, engines;
+	}
+	public enum EnergyCommandType{
+		balance, shutdown;
+	}
 
 	//other commands
 	public static String help = "help";
@@ -83,11 +101,21 @@ public class SpaceshipCommands {
 			player.addChatComponentMessage(new ChatComponentText("move: Please initialize the Spaceship first"));
 			return;
 		}
-
+		
+		
+		
 		//Process "move front, back, etc. commands depending on the direction the player looks"
 		//Taken from http://www.minecraftforge.net/forum/index.php?topic=6514.0
 		int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
+		if(ship.getFacing()==EnumFacing.NORTH){
+			playerRotation=2;
+		} else if(ship.getFacing()==EnumFacing.SOUTH){
+			playerRotation=0;
+		} else if(ship.getFacing()==EnumFacing.EAST){
+			playerRotation=3;
+		} else if(ship.getFacing()==EnumFacing.WEST){
+			playerRotation=1;
+		}		
 		if(command.startsWith("forward")) {
 			command = command.substring("forward".length());
 			command = processDirectionMoveCommand(command, playerRotation);
@@ -177,6 +205,42 @@ public class SpaceshipCommands {
 
 		}
 	}
+	public static void energy(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, final Spaceship ship){
+		if(command.startsWith(energy)){
+			String[] parts = command.split(" ");
+			boolean toActivate = false;
+			if(parts[1].equals(activate)){
+				toActivate = true;
+			} else if (parts[1].equals(deactivate)){
+				
+			} else if(parts[1].equals(balance)){
+				ship.balanceEnergy();
+			} else if(parts[1].equals(shutdown)){
+				ship.deactivateEverything();
+			} else {
+				return;
+			}
+			if(parts[2].equals(phaser)){
+				if(toActivate){
+					ship.activatePhasers();
+				} else {
+					ship.deactivatePhasers();
+				}
+			} else if(parts[2].equals(shields)){
+				if(toActivate){
+					ship.activateEngines();
+				} else {
+					ship.deactivateEngines();
+				}
+			} else if(parts[2].equals(engines)){
+				if(toActivate){
+					ship.activateEngines();
+				} else {
+					ship.deactivateEngines();
+				}
+			}
+		}
+	}
 
 	public static void shoot(String command, final World worldObj, final ChatRegisterEntity commandBlock, final EntityPlayer player, Spaceship ship) {
 		command = command.substring("shoot".length()).replaceAll("\\s", "");
@@ -222,8 +286,38 @@ public class SpaceshipCommands {
 		player.addChatComponentMessage(new ChatComponentText(out));
 		return out;
 	}
+	public static String activateCommand(boolean toActivate, EnergyType type){
+		String command = energy;
+		if(toActivate){
+			command += " "+activate;			
+		} else {
+			command += " "+deactivate;
+		}
+		switch(type){
+		case phaser:
+			command += " "+phaser;
+			break;
+		case engines:
+			command += " "+engines;
+		case shields:
+			command += " "+shields;
+		}
+		return command;
+	}
+	public static String EnergyCommand(EnergyCommandType type){
+		String command = energy;
+		switch(type){
+		case balance:
+			command += " "+balance;
+			break;
+		case shutdown:
+			command += " "+shutdown;
+			break;
+		}
+		return command;
+	}
 
-	public static void land(final CustomGuiChat terminal){
+	public static void land(final IMenuInterface terminal){
 		/*
 		try{
 			double x,y,z;

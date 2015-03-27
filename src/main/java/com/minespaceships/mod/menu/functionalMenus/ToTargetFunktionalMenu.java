@@ -9,6 +9,7 @@ import net.minecraft.util.BlockPos;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Spaceship;
 
 import scala.reflect.api.Types.ThisTypeExtractor;
@@ -37,7 +38,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, CustomGuiChat terminal){
+	public String activate(String command, IMenuInterface terminal){
 		if(command.equals(null)){
 			throw new IllegalArgumentException("Command can not be null.");
 		}
