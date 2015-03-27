@@ -23,8 +23,8 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public HelpMenu(String name) {
-		super(name);
+	public HelpMenu() {
+		super("Help");
 	}
 
 	/**

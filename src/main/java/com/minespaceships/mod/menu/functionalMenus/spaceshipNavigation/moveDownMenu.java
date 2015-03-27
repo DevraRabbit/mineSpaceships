@@ -1,10 +1,13 @@
-package com.minespaceships.mod.menu.functionalMenus;
+package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
-import net.minecraft.util.EnumChatFormatting;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.minespaceships.mod.menu.FunctionalMenu;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
+
+import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
-import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Shipyard;
@@ -12,24 +15,24 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
- * Menu witch will create a new spaceship.
+ * Move the spaceship position down.
  * @author ovae.
  * @version 20150323.
  */
-public class CreateShipMenu extends Menu implements FunctionalMenu{
+public class moveDownMenu extends Menu implements FunctionalParamMenu{
 
 	/**
-	 * The constructor creates a new spaceship.
+	 * Creates a new moveDownMenu.
 	 * @param name
-	 * @param terminal
 	 */
-	public CreateShipMenu() {
-		super("Recreate spaceship");
+	public moveDownMenu() {
+		super("Please type in how may blocks you want to move\n    down.    ");
 	}
 
 	/**
 	 * The functionality of the menu is activated by this method.
 	 * @param command
+	 * @param terminal
 	 */
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
@@ -40,8 +43,8 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 			return "command can not be null.";
 		}
 
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.initAuto, null);
-		return EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\nPress 'Esc' and reopen the menu.";
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveDown+" "+command, terminal.getPlayerEntity());
+		return SpaceshipCommands.moveDown+" "+command;
 	}
 
 }

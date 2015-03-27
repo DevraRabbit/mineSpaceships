@@ -1,4 +1,4 @@
-package com.minespaceships.mod.menu.functionalMenus;
+package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,14 +23,14 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  * @author ovae.
  * @version 20150323.
  */
-public class landingMenu extends Menu implements FunctionalMenu{
+public class LandingMenu extends Menu implements FunctionalMenu{
 
 	/**
 	 * Creates a new landingMenu.
 	 * @param name
 	 */
-	public landingMenu(String name) {
-		super(name);
+	public LandingMenu() {
+		super("land");
 	}
 
 	/**
