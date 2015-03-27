@@ -299,13 +299,13 @@ public class Spaceship implements Serializable{
 			}		
 		}
 		if(north>south&& north>west&& north> east){
-			return EnumFacing.NORTH;
+			return EnumFacing.NORTH.getOpposite();
 		} else if(south>north&&south>west&&south>east){
-			return EnumFacing.SOUTH;
+			return EnumFacing.SOUTH.getOpposite();
 		} else if (east>north&&east>south&&east>west){
-			return EnumFacing.EAST;
+			return EnumFacing.EAST.getOpposite();
 		} else if (west>north&&west>south&&west>east){
-			return EnumFacing.WEST;
+			return EnumFacing.WEST.getOpposite();
 		}		
 		return EnumFacing.UP;		
 	}
