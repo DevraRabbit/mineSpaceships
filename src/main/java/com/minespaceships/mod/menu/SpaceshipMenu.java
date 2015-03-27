@@ -1,7 +1,7 @@
 package com.minespaceships.mod.menu;
 
+import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.*;
-import com.minespaceships.mod.menu.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LandingMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.SpaceshipNavigation;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.liftoffMenu;
@@ -68,8 +68,7 @@ public class SpaceshipMenu {
 		root.addSubMenu(new SpaceshipNavigation());
 		root.addSubMenu(new EnergyManagementMenu());
 		root.addSubMenu(shootPhaserMenu);
-		root.addSubMenu(new HelpMenu());
-
+		root.addSubMenu(new HelpMenu("Help"));
 		runBefore = true;
 	}
 

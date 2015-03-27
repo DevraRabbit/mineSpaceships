@@ -30,15 +30,10 @@ public class PhaserBlock extends ActivatableBlock implements ITileEntityProvider
         this.setTickRandomly(true);
 	}
 	
-	@Override
-	public int getEnergy() {
-		return -1;
-	}
-	
 	public void shoot(BlockPos pos, World world, float strength, Target target){
 		if(getStatus(pos, world)){
 			Spaceship ship = Shipyard.getShipyard(world).getShip(pos, world);
-			if(ship != null){				
+			if(ship != null){
 				TileEntity entity = world.getTileEntity(pos);
 				if(entity instanceof PhaserTileEntity){
 					((PhaserTileEntity)entity).shoot(target, ship);
@@ -57,5 +52,10 @@ public class PhaserBlock extends ActivatableBlock implements ITileEntityProvider
 		if(entity instanceof PhaserTileEntity){
 			((PhaserTileEntity)entity).updateRender(rand);
 		}
+	}
+	
+	@Override
+	public int getEnergy() {
+		return -1;
 	}
 }

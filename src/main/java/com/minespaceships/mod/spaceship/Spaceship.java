@@ -243,7 +243,6 @@ public class Spaceship implements Serializable{
 	public void deactivateEverything(){
 		energySystem.changeAll(IEnergyC.class, false);
 	}
-	
 	public void shootPhaserAt(Target target){
 		ArrayList<BlockPos> phasers = energySystem.getActive(PhaserBlock.class, true);
 		Random rand = new Random();
@@ -257,8 +256,7 @@ public class Spaceship implements Serializable{
 			}
 		}
 	}
-	
-	
+
 	public void setTarget(BlockPos position){
 		//moveTo(Vec3Op.subtract(position, origin), 0, world);
 		target = new MovementTarget(position, 0, world);

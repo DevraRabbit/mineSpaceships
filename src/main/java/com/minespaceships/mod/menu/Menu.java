@@ -80,7 +80,6 @@ public class Menu{
 				//Get the selctedMenu
 				FunctionalParamMenu temp = (FunctionalParamMenu) this.getChildrenList().get(0);
 				temp.activate(name, terminal);
-
 				return this.getMother().getMenu(terminal);
 			}else{
 				//Changes the menu via sub menu position.
@@ -106,6 +105,7 @@ public class Menu{
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
 							return menu.getMenu(terminal);
+
 						}
 					}
 				}
