@@ -29,12 +29,13 @@ public class ItemPhaser extends ItemBow{
 	
 	 public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityPlayer playerIn, int timeLeft)
 	    {
+		 
 	        int j = this.getMaxItemUseDuration(stack) - timeLeft;
 	       int charge = 1;
 //	       if (j!=0) {
-//			charge = (j+2/(j))-10;
+//			charge = (j+2/(j))-10;S
 //			System.out.println(charge);
-//			System.out.println(j+"charged");
+			System.out.println(j+"charged");
 //	       }
 	       
 	       boolean flag = playerIn.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
@@ -44,7 +45,7 @@ public class ItemPhaser extends ItemBow{
 	        	
 	        	
 	        	worldIn.spawnParticle(EnumParticleTypes.FLAME,playerIn.posX, playerIn.posY+1, playerIn.posZ, playerIn.getLookVec().xCoord, playerIn.getLookVec().yCoord, playerIn.getLookVec().zCoord,3);
-	            PhaserUtils.shoot(playerIn.getPosition().add(0, 1, 0), playerIn.getLookVec(),0.5+j/10, 80+j, worldIn);
+	            PhaserUtils.shoot(playerIn.getPosition().add(0, 1, 0), playerIn.getLookVec(), 0.2f+2*j/75, 80+j, worldIn);
 
 	            stack.damageItem(1, playerIn);
 	            worldIn.playSoundAtEntity(playerIn, "random.bow", 20.0F, 5.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 4 * 0.5F);

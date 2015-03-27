@@ -102,7 +102,6 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 				PhaserUtils.shoot(pos, targetPos, PhaserBlock.phaserStrength, PhaserBlock.phaserMaxRange, worldObj);
 				delay = phaserDelay;
 			}
-			delay = 0;
 		} else {
 			delay--;
 		}
