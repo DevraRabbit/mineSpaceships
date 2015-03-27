@@ -1,13 +1,13 @@
-package com.minespaceships.mod.menu.functionalMenus;
+package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -17,18 +17,18 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
- * Move the spaceship position forward.
+ * Move the spaceship position back.
  * @author ovae.
  * @version 20150323.
  */
-public class moveForwardMenu extends Menu implements FunctionalParamMenu {
+public class moveBackMenu extends Menu implements FunctionalParamMenu{
 
 	/**
-	 * Creates a new moveForwardMenu.
+	 * Creates a new moveBackMenu.
 	 * @param name
 	 */
-	public moveForwardMenu(String name) {
-		super(name);
+	public moveBackMenu() {
+		super("Please type in how may blocks you want to move\n    back.    ");
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 	 * @param terminal
 	 */
 	@Override
-	public String activate(final String command, IMenuInterface terminal) {
+	public String activate(String command, IMenuInterface terminal) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}
@@ -45,8 +45,8 @@ public class moveForwardMenu extends Menu implements FunctionalParamMenu {
 			return "command can not be null.";
 		}
 
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveForward+" "+command, terminal.getPlayerEntity());
-		return "";
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveBack+" "+command, terminal.getPlayerEntity());
+		return SpaceshipCommands.moveBack;
 	}
 
 }

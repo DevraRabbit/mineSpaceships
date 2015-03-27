@@ -21,8 +21,7 @@ public class NoSpaceshipEntityMenu{
 
 	public static void initMenu(){
 		rootMenu = new Menu("root");
-		initMenu= new CreateShipMenu("initialise spaceship");
-		rootMenu.addSubMenu(initMenu);
+		rootMenu.addSubMenu(new CreateShipMenu());
 		runBefore = true;
 	}
 

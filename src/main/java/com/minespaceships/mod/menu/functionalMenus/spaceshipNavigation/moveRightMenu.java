@@ -1,4 +1,4 @@
-package com.minespaceships.mod.menu.functionalMenus;
+package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
@@ -6,18 +6,18 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 
 /**
- * Move the spaceship position to the left.
+ * Move the spaceship position to the right.
  * @author ovae.
  * @version 20150320.
  */
-public class moveLeftMenu extends Menu implements FunctionalParamMenu{
+public class moveRightMenu extends Menu implements FunctionalParamMenu{
 
 	/**
-	 * Creates a new moveLeftmenu.
+	 * Creates a new moveRightMenu.
 	 * @param name
 	 */
-	public moveLeftMenu(String name) {
-		super(name);
+	public moveRightMenu() {
+		super("Please type in how may blocks you want to move\n    right.    ");
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class moveLeftMenu extends Menu implements FunctionalParamMenu{
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
 		// TODO Auto-generated method stub
-		return "move left not implemented yet!";
+		return "move right not implemented yet!";
 	}
 
 }
