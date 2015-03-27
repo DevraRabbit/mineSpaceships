@@ -181,6 +181,9 @@ public class Spaceship implements Serializable{
 	public int getSize(){
 		return blockMap.getSize();
 	}
+	
+	
+	
 	public float getHardness(){
 		return blockMap.getHardnessSum(world);
 	}	
@@ -263,6 +266,20 @@ public class Spaceship implements Serializable{
 	public void moveToTarget(){
 		moveTo(target.getTarget(), target.getWorld(), target.getTurn());
 		target = null;
+	}
+	
+
+	public BlockPos getLenght(){
+		if (getFacing()==EnumFacing.EAST){
+			return new BlockPos (getMaxPos().getX()-getMinPos().getX(),0,0);			
+		} else if (getFacing()==EnumFacing.WEST){
+			return new BlockPos (-(getMaxPos().getX()-getMinPos().getX()),0,0);			
+		} else if (getFacing()==EnumFacing.NORTH){
+			return new BlockPos (0,0,-(getMaxPos().getZ()-getMinPos().getZ()));			
+		} else{
+			return new BlockPos (0,0,getMaxPos().getZ()-getMinPos().getZ());
+		}
+		
 	}
 	
 	public EnumFacing getFacing(){
@@ -350,7 +367,7 @@ public class Spaceship implements Serializable{
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					if(tryCopy(startMock, Pos, nextPos, turn)){
 						if(world.getBlockState(nextPos).getBlock().getMaterial() != Material.water && world.getBlockState(nextPos).getBlock().getMaterial() != Material.air){
-							if(world.getBlockState(nextPos).getBlock().getExplosionResistance(null) >= world.getBlockState(Pos).getBlock().getExplosionResistance(null)){
+							if(world.getBlockState(nextPos).getBlock().getBlockHardness(world, nextPos) >= world.getBlockState(Pos).getBlock().getBlockHardness(world, Pos)){
 								harderBlocks.add(nextPos);
 							}
 							else{

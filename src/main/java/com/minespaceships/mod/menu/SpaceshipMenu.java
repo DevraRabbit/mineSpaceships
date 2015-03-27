@@ -77,6 +77,9 @@ public class SpaceshipMenu {
 
 	//Menu for the landing functionality.
 	private static Menu landingMenu;
+	
+	
+	
 
 	/**
 	 * Initialise the menu structure.
@@ -131,6 +134,9 @@ public class SpaceshipMenu {
 		out +="Please type in how may blocks you want to move\n"
 		+ "    down.    ";
 		moveDownFuncMenu = new moveDownMenu(out);
+		
+		
+		
 
 		liftoffMenu = new liftoffMenu("liftoff");
 		landingMenu = new landingMenu("landing");
@@ -160,6 +166,8 @@ public class SpaceshipMenu {
 				moveDownMenu.addSubMenu(moveDownFuncMenu);
 			navigation.addSubMenu(liftoffMenu);
 			navigation.addSubMenu(landingMenu);
+			navigation.addSubMenu(new moveForwardTurnMenu("move forward and turn"));
+							
 		root.addSubMenu(energySystem);
 
 		runBefore = true;

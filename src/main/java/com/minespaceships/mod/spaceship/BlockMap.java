@@ -13,6 +13,7 @@ import net.minecraft.block.BlockSponge;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class BlockMap {
@@ -51,6 +52,7 @@ public class BlockMap {
 	public int getSize(){
 		return map.size();
 	}
+	
 	
 	public ArrayList<BlockPos> getBlocksToRefill(World world)
 	{	HashMap<BlockPos, Boolean> nextToShipBlocks;
