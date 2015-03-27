@@ -42,7 +42,7 @@ public class moveForwardTurn90Menu extends Menu implements FunctionalParamMenu {
 	public String activate(final String command, IMenuInterface terminal) {
 		Spaceship ship=TerminalUtil.getShip(terminal);
 		if (ship!=null){
-			ship.setTarget(ship.getOrigin().add(ship.getLenght()), Turn.RIGHT);
+			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd(terminal.getPlayerEntity())), Turn.RIGHT);
 		}
 		return "";
 	}

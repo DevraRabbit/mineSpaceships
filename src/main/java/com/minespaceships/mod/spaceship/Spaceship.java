@@ -46,6 +46,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.Explosion;
@@ -269,17 +270,38 @@ public class Spaceship implements Serializable{
 	}
 	
 
-	public BlockPos getLenght(){
-		if (getFacing()==EnumFacing.EAST){
-			return new BlockPos (getMaxPos().getX()-getMinPos().getX(),0,0);			
-		} else if (getFacing()==EnumFacing.WEST){
-			return new BlockPos (-(getMaxPos().getX()-getMinPos().getX()),0,0);			
-		} else if (getFacing()==EnumFacing.NORTH){
-			return new BlockPos (0,0,-(getMaxPos().getZ()-getMinPos().getZ()));			
-		} else{
-			return new BlockPos (0,0,getMaxPos().getZ()-getMinPos().getZ());
+	public BlockPos getShipLengthToAdd(EntityPlayer player){
+		int length = 0;
+		if(getMaxPos().getZ()-getMinPos().getZ() > getMaxPos().getX()-getMinPos().getX())
+		{
+			length = getMaxPos().getZ()-getMinPos().getZ() + 1;
 		}
-		
+		else
+		{
+			length = getMaxPos().getX()-getMinPos().getX() + 1;
+		}
+		System.out.println("DIIIIIEEE LÄÄÄÄNGEEE IST :   " + length);
+		if (getFacing()==EnumFacing.EAST){
+			return new BlockPos (length,0,0);			
+		} else if (getFacing()==EnumFacing.WEST){
+			return new BlockPos (-(length),0,0);			
+		} else if (getFacing()==EnumFacing.NORTH){
+			return new BlockPos (0,0,-(length));			
+		} else if (getFacing()==EnumFacing.SOUTH){
+			return new BlockPos (0,0,length);
+		}
+		else {
+			int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			if (playerRotation==EnumFacing.EAST.getHorizontalIndex()){
+				return new BlockPos (length,0,0);			
+			} else if (playerRotation==EnumFacing.WEST.getHorizontalIndex()){
+				return new BlockPos (-(length),0,0);			
+			} else if (playerRotation==EnumFacing.NORTH.getHorizontalIndex()){
+				return new BlockPos (0,0,-(length));			
+			} else{
+				return new BlockPos (0,0,length);
+			}
+		}
 	}
 	
 	public EnumFacing getFacing(){
@@ -324,6 +346,7 @@ public class Spaceship implements Serializable{
 		} else if (west>north&&west>south&&west>east){
 			return EnumFacing.WEST.getOpposite();
 		}		
+		
 		return EnumFacing.UP;		
 	}
 	

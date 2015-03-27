@@ -8,6 +8,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 
+import com.minespacehips.mod.functionalMenus.energyMenus.TerminalUtil;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -15,6 +16,7 @@ import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.mod.spaceship.Turn;
 
 /**
  * Move the spaceship position forward.
@@ -38,14 +40,12 @@ public class moveForwardTurn180Menu extends Menu implements FunctionalParamMenu 
 	 */
 	@Override
 	public String activate(final String command, IMenuInterface terminal) {
-		if(command.trim().isEmpty()){
-			return "command can not be empty.";
+		
+		Spaceship ship=TerminalUtil.getShip(terminal);
+		if (ship!=null){
+			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd(terminal.getPlayerEntity())), Turn.AROUND);
+		
 		}
-		if(command.equals(null)){
-			return "command can not be null.";
-		}
-
-		//terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveForward+" "+command, terminal.getPlayerEntity());
 		return "";
 	}
 
