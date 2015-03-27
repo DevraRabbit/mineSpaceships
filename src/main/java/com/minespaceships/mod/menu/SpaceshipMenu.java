@@ -2,6 +2,7 @@ package com.minespaceships.mod.menu;
 
 import com.minespaceships.mod.menu.functionalMenus.*;
 import com.minespaceships.mod.menu.functionalMenus.energyMenus.EnergyManagementMenu;
+import com.minespaceships.mod.menu.functionalMenus.targetMenus.PhaserShootMenu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 
@@ -24,8 +25,9 @@ public class SpaceshipMenu {
 	//Menu if you need help
 	private static Menu help;
 
-	//Menu for the spaceship shield.
+	//Menu for the spaceship energy.
 	private static Menu energySystem;
+	private static Menu shootPhaserMenu;
 
 	//Menu which contains the ability to set the spaceship to a target position.
 	private static Menu shipToTargetMenu;
@@ -94,6 +96,7 @@ public class SpaceshipMenu {
 		navigation = new Menu("spaceship navigation");
 		help = new HelpMenu("help");
 		energySystem = new EnergyManagementMenu();
+		shootPhaserMenu = new PhaserShootMenu();
 		shipToTargetMenu = new Menu("to target");
 
 		moveForwardMenu = new Menu("move forward");
@@ -161,6 +164,7 @@ public class SpaceshipMenu {
 			navigation.addSubMenu(liftoffMenu);
 			navigation.addSubMenu(landingMenu);
 		root.addSubMenu(energySystem);
+		root.addSubMenu(shootPhaserMenu);
 
 		runBefore = true;
 	}
