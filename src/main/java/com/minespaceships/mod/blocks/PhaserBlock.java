@@ -20,6 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PhaserBlock extends ActivatableBlock implements ITileEntityProvider {
+	public static final float phaserStrength = 5;
+	public static final int phaserMaxRange = 200;
 
 	public PhaserBlock() {
 		super();

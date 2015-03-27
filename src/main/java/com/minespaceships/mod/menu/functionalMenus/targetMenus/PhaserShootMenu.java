@@ -33,7 +33,7 @@ public class PhaserShootMenu extends Menu {
 		}
 		@Override
 		public void onTarget(Target target) {
-			//ship.FirePhaserAt(target);
+			ship.shootPhaserAt(target);
 		}
 		
 	}

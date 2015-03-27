@@ -1,6 +1,7 @@
 package com.minespaceships.util;
 
 import java.util.List;
+import java.util.Random;
 
 import com.minespaceships.mod.overhead.PhaserEffect;
 import com.minespaceships.mod.spaceship.ShipInformation;
@@ -22,6 +23,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class PhaserUtils {
 
@@ -32,7 +35,7 @@ public class PhaserUtils {
 	}
 
 	public static void shoot(BlockPos source, Vec3 direction, double strength, int maxrange, World world) {
-		
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		BlockPos current;
 		
 		//Normalize vector, so no block is safe!11!!
@@ -86,7 +89,12 @@ public class PhaserUtils {
                     entity.onStruckByLightning(killer);
             }
             
-            world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, ray.xCoord, ray.yCoord, ray.zCoord, 0, 0, 0, 0);
+            if(side == Side.CLIENT){
+            	Random rand = new Random();
+            	for(int i = 0; i < 5; i++){
+            		world.spawnParticle(EnumParticleTypes.REDSTONE, current.getX()+rand.nextFloat(), current.getY()+rand.nextFloat(), current.getZ()+rand.nextFloat(), 0, 0, 0, new int[0]);
+            	}
+            }
             
 			maxrange--;
 		}

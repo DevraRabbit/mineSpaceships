@@ -65,13 +65,8 @@ public abstract class CommonProxy {
     
     public abstract IMenuInterface makeTerminal(EntityPlayer player, ChatRegisterEntity entity);
     public void setupTerminal(EntityPlayer player, ChatRegisterEntity entity, IMenuInterface menu){
-		//Initialise the menu structure.
-		if(!SpaceshipMenu.getRunBefore()){
-			SpaceshipMenu.initMenu(menu);
-		}
-		if(!NoSpaceshipEntityMenu.getRunBefore()){
-			NoSpaceshipEntityMenu.initMenu();
-		}
+		SpaceshipMenu.initMenu(menu);
+		NoSpaceshipEntityMenu.initMenu();
 
 		//initialise the menu display.
 		MenuDisplay spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), menu);

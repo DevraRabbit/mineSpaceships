@@ -20,8 +20,10 @@ import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
 import com.minespaceships.mod.blocks.ShieldBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.target.Target;
 import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
+import com.minespaceships.util.PhaserUtils;
 import com.minespaceships.util.Vec3Op;
 
 import energyStrategySystem.EnergyStrategySystem;
@@ -240,6 +242,20 @@ public class Spaceship implements Serializable{
 	}
 	public void deactivateEverything(){
 		energySystem.changeAll(IEnergyC.class, false);
+	}
+	
+	public void shootPhaserAt(Target target){
+		ArrayList<BlockPos> phasers = energySystem.getActive(PhaserBlock.class, true);
+		Random rand = new Random();
+		while(!phasers.isEmpty()){
+			int index = (int)((float)phasers.size()*rand.nextFloat());
+			BlockPos pos = phasers.get(index);
+			phasers.remove(index);
+			Block block = world.getBlockState(pos).getBlock();
+			if(block instanceof PhaserBlock){
+				((PhaserBlock)block).shoot(pos, world, PhaserBlock.phaserStrength, target);
+			}
+		}
 	}
 	
 	
