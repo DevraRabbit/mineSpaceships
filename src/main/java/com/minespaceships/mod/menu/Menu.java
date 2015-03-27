@@ -91,7 +91,7 @@ public class Menu{
 			}
 
 			/*
-			 * Changes the men via menu id,
+			 * Changes the menu via menu id,
 			 * the input must be longer than one character.
 			 */
 			if(name.length()>1){
@@ -112,7 +112,7 @@ public class Menu{
 			}
 
 			/*
-			 * Changes the menu vis menu name,
+			 * Changes the menu via menu name,
 			 * the input must be longer than 4 characters.
 			 */
 			if(name.length() >= 4){

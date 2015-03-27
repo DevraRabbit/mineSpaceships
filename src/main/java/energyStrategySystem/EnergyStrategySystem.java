@@ -128,6 +128,7 @@ public class EnergyStrategySystem {
 		for(BlockPos p: classList){
 			Block block = world.getBlockState(p).getBlock();
 			if(block instanceof IEnergyC){
+
 				IEnergyC energyBlock=(IEnergyC)block;
 				if (energyBlock.getStatus(p, world)== active){
 					outList.add(p);
@@ -136,6 +137,9 @@ public class EnergyStrategySystem {
 		}
 		return outList;
 	}
+
+	
+
 	
 //	public void setAggressiveFocus(){
 //		priorityList.clear();
