@@ -56,6 +56,14 @@ public class terminalMenu {
 			World world = chatEntity.getWorld();
 			BlockPos pos = player.getPosition();
 			int size=5;
+			/**
+			 * State ID's
+			 * 198 = navigator block
+			 * 199 = generator block
+			 * 200 = phaser
+			 * 201 = engine block
+			 * 202 = shield block
+			 */
 			for(int x=0;x<size;x++){
 				for(int y=0;y<size;y++){
 					//Place the wool blocks
@@ -80,6 +88,16 @@ public class terminalMenu {
 					if((x==0) && (y==2)){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
 						world.setBlockState(newPos, Blocks.ladder.getDefaultState());
+					}
+
+					
+
+					if((x==0) && (y==0) || (x==0) && (y==size-1)){
+						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
+						world.setBlockState(newPos, NavigatorBlock.getStateById(201));
+						newPos = null;
+						newPos = new BlockPos(pos.getX()+x, pos.getY()+4, pos.getZ()+y);
+						world.setBlockState(newPos, NavigatorBlock.getStateById(199));
 					}
 				}
 			}

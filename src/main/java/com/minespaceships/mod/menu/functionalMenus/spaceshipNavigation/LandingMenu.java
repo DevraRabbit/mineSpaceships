@@ -91,10 +91,15 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 					}
 				}
 			}
-
+			BlockPos origin = ship.getOrigin();
+			BlockPos min = ship.getMinPos();
+			int level = origin.getY()-min.getY();
+			if(level <=0){
+				level*=1;
+			}
 			//(double)x, (double)y, (double)z
-			//BlockPos position = new BlockPos(x, lowest.getY() , z);
-			ship.move(lowest);
+			BlockPos position = new BlockPos(x, lowest.getY()+level , z);
+			ship.move(position);
 
 			return "land successful.\nPress 'm' to get back.";
 		}catch(Exception e){
