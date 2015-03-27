@@ -2,6 +2,7 @@ package com.minespaceships.mod.WorldProviderSpace;
 
 import com.google.common.collect.Lists;
 import com.minespaceships.mod.Generator.WorldGenFloatingIslandsSmall;
+import com.minespaceships.mod.Generator.WorldGeneratorTest;
 
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,9 @@ public class ChunkProviderSpace implements IChunkProvider
     private WorldGenLakes waterLakeGenerator;
     private WorldGenLakes lavaLakeGenerator;
     private static final String __OBFID = "CL_00000391";
-    
+ 
+    private WorldGenFloatingIslandsSmall worldGen;
+    private WorldGeneratorTest worldGenA;
     private NoiseGeneratorOctaves noiseGen1;
     private NoiseGeneratorOctaves noiseGen2;
     private NoiseGeneratorOctaves noiseGen3;
@@ -76,7 +79,8 @@ public class ChunkProviderSpace implements IChunkProvider
                 this.structureGenerators.add(new StructureOceanMonument());            
                 this.waterLakeGenerator = new WorldGenLakes(Blocks.end_stone);
                 this.lavaLakeGenerator = new WorldGenLakes(Blocks.coal_block);
-                
+                this.worldGen = new WorldGenFloatingIslandsSmall(Blocks.cobblestone, true);
+                this.worldGenA = new WorldGeneratorTest(Blocks.cobblestone);
                 
                 boolean flag1 = true;
      
@@ -142,6 +146,8 @@ public class ChunkProviderSpace implements IChunkProvider
         this.random.setSeed((long)i * i1 + (long)j * j1 ^ this.worldObj.getSeed());
         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
         Iterator iterator = this.structureGenerators.iterator();
+        worldGen.generate(random, i, j, worldObj, chunkProvider, chunkProvider);
+        worldGenA.generate(random, i, j, worldObj, chunkProvider, chunkProvider);
 
         while (iterator.hasNext())
         {

@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.minespaceships.mod.Generator.WorldGenFloatingIslandsSmall;
 import com.minespaceships.mod.Generator.WorldGeneratorTest;
+import com.minespaceships.mod.WorldProviderSpace.WorldProviderSpace;
 import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.GateBlock;
@@ -90,7 +92,12 @@ public abstract class CommonProxy {
     	GameRegistry.registerTileEntity(PhaserTileEntity.class, "PhaserTileEntity");
     	GameRegistry.registerItem(new ItemTest(),"TestItem");
     	GameRegistry.registerItem(new ItemPhaser(), "Phaser");
-    	    	
+
+		DimensionManager.registerProviderType(2, WorldProviderSpace.class, true);
+		DimensionManager.registerDimension(2, 2);
+		GameRegistry.registerWorldGenerator(worldGen, 0);
+		GameRegistry.registerWorldGenerator(worldGenFloatingIslands, 0);
+
     	// Register event listener
     	MinecraftForge.EVENT_BUS.register(new BlockEvent());
     	MinecraftForge.EVENT_BUS.register(new PlayerTracker());
