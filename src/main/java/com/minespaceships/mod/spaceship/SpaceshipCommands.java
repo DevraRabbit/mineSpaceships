@@ -20,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -101,11 +102,21 @@ public class SpaceshipCommands {
 			player.addChatComponentMessage(new ChatComponentText("move: Please initialize the Spaceship first"));
 			return;
 		}
-
+		
+		
+		
 		//Process "move front, back, etc. commands depending on the direction the player looks"
 		//Taken from http://www.minecraftforge.net/forum/index.php?topic=6514.0
 		int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
+		if(ship.getFacing()==EnumFacing.NORTH){
+			playerRotation=2;
+		} else if(ship.getFacing()==EnumFacing.SOUTH){
+			playerRotation=0;
+		} else if(ship.getFacing()==EnumFacing.EAST){
+			playerRotation=3;
+		} else if(ship.getFacing()==EnumFacing.WEST){
+			playerRotation=1;
+		}		
 		if(command.startsWith("forward")) {
 			command = command.substring("forward".length());
 			command = processDirectionMoveCommand(command, playerRotation);

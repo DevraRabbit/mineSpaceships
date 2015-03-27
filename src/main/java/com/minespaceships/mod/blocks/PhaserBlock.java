@@ -20,6 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PhaserBlock extends ActivatableBlock implements ITileEntityProvider {
+	public static final float phaserStrength = 5;
+	public static final int phaserMaxRange = 200;
 
 	public PhaserBlock() {
 		super();
@@ -28,15 +30,10 @@ public class PhaserBlock extends ActivatableBlock implements ITileEntityProvider
         this.setTickRandomly(true);
 	}
 	
-	@Override
-	public int getEnergy() {
-		return -1;
-	}
-	
 	public void shoot(BlockPos pos, World world, float strength, Target target){
 		if(getStatus(pos, world)){
 			Spaceship ship = Shipyard.getShipyard(world).getShip(pos, world);
-			if(ship != null){				
+			if(ship != null){
 				TileEntity entity = world.getTileEntity(pos);
 				if(entity instanceof PhaserTileEntity){
 					((PhaserTileEntity)entity).shoot(target, ship);
@@ -55,5 +52,10 @@ public class PhaserBlock extends ActivatableBlock implements ITileEntityProvider
 		if(entity instanceof PhaserTileEntity){
 			((PhaserTileEntity)entity).updateRender(rand);
 		}
+	}
+	
+	@Override
+	public int getEnergy() {
+		return -1;
 	}
 }

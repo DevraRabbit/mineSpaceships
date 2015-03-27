@@ -80,7 +80,6 @@ public class Menu{
 				//Get the selctedMenu
 				FunctionalParamMenu temp = (FunctionalParamMenu) this.getChildrenList().get(0);
 				temp.activate(name, terminal);
-
 				return this.getMother().getMenu(terminal);
 			}else{
 				//Changes the menu via sub menu position.
@@ -92,7 +91,7 @@ public class Menu{
 			}
 
 			/*
-			 * Changes the men via menu id,
+			 * Changes the menu via menu id,
 			 * the input must be longer than one character.
 			 */
 			if(name.length()>1){
@@ -106,13 +105,14 @@ public class Menu{
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
 							return menu.getMenu(terminal);
+
 						}
 					}
 				}
 			}
 
 			/*
-			 * Changes the menu vis menu name,
+			 * Changes the menu via menu name,
 			 * the input must be longer than 4 characters.
 			 */
 			if(name.length() >= 4){

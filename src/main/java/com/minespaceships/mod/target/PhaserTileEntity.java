@@ -2,6 +2,7 @@ package com.minespaceships.mod.target;
 
 import java.util.Random;
 
+import com.minespaceships.mod.blocks.PhaserBlock;
 import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
@@ -23,8 +24,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox{
 	public static final int phaserDelay = 25;
-	public static final int phaserMaxRange = 200;
-	public static final float phaserStrength = 5;
 	
 	public static String delayKey = "delay";
 	public static String targetKey = "target";
@@ -33,19 +32,24 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	int delay;
 	BlockPos targetPos;
 	
+	public PhaserTileEntity(){
+		targetPos = null;
+		delay = 0;
+	}
+	
 	public void shoot(Target target, Spaceship ship){
 		BlockPos targetPos = target.getTarget();
 		BlockPos direction = Vec3Op.subtract(targetPos, pos);
 		Vec3 dirVec = new Vec3(direction.getX(), direction.getY(), direction.getZ());
 		if(ship != null && PhaserUtils.canShoot(pos, dirVec, ship)){
 			this.targetPos = targetPos;
-			
+			delay = phaserDelay;
 		}
 	}
 	public void updateRender(Random rand){
 		if (delay != 0) {
 			if(worldObj != null){
-				float field = 0.5f;
+				float field = 1.5f;
 				worldObj.spawnParticle(EnumParticleTypes.REDSTONE, pos.getX()+rand.nextFloat()*field, pos.getY()+rand.nextFloat()*field, pos.getZ()+rand.nextFloat()*field, 0, 0, 0, new int[0]);
 			}
 		}		
@@ -59,6 +63,8 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 			par1.setInteger(delayKey, delay);
 		} else {
 			par1.setBoolean(hasTargetKey, false);
+			par1.setLong(targetKey, 0);
+			par1.setInteger(delayKey, 0);
 		}
 		super.writeToNBT(par1); 
 		this.markDirty();
@@ -91,11 +97,12 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	
 	@Override
 	public void update() {
-		if(delay == 0){
+		if(delay <= 0){
 			if(targetPos != null && worldObj != null){
-				PhaserUtils.shoot(pos, targetPos, phaserStrength, phaserMaxRange, worldObj);
-				targetPos = null;
+				PhaserUtils.shoot(pos, targetPos, PhaserBlock.phaserStrength, PhaserBlock.phaserMaxRange, worldObj);
+				delay = phaserDelay;
 			}
+			delay = 0;
 		} else {
 			delay--;
 		}

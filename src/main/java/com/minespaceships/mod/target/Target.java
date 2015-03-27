@@ -1,13 +1,17 @@
 package com.minespaceships.mod.target;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.Random;
 
 import com.minespaceships.util.Vec3Op;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 
 public abstract class Target {
+	public static String classKey = "Class";
 	public abstract BlockPos getTarget();
 	public BlockPos getDiversedTarget(BlockPos range){
 		BlockPos target = getTarget();
@@ -35,7 +39,6 @@ public abstract class Target {
 				return 0;
 			}
 			return -1;
-		}
-		
+		}		
 	}
 }
