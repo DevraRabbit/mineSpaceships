@@ -43,7 +43,7 @@ public class PhaserUtils {
 			current = source.add((BlockPos) nextHitInfo[0]);
 			ray = (Vec3) nextHitInfo[1];
 			
-			if (!world.isAirBlock(current) && !(world.getBlockState(current).getBlock() instanceof BlockFire)) {
+			if (!canPhaserPassBlock(current, world)) {
 				strength -= world.getBlockState(current).getBlock()
 						.getBlockHardness(world, current);
 				Spaceship ship = Shipyard.getShipyard(world).getShip(current, world);
@@ -90,6 +90,22 @@ public class PhaserUtils {
             
 			maxrange--;
 		}
+	}
+	public static boolean canShoot(BlockPos source, Vec3 direction, Spaceship ship){
+		BlockPos current = source;
+		Vec3 ray = direction.normalize();
+		while(ship.isInsideShipRectangle(current)){
+			Object[] nextHitInfo = getNextPhaserHit(ray);
+			current = source.add((BlockPos) nextHitInfo[0]);
+			ray = (Vec3) nextHitInfo[1];
+			if(!canPhaserPassBlock(current, ship.getWorld())){
+				return false;
+			}
+		}
+		return true;
+	}
+	public static boolean canPhaserPassBlock(BlockPos pos, World world){
+		return world.isAirBlock(pos) || (world.getBlockState(pos).getBlock() instanceof BlockFire);
 	}
 
 	private static Object[] getNextPhaserHit(Vec3 ray) {
