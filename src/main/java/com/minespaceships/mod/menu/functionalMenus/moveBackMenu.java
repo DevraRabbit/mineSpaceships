@@ -11,6 +11,7 @@ import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
@@ -36,7 +37,7 @@ public class moveBackMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, CustomGuiChat terminal) {
+	public String activate(String command, IMenuInterface terminal) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}

@@ -74,6 +74,12 @@ public class Shipyard {
 		return ships.size();
 	}
 	
+	public void update(){
+		for(Spaceship ship : ships){
+			ship.update();
+		}
+	}
+	
 	public void addShip(Spaceship ship){
 		if(ship != null){
 			if(!ships.contains(ship) && ship.getNavigatorCount() > 0){

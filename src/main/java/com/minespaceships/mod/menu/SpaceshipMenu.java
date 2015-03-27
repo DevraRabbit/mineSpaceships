@@ -1,7 +1,9 @@
 package com.minespaceships.mod.menu;
 
+import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.*;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 
 /**
  * A default menu structure.
@@ -19,23 +21,11 @@ public class SpaceshipMenu {
 	//Menu for the spaceship navigation.
 	private static Menu navigation;
 
-	//Menu for the spaceship armour.
-	private static Menu armour;
-
-	//Menu for all protective devices of the spaceship.
-	private static Menu protection;
-
 	//Menu if you need help
 	private static Menu help;
 
 	//Menu for the spaceship shield.
-	private static Menu shield;
-
-	//Menu which contains the ability to activate the shield
-	private static Menu activateShield;
-
-	//Menu which contains the ability to disable the shield
-	private static Menu disableShield;
+	private static Menu energySystem;
 
 	//Menu which contains the ability to set the spaceship to a target position.
 	private static Menu shipToTargetMenu;
@@ -45,13 +35,7 @@ public class SpaceshipMenu {
 
 	//Menu to create a new spaceship.
 	private static Menu createShip;
-
-	//Menu for all phaser types.
-	private static Menu phaserMenu;
-
-	//Menu for all torpedo types.
-	private static Menu torpedoMenu;
-
+	
 	//Menu of the move forward command
 	private static Menu moveForwardMenu;
 
@@ -98,7 +82,7 @@ public class SpaceshipMenu {
 	 * Initialise the menu structure.
 	 * @param terminal
 	 */
-	public static void initMenu(CustomGuiChat terminal){
+	public static void initMenu(IMenuInterface terminal){
 		if(terminal.equals(null)){
 			System.err.println("terminal can not be null.");
 		}
@@ -108,50 +92,44 @@ public class SpaceshipMenu {
 		root = new Menu("Spaceship console");
 		createShip = new CreateShipMenu("recreate spaceship");
 		navigation = new Menu("spaceship navigation");
-		armour = new Menu("weapons");
-		protection = new Menu("protection");
 		help = new HelpMenu("help");
-		shield = new Menu("shield");
-		activateShield = new ShieldActivateMenu("activate shield");
-		disableShield = new ShieldDisableMenu("disable shield");
+		energySystem = new EnergyManagementMenu();
 		shipToTargetMenu = new Menu("to target");
-		phaserMenu = new Menu("phaser");
-		torpedoMenu = new Menu("torpedo");
 
 		moveForwardMenu = new Menu("move forward");
 		out = "";
-		out +="Please type in how may blocks you want to move forward.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    forward.    ";
 		moveForwardFuncMenu = new moveForwardMenu(out);
 
 		moveBackMenu = new Menu("move back");
 		out = "";
-		out +="Please type in how may blocks you want to move back.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    back.    ";
 		moveBackFuncMenu = new moveBackMenu(out);
 
 		moveRightMenu = new Menu("move right");
 		out = "";
-		out +="Please type in how may blocks you want to move right.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    right.    ";
 		moveRightFuncMenu = new moveRightMenu(out);
 
 		moveLeftMenu = new Menu("move left");
 		out = "";
-		out +="Please type in how may blocks you want to move left.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    left.    ";
 		moveLeftFuncMenu = new moveLeftMenu(out);
 
 		moveUpMenu = new Menu("move up");
 		out = "";
-		out +="Please type in how may blocks you want to move up.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    up.    ";
 		moveUpFuncMenu = new moveUpMenu(out);
 
 		moveDownMenu = new Menu("move down");
 		out = "";
-		out +="Please type in how may blocks you want to move down.";
-		out +="The input must begin with an #\n";
+		out +="Please type in how may blocks you want to move\n"
+		+ "    down.    ";
 		moveDownFuncMenu = new moveDownMenu(out);
 
 		liftoffMenu = new liftoffMenu("liftoff");
@@ -168,8 +146,6 @@ public class SpaceshipMenu {
 		//Create the menu structure.
 		root.addSubMenu(createShip);
 		root.addSubMenu(navigation);
-			navigation.addSubMenu(shipToTargetMenu);
-				shipToTargetMenu.addSubMenu(shipToTargetFunc);
 			navigation.addSubMenu(moveForwardMenu);
 				moveForwardMenu.addSubMenu(moveForwardFuncMenu);
 			navigation.addSubMenu(moveBackMenu);
@@ -184,15 +160,8 @@ public class SpaceshipMenu {
 				moveDownMenu.addSubMenu(moveDownFuncMenu);
 			navigation.addSubMenu(liftoffMenu);
 			navigation.addSubMenu(landingMenu);
+		root.addSubMenu(energySystem);
 
-		root.addSubMenu(armour);
-			armour.addSubMenu(phaserMenu);
-			armour.addSubMenu(torpedoMenu);
-		root.addSubMenu(protection);
-		root.addSubMenu(help);
-			protection.addSubMenu(shield);
-			shield.addSubMenu(activateShield);
-			shield.addSubMenu(disableShield);
 		runBefore = true;
 	}
 

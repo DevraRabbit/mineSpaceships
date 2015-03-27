@@ -5,10 +5,13 @@ import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AllShipyards {
 	private static ArrayList<Shipyard> shipyards = new ArrayList<Shipyard>();
 	private static HashMap<Integer, HashMap<NBTTagCompound, String>> bufferedData = new HashMap<Integer, HashMap<NBTTagCompound, String>>();
+	
 	public static Shipyard getShipyard(World world){
 		for(Shipyard s : shipyards){
 			if(s.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
@@ -54,8 +57,25 @@ public class AllShipyards {
 		for(Shipyard s: shipyards){
 			s.clear();
 		}
+		shipyards.clear();
+		bufferedData.clear();
 	}
 	
+	@SubscribeEvent
+	public void onClientTick(TickEvent.ClientTickEvent event) {
+		update();
+	}
+	  
+	@SubscribeEvent
+	public void onServerTick(TickEvent.ServerTickEvent event) {
+		update();
+	}
+	public static void update(){
+		for(Shipyard s : shipyards){
+			s.update();
+		}
+	}
+
 //	public static void readFromNBT(NBTTagCompound nbt) {
 //		for(Shipyard shipyard : shipyards){
 //			shipyard.readFromNBT(nbt);	
