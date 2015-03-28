@@ -13,12 +13,12 @@ public class SpaceshipNavigation extends Menu{
 		Menu moveUp = new Menu("move up");
 		Menu moveDown = new Menu("move down");
 
-		moveForwad.addSubMenu(new moveForwardMenu());
-		moveBack.addSubMenu(new moveBackMenu());
-		moveLeft.addSubMenu(new moveLeftMenu());
-		moveRight.addSubMenu(new moveRightMenu());
-		moveUp.addSubMenu(new moveUpMenu());
-		moveDown.addSubMenu(new moveDownMenu());
+		moveForwad.addSubMenu(new MoveForwardMenu());
+		moveBack.addSubMenu(new MoveBackMenu());
+		moveLeft.addSubMenu(new MoveLeftMenu());
+		moveRight.addSubMenu(new MoveRightMenu());
+		moveUp.addSubMenu(new MoveUpMenu());
+		moveDown.addSubMenu(new MoveDownMenu());
 
 		addSubMenu(moveForwad);
 		addSubMenu(moveBack);
@@ -27,7 +27,7 @@ public class SpaceshipNavigation extends Menu{
 		addSubMenu(moveUp);
 		addSubMenu(moveDown);
 		addSubMenu(new LandingMenu());
-		addSubMenu(new liftoffMenu());
+		addSubMenu(new LiftoffMenu());
 	}
 
 }

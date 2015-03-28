@@ -17,6 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureStrongholdPieces.Library;
@@ -90,14 +91,12 @@ public class terminalMenu {
 						world.setBlockState(newPos, Blocks.ladder.getDefaultState());
 					}
 
-					
-
-					if((x==0) && (y==0) || (x==0) && (y==size-1)){
-						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
-						world.setBlockState(newPos, NavigatorBlock.getStateById(201));
-						newPos = null;
-						newPos = new BlockPos(pos.getX()+x, pos.getY()+4, pos.getZ()+y);
+					if((x==0) && (y==1) || (x==0) && (y==size-2)){
+						BlockPos newPos = new BlockPos(pos.getX()+x-1, pos.getY()+3, pos.getZ()+y);
 						world.setBlockState(newPos, NavigatorBlock.getStateById(199));
+						newPos = null;
+						newPos = new BlockPos(pos.getX()+x-1, pos.getY()+4, pos.getZ()+y);
+						world.setBlockState(newPos, NavigatorBlock.getStateById(201));
 					}
 				}
 			}

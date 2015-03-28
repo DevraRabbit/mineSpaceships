@@ -1,6 +1,7 @@
 package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,7 +66,8 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 			for(BlockPos block : spacehipBlocks){
 				int height=0;
 				boolean run = true;
-				int posY= block.getY()-2;
+				boolean contains = false;
+				int posY= block.getY()-1;
 				IBlockState current;
 				do{
 					current = world.getBlockState(new BlockPos(x,posY,z));
@@ -74,34 +76,71 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 					}else{
 						run = false;
 					}
+					if(spacehipBlocks.contains(current)){
+						run = false;
+					}
 					posY--;
 					height++;
 				}while(run);
-				if(!spacehipBlocks.contains(current)){
-					lowestBlocks.add(new BlockPos(block.getX(), posY ,block.getZ()));
+				if(!contains){
+					lowestBlocks.add(new BlockPos(block.getX(), posY+3 ,block.getZ()));
+				}
+				contains = false;
+			}
+
+			//Double check if a block is a part of the ship
+			for(BlockPos block : lowestBlocks){
+				if(spacehipBlocks.contains(block)){
+					lowestBlocks.remove(block);
+					System.out.println("RMBlock : "+block+"");
+				}else{
+					System.out.println("Block : "+block+"");
 				}
 			}
 
-			//Get lowest block of all.
-			BlockPos lowest = lowestBlocks.get(0);
+			//Get highest block of all.
+			BlockPos highest = lowestBlocks.get(0);
 			for(BlockPos block : lowestBlocks){
-				if(!spacehipBlocks.contains(block)){
-					if(block.getY() >= lowest.getY()){
-						lowest = block;
+				if(block.getY() >= highest.getY()){
+					if(!spacehipBlocks.contains(block)){
+						highest = block;
 					}
 				}
 			}
+
 			BlockPos origin = ship.getOrigin();
 			BlockPos min = ship.getMinPos();
 			int level = origin.getY()-min.getY();
 			if(level <=0){
 				level*=1;
 			}
-			//(double)x, (double)y, (double)z
-			BlockPos position = new BlockPos(x, lowest.getY()+level , z);
-			ship.move(position);
 
-			return "land successful.\nPress 'm' to get back.";
+			//(double)x, (double)y, (double)z
+			BlockPos position = new BlockPos(x, highest.getY()+level , z);
+
+			if(spacehipBlocks.contains(position)){
+				String out ="";
+				out = "Cant land\n"
+						+"Origin  : "+ship.getOrigin()+"\n"
+						+"Min     : "+ship.getMinPos()+"\n"
+						+"Landing : "+highest+"\n"
+						+"Postion : "+position;
+				return out;
+			}
+
+			//Finally move the spaceship.
+			//ship.move(position);
+			//return "land successful.\nPress 'm' to get back.";
+
+			String out ="";
+			out =	"Origin  : "+ship.getOrigin()+"\n"
+					+"Min     : "+ship.getMinPos()+"\n"
+					+"Landing : "+highest+"\n"
+					+"Postion : "+position;
+			return out;
+
+		}catch(ConcurrentModificationException f){
+			return "ConcurrentModificationException: "+f.getStackTrace();
 		}catch(Exception e){
 			return "While trying to land an error occurred: "+e;
 		}
