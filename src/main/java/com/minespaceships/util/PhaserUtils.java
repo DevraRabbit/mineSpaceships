@@ -55,26 +55,26 @@ public class PhaserUtils {
 				}
 				if (strength >= 0) {
 					world.destroyBlock(current, false);
-					world.setBlockState(current, Blocks.fire.getDefaultState());
-				}
+					world.setBlockState(current, Blocks.fire.getDefaultState());				
 	            
-	            if(world.isAirBlock(current.down()))
-	            world.setBlockState(current.down(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.up()))
-	            world.setBlockState(current.up(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.north()))
-	            world.setBlockState(current.north(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.south()))
-	            world.setBlockState(current.south(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.east()))
-	            world.setBlockState(current.east(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.west()))
-	            world.setBlockState(current.west(), Blocks.fire.getDefaultState());
+		            if(world.isAirBlock(current.down()))
+		            world.setBlockState(current.down(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.up()))
+		            world.setBlockState(current.up(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.north()))
+		            world.setBlockState(current.north(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.south()))
+		            world.setBlockState(current.south(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.east()))
+		            world.setBlockState(current.east(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.west()))
+		            world.setBlockState(current.west(), Blocks.fire.getDefaultState());
+				}
 			}
 			
         	double d0 = 2.0D;

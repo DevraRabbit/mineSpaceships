@@ -36,9 +36,9 @@ public class GetPlayerTargetMenu extends Menu implements ITargetHolder{
 			targets.add(new EntityTarget(e));
 		}
 		PositionTarget pos = new PositionTarget(terminal.getChatRegisterEntity().getPos());
-		Collections.sort(targets, new Target.distanceComparator(pos));
+		Collections.sort(targets, new Target.distanceComparator(pos, terminal.getChatRegisterEntity().getWorld()));
 		for(int i = 0; i < 10 && i < targets.size() &&  !targets.isEmpty(); i++){
-			list.addSubMenu(new EntityTargetMenu(targets.get(i)));
+			list.addSubMenu(new EntityTargetMenu(targets.get(i), terminal.getChatRegisterEntity().getWorld()));
 		}
 		return list;
 	}

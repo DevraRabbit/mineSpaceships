@@ -3,21 +3,32 @@ package com.minespaceships.mod.target;
 import java.util.Comparator;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
 public class EntityTarget extends Target {
-	private Entity entity;
+	private int entityID;
+	public static final String entityKey = "entity";
+	
 	public EntityTarget(Entity entity){
 		this.setEntity(entity);
 	}
-	@Override
-	public BlockPos getTarget() {
-		return getEntity().getPosition();
+	public EntityTarget(NBTTagCompound c) {
+		entityID = c.getInteger(entityKey);
 	}
-	public Entity getEntity() {
-		return entity;
+	@Override
+	public BlockPos getTarget(World world) {
+		return getEntity(world).getPosition();
+	}
+	public Entity getEntity(World world) {
+		return world.getEntityByID(entityID);
 	}
 	public void setEntity(Entity entity) {
-		this.entity = entity;
+		this.entityID = entity.getEntityId();
+	}
+	@Override
+	public void writeToNBT(NBTTagCompound c) {
+		c.setInteger(entityKey, entityID);		
 	}	
 }

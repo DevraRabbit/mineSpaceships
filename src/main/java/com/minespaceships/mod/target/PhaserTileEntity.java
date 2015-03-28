@@ -30,19 +30,19 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	public static String hasTargetKey = "hasTarget";
 	
 	int delay;
-	BlockPos targetPos;
+	Target target;
 	
 	public PhaserTileEntity(){
-		targetPos = null;
+		target = null;
 		delay = 0;
 	}
 	
 	public void shoot(Target target, Spaceship ship){
-		BlockPos targetPos = target.getTarget();
+		BlockPos targetPos = target.getTarget(ship.getWorld());
 		BlockPos direction = Vec3Op.subtract(targetPos, pos);
 		Vec3 dirVec = new Vec3(direction.getX(), direction.getY(), direction.getZ());
 		if(ship != null && PhaserUtils.canShoot(pos, dirVec, ship)){
-			this.targetPos = targetPos;
+			this.target = target;
 			delay = phaserDelay;
 		}
 	}
@@ -57,9 +57,9 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	
 	@Override
 	public void writeToNBT(NBTTagCompound par1){
-		if(targetPos != null){
+		if(target != null){
 			par1.setBoolean(hasTargetKey, true);
-			par1.setLong(targetKey, targetPos.toLong());
+			target.writeToNBT(par1);
 			par1.setInteger(delayKey, delay);
 		} else {
 			par1.setBoolean(hasTargetKey, false);
@@ -73,10 +73,10 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	@Override
 	public void readFromNBT(NBTTagCompound par1){
 		if(par1.getBoolean(hasTargetKey)){
-			targetPos = BlockPos.fromLong(par1.getLong(targetKey));
+			target = Target.targetFromNBT(par1);
 			delay = par1.getInteger(delayKey);
 		} else{
-			targetPos = null;
+			target = null;
 			delay = 0;
 		}
 		super.readFromNBT(par1);
@@ -98,8 +98,8 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	@Override
 	public void update() {
 		if(delay <= 0){
-			if(targetPos != null && worldObj != null){
-				PhaserUtils.shoot(pos, targetPos, PhaserBlock.phaserStrength, PhaserBlock.phaserMaxRange, worldObj);
+			if(target != null && worldObj != null){
+				PhaserUtils.shoot(pos, target.getTarget(worldObj), PhaserBlock.phaserStrength, PhaserBlock.phaserMaxRange, worldObj);
 				delay = phaserDelay;
 			}
 		} else {
