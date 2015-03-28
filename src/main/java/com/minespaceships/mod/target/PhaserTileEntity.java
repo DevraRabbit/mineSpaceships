@@ -26,10 +26,12 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	public static final int phaserDelay = 25;
 	
 	public static String delayKey = "delay";
+	public static String strengthKey = "delay";
 	public static String targetKey = "target";
 	public static String hasTargetKey = "hasTarget";
 	
 	int delay;
+	float strength;
 	Target target;
 	
 	public PhaserTileEntity(){
@@ -37,14 +39,33 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 		delay = 0;
 	}
 	
-	public void shoot(Target target, Spaceship ship){
-		BlockPos targetPos = target.getTarget(ship.getWorld());
-		BlockPos direction = Vec3Op.subtract(targetPos, pos);
-		Vec3 dirVec = new Vec3(direction.getX(), direction.getY(), direction.getZ());
-		if(ship != null && PhaserUtils.canShoot(pos, dirVec, ship)){
-			this.target = target;
+	public boolean shoot(Target futureTarget, float strength, Spaceship ship){		
+		if(canShoot(futureTarget, ship)){
+			this.target = futureTarget;
 			delay = phaserDelay;
+			this.strength = strength;
+			return true;
 		}
+		return false;
+	}
+	public boolean canShoot(Target futureTarget, Spaceship ship){
+		if(ship != null && futureTarget != null){
+			BlockPos targetPos = futureTarget.getTarget(ship.getWorld());
+			if(targetPos != null){
+				BlockPos direction = Vec3Op.subtract(targetPos, pos);
+				Vec3 dirVec = new Vec3(direction.getX(), direction.getY(), direction.getZ());
+				return PhaserUtils.canShoot(pos, dirVec, ship);
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	public void stopShooting(){
+		target = null;
+		strength = 0;
+		delay = 0;
 	}
 	public void updateRender(Random rand){
 		if (delay != 0) {
@@ -99,8 +120,13 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	public void update() {
 		if(delay <= 0){
 			if(target != null && worldObj != null){
-				PhaserUtils.shoot(pos, target.getTarget(worldObj), PhaserBlock.phaserStrength, PhaserBlock.phaserMaxRange, worldObj);
-				delay = phaserDelay;
+				BlockPos targetPos = target.getTarget(worldObj);
+				if(targetPos != null){
+					PhaserUtils.shoot(pos, targetPos, strength, PhaserBlock.phaserMaxRange, worldObj);
+				}
+				Target nextTarget = target;
+				stopShooting();
+				Shipyard.getShipyard(worldObj).getShip(pos, worldObj).shootPhaserAt(nextTarget);
 			}
 		} else {
 			delay--;

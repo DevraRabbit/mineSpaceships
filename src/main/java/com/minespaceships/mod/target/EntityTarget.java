@@ -19,7 +19,13 @@ public class EntityTarget extends Target {
 	}
 	@Override
 	public BlockPos getTarget(World world) {
-		return getEntity(world).getPosition();
+		Entity ent = getEntity(world);
+		if(ent != null){
+			return ent.getPosition();
+		} else {
+			System.out.println("Lost target");
+			return null;
+		}
 	}
 	public Entity getEntity(World world) {
 		return world.getEntityByID(entityID);

@@ -246,13 +246,17 @@ public class Spaceship implements Serializable{
 	public void shootPhaserAt(Target target){
 		ArrayList<BlockPos> phasers = energySystem.getActive(PhaserBlock.class, true);
 		Random rand = new Random();
+		boolean hasShot = false;
 		while(!phasers.isEmpty()){
 			int index = (int)((float)phasers.size()*rand.nextFloat());
 			BlockPos pos = phasers.get(index);
 			phasers.remove(index);
 			Block block = world.getBlockState(pos).getBlock();
 			if(block instanceof PhaserBlock){
-				((PhaserBlock)block).shoot(pos, world, PhaserBlock.phaserStrength, target);
+				((PhaserBlock)block).stopShooting(pos, world);
+				if(!hasShot){
+					hasShot = ((PhaserBlock)block).shoot(pos, world, ShipInformation.getShipStrength(this), target);
+				}
 			}
 		}
 	}
