@@ -14,7 +14,8 @@ import net.minecraft.world.World;
 
 public abstract class Target {
 	public static String classKey = "Class";
-	private BlockPos lastTarget;
+	public static String lastTargetKey = "LastTarget";
+	protected BlockPos lastTarget;
 	
 	public BlockPos getTarget(World world){
 		if(lastTarget != null){
@@ -55,17 +56,24 @@ public abstract class Target {
 			return -1;
 		}		
 	}
-	public abstract void writeToNBT(NBTTagCompound c);
+	public void writeToNBT(NBTTagCompound c){
+		c.setLong(lastTargetKey, lastTarget.toLong());
+	}
 	
-	public static Target targetFromNBT(NBTTagCompound tag){
+	public static Target targetFromNBT(NBTTagCompound tag){	
+		BlockPos lastTarget = BlockPos.fromLong(tag.getLong(lastTargetKey));
 		String classname = tag.getString(classKey);
+		Target target = null;
 		if(classname.equals(PositionTarget.class.getName())){
-			return new PositionTarget(tag);
+			target = new PositionTarget(tag);
 		} else if (classname.equals(EntityTarget.class.getName())){
-			return new EntityTarget(tag);
+			target = new EntityTarget(tag);
 		} else if (classname.equals(SpaceshipTarget.class.getName())){
-			return new SpaceshipTarget(tag);
+			target = new SpaceshipTarget(tag);
 		}
-		return null;
+		if(target != null){
+			target.lastTarget = lastTarget;
+		}
+		return target;
 	}
 }

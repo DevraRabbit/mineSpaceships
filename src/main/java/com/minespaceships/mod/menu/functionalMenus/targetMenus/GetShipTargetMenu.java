@@ -39,10 +39,10 @@ public class GetShipTargetMenu extends Menu implements ITargetHolder{
 		Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), world);
 		for(Spaceship s : ships){
 			if(s != ship){
-				targets.add(new SpaceshipTarget(s.getOrigin()));
+				targets.add(new SpaceshipTarget(s.getOrigin(), s));
 			}
 		}
-		SpaceshipTarget pos = new SpaceshipTarget(terminal.getChatRegisterEntity().getPos());
+		SpaceshipTarget pos = new SpaceshipTarget(terminal.getChatRegisterEntity().getPos(), ship);
 		Collections.sort(targets, new Target.distanceComparator(pos, terminal.getChatRegisterEntity().getWorld()));
 		for(int i = 0; i < 10 && i < targets.size() &&  !targets.isEmpty(); i++){
 			list.addSubMenu(new SpaceshipTargetMenu(targets.get(i), terminal.getChatRegisterEntity().getWorld()));

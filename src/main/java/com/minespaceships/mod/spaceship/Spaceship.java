@@ -106,6 +106,15 @@ public class Spaceship implements Serializable{
 	public BlockPos getOrigin(){
 		return blockMap.getMiddle();
 	}
+	public BlockPos getBlockMapOrigin(){
+		return blockMap.getOrigin();
+	}
+	public BlockPos getRandomPos(Random rand){
+		ArrayList<BlockPos> positions = getPositions();
+		float index = (float)(positions.size()-1)*rand.nextFloat();
+		return positions.get((int)(index));
+	}
+	
 	public BlockPos getMaxPos(){
 		return blockMap.getMaxPos();
 	}
@@ -190,6 +199,7 @@ public class Spaceship implements Serializable{
 		ArrayList<BlockPos> phasers = energySystem.getActive(PhaserBlock.class, true);
 		Random rand = new Random();
 		boolean hasShot = false;
+		target.getNewTarget(world);
 		while(!phasers.isEmpty()){
 			int index = (int)((float)phasers.size()*rand.nextFloat());
 			BlockPos pos = phasers.get(index);

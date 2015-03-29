@@ -1,5 +1,7 @@
 package com.minespaceships.mod.menu.functionalMenus.targetMenus;
 
+import java.util.Random;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -7,24 +9,32 @@ import net.minecraft.world.World;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.target.PositionTarget;
+import com.minespaceships.mod.target.Target;
 import com.minespaceships.util.Vec3Op;
 
 public class SpaceshipTarget extends PositionTarget{
 
-	public SpaceshipTarget(BlockPos position) {
+	public SpaceshipTarget(BlockPos position, Spaceship ship) {
 		super(position);
+		if(ship != null){
+			super.position = ship.getBlockMapOrigin();
+			super.lastTarget = super.position;
+		}
 	}
 	public SpaceshipTarget(NBTTagCompound position) {
 		super(position);
 	}
 	@Override
+	public void writeToNBT(NBTTagCompound c) {
+		super.writeToNBT(c);
+		c.setString(super.classKey, this.getClass().getName());
+	}
+	@Override
 	public BlockPos getNewTarget(World world) {
-		BlockPos position = super.getNewTarget(world);
-		Spaceship ship = Shipyard.getShipyard(world).getShip(position, world);
+		Spaceship ship = Shipyard.getShipyard(world).getShipByBlockMapOrigin(super.position, world);
 		if(ship != null){
-			BlockPos span = Vec3Op.subtract(ship.getMaxPos(), ship.getMinPos());
-			BlockPos div = Vec3Op.scale(span, 0.5);
-			return super.getDiversedTarget(div, world);
+			super.lastTarget = ship.getRandomPos(world.rand);
+			return super.lastTarget;
 		}
 		return position;
 	}

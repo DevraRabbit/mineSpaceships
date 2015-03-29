@@ -35,6 +35,8 @@ public class EntityTarget extends Target {
 	}
 	@Override
 	public void writeToNBT(NBTTagCompound c) {
-		c.setInteger(entityKey, entityID);		
+		c.setInteger(entityKey, entityID);	
+		c.setString(super.classKey, this.getClass().getName());
+		super.writeToNBT(c);
 	}	
 }

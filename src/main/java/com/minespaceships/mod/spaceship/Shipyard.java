@@ -109,6 +109,15 @@ public class Shipyard {
 		}
 		return null;
 	}
+	public Spaceship getShipByBlockMapOrigin(BlockPos pos, World world){
+		for(Spaceship ship : ships){
+			if(ship.getBlockMapOrigin().equals(pos) && 
+					ship.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
+				return ship;
+			}
+		}
+		return null;
+	}
 	public Vector<Spaceship> getShipList(){
 		return (Vector<Spaceship>) ships.clone();
 	}

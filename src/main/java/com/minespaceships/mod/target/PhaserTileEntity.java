@@ -50,7 +50,7 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 	}
 	public boolean canShoot(Target futureTarget, Spaceship ship){
 		if(ship != null && futureTarget != null){
-			BlockPos targetPos = futureTarget.getNewTarget(ship.getWorld());
+			BlockPos targetPos = futureTarget.getTarget(ship.getWorld());
 			if(targetPos != null){
 				BlockPos direction = Vec3Op.subtract(targetPos, pos);
 				Vec3 dirVec = new Vec3(direction.getX(), direction.getY(), direction.getZ());
@@ -126,7 +126,10 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 				}
 				Target nextTarget = target;
 				stopShooting();
-				Shipyard.getShipyard(worldObj).getShip(pos, worldObj).shootPhaserAt(nextTarget);
+				Spaceship ship = Shipyard.getShipyard(worldObj).getShip(pos, worldObj);
+				if(ship != null){
+					ship.shootPhaserAt(nextTarget);
+				}
 			}
 		} else {
 			delay--;
