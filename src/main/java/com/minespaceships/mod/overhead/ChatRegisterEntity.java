@@ -195,10 +195,10 @@ public class ChatRegisterEntity extends TileEntity {
 			//terminalMenu.onCommand(command, player, this, this.terminal);
 			//display the menu and make the menu commands (also works on Server)
 			if(spaceshipMenu != null){
-				spaceshipMenu.display(command, this.terminal);
+				spaceshipMenu.display(command, this.terminal, player);
 			} else {
 				MineSpaceships.proxy.makeTerminal(player, this);
-				spaceshipMenu.display(command, this.terminal);
+				spaceshipMenu.display(command, this.terminal, player);
 			}
 		}
 		//SpaceshipCommands.debug(command, this);

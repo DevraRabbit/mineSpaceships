@@ -71,11 +71,13 @@ public class CustomGuiChat extends GuiChat implements IMenuInterface{
 	 * @param message String
 	 * @param clear boolean
 	 */
-	public void display(final String message, final boolean clear){
-		if(clear){
-			this.clearChat();
+	public void display(final String message, EntityPlayer player, final boolean clear){
+		if(player.equals(Minecraft.getMinecraft().thePlayer)){
+			if(clear){
+				this.clearChat();
+			}
+			this.mc.thePlayer.addChatComponentMessage(new ChatComponentText(message));
 		}
-		this.mc.thePlayer.addChatComponentMessage(new ChatComponentText(message));
 	}
 
 	/**

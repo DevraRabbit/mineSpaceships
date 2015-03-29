@@ -546,13 +546,18 @@ public class BlockMap {
 		this.minPos = Turn.getRotatedPos(this.minPos, origin, new BlockPos(0,0,0), turn);
 	}
 	public float getHardnessSum(World world){
-		Set<BlockPos> positions = map.keySet();
-		float blastResistance = 0;
-		for(BlockPos pos : positions){
-			Block block = world.getBlockState(pos.add(origin)).getBlock();
-			blastResistance += block.getBlockHardness(world, pos.add(origin));
+		try{
+			Set<BlockPos> positions = map.keySet();
+			float blastResistance = 0;
+			for(BlockPos pos : positions){
+				Block block = world.getBlockState(pos.add(origin)).getBlock();
+				blastResistance += block.getBlockHardness(world, pos.add(origin));
+			}
+			return blastResistance;
+		} catch(Exception e){
+			e.printStackTrace();
+			return 1;
 		}
-		return blastResistance;
 	}
 	
 	public void showDebug(World world){

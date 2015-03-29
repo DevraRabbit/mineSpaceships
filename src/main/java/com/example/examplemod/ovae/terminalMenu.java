@@ -85,7 +85,7 @@ public class terminalMenu {
 			}
 			chat.clearChat();
 			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.GREEN+"Basic spaceship spawned."));
-			chat.display("\nPress 'm' to get back.", false);
+			chat.display("\nPress 'm' to get back.", player, false);
 		}
 
 	}

@@ -41,7 +41,7 @@ public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
 		//(double)x, (double)y, (double)z
 		BlockPos position = new BlockPos(x, y, z);
 		if(ship == null) {
-			this.terminal.display("move: Please initialize the Spaceship first", true);
+			this.terminal.display("move: Please initialize the Spaceship first", terminal.getPlayerEntity(), true);
 		}
 		ship.setTarget(position);
 		return "";

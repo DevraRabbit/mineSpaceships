@@ -38,7 +38,7 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 			World world = terminal.getChatRegisterEntity().getWorld();
 			Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 			if(ship == null) {
-				terminal.display("move: Please initialise the Spaceship first", true);
+				terminal.display("move: Please initialise the Spaceship first", terminal.getPlayerEntity(), true);
 			}
 			BlockPos maxPos = ship.getMaxPos();
 			BlockPos minPos = ship.getMinPos();

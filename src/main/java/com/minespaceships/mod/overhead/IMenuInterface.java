@@ -13,6 +13,6 @@ public interface IMenuInterface {
 	 */
 	public EntityPlayer getPlayerEntity();
 	
-	public void display(String command, boolean clear);
+	public void display(String command, EntityPlayer player, boolean clear);
 	public void clearChat();
 }

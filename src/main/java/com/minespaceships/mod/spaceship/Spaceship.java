@@ -69,6 +69,7 @@ public class Spaceship implements Serializable{
 	private static final String containsTargetKey = "containsTarget";
 	private static final String targetPositionKey = "TargetPos";
 	private static final String targetTurnKey = "TargetTurn";
+	private static final String actualPositionKey = "APK";
 	
 	private boolean canBeRemoved = true;
 	
@@ -100,6 +101,9 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
+		if(position == null){
+			position = blockMap.getMiddleVec();
+		}
 		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
@@ -216,7 +220,7 @@ public class Spaceship implements Serializable{
 			}
 		}
 		if(minHeight != Integer.MAX_VALUE){
-			return minHeight;
+			return minHeight-1;
 		} else {
 			return 0;
 		}
@@ -400,7 +404,7 @@ public class Spaceship implements Serializable{
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
-		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
+		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 		
@@ -709,9 +713,11 @@ public class Spaceship implements Serializable{
 	
 	public void readFromNBT(NBTTagCompound c, String firstKey){
 		String data = c.getString(firstKey+positionsKey);
-		if(c.getBoolean(containsTargetKey)){
-			BlockPos targetPos = BlockPos.fromLong(c.getLong(targetPositionKey));
-			int targetTurn = c.getInteger(targetTurnKey);
+		BlockPos pos = BlockPos.fromLong(c.getLong(firstKey+actualPositionKey));
+		position = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+		if(c.getBoolean(firstKey+containsTargetKey)){
+			BlockPos targetPos = BlockPos.fromLong(c.getLong(firstKey+targetPositionKey));
+			int targetTurn = c.getInteger(firstKey+targetTurnKey);
 			target = new MovementTarget(targetPos, targetTurn, world);
 		}
 		try {
@@ -722,12 +728,14 @@ public class Spaceship implements Serializable{
 	}
 	public void writeToNBT(NBTTagCompound c, String firstKey){
 		c.setString(firstKey+positionsKey, positionsToString());
+		BlockPos pos = new BlockPos(position);
+		c.setLong(firstKey+actualPositionKey, pos.toLong());
 		if(target != null){
-			c.setBoolean(containsTargetKey, true);
-			c.setLong(targetPositionKey, target.getTarget().toLong());
-			c.setInteger(targetTurnKey, target.getTurn());
+			c.setBoolean(firstKey+containsTargetKey, true);
+			c.setLong(firstKey+targetPositionKey, target.getTarget().toLong());
+			c.setInteger(firstKey+targetTurnKey, target.getTurn());
 		} else {
-			c.setBoolean(containsTargetKey, false);
+			c.setBoolean(firstKey+containsTargetKey, false);
 		}
 	}
 	

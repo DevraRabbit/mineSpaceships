@@ -2,7 +2,6 @@ package com.minespaceships.mod.menu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.player.*;
 import net.minecraft.util.ChatComponentText;
 
 import com.minespaceships.mod.overhead.CustomGuiChat;

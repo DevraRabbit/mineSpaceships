@@ -2,6 +2,7 @@ package com.minespaceships.mod.menu;
 
 import java.util.ArrayList;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -80,12 +81,22 @@ public class MenuDisplay {
 	 * Displays the current selected menu.
 	 * @param command
 	 */
-	public void display(final String command, IMenuInterface terminal){
-		if(command.trim().isEmpty()){
-			terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", true);
-			return;
+	public void display(final String command, IMenuInterface terminal, EntityPlayer player){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if(side == Side.CLIENT){
+			try{
+				if(command.trim().isEmpty()){
+					terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", player, true);
+					return;
+				}
+				String s = preparingOutput(root.switchMenu(command, terminal),command);
+				terminal.display(s, player,true);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		} else if(side == Side.SERVER){
+			String s = preparingOutput(root.switchMenu(command, terminal),command);
 		}
-		terminal.display(preparingOutput(root.switchMenu(command, terminal),command),true);
 	}
 
 	/**
@@ -96,6 +107,6 @@ public class MenuDisplay {
 		if(menu.equals(null)){
 			throw new IllegalArgumentException("Menu can not be null.");
 		}
-		terminal.display(preparingOutput(menu, ""),true);
+		terminal.display(preparingOutput(menu, ""), terminal.getPlayerEntity(),true);
 	}
 }

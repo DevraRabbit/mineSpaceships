@@ -37,6 +37,8 @@ public class SpaceshipCommands {
 	public static String moveBack = "move back";
 	public static String moveUp = "move up";
 	public static String moveDown ="move down";
+	public static String moveLeft ="move left";
+	public static String moveRight ="move right";
 	public static String land ="land";
 	public static String liftoff = "liftoff";
 	//energy management

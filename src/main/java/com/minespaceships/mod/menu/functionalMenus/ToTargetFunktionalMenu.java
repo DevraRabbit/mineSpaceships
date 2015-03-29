@@ -60,7 +60,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 					//(double)x, (double)y, (double)z
 					BlockPos position = new BlockPos(x, y, z);
 					if(ship == null) {
-						terminal.display("move: Please initialise the Spaceship first", true);
+						terminal.display("move: Please initialise the Spaceship first", terminal.getPlayerEntity(), true);
 					}
 					ship.move(position);
 					return ">> to target <<\nPress 'm' to get back.";

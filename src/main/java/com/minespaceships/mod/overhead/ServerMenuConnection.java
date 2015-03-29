@@ -19,7 +19,7 @@ public class ServerMenuConnection implements IMenuInterface {
 		return player;
 	}
 	@Override
-	public void display(String command, boolean clear) {
+	public void display(String command, EntityPlayer player, boolean clear) {
 		// TODO Auto-generated method stub
 		
 	}
