@@ -57,7 +57,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class Spaceship implements Serializable{
-	private BlockPos origin;
 	private World world;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
@@ -74,20 +73,6 @@ public class Spaceship implements Serializable{
 	private boolean canBeRemoved = true;
 	
 	public static final int maxShipSize = 27000;
-
-	@Deprecated
-	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World world){
-		this.origin = origin;
-		this.world = world;
-		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
-		initializeBase();
-	}
-	@Deprecated
-	public Spaceship(int[] originMeasurement){
-		world = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		readOriginMeasurementArray(originMeasurement);
-		initializeBase();
-	}
 	
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
@@ -95,7 +80,6 @@ public class Spaceship implements Serializable{
 		if(blockMap == null){
 			throw new Exception("Ship is too huge or connected to the Ground");
 		}
-		this.origin = initial;
 		this.world = world;
 		initializeBase();
 	}
@@ -108,7 +92,6 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		//world needs to be loaded first to prevent null pointer
 		this.readFromNBT(s, firstKey);
-		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
 	private void initializeBase(){
@@ -117,12 +100,11 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
-		position = new Vec3(origin.getX(), origin.getY(), origin.getZ());
 		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
 	public BlockPos getOrigin(){
-		return origin;
+		return blockMap.getMiddle();
 	}
 	public BlockPos getMaxPos(){
 		return blockMap.getMaxPos();
@@ -140,45 +122,6 @@ public class Spaceship implements Serializable{
 	
 	public BlockMap getBlockMap(){
 		return blockMap;
-	}
-	
-	@Deprecated
-	public int[] getOriginMeasurementArray(){
-		BlockPos minSpan = Vec3Op.subtract(blockMap.getMinPos(), origin);
-		BlockPos maxSpan = Vec3Op.subtract(blockMap.getMaxPos(), origin);
-		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
-				origin.getX(), origin.getY(), origin.getZ(),
-				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
-		return a;
-	}
-	@Deprecated
-	public void readOriginMeasurementArray(int[] array){
-		try {
-			BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
-			BlockPos maxSpan = new BlockPos(array[6], array[7], array[8]);
-			origin = new BlockPos(array[3], array[4], array[5]);
-			setMeasurements(minSpan.add(origin), maxSpan.add(origin));
-			origin = new BlockPos(array[3], array[4], array[5]);
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			System.out.println("Could not read OriginMeasurementArray (probably an error with NBT). Try creating a new World.");
-			System.out.println("Printing Exception Stack:");
-			System.out.println(ex.getMessage());
-		}
-	}
-	@Deprecated
-	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
-		blockMap = new BlockMap(minPos);
-		BlockPos span = Vec3Op.subtract(((BlockPos) maxPos), minPos);
-		for(int x = 0; x <= span.getX(); x++){
-			for(int y = 0; y <= span.getY(); y++){
-				for(int z = 0; z <= span.getZ(); z++){
-					//if(!world.isAirBlock(new BlockPos(x,y,z).add(minPos))){
-						blockMap.add(new BlockPos(x,y,z).add(minPos));
-					//}
-				}
-			}
-		}
-		origin = Vec3Op.scale(span, 0.5);
 	}
 	public int getSize(){
 		return blockMap.getSize();
@@ -263,10 +206,12 @@ public class Spaceship implements Serializable{
 
 	public void setTarget(BlockPos position){
 		//moveTo(Vec3Op.subtract(position, origin), 0, world);
+		this.position = blockMap.getMiddleVec();
 		target = new MovementTarget(position, 0, world);
 	}
 	public void setTarget(BlockPos position, int turn){
 		//moveTo(Vec3Op.subtract(position, origin), world);
+		this.position = blockMap.getMiddleVec();
 		target = new MovementTarget(position, turn, world);
 	}
 	public void moveTo(BlockPos addDirection) {
@@ -355,7 +300,7 @@ public class Spaceship implements Serializable{
 				BlockPos Pos = it.next();
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
-				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);			
+				BlockPos nextPos = Turn.getRotatedPos(Pos, getOrigin(), add, turn);			
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
@@ -389,7 +334,7 @@ public class Spaceship implements Serializable{
 		if(!positions.isEmpty()){
 			for(BlockPos Pos : positions){
 				//force placement
-				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);	
+				BlockPos nextPos = Turn.getRotatedPos(Pos, getOrigin(), add, turn);	
 				BlockCopier.copyBlock(world, Pos, nextPos, turn);
 				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
 				removal.insertElementAt(Pos, 0);
@@ -463,11 +408,10 @@ public class Spaceship implements Serializable{
 	}
 		
 	private void moveMeasurements(BlockPos addDirection, int turn){
-		blockMap.rotate(origin, turn);
+		blockMap.rotate(getOrigin(), turn);
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
-		assembler.rotate(origin,  turn);
+		assembler.rotate(getOrigin(),  turn);
 		assembler.setOrigin(assembler.getOrigin().add(addDirection));
-		origin = origin.add(addDirection);
 	}
 	@Deprecated
 	private void moveEntities(BlockPos addDirection, int turn){
@@ -477,6 +421,7 @@ public class Spaceship implements Serializable{
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));
 			}
 			Vec3 addDir = new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ());
+			BlockPos origin = getOrigin();
 			Vec3 orig = new Vec3(origin.getX(), origin.getY(), origin.getZ());
 			Vec3 newPos = Turn.getRotatedPos(ent.getPositionVector(), orig, addDir, turn);
 			switch(turn){
@@ -500,7 +445,7 @@ public class Spaceship implements Serializable{
 		StringBuilder sb = new StringBuilder();
 		sb.append("minPosition: " + blockMap.getMinPos().toString());
 		sb.append("\nmaxPosition: " + blockMap.getMaxPos().toString());
-		sb.append("\norigin: " + origin.toString());
+		sb.append("\norigin: " + getOrigin().toString());
 		sb.append("\nworlderver: " + world == null ? "Not Known.\n" : "Known\n");
 		return sb.toString();
 	}
@@ -578,7 +523,6 @@ public class Spaceship implements Serializable{
 		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
 		blockMap = new BlockMap(ori);
 		assembler = new SpaceshipAssembler(ori);
-		this.origin = ori;
 		Class addedClass = null;
 		for(String s : lines){
 			if(addedClass == null){
@@ -642,8 +586,8 @@ public class Spaceship implements Serializable{
 		double maxWorldHeight = this.world.getHeight();
 		BlockPos maxPos = getMaxPos();
 		BlockPos minPos = getMinPos();
-		BlockPos nextMaxPos = Turn.getRotatedPos(maxPos, origin, addDirection, turn);
-		BlockPos nextMinPos = Turn.getRotatedPos(minPos, origin, addDirection, turn);
+		BlockPos nextMaxPos = Turn.getRotatedPos(maxPos, getOrigin(), addDirection, turn);
+		BlockPos nextMinPos = Turn.getRotatedPos(minPos, getOrigin(), addDirection, turn);
 		if(nextMaxPos.getY() > maxWorldHeight || nextMinPos.getY() < 0){
 			return false;
 		}
@@ -721,7 +665,7 @@ public class Spaceship implements Serializable{
 	}
 	private void stop(){
 		BlockPos positionPos = new BlockPos(position);
-		BlockPos addDirection = Vec3Op.subtract(positionPos, origin);
+		BlockPos addDirection = Vec3Op.subtract(positionPos, getOrigin());
 		moveTo(addDirection, world, target.getTurn());
 		target = null;
 	}

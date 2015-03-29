@@ -110,10 +110,6 @@ public class Shipyard {
 		return null;
 	}	
 	
-	@Deprecated
-	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World worldS){
-		addShip(new Spaceship(minSpan, origin, maxSpan, worldS));
-	}
 	public void createShip(BlockPos initial, World worldS) throws Exception{
 		addShip(new Spaceship(initial, worldS));
 	}
