@@ -18,7 +18,7 @@ public class EntityTarget extends Target {
 		entityID = c.getInteger(entityKey);
 	}
 	@Override
-	public BlockPos getTarget(World world) {
+	public BlockPos getNewTarget(World world) {
 		Entity ent = getEntity(world);
 		if(ent != null){
 			return ent.getPosition();

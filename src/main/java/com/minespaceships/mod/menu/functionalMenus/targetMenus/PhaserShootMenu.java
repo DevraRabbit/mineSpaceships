@@ -19,6 +19,7 @@ public class PhaserShootMenu extends Menu {
 		super("Shoot Phaser");
 		if(ship != null){
 			addSubMenu(new GetPlayerTargetMenu(new TargetHolder(ship)));
+			addSubMenu(new GetShipTargetMenu(new TargetHolder(ship)));
 		}
 	}
 	@Override

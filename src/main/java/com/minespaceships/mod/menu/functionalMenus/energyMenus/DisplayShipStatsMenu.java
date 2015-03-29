@@ -26,14 +26,17 @@ public class DisplayShipStatsMenu extends Menu implements FunctionalMenu {
 			float speed = ShipInformation.getShipSpeed(ship);
 			float shields = ShipInformation.getShipShields(ship);
 			float capacity = ship.getCapacity();
+			float strength = ShipInformation.getShipStrength(ship);
 			int activeGenerators = ship.getActiveGeneratorsCount();
 			int activeEngines = ship.getActiveEnginesCount();
 			int activeShields = ship.getActiveShieldsCount();
+			int activePhaser = ship.getActivePhaserCount();
 			
 			return "Weight: "+weight +" tons\n"+
 					"Capacity: "+capacity+" EU ("+activeGenerators+" active generators)\n"+
 					"Speed: "+speed +" EU ("+activeEngines+" active engines)\n"+
-					"Shields: "+shields+" EU ("+activeShields+" active shields)\n";
+					"Shields: "+shields+" SU ("+activeShields+" active shields)\n"+
+					"Strength: "+strength+" PU ("+activePhaser+" active phaser)\n";
 		} else {
 			return EnumChatFormatting.RED+"No Spaceship\n";
 		}

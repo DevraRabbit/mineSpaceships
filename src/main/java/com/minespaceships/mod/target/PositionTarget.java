@@ -14,7 +14,7 @@ public class PositionTarget extends Target{
 		position = BlockPos.fromLong(tag.getLong(positionKey));
 	}
 	@Override
-	public BlockPos getTarget(World world) {
+	public BlockPos getNewTarget(World world) {
 		return position;
 	}
 	@Override

@@ -108,7 +108,10 @@ public class Shipyard {
 			}
 		}
 		return null;
-	}	
+	}
+	public Vector<Spaceship> getShipList(){
+		return (Vector<Spaceship>) ships.clone();
+	}
 	
 	public void createShip(BlockPos initial, World worldS) throws Exception{
 		addShip(new Spaceship(initial, worldS));

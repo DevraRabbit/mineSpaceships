@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.Random;
 
+import com.minespaceships.mod.menu.functionalMenus.targetMenus.SpaceshipTarget;
 import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,8 +14,17 @@ import net.minecraft.world.World;
 
 public abstract class Target {
 	public static String classKey = "Class";
+	private BlockPos lastTarget;
 	
-	public abstract BlockPos getTarget(World world);
+	public BlockPos getTarget(World world){
+		if(lastTarget != null){
+			return lastTarget;
+		} else {
+			lastTarget = getNewTarget(world);
+			return lastTarget;
+		}
+	}
+	public abstract BlockPos getNewTarget(World world);
 	public BlockPos getDiversedTarget(BlockPos range, World world){
 		BlockPos target = getTarget(world);
 		Random rand = new Random();
@@ -53,6 +63,8 @@ public abstract class Target {
 			return new PositionTarget(tag);
 		} else if (classname.equals(EntityTarget.class.getName())){
 			return new EntityTarget(tag);
+		} else if (classname.equals(SpaceshipTarget.class.getName())){
+			return new SpaceshipTarget(tag);
 		}
 		return null;
 	}
