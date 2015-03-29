@@ -5,6 +5,7 @@ import net.minecraft.util.ChatComponentText;
 
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
+import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
@@ -12,7 +13,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
  * @author ovae.
  * @version 20150221
  */
-public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
+public class NavigateToTargetMenu extends Menu implements FunctionalMenu{
 
 	//
 	private CustomGuiChat terminal;
@@ -27,12 +28,9 @@ public class NavigateToTargetMenu extends Menu implements FunktionalMenu{
 		this.terminal = terminal;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
-	public String activate(String paramlist) {
-		String[] param = paramlist.split("\\s+");
+	public String activate(String command, IMenuInterface terminal) {
+		String[] param = command.split("\\s+");
 		double x = Double.parseDouble(param[0]);
 		double y = Double.parseDouble(param[1]);
 		double z = Double.parseDouble(param[2]);

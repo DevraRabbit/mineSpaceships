@@ -30,7 +30,8 @@ hs_err_pid*
 #Files that were created by the minecraft server
 banned-ips.json
 banned-players.json
-logs/
+/logs/
+/crash-reports/
 ops.json
 eula.txt
 server.properties
