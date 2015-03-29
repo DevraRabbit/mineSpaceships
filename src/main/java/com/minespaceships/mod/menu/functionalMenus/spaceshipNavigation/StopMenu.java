@@ -1,10 +1,12 @@
 package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.menu.functionalMenus.energyMenus.TerminalUtil;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Shipyard;
@@ -16,13 +18,13 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  * @author ovae.
  * @version 20150323.
  */
-public class liftoffMenu extends Menu implements FunctionalMenu{
+public class StopMenu extends Menu implements FunctionalMenu{
 
 	/**
 	 * Creates a new liftoffMenu.
 	 * @param name
 	 */
-	public liftoffMenu() {
+	public StopMenu() {
 		super("liftoff");
 	}
 
@@ -33,8 +35,13 @@ public class liftoffMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveUp+" 23", terminal.getPlayerEntity());
-		return SpaceshipCommands.liftoff+"\nPress m to get back.";
+		Spaceship ship = TerminalUtil.getShip(terminal);
+		if(ship != null){
+			int distToGround = ship.getDistanceToGround();
+			ship.stop();
+			return EnumChatFormatting.RED+"Braking!";
+		}
+		return "No Spaceship...";
 	}
 
 }

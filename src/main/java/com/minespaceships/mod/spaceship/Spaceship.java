@@ -106,6 +106,9 @@ public class Spaceship implements Serializable{
 	public BlockPos getOrigin(){
 		return blockMap.getMiddle();
 	}
+	public Vec3 getOriginVec(){
+		return blockMap.getMiddleVec();
+	}
 	public BlockPos getBlockMapOrigin(){
 		return blockMap.getOrigin();
 	}
@@ -195,6 +198,30 @@ public class Spaceship implements Serializable{
 	public void deactivateEverything(){
 		energySystem.changeAll(IEnergyC.class, false);
 	}
+	
+	public int getDistanceToGround(){
+		ArrayList<BlockPos> positions = getPositions();
+		int minHeight = Integer.MAX_VALUE;
+		for(BlockPos pos : positions){
+			BlockPos current = pos.add(0,-1,0);
+			int height = 1;
+			while(current.getY() > 0 && world.isAirBlock(current)){
+				current = current.add(0,-1,0);
+				height++;
+			}
+			if(!containsBlock(current)){
+				if(height < minHeight){
+					minHeight = height;
+				}
+			}
+		}
+		if(minHeight != Integer.MAX_VALUE){
+			return minHeight;
+		} else {
+			return 0;
+		}
+	}
+	
 	public void shootPhaserAt(Target target){
 		ArrayList<BlockPos> phasers = energySystem.getActive(PhaserBlock.class, true);
 		Random rand = new Random();
@@ -216,12 +243,12 @@ public class Spaceship implements Serializable{
 
 	public void setTarget(BlockPos position){
 		//moveTo(Vec3Op.subtract(position, origin), 0, world);
-		this.position = blockMap.getMiddleVec();
+		this.position = getOriginVec();
 		target = new MovementTarget(position, 0, world);
 	}
 	public void setTarget(BlockPos position, int turn){
 		//moveTo(Vec3Op.subtract(position, origin), world);
-		this.position = blockMap.getMiddleVec();
+		this.position = getOriginVec();
 		target = new MovementTarget(position, turn, world);
 	}
 	public void moveTo(BlockPos addDirection) {
@@ -673,7 +700,7 @@ public class Spaceship implements Serializable{
 			return null;
 		}
 	}
-	private void stop(){
+	public void stop(){
 		BlockPos positionPos = new BlockPos(position);
 		BlockPos addDirection = Vec3Op.subtract(positionPos, getOrigin());
 		moveTo(addDirection, world, target.getTurn());

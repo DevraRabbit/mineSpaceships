@@ -27,7 +27,7 @@ public class SpaceshipNavigation extends Menu{
 		addSubMenu(moveUp);
 		addSubMenu(moveDown);
 		addSubMenu(new LandingMenu());
-		addSubMenu(new liftoffMenu());
+		addSubMenu(new StopMenu());
 	}
 
 }

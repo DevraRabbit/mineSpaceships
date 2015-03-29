@@ -4,7 +4,6 @@ import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.*;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LandingMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.SpaceshipNavigation;
-import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.liftoffMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.moveBackMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.moveDownMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.moveForwardMenu;

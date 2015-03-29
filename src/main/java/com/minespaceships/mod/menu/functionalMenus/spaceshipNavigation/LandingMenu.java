@@ -6,12 +6,14 @@ import java.util.regex.Pattern;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.menu.functionalMenus.energyMenus.TerminalUtil;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Shipyard;
@@ -40,15 +42,13 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		if(command.trim().isEmpty()){
-			return "command can not be empty.";
+		Spaceship ship = TerminalUtil.getShip(terminal);
+		if(ship != null){
+			int distToGround = ship.getDistanceToGround();
+			ship.setTarget(ship.getOrigin().add(0, -distToGround, 0));
+			return EnumChatFormatting.GREEN+"Landing!";
 		}
-		if(command.equals(null)){
-			return "command can not be null.";
-		}
-
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.land, terminal.getPlayerEntity());
-		return SpaceshipCommands.land+" not implementes yet.\nPress m to get back.";
+		return "No Spaceship...";
 	}
 
 }
