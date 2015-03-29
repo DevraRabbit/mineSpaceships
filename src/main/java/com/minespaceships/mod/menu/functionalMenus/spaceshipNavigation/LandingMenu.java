@@ -83,7 +83,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 					height++;
 				}while(run);
 				if(!contains){
-					lowestBlocks.add(new BlockPos(block.getX(), posY+3 ,block.getZ()));
+					lowestBlocks.add(new BlockPos(block.getX(), posY ,block.getZ()));
 				}
 				contains = false;
 			}
@@ -116,7 +116,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 			}
 
 			//(double)x, (double)y, (double)z
-			BlockPos position = new BlockPos(x, highest.getY()+level , z);
+			BlockPos position = new BlockPos(x, highest.getY()+level+3 , z);
 
 			if(spacehipBlocks.contains(position)){
 				String out ="";

@@ -1,6 +1,6 @@
 package com.minespaceships.mod.menu;
 
-import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
+import com.minespaceships.mod.menu.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.CreateShipMenu;
 import com.minespaceships.mod.menu.functionalMenus.HelpMenu;
 import com.minespaceships.mod.menu.functionalMenus.ToTargetFunktionalMenu;
