@@ -50,20 +50,38 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 		}
 
 		ArrayList<BlockPos> lowestBlocks = new ArrayList<BlockPos>();
-		ArrayList<BlockPos> spacehipBlocks = new ArrayList<BlockPos>();
+		ArrayList<BlockPos> spaceshipBlocks = new ArrayList<BlockPos>();
+		//ArrayList<BlockPos> spaceshipBottom = new ArrayList<BlockPos>();
 		try{
 			double x,y,z;
 			World world = terminal.getChatRegisterEntity().getWorld();
 			Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-			spacehipBlocks = ship.getPositions();
+			spaceshipBlocks = ship.getPositions();
 
 			x = terminal.getChatRegisterEntity().getPos().getX();
 			y = terminal.getChatRegisterEntity().getPos().getY();
 			z = terminal.getChatRegisterEntity().getPos().getZ();
-			BlockPos minPos = ship.getMinPos();
+			BlockPos min = ship.getMinPos();
+
+			/*
+			//Get the bottom of the spaceship
+			BlockPos temp = spaceshipBlocks.get(0);
+			for(BlockPos blockOut: spaceshipBlocks){
+				for(BlockPos blockIn: spaceshipBlocks){
+					if(blockIn.getX() == blockOut.getX() && blockIn.getZ() == blockOut.getZ()){
+						if(blockIn.getY() < temp.getY()){
+							temp = blockIn;
+						}
+					}else{
+						temp = blockOut;
+					}
+				}
+				spaceshipBottom.add(temp);
+				System.out.println("BOTTOM: "+temp);
+			}*/
 
 			//Check all blocks of the spaceship, how many air locks are under the ship.
-			for(BlockPos block : spacehipBlocks){
+			/*for(BlockPos block : spaceshipBlocks){
 				int height=0;
 				boolean run = true;
 				boolean contains = false;
@@ -76,7 +94,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 					}else{
 						run = false;
 					}
-					if(spacehipBlocks.contains(current)){
+					if(spaceshipBlocks.contains(current)){
 						run = false;
 					}
 					posY--;
@@ -86,11 +104,53 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 					lowestBlocks.add(new BlockPos(block.getX(), posY ,block.getZ()));
 				}
 				contains = false;
+			}*/
+
+
+			for(BlockPos block : spaceshipBlocks){
+				boolean run = true;
+				boolean contains = false;
+				int posY= block.getY();
+				IBlockState current;
+				while(run){
+					current = world.getBlockState(new BlockPos(x, --posY ,z));
+					if(!(current == Blocks.air.getDefaultState())){
+						run = false;
+					}
+					if(spaceshipBlocks.contains(current)){
+						run = false;
+						contains = true;
+					}
+				}
+
+				if(!contains){
+					BlockPos b = new BlockPos(block.getX(), ++posY ,block.getZ());
+					lowestBlocks.add(b);
+					contains = false;
+				}
 			}
 
+			BlockPos highest = lowestBlocks.get(0);
+			BlockPos lowest = lowestBlocks.get(0);
+			for(BlockPos block : lowestBlocks){
+				if(block.getY() < lowest.getY()){
+					lowest = block;
+				}
+				if(block.getY() > highest.getY()){
+					highest = block;
+				}
+				System.out.println(""+block);
+			}
+			BlockPos origin = ship.getOrigin();
+			int level = origin.getY()-min.getY();
+			BlockPos position = new BlockPos(origin.getX(), (y-(highest.getY()-lowest.getY()))+level+2 , origin.getZ());
+			ship.move(position);
+			return "test"+ position+"Origin"+origin;
+
+/*
 			//Double check if a block is a part of the ship
 			for(BlockPos block : lowestBlocks){
-				if(spacehipBlocks.contains(block)){
+				if(spaceshipBlocks.contains(block)){
 					lowestBlocks.remove(block);
 					System.out.println("RMBlock : "+block+"");
 				}else{
@@ -102,14 +162,13 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 			BlockPos highest = lowestBlocks.get(0);
 			for(BlockPos block : lowestBlocks){
 				if(block.getY() >= highest.getY()){
-					if(!spacehipBlocks.contains(block)){
+					if(!spaceshipBlocks.contains(block)){
 						highest = block;
 					}
 				}
 			}
 
 			BlockPos origin = ship.getOrigin();
-			BlockPos min = ship.getMinPos();
 			int level = origin.getY()-min.getY();
 			if(level <=0){
 				level*=1;
@@ -117,8 +176,9 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 
 			//(double)x, (double)y, (double)z
 			BlockPos position = new BlockPos(x, highest.getY()+level+3 , z);
-
-			if(spacehipBlocks.contains(position)){
+*/
+/*
+			if(spaceshipBlocks.contains(position)){
 				String out ="";
 				out = "Cant land\n"
 						+"Origin  : "+ship.getOrigin()+"\n"
@@ -129,7 +189,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 			}
 
 			//Finally move the spaceship.
-			//ship.move(position);
+			ship.move(position);
 			//return "land successful.\nPress 'm' to get back.";
 
 			String out ="";
@@ -138,7 +198,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 					+"Landing : "+highest+"\n"
 					+"Postion : "+position;
 			return out;
-
+*/
 		}catch(ConcurrentModificationException f){
 			return "ConcurrentModificationException: "+f.getStackTrace();
 		}catch(Exception e){
