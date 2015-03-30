@@ -63,50 +63,10 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 			z = terminal.getChatRegisterEntity().getPos().getZ();
 			BlockPos min = ship.getMinPos();
 
-			/*
-			//Get the bottom of the spaceship
-			BlockPos temp = spaceshipBlocks.get(0);
-			for(BlockPos blockOut: spaceshipBlocks){
-				for(BlockPos blockIn: spaceshipBlocks){
-					if(blockIn.getX() == blockOut.getX() && blockIn.getZ() == blockOut.getZ()){
-						if(blockIn.getY() < temp.getY()){
-							temp = blockIn;
-						}
-					}else{
-						temp = blockOut;
-					}
-				}
-				spaceshipBottom.add(temp);
-				System.out.println("BOTTOM: "+temp);
-			}*/
-
-			//Check all blocks of the spaceship, how many air locks are under the ship.
-			/*for(BlockPos block : spaceshipBlocks){
-				int height=0;
-				boolean run = true;
-				boolean contains = false;
-				int posY= block.getY()-1;
-				IBlockState current;
-				do{
-					current = world.getBlockState(new BlockPos(x,posY,z));
-					if(current == Blocks.air.getDefaultState()){
-						run = true;
-					}else{
-						run = false;
-					}
-					if(spaceshipBlocks.contains(current)){
-						run = false;
-					}
-					posY--;
-					height++;
-				}while(run);
-				if(!contains){
-					lowestBlocks.add(new BlockPos(block.getX(), posY ,block.getZ()));
-				}
-				contains = false;
-			}*/
-
-
+			/* Checks if the block beneath every spaceship block is air or something different.
+			 * If the block beneath the spaceship block is an other spaceship block nothing happens.
+			 * Otherwise the block above the first block that is not air is added to the lowestBlock list.
+			 */
 			for(BlockPos block : spaceshipBlocks){
 				boolean run = true;
 				boolean contains = false;
@@ -143,62 +103,17 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 			}
 			BlockPos origin = ship.getOrigin();
 			int level = origin.getY()-min.getY();
+
 			BlockPos position = new BlockPos(origin.getX(), (y-(highest.getY()-lowest.getY()))+level+2 , origin.getZ());
 			ship.move(position);
-			return "test"+ position+"Origin"+origin;
-
-/*
-			//Double check if a block is a part of the ship
-			for(BlockPos block : lowestBlocks){
-				if(spaceshipBlocks.contains(block)){
-					lowestBlocks.remove(block);
-					System.out.println("RMBlock : "+block+"");
-				}else{
-					System.out.println("Block : "+block+"");
-				}
-			}
-
-			//Get highest block of all.
-			BlockPos highest = lowestBlocks.get(0);
-			for(BlockPos block : lowestBlocks){
-				if(block.getY() >= highest.getY()){
-					if(!spaceshipBlocks.contains(block)){
-						highest = block;
-					}
-				}
-			}
-
-			BlockPos origin = ship.getOrigin();
-			int level = origin.getY()-min.getY();
-			if(level <=0){
-				level*=1;
-			}
-
-			//(double)x, (double)y, (double)z
-			BlockPos position = new BlockPos(x, highest.getY()+level+3 , z);
-*/
-/*
-			if(spaceshipBlocks.contains(position)){
-				String out ="";
-				out = "Cant land\n"
-						+"Origin  : "+ship.getOrigin()+"\n"
-						+"Min     : "+ship.getMinPos()+"\n"
-						+"Landing : "+highest+"\n"
-						+"Postion : "+position;
-				return out;
-			}
-
-			//Finally move the spaceship.
-			ship.move(position);
-			//return "land successful.\nPress 'm' to get back.";
 
 			String out ="";
-			out =	"Origin  : "+ship.getOrigin()+"\n"
-					+"Min     : "+ship.getMinPos()+"\n"
-					+"Landing : "+highest+"\n"
-					+"Postion : "+position;
+			out =	 ""+ship.getMaxPos()+" Max \n" 
+					+""+ship.getOrigin()+" Origin \n"
+					+""+ship.getMinPos()+" Min \n"
+					+""+position+" Landing postion";
 			return out;
-*/
+
 		}catch(ConcurrentModificationException f){
 			return "ConcurrentModificationException: "+f.getStackTrace();
 		}catch(Exception e){
