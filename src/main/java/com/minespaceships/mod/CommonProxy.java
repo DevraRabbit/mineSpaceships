@@ -93,10 +93,12 @@ public abstract class CommonProxy {
     	GameRegistry.registerItem(new ItemTest(),"TestItem");
     	GameRegistry.registerItem(new ItemPhaser(), "Phaser");
 
+    	/*
 		DimensionManager.registerProviderType(2, WorldProviderSpace.class, true);
 		DimensionManager.registerDimension(2, 2);
 		GameRegistry.registerWorldGenerator(worldGen, 0);
 		GameRegistry.registerWorldGenerator(worldGenFloatingIslands, 0);
+		*/
 
     	// Register event listener
     	MinecraftForge.EVENT_BUS.register(new BlockEvent());
