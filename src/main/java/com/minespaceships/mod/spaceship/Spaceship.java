@@ -14,6 +14,8 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
@@ -431,7 +433,7 @@ public class Spaceship implements Serializable{
 		//TODO
 		if(side == Side.SERVER){
 			removeOldSpaceship();
-			//this.getBlockMapOrigin();
+			MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+world.provider.getDimensionId()));
 		}
 
 		for(BlockPos p : harderBlocks){

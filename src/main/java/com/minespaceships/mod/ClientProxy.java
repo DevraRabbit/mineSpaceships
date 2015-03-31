@@ -7,6 +7,7 @@ import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
+import com.minespaceships.mod.spaceship.RemoveHandler;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,7 @@ public class ClientProxy extends CommonProxy {
         super.preInit(e);
     	MineSpaceships.network.registerMessage(CommandMessage.HandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
     	MineSpaceships.blockChangeEvents.registerMessage(BlockHandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
+    	MineSpaceships.shipRemoval.registerMessage(RemoveHandler.class, CommandMessage.class, 0, Side.CLIENT);
     }
 
     @Override
