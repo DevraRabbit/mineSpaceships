@@ -55,7 +55,7 @@ public class SpaceshipMenu {
 		root = new Menu("Spaceship console");
 		shootPhaserMenu = new PhaserShootMenu();
 		shipToTargetMenu = new Menu("to target");
-
+		
 		out = "";
 		out+="  To target needs three parameter x,y and z.\n"
 		+"    Current position: "+terminal.getChatRegisterEntity().getPos()+'\n'
@@ -70,6 +70,7 @@ public class SpaceshipMenu {
 		root.addSubMenu(new EnergyManagementMenu());
 		root.addSubMenu(shootPhaserMenu);
 		root.addSubMenu(new HelpMenu());
+
 		runBefore = true;
 	}
 
