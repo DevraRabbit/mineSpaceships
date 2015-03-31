@@ -7,7 +7,6 @@ import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
-import com.minespaceships.mod.spaceship.RemoveHandler;
 import com.minespaceships.mod.spaceship.Shipyard;
 
 import net.minecraft.client.Minecraft;

@@ -72,6 +72,7 @@ public class Spaceship implements Serializable{
 	private MovementTarget target;
 	private Vec3 position;
 	private boolean isResolved = true;
+	private boolean mayRemoveBlocks = false;
 	
 	private static final String positionsKey = "Positions";
 	private static final String containsTargetKey = "containsTarget";
@@ -132,6 +133,13 @@ public class Spaceship implements Serializable{
 		float index = (float)(positions.size()-1)*rand.nextFloat();
 		return positions.get((int)(index));
 	}
+	public void canRemoveBlocks(){
+		if(!mayRemoveBlocks){
+			mayRemoveBlocks = true;
+		} else {
+			removeOldSpaceship();
+		}
+	}
 	
 	public BlockPos getMaxPos(){
 		return blockMap.getMaxPos();
@@ -139,7 +147,7 @@ public class Spaceship implements Serializable{
 	public BlockPos getMinPos(){
 		return blockMap.getMinPos();
 	}
-	public boolean canBeRemoved(){
+	public boolean canBeRemoved(){		
 		return canBeRemoved;
 	}
 	
@@ -431,10 +439,11 @@ public class Spaceship implements Serializable{
 		}
 
 		//TODO
-		if(side == Side.SERVER){
+		long oldOrigin = this.getBlockMapOrigin().toLong();
+		if(side == Side.SERVER || mayRemoveBlocks){
 			removeOldSpaceship();
-			MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+world.provider.getDimensionId()));
 		}
+		canRemoveBlocks();
 
 		for(BlockPos p : harderBlocks){
 			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
@@ -447,6 +456,7 @@ public class Spaceship implements Serializable{
 		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
+		if(side == Side.SERVER)MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+oldOrigin+","+world.provider.getDimensionId()));
 	}
 
 	//Removes the ship at the old position and refills blocks like water.
@@ -462,6 +472,7 @@ public class Spaceship implements Serializable{
 				BlockPos prev = reverseRemoval.previous();
 				if(tryRemove(startMock, prev)){
 					BlockCopier.removeBlock(world, prev);
+					reverseRemoval.remove();
 				}
 			}
 		}
@@ -476,6 +487,7 @@ public class Spaceship implements Serializable{
 		for(BlockPos pos : toRefill){
 			world.setBlockState(pos, Block.getStateById(8));
 		}
+		mayRemoveBlocks = false;
 	}
 
 	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
