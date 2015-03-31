@@ -57,6 +57,11 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @verison 20150331.
+ */
 public class Spaceship implements Serializable{
 	private World world;
 	private BlockMap blockMap;
