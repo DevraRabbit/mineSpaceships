@@ -1,6 +1,7 @@
 package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.menu.moveForwardTurnMenu;
 
 /**
  * Creates the spaceship navigation menu structure.
@@ -31,6 +32,7 @@ public class SpaceshipNavigation extends Menu{
 		addSubMenu(moveRight);
 		addSubMenu(moveUp);
 		addSubMenu(moveDown);
+		addSubMenu(new moveForwardTurnMenu());
 		addSubMenu(new LandingMenu());
 		addSubMenu(new LiftoffMenu());
 		addSubMenu(new StopMenu());
