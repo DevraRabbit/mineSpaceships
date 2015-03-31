@@ -19,7 +19,7 @@ public class ActivateShieldsMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.activateCommand(true, EnergyType.shields), terminal.getPlayerEntity());
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(true, EnergyType.shields), terminal.getPlayerEntity());
 		return EnumChatFormatting.GREEN+"Activating shields!\n";
 	}
 

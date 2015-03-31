@@ -33,7 +33,7 @@ public class LiftoffMenu extends Menu implements FunctionalMenu{
 	 */
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveUp+" 23", terminal.getPlayerEntity());
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.moveUp+" 23", terminal.getPlayerEntity());
 		return SpaceshipCommands.liftoff+"\nPress m to get back.";
 	}
 
