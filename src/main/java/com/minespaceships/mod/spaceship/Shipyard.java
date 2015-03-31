@@ -83,13 +83,17 @@ public class Shipyard {
 	public void addShip(Spaceship ship){
 		if(ship != null){
 			if(!ships.contains(ship) && ship.getNavigatorCount() > 0){
+				ArrayList<Spaceship> toRemove = new ArrayList<Spaceship>();
 				Iterator<Spaceship> shipIt = ships.iterator();
 				while(shipIt.hasNext()){
 					Spaceship nextShip = shipIt.next();
 					if(nextShip.measuresEquals(ship)){
-						shipIt.remove();
+						toRemove.add(nextShip);
 						System.out.println("Removed ship due to ship overloading");
 					}					
+				}
+				for(Spaceship s : toRemove){
+					ships.remove(s);
 				}
 				ships.add(ship);
 				System.out.println("Added ship to the Shipyard");
@@ -108,12 +112,20 @@ public class Shipyard {
 			}
 		}
 		return null;
-	}	
-	
-	@Deprecated
-	public void createShip(BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World worldS){
-		addShip(new Spaceship(minSpan, origin, maxSpan, worldS));
 	}
+	public Spaceship getShipByBlockMapOrigin(BlockPos pos, World world){
+		for(Spaceship ship : ships){
+			if(ship.getBlockMapOrigin().equals(pos) && 
+					ship.getWorld().provider.getDimensionId() == world.provider.getDimensionId()){
+				return ship;
+			}
+		}
+		return null;
+	}
+	public Vector<Spaceship> getShipList(){
+		return (Vector<Spaceship>) ships.clone();
+	}
+	
 	public void createShip(BlockPos initial, World worldS) throws Exception{
 		addShip(new Spaceship(initial, worldS));
 	}

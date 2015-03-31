@@ -23,8 +23,8 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	 * @param name
 	 * @param terminal
 	 */
-	public CreateShipMenu(String name) {
-		super(name);
+	public CreateShipMenu() {
+		super("Recreate spaceship");
 	}
 
 	/**

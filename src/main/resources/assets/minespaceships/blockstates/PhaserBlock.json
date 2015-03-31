@@ -7,11 +7,11 @@
         "activated=true,facing=south": { "model": "minespaceships:PhaserBlock" , "y": 90 },
         "activated=true,facing=west": { "model": "minespaceships:PhaserBlock" , "y": 180 },
         
-        "activated=false,facing=up": { "model": "minespaceships:PhaserBlock" },
-        "activated=false,facing=down": { "model": "minespaceships:PhaserBlock", "x": 180 },
-        "activated=false,facing=north": { "model": "minespaceships:PhaserBlock" , "y": 270 },
-        "activated=false,facing=east": { "model": "minespaceships:PhaserBlock" },
-        "activated=false,facing=south": { "model": "minespaceships:PhaserBlock" , "y": 90 },
-        "activated=false,facing=west": { "model": "minespaceships:PhaserBlock" , "y": 180 }
+        "activated=false,facing=up": { "model": "minespaceships:PhaserBase" },
+        "activated=false,facing=down": { "model": "minespaceships:PhaserBase", "x": 180 },
+        "activated=false,facing=north": { "model": "minespaceships:PhaserBase" , "y": 270 },
+        "activated=false,facing=east": { "model": "minespaceships:PhaserBase" },
+        "activated=false,facing=south": { "model": "minespaceships:PhaserBase" , "y": 90 },
+        "activated=false,facing=west": { "model": "minespaceships:PhaserBase" , "y": 180 }
     }
 }

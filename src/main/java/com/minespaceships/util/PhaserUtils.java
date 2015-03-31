@@ -1,6 +1,7 @@
 package com.minespaceships.util;
 
 import java.util.List;
+import java.util.Random;
 
 import com.minespaceships.mod.overhead.PhaserEffect;
 import com.minespaceships.mod.spaceship.ShipInformation;
@@ -22,9 +23,10 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class PhaserUtils {
-
 	public static void shoot(BlockPos source, BlockPos target, double strength, int maxrange, World world) {
 		Vec3 direction = new Vec3(target.getX() - source.getX(), target.getY()
 				- source.getY(), target.getZ() - source.getZ());
@@ -32,18 +34,19 @@ public class PhaserUtils {
 	}
 
 	public static void shoot(BlockPos source, Vec3 direction, double strength, int maxrange, World world) {
-		
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		BlockPos current;
 		
 		//Normalize vector, so no block is safe!11!!
 		Vec3 ray = direction.normalize();
-
+		
+		Shipyard syard = Shipyard.getShipyard(world);
 		while (strength > 0 && maxrange > 0) {
 			Object[] nextHitInfo = getNextPhaserHit(ray);
 			current = source.add((BlockPos) nextHitInfo[0]);
 			ray = (Vec3) nextHitInfo[1];
 			
-			if (!world.isAirBlock(current) && !(world.getBlockState(current).getBlock() instanceof BlockFire)) {
+			if (!canPhaserPassBlock(current, world)) {
 				strength -= world.getBlockState(current).getBlock()
 						.getBlockHardness(world, current);
 				Spaceship ship = Shipyard.getShipyard(world).getShip(current, world);
@@ -51,27 +54,28 @@ public class PhaserUtils {
 					strength -= ShipInformation.getShipShields(ship);
 				}
 				if (strength >= 0) {
+					syard.removeBlock(current, world);
 					world.destroyBlock(current, false);
-					world.setBlockState(current, Blocks.fire.getDefaultState());
-				}
+					world.setBlockState(current, Blocks.fire.getDefaultState());		
 	            
-	            if(world.isAirBlock(current.down()))
-	            world.setBlockState(current.down(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.up()))
-	            world.setBlockState(current.up(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.north()))
-	            world.setBlockState(current.north(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.south()))
-	            world.setBlockState(current.south(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.east()))
-	            world.setBlockState(current.east(), Blocks.fire.getDefaultState());
-
-	            if(world.isAirBlock(current.west()))
-	            world.setBlockState(current.west(), Blocks.fire.getDefaultState());
+		            if(world.isAirBlock(current.down()))
+		            world.setBlockState(current.down(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.up()))
+		            world.setBlockState(current.up(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.north()))
+		            world.setBlockState(current.north(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.south()))
+		            world.setBlockState(current.south(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.east()))
+		            world.setBlockState(current.east(), Blocks.fire.getDefaultState());
+	
+		            if(world.isAirBlock(current.west()))
+		            world.setBlockState(current.west(), Blocks.fire.getDefaultState());		            
+				}
 			}
 			
         	double d0 = 2.0D;
@@ -86,10 +90,31 @@ public class PhaserUtils {
                     entity.onStruckByLightning(killer);
             }
             
-            world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, ray.xCoord, ray.yCoord, ray.zCoord, 0, 0, 0, 0);
+            if(side == Side.CLIENT){
+            	Random rand = new Random();
+            	for(int i = 0; i < 5; i++){
+            		world.spawnParticle(EnumParticleTypes.REDSTONE, current.getX()+rand.nextFloat(), current.getY()+rand.nextFloat(), current.getZ()+rand.nextFloat(), 0, 0, 0, new int[0]);
+            	}
+            }
             
 			maxrange--;
 		}
+	}
+	public static boolean canShoot(BlockPos source, Vec3 direction, Spaceship ship){
+		BlockPos current = source;
+		Vec3 ray = direction.normalize();
+		while(ship.isInsideShipRectangle(current)){
+			Object[] nextHitInfo = getNextPhaserHit(ray);
+			current = source.add((BlockPos) nextHitInfo[0]);
+			ray = (Vec3) nextHitInfo[1];
+			if(!canPhaserPassBlock(current, ship.getWorld())){
+				return false;
+			}
+		}
+		return true;
+	}
+	public static boolean canPhaserPassBlock(BlockPos pos, World world){
+		return world.isAirBlock(pos) || (world.getBlockState(pos).getBlock() instanceof BlockFire);
 	}
 
 	private static Object[] getNextPhaserHit(Vec3 ray) {

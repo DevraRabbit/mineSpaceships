@@ -3,6 +3,7 @@
  */
 package com.minespaceships.mod.spaceship;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +38,8 @@ public class SpaceshipCommands {
 	public static String moveBack = "move back";
 	public static String moveUp = "move up";
 	public static String moveDown ="move down";
+	public static String moveLeft ="move left";
+	public static String moveRight ="move right";
 	public static String land ="land";
 	public static String liftoff = "liftoff";
 	//energy management
@@ -82,9 +85,9 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			BlockPos from = new BlockPos(Integer.valueOf(moffset.group(1)), Integer.valueOf(moffset.group(2)), Integer.valueOf(moffset.group(3)));
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
-			Shipyard.getShipyard(worldObj).createShip(from, commandBlock.getPos(), to, worldObj);
+			//Shipyard.getShipyard(worldObj).createShip(from, commandBlock.getPos(), to, worldObj); Not existing anymore
 			
-			player.addChatComponentMessage(new ChatComponentText("Initialized Spaceship at [" + commandBlock.getPos().getX() + "; " + commandBlock.getPos().getY() + "; " + commandBlock.getPos().getZ() + "] from (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ") to (" + moffset.group(4) + "; " + moffset.group(5) + "; " + moffset.group(6) + ")"));
+			player.addChatComponentMessage(new ChatComponentText("This command doesn't exist anymore"));
 		} else {
 			player.addChatComponentMessage(new ChatComponentText("init: Error processing intput"));
 			player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;# or try <init auto>"));
@@ -315,44 +318,6 @@ public class SpaceshipCommands {
 			break;
 		}
 		return command;
-	}
-
-	public static void land(final IMenuInterface terminal){
-		/*
-		try{
-			double x,y,z;
-			World world = terminal.getChatRegisterEntity().getWorld();
-			Spaceship ship = Shipyard.getShipyard().getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
-			if(ship == null) {
-				//return "Please initialise the spaceship first";
-			}
-			x = terminal.getChatRegisterEntity().getPos().getX();
-			y = terminal.getChatRegisterEntity().getPos().getY();
-			z = terminal.getChatRegisterEntity().getPos().getZ();
-			BlockPos minPos = ship.getMinPos();
-
-			int height=0;
-			boolean run = true;
-			int posY= minPos.getY()-1;
-			do{
-				IBlockState current = world.getBlockState(new BlockPos(x,posY,z));
-				if(current == Blocks.air.getDefaultState()){
-					run = true;
-				}else{
-					run = false;
-				}
-				posY--;
-				height++;
-			}while(run);
-
-			//(double)x, (double)y, (double)z
-			BlockPos position = new BlockPos(x, y-height+2, z);
-			ship.move(position);
-			//return "land successful.\nPress 'm' to get back.";
-		}catch(Exception e){
-			//return "While trying to land an error occurred: "+e;
-		}
-		*/
 	}
 
 }

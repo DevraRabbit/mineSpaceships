@@ -1,14 +1,26 @@
 package com.minespaceships.mod.menu;
 
-import com.minespacehips.mod.functionalMenus.energyMenus.EnergyManagementMenu;
-import com.minespaceships.mod.menu.functionalMenus.*;
+import com.minespaceships.mod.menu.functionalMenus.energyMenus.EnergyManagementMenu;
+import com.minespaceships.mod.menu.functionalMenus.CreateShipMenu;
+import com.minespaceships.mod.menu.functionalMenus.HelpMenu;
+import com.minespaceships.mod.menu.functionalMenus.ToTargetFunktionalMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LandingMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.SpaceshipNavigation;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LiftoffMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveBackMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveDownMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveForwardMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveLeftMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveRightMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveUpMenu;
+import com.minespaceships.mod.menu.functionalMenus.targetMenus.PhaserShootMenu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 
 /**
  * A default menu structure.
  * @author ovae.
- * @version 20150313.
+ * @version 20150331.
  */
 public class SpaceshipMenu {
 
@@ -18,69 +30,6 @@ public class SpaceshipMenu {
 	//The root menu.
 	private static Menu root;
 
-	//Menu for the spaceship navigation.
-	private static Menu navigation;
-
-	//Menu if you need help
-	private static Menu help;
-
-	//Menu for the spaceship shield.
-	private static Menu energySystem;
-
-	//Menu which contains the ability to set the spaceship to a target position.
-	private static Menu shipToTargetMenu;
-
-	//Menu which contains the functionality to get the to target coordinates.
-	private static Menu shipToTargetFunc;
-
-	//Menu to create a new spaceship.
-	private static Menu createShip;
-	
-	//Menu of the move forward command
-	private static Menu moveForwardMenu;
-
-	//Menu of the move forward command witch contains the functionality.
-	private static Menu moveForwardFuncMenu;
-
-	//Menu of the move back command.
-	private static Menu moveBackMenu;
-
-	//Menu for the move back command witch contains the functionality.
-	private static Menu moveBackFuncMenu;
-
-	//Menu of the move right command.
-	private static Menu moveRightMenu;
-
-	//Menu for the move right command witch contains the functionality.
-	private static Menu moveRightFuncMenu;
-
-	//Menu of the move left command.
-	private static Menu moveLeftMenu;
-
-	//Menu for the move left command witch contains the functionality.
-	private static Menu moveLeftFuncMenu;
-
-	//Menu of the move up command.
-	private static Menu moveUpMenu;
-
-	//Menu for the move up command witch contains the functionality.
-	private static Menu moveUpFuncMenu;
-
-	//Menu of the move down command.
-	private static Menu moveDownMenu;
-
-	//Menu for the move down command witch contains the functionality.
-	private static Menu moveDownFuncMenu;
-
-	//Menu for the liftoff functionality.
-	private static Menu liftoffMenu;
-
-	//Menu for the landing functionality.
-	private static Menu landingMenu;
-	
-	
-	
-
 	/**
 	 * Initialise the menu structure.
 	 * @param terminal
@@ -89,86 +38,16 @@ public class SpaceshipMenu {
 		if(terminal.equals(null)){
 			System.err.println("terminal can not be null.");
 		}
-		String out ="";
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		createShip = new CreateShipMenu("recreate spaceship");
-		navigation = new Menu("spaceship navigation");
-		help = new HelpMenu("help");
-		energySystem = new EnergyManagementMenu();
-		shipToTargetMenu = new Menu("to target");
-
-		moveForwardMenu = new Menu("move forward");
-		out = "";
-		out +="Please type in how may blocks you want to move\n"
-		+ "    forward.    ";
-		moveForwardFuncMenu = new moveForwardMenu(out);
-
-		moveBackMenu = new Menu("move back");
-		out = "";
-		out +="Please type in how may blocks you want to move\n"
-		+ "    back.    ";
-		moveBackFuncMenu = new moveBackMenu(out);
-
-		moveRightMenu = new Menu("move right");
-		out = "";
-		out +="Please type in how may blocks you want to move\n"
-		+ "    right.    ";
-		moveRightFuncMenu = new moveRightMenu(out);
-
-		moveLeftMenu = new Menu("move left");
-		out = "";
-		out +="Please type in how may blocks you want to move\n"
-		+ "    left.    ";
-		moveLeftFuncMenu = new moveLeftMenu(out);
-
-		moveUpMenu = new Menu("move up");
-		out = "";
-		out +="Please type in how may blocks you want to move\n"
-		+ "    up.    ";
-		moveUpFuncMenu = new moveUpMenu(out);
-
-		moveDownMenu = new Menu("move down");
-		out = "";
-		out +="Please type in how may blocks you want to move\n"
-		+ "    down.    ";
-		moveDownFuncMenu = new moveDownMenu(out);
-		
-		
-		
-
-		liftoffMenu = new liftoffMenu("liftoff");
-		landingMenu = new landingMenu("landing");
-
-		out = "";
-		out+="  To target needs three parameter x,y and z.\n"
-		+"    Current position: "+terminal.getChatRegisterEntity().getPos()+'\n'
-		+"    Please enter them in the following form,\n"
-		+"    without the brakets or whitespaces:\n"
-		+"    [x];[y];[z]";
-		shipToTargetFunc = new ToTargetFunktionalMenu(out);
 
 		//Create the menu structure.
-		root.addSubMenu(createShip);
-		root.addSubMenu(navigation);
-			navigation.addSubMenu(moveForwardMenu);
-				moveForwardMenu.addSubMenu(moveForwardFuncMenu);
-			navigation.addSubMenu(moveBackMenu);
-				moveBackMenu.addSubMenu(moveBackFuncMenu);
-			navigation.addSubMenu(moveRightMenu);
-				moveRightMenu.addSubMenu(moveRightFuncMenu);
-			navigation.addSubMenu(moveLeftMenu);
-				moveLeftMenu.addSubMenu(moveLeftFuncMenu);
-			navigation.addSubMenu(moveUpMenu);
-				moveUpMenu.addSubMenu(moveUpFuncMenu);
-			navigation.addSubMenu(moveDownMenu);
-				moveDownMenu.addSubMenu(moveDownFuncMenu);
-			navigation.addSubMenu(liftoffMenu);
-			navigation.addSubMenu(landingMenu);
-			navigation.addSubMenu(new moveForwardTurnMenu("move forward and turn"));
-							
-		root.addSubMenu(energySystem);
+		root.addSubMenu(new CreateShipMenu());
+		root.addSubMenu(new SpaceshipNavigation());
+		root.addSubMenu(new EnergyManagementMenu());
+		root.addSubMenu(new PhaserShootMenu());
+		root.addSubMenu(new HelpMenu());
 
 		runBefore = true;
 	}

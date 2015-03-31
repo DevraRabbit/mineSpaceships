@@ -20,8 +20,10 @@ import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
 import com.minespaceships.mod.blocks.ShieldBlock;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
+import com.minespaceships.mod.target.Target;
 import com.minespaceships.mod.worldanalysation.WorldMock;
 import com.minespaceships.util.BlockCopier;
+import com.minespaceships.util.PhaserUtils;
 import com.minespaceships.util.Vec3Op;
 
 import energyStrategySystem.EnergyStrategySystem;
@@ -56,7 +58,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class Spaceship implements Serializable{
-	private BlockPos origin;
 	private World world;
 	private BlockMap blockMap;
 	private SpaceshipAssembler assembler;
@@ -69,24 +70,11 @@ public class Spaceship implements Serializable{
 	private static final String containsTargetKey = "containsTarget";
 	private static final String targetPositionKey = "TargetPos";
 	private static final String targetTurnKey = "TargetTurn";
+	private static final String actualPositionKey = "APK";
 	
 	private boolean canBeRemoved = true;
 	
 	public static final int maxShipSize = 27000;
-
-	@Deprecated
-	public Spaceship(final BlockPos minSpan, final BlockPos origin, final BlockPos maxSpan, World world){
-		this.origin = origin;
-		this.world = world;
-		setMeasurements(((BlockPos) minSpan).add(origin), ((BlockPos) maxSpan).add(origin));		
-		initializeBase();
-	}
-	@Deprecated
-	public Spaceship(int[] originMeasurement){
-		world = (WorldServer)MinecraftServer.getServer().getEntityWorld();
-		readOriginMeasurementArray(originMeasurement);
-		initializeBase();
-	}
 	
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
@@ -94,7 +82,6 @@ public class Spaceship implements Serializable{
 		if(blockMap == null){
 			throw new Exception("Ship is too huge or connected to the Ground");
 		}
-		this.origin = initial;
 		this.world = world;
 		initializeBase();
 	}
@@ -107,7 +94,6 @@ public class Spaceship implements Serializable{
 		this.world = world;
 		//world needs to be loaded first to prevent null pointer
 		this.readFromNBT(s, firstKey);
-		this.origin = blockMap.getOrigin();
 		initializeBase();
 	}
 	private void initializeBase(){
@@ -116,13 +102,27 @@ public class Spaceship implements Serializable{
 			refreshParts();
 		}
 		energySystem = new EnergyStrategySystem(assembler, world);
-		position = new Vec3(origin.getX(), origin.getY(), origin.getZ());
+		if(position == null){
+			position = blockMap.getMiddleVec();
+		}
 		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
 	public BlockPos getOrigin(){
-		return origin;
+		return blockMap.getMiddle();
 	}
+	public Vec3 getOriginVec(){
+		return blockMap.getMiddleVec();
+	}
+	public BlockPos getBlockMapOrigin(){
+		return blockMap.getOrigin();
+	}
+	public BlockPos getRandomPos(Random rand){
+		ArrayList<BlockPos> positions = getPositions();
+		float index = (float)(positions.size()-1)*rand.nextFloat();
+		return positions.get((int)(index));
+	}
+	
 	public BlockPos getMaxPos(){
 		return blockMap.getMaxPos();
 	}
@@ -139,45 +139,6 @@ public class Spaceship implements Serializable{
 	
 	public BlockMap getBlockMap(){
 		return blockMap;
-	}
-	
-	@Deprecated
-	public int[] getOriginMeasurementArray(){
-		BlockPos minSpan = Vec3Op.subtract(blockMap.getMinPos(), origin);
-		BlockPos maxSpan = Vec3Op.subtract(blockMap.getMaxPos(), origin);
-		int[] a = {minSpan.getX(), minSpan.getY(), minSpan.getZ(),
-				origin.getX(), origin.getY(), origin.getZ(),
-				maxSpan.getX(), maxSpan.getY(), maxSpan.getZ()};
-		return a;
-	}
-	@Deprecated
-	public void readOriginMeasurementArray(int[] array){
-		try {
-			BlockPos minSpan = new BlockPos(array[0], array[1], array[2]);
-			BlockPos maxSpan = new BlockPos(array[6], array[7], array[8]);
-			origin = new BlockPos(array[3], array[4], array[5]);
-			setMeasurements(minSpan.add(origin), maxSpan.add(origin));
-			origin = new BlockPos(array[3], array[4], array[5]);
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			System.out.println("Could not read OriginMeasurementArray (probably an error with NBT). Try creating a new World.");
-			System.out.println("Printing Exception Stack:");
-			System.out.println(ex.getMessage());
-		}
-	}
-	@Deprecated
-	private void setMeasurements(final BlockPos minPos, final BlockPos maxPos){
-		blockMap = new BlockMap(minPos);
-		BlockPos span = Vec3Op.subtract(((BlockPos) maxPos), minPos);
-		for(int x = 0; x <= span.getX(); x++){
-			for(int y = 0; y <= span.getY(); y++){
-				for(int z = 0; z <= span.getZ(); z++){
-					//if(!world.isAirBlock(new BlockPos(x,y,z).add(minPos))){
-						blockMap.add(new BlockPos(x,y,z).add(minPos));
-					//}
-				}
-			}
-		}
-		origin = Vec3Op.scale(span, 0.5);
 	}
 	public int getSize(){
 		return blockMap.getSize();
@@ -246,13 +207,56 @@ public class Spaceship implements Serializable{
 		energySystem.changeAll(IEnergyC.class, false);
 	}
 	
+	public int getDistanceToGround(){
+		ArrayList<BlockPos> positions = getPositions();
+		int minHeight = Integer.MAX_VALUE;
+		for(BlockPos pos : positions){
+			BlockPos current = pos.add(0,-1,0);
+			int height = 1;
+			while(current.getY() > 0 && world.isAirBlock(current)){
+				current = current.add(0,-1,0);
+				height++;
+			}
+			if(!containsBlock(current)){
+				if(height < minHeight){
+					minHeight = height;
+				}
+			}
+		}
+		if(minHeight != Integer.MAX_VALUE){
+			return minHeight-1;
+		} else {
+			return 0;
+		}
+	}
 	
+	public void shootPhaserAt(Target target){
+		ArrayList<BlockPos> phasers = energySystem.getActive(PhaserBlock.class, true);
+		Random rand = new Random();
+		boolean hasShot = false;
+		target.getNewTarget(world);
+		while(!phasers.isEmpty()){
+			int index = (int)((float)phasers.size()*rand.nextFloat());
+			BlockPos pos = phasers.get(index);
+			phasers.remove(index);
+			Block block = world.getBlockState(pos).getBlock();
+			if(block instanceof PhaserBlock){
+				((PhaserBlock)block).stopShooting(pos, world);
+				if(!hasShot){
+					hasShot = ((PhaserBlock)block).shoot(pos, world, ShipInformation.getShipStrength(this), target);
+				}
+			}
+		}
+	}
+
 	public void setTarget(BlockPos position){
 		//moveTo(Vec3Op.subtract(position, origin), 0, world);
+		this.position = getOriginVec();
 		target = new MovementTarget(position, 0, world);
 	}
 	public void setTarget(BlockPos position, int turn){
 		//moveTo(Vec3Op.subtract(position, origin), world);
+		this.position = getOriginVec();
 		target = new MovementTarget(position, turn, world);
 	}
 	public void moveTo(BlockPos addDirection) {
@@ -377,7 +381,7 @@ public class Spaceship implements Serializable{
 				BlockPos Pos = it.next();
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
-				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);			
+				BlockPos nextPos = Turn.getRotatedPos(Pos, getOrigin(), add, turn);			
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
@@ -411,7 +415,7 @@ public class Spaceship implements Serializable{
 		if(!positions.isEmpty()){
 			for(BlockPos Pos : positions){
 				//force placement
-				BlockPos nextPos = Turn.getRotatedPos(Pos, this.origin, add, turn);	
+				BlockPos nextPos = Turn.getRotatedPos(Pos, getOrigin(), add, turn);	
 				BlockCopier.copyBlock(world, Pos, nextPos, turn);
 				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
 				removal.insertElementAt(Pos, 0);
@@ -440,7 +444,7 @@ public class Spaceship implements Serializable{
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
-		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
+		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 		
@@ -485,11 +489,10 @@ public class Spaceship implements Serializable{
 	}
 		
 	private void moveMeasurements(BlockPos addDirection, int turn){
-		blockMap.rotate(origin, turn);
+		blockMap.rotate(getOrigin(), turn);
 		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
-		assembler.rotate(origin,  turn);
+		assembler.rotate(getOrigin(),  turn);
 		assembler.setOrigin(assembler.getOrigin().add(addDirection));
-		origin = origin.add(addDirection);
 	}
 	@Deprecated
 	private void moveEntities(BlockPos addDirection, int turn){
@@ -499,6 +502,7 @@ public class Spaceship implements Serializable{
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));
 			}
 			Vec3 addDir = new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ());
+			BlockPos origin = getOrigin();
 			Vec3 orig = new Vec3(origin.getX(), origin.getY(), origin.getZ());
 			Vec3 newPos = Turn.getRotatedPos(ent.getPositionVector(), orig, addDir, turn);
 			switch(turn){
@@ -522,7 +526,7 @@ public class Spaceship implements Serializable{
 		StringBuilder sb = new StringBuilder();
 		sb.append("minPosition: " + blockMap.getMinPos().toString());
 		sb.append("\nmaxPosition: " + blockMap.getMaxPos().toString());
-		sb.append("\norigin: " + origin.toString());
+		sb.append("\norigin: " + getOrigin().toString());
 		sb.append("\nworlderver: " + world == null ? "Not Known.\n" : "Known\n");
 		return sb.toString();
 	}
@@ -600,7 +604,6 @@ public class Spaceship implements Serializable{
 		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
 		blockMap = new BlockMap(ori);
 		assembler = new SpaceshipAssembler(ori);
-		this.origin = ori;
 		Class addedClass = null;
 		for(String s : lines){
 			if(addedClass == null){
@@ -664,8 +667,8 @@ public class Spaceship implements Serializable{
 		double maxWorldHeight = this.world.getHeight();
 		BlockPos maxPos = getMaxPos();
 		BlockPos minPos = getMinPos();
-		BlockPos nextMaxPos = Turn.getRotatedPos(maxPos, origin, addDirection, turn);
-		BlockPos nextMinPos = Turn.getRotatedPos(minPos, origin, addDirection, turn);
+		BlockPos nextMaxPos = Turn.getRotatedPos(maxPos, getOrigin(), addDirection, turn);
+		BlockPos nextMinPos = Turn.getRotatedPos(minPos, getOrigin(), addDirection, turn);
 		if(nextMaxPos.getY() > maxWorldHeight || nextMinPos.getY() < 0){
 			return false;
 		}
@@ -741,18 +744,20 @@ public class Spaceship implements Serializable{
 			return null;
 		}
 	}
-	private void stop(){
+	public void stop(){
 		BlockPos positionPos = new BlockPos(position);
-		BlockPos addDirection = Vec3Op.subtract(positionPos, origin);
+		BlockPos addDirection = Vec3Op.subtract(positionPos, getOrigin());
 		moveTo(addDirection, world, target.getTurn());
 		target = null;
 	}
 	
 	public void readFromNBT(NBTTagCompound c, String firstKey){
 		String data = c.getString(firstKey+positionsKey);
-		if(c.getBoolean(containsTargetKey)){
-			BlockPos targetPos = BlockPos.fromLong(c.getLong(targetPositionKey));
-			int targetTurn = c.getInteger(targetTurnKey);
+		BlockPos pos = BlockPos.fromLong(c.getLong(firstKey+actualPositionKey));
+		position = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+		if(c.getBoolean(firstKey+containsTargetKey)){
+			BlockPos targetPos = BlockPos.fromLong(c.getLong(firstKey+targetPositionKey));
+			int targetTurn = c.getInteger(firstKey+targetTurnKey);
 			target = new MovementTarget(targetPos, targetTurn, world);
 		}
 		try {
@@ -763,12 +768,14 @@ public class Spaceship implements Serializable{
 	}
 	public void writeToNBT(NBTTagCompound c, String firstKey){
 		c.setString(firstKey+positionsKey, positionsToString());
+		BlockPos pos = new BlockPos(position);
+		c.setLong(firstKey+actualPositionKey, pos.toLong());
 		if(target != null){
-			c.setBoolean(containsTargetKey, true);
-			c.setLong(targetPositionKey, target.getTarget().toLong());
-			c.setInteger(targetTurnKey, target.getTurn());
+			c.setBoolean(firstKey+containsTargetKey, true);
+			c.setLong(firstKey+targetPositionKey, target.getTarget().toLong());
+			c.setInteger(firstKey+targetTurnKey, target.getTurn());
 		} else {
-			c.setBoolean(containsTargetKey, false);
+			c.setBoolean(firstKey+containsTargetKey, false);
 		}
 	}
 	

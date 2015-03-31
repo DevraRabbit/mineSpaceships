@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * This class is a utility to detect parameter patterns in
  * a string.
  * @author ovae.
- * @version 20150222.
+ * @version 20150331.
  */
 public class ParameterPattern {
 
@@ -22,7 +22,7 @@ public class ParameterPattern {
 	//Pattern for a float value.
 	private static String floatPattern = "([+-]?\\d*[.]?\\d+);";
 
-	//Patter for a int value
+	//Patter for a integer value
 	private static String intPattern ="([0-9]*);";
 
 	//Any possible character
@@ -33,7 +33,7 @@ public class ParameterPattern {
 
 	/**
 	 * Returns true if the command parameter has the following form.
-	 * whitespaces+float+whitespaces+float+whitespaces+float+ any number of whitespace
+	 * Whitespace+float+whitespace+float+whitespace+float+ any number of whitespace
 	 * @param command
 	 * @return
 	 */

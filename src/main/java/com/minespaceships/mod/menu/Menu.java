@@ -80,14 +80,13 @@ public class Menu{
 				//Get the selctedMenu
 				FunctionalParamMenu temp = (FunctionalParamMenu) this.getChildrenList().get(0);
 				temp.activate(name, terminal);
-
-				return this.getMother();
+				return this.getMother().getMenu(terminal);
 			}else{
 				//Changes the menu via sub menu position.
 				int position = Integer.parseInt(name);
 				if(position > 0 && position <= this.childrenList.size()){
 				position -= 1;
-				return this.childrenList.get(position);
+				return this.childrenList.get(position).getMenu(terminal);
 				}
 			}
 
@@ -105,7 +104,8 @@ public class Menu{
 
 					for(Menu menu : menuList){
 						if(menu.getMenuID() == n){
-							return menu;
+							return menu.getMenu(terminal);
+
 						}
 					}
 				}
@@ -118,7 +118,7 @@ public class Menu{
 			if(name.length() >= 4){
 				for(Menu menu : menuList){
 					if(menu.getMenuName().equals(name)){
-						return menu;
+						return menu.getMenu(terminal);
 					}
 				}
 			}
@@ -166,6 +166,9 @@ public class Menu{
 	 */
 	public Menu getMother(){
 		return motherMenu;
+	}
+	public Menu getMenu(IMenuInterface terminal){
+		return this;
 	}
 
 	/**

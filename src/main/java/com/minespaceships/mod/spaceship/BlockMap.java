@@ -13,6 +13,7 @@ import net.minecraft.block.BlockSponge;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
@@ -21,6 +22,8 @@ public class BlockMap {
 	private BlockPos maxPos;
 	private BlockPos minPos;
 	private BlockPos origin;
+	private int blockCount;
+	private Vec3 middle;
 	private HashMap<BlockPos, Boolean> outerBlocks; 
 	private HashMap<BlockPos, Boolean> outerOutBlocks;
 	private HashMap<BlockPos, Boolean> spannedRectangle;
@@ -40,10 +43,17 @@ public class BlockMap {
 	  	maxPos = new BlockPos(0,0,0);
 		minPos = new BlockPos(0,0,0);
 		origin = originPoint;
+		middle = new Vec3(origin.getX(), origin.getY(), origin.getZ());
 	}
 	
 	public BlockPos getOrigin(){
 		return origin;
+	}
+	public BlockPos getMiddle(){
+		return new BlockPos(middle).add(origin);
+	}
+	public Vec3 getMiddleVec(){
+		return middle.add(new Vec3(origin.getX(), origin.getY(), origin.getZ()));
 	}
 	
 	public void setOrigin(BlockPos pos){
@@ -92,21 +102,27 @@ public class BlockMap {
 	}
 	
 	public void add(BlockPos pos){
+		BlockPos coordPos = Vec3Op.subtract(pos, origin);
+		if(!contains(pos)){
+			blockCount++;
+			middle = new Vec3((middle.xCoord*(blockCount-1)+coordPos.getX())/blockCount,
+					(middle.yCoord*(blockCount-1)+coordPos.getY())/blockCount,
+					(middle.zCoord*(blockCount-1)+coordPos.getZ())/blockCount);
+		}
 
-		map.put(Vec3Op.subtract(pos, origin), true);
-		resize(Vec3Op.subtract(pos, origin));
-		pos = Vec3Op.subtract(pos, origin);
-		outerBlocks.remove(pos);
-		innerBlocks.remove(pos);
+		map.put(coordPos, true);
+		resize(coordPos);
+		outerBlocks.remove(coordPos);
+		innerBlocks.remove(coordPos);
 		calculateOuterOutBlocks();
 		boolean hasOuterBlock=false;
-		for(BlockPos p: getNeighbours(pos)){
+		for(BlockPos p: getNeighbours(coordPos)){
 			if(outerBlocks.containsKey(p)){
 				hasOuterBlock=true;
 				break;
 			}
 		}
-		if(hasOuterBlock || outerOutBlocks.containsKey(pos)){
+		if(hasOuterBlock || outerOutBlocks.containsKey(coordPos)){
 			hasToRefresh = true;
 		}		
 		refreshVolumeBlocks();
@@ -119,6 +135,13 @@ public class BlockMap {
 	
 
 	public void remove(BlockPos pos){
+		BlockPos coordPos = Vec3Op.subtract(pos, origin);
+		if(!contains(pos)){
+			blockCount--;
+			middle = new Vec3((middle.xCoord*(blockCount+1)-coordPos.getX())/blockCount,
+					(middle.yCoord*(blockCount+1)+coordPos.getY())/blockCount,
+					(middle.zCoord*(blockCount+1)+coordPos.getZ())/blockCount);
+		}
 		map.remove(Vec3Op.subtract(pos, origin));
 		impendEdges(Vec3Op.subtract(pos, origin));
 		pos = Vec3Op.subtract(pos, origin);
@@ -525,13 +548,18 @@ public class BlockMap {
 		this.minPos = Turn.getRotatedPos(this.minPos, origin, new BlockPos(0,0,0), turn);
 	}
 	public float getHardnessSum(World world){
-		Set<BlockPos> positions = map.keySet();
-		float blastResistance = 0;
-		for(BlockPos pos : positions){
-			Block block = world.getBlockState(pos.add(origin)).getBlock();
-			blastResistance += block.getBlockHardness(world, pos.add(origin));
+		try{
+			Set<BlockPos> positions = map.keySet();
+			float blastResistance = 0;
+			for(BlockPos pos : positions){
+				Block block = world.getBlockState(pos.add(origin)).getBlock();
+				blastResistance += block.getBlockHardness(world, pos.add(origin));
+			}
+			return blastResistance;
+		} catch(Exception e){
+			e.printStackTrace();
+			return 1;
 		}
-		return blastResistance;
 	}
 	
 	public void showDebug(World world){
