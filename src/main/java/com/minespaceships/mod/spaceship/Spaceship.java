@@ -740,8 +740,10 @@ public class Spaceship implements Serializable{
 				position = position.add(direction);
 				traveledDistance += directionAbs;
 				distance -= directionAbs;
-				movedPositions.add(new BlockPos(position));
-				BlockPos worldPos = new BlockPos(position);
+				movedPositions.add(new BlockPos(Math.round(position.xCoord), Math.round(position.yCoord), Math.round(position.zCoord)));
+				BlockPos worldPos = new BlockPos(new BlockPos(Math.round(position.xCoord), Math.round(position.yCoord), Math.round(position.zCoord)));
+				
+				
 				Block block = world.getBlockState(worldPos).getBlock();
 				if(!containsBlock(worldPos) &&
 						block.getMaterial() != Material.air &&
@@ -760,7 +762,8 @@ public class Spaceship implements Serializable{
 		}
 	}
 	public void stop(){
-		BlockPos positionPos = new BlockPos(position);
+		
+		BlockPos positionPos = new BlockPos(new BlockPos(Math.round(position.xCoord), Math.round(position.yCoord), Math.round(position.zCoord)));  
 		BlockPos addDirection = Vec3Op.subtract(positionPos, getOrigin());
 		moveTo(addDirection, world, target.getTurn());
 		target = null;
