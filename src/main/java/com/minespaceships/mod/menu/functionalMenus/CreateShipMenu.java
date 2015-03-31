@@ -40,7 +40,7 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 			return "command can not be null.";
 		}
 
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.initAuto, null);
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.initAuto, null);
 		return EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\nPress 'Esc' and reopen the menu.";
 	}
 

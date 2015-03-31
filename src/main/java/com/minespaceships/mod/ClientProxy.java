@@ -40,7 +40,7 @@ public class ClientProxy extends CommonProxy {
 		super.setupTerminal(player, entity, gui);
 		
 		//open our console. 
-		if(Minecraft.getMinecraft().thePlayer.equals(player)){Minecraft.getMinecraft().displayGuiScreen(gui);}
+		if(player != null && Minecraft.getMinecraft().thePlayer.equals(player)){Minecraft.getMinecraft().displayGuiScreen(gui);}
 
 		if(Shipyard.getShipyard(gui.getChatRegisterEntity().getWorld()).getShip(gui.getChatRegisterEntity().getPos(), gui.getChatRegisterEntity().getWorld()) == null){
 			entity.getNoSpaceshipMenu().displayMain(NoSpaceshipEntityMenu.getRootMenu(), gui);

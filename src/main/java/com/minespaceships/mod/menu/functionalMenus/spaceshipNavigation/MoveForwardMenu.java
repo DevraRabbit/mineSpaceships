@@ -45,7 +45,7 @@ public class MoveForwardMenu extends Menu implements FunctionalParamMenu {
 			return "command can not be null.";
 		}
 
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveForward+" "+command, terminal.getPlayerEntity());
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.moveForward+" "+command, terminal.getPlayerEntity());
 		return "";
 	}
 

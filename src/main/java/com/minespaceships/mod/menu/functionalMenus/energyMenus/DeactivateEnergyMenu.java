@@ -22,7 +22,7 @@ public class DeactivateEnergyMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.EnergyCommand(EnergyCommandType.shutdown), terminal.getPlayerEntity());
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.EnergyCommand(EnergyCommandType.shutdown), terminal.getPlayerEntity());
 		return EnumChatFormatting.GREEN+"Shutting down.\n";
 	}
 
