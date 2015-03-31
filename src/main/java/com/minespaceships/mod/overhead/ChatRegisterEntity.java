@@ -141,7 +141,7 @@ public class ChatRegisterEntity extends TileEntity {
 	public void onCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		if(side == Side.CLIENT) {
-			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
+			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+player.getUniqueID()+","+ command));
 		}
 	}
 
@@ -157,7 +157,7 @@ public class ChatRegisterEntity extends TileEntity {
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
-			player.addChatComponentMessage(new ChatComponentText("I love you!"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("I love you!"));
 		//Define the 'calc' command, which parses a math expression
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
@@ -177,7 +177,7 @@ public class ChatRegisterEntity extends TileEntity {
 			} else if (command.equals("around")) {
 				Turn.around(worldObj, pos);
 			} else {
-				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
+				if(player != null)player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
 			}
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
