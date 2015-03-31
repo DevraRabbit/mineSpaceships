@@ -23,7 +23,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Lands the spaceship.
  * @author ovae.
- * @version 20150323.
+ * @version 20150331.
  */
 public class LandingMenu extends Menu implements FunctionalMenu{
 

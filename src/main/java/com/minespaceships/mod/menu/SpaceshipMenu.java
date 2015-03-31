@@ -20,7 +20,7 @@ import com.minespaceships.mod.overhead.IMenuInterface;
 /**
  * A default menu structure.
  * @author ovae.
- * @version 20150313.
+ * @version 20150331.
  */
 public class SpaceshipMenu {
 
@@ -30,18 +30,6 @@ public class SpaceshipMenu {
 	//The root menu.
 	private static Menu root;
 
-	//Menu for the spaceship energy.
-	private static Menu shootPhaserMenu;
-
-	//Menu which contains the ability to set the spaceship to a target position.
-	private static Menu shipToTargetMenu;
-
-	//Menu which contains the functionality to get the to target coordinates.
-	private static Menu shipToTargetFunc;
-
-	//Menu to create a new spaceship.
-	private static Menu createShip;
-
 	/**
 	 * Initialise the menu structure.
 	 * @param terminal
@@ -50,26 +38,15 @@ public class SpaceshipMenu {
 		if(terminal.equals(null)){
 			System.err.println("terminal can not be null.");
 		}
-		String out ="";
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		shootPhaserMenu = new PhaserShootMenu();
-		shipToTargetMenu = new Menu("to target");
-
-		out = "";
-		out+="  To target needs three parameter x,y and z.\n"
-		+"    Current position: "+terminal.getChatRegisterEntity().getPos()+'\n'
-		+"    Please enter them in the following form,\n"
-		+"    without the brakets or whitespaces:\n"
-		+"    [x];[y];[z]";
-		shipToTargetFunc = new ToTargetFunktionalMenu(out);
 
 		//Create the menu structure.
 		root.addSubMenu(new CreateShipMenu());
 		root.addSubMenu(new SpaceshipNavigation());
 		root.addSubMenu(new EnergyManagementMenu());
-		root.addSubMenu(shootPhaserMenu);
+		root.addSubMenu(new PhaserShootMenu());
 		root.addSubMenu(new HelpMenu());
 		runBefore = true;
 	}

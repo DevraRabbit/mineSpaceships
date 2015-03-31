@@ -2,6 +2,11 @@ package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import com.minespaceships.mod.menu.Menu;
 
+/**
+ * Creates the spaceship navigation menu structure.
+ * @author ovae.
+ * @version 20150331.
+ */
 public class SpaceshipNavigation extends Menu{
 
 	public SpaceshipNavigation() {
