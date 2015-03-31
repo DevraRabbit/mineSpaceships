@@ -32,7 +32,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 	 * @param name
 	 */
 	public LandingMenu() {
-		super("land");
+		super("Land");
 	}
 
 	/**

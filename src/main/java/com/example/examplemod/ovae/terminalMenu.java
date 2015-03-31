@@ -1,6 +1,7 @@
 package com.example.examplemod.ovae;
 
 import com.jcraft.jorbis.Block;
+import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
 import com.minespaceships.mod.blocks.PhaserBlock;
@@ -9,7 +10,9 @@ import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.mod.spaceship.Shipyard;
 
+import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,7 +56,7 @@ public class terminalMenu {
 		if(command.equals("info")){
 			player.addChatComponentMessage(new ChatComponentText(player.toString()));
 		}
-		if(command.equals("melon")){
+		if(command.equals("basic")){
 			World world = chatEntity.getWorld();
 			BlockPos pos = player.getPosition();
 			int size=5;
@@ -70,33 +73,33 @@ public class terminalMenu {
 					//Place the wool blocks
 					if(!((x==0 && y==0) || (x==0 && y==size-1) || (x==size-1 && y==0) || (x==size-1 && y==4) || (x==0) && (y==2))){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
-						world.setBlockState(newPos, Blocks.melon_block.getDefaultState());
+						world.setBlockState(newPos, Blocks.iron_block.getDefaultState());
 					}
 
-					//Place the navigator block
+					//Place the navigator block.
 					if((x==3) && (y==2)){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+4, pos.getZ()+y);
-						world.setBlockState(newPos, NavigatorBlock.getStateById(198));
+						world.setBlockState(newPos, NavigatorBlock.getStateById(198).withProperty(EnergyBlock.FACING, EnumFacing.EAST));
 					}
 
-					//Place the redstone_block
+					//Place the redstone_block.
 					if((x==3) && (y==2)){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
 						world.setBlockState(newPos, Blocks.redstone_block.getDefaultState());
 					}
 
-					//Place a ladder
+					//Place a ladder.
 					if((x==0) && (y==2)){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
 						world.setBlockState(newPos, Blocks.ladder.getDefaultState());
 					}
 
-					if((x==0) && (y==1) || (x==0) && (y==size-2)){
-						BlockPos newPos = new BlockPos(pos.getX()+x-1, pos.getY()+3, pos.getZ()+y);
-						world.setBlockState(newPos, NavigatorBlock.getStateById(199));
-						newPos = null;
-						newPos = new BlockPos(pos.getX()+x-1, pos.getY()+4, pos.getZ()+y);
-						world.setBlockState(newPos, NavigatorBlock.getStateById(201));
+					//Place the generator block and the engine blocks.
+					if((x==0) && (y==1) || (x==0) && (y==3)){
+						BlockPos generatorPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
+						BlockPos enginePos = new BlockPos(pos.getX()+(x-1), pos.getY()+3, pos.getZ()+y);
+						world.setBlockState(generatorPos, EnergyBlock.getStateById(199).withProperty(EnergyBlock.FACING, EnumFacing.DOWN));
+						world.setBlockState(enginePos, EngineBlock.getStateById(201).withProperty(EngineBlock.FACING, EnumFacing.WEST));
 					}
 				}
 			}

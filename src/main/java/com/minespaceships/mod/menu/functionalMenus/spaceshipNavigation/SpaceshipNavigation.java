@@ -11,12 +11,12 @@ public class SpaceshipNavigation extends Menu{
 
 	public SpaceshipNavigation() {
 		super("Spaceship navigation");
-		Menu moveForwad = new Menu("move forward");
-		Menu moveBack = new Menu("move back");
-		Menu moveLeft = new Menu("move left");
-		Menu moveRight = new Menu("move right");
-		Menu moveUp = new Menu("move up");
-		Menu moveDown = new Menu("move down");
+		Menu moveForwad = new Menu("Move forward");
+		Menu moveBack = new Menu("Move back");
+		Menu moveLeft = new Menu("Move left");
+		Menu moveRight = new Menu("Move right");
+		Menu moveUp = new Menu("Move up");
+		Menu moveDown = new Menu("Move down");
 
 		moveForwad.addSubMenu(new MoveForwardMenu());
 		moveBack.addSubMenu(new MoveBackMenu());

@@ -23,7 +23,7 @@ public class LiftoffMenu extends Menu implements FunctionalMenu{
 	 * @param name
 	 */
 	public LiftoffMenu() {
-		super("liftoff");
+		super("Liftoff");
 	}
 
 	/**
