@@ -74,7 +74,7 @@ public class SpaceshipCommands {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				player.addChatComponentMessage(new ChatComponentText(e.toString()));
+				if(player != null)player.addChatComponentMessage(new ChatComponentText(e.toString()));
 			}
 			return;
 		}
@@ -87,10 +87,10 @@ public class SpaceshipCommands {
 			BlockPos to = new BlockPos(Integer.valueOf(moffset.group(4)), Integer.valueOf(moffset.group(5)), Integer.valueOf(moffset.group(6)));
 			//Shipyard.getShipyard(worldObj).createShip(from, commandBlock.getPos(), to, worldObj); Not existing anymore
 			
-			player.addChatComponentMessage(new ChatComponentText("This command doesn't exist anymore"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("This command doesn't exist anymore"));
 		} else {
-			player.addChatComponentMessage(new ChatComponentText("init: Error processing intput"));
-			player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;# or try <init auto>"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("init: Error processing intput"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("usage: init #;#;# to #;#;# or try <init auto>"));
 		}
 	}
 	
@@ -101,7 +101,7 @@ public class SpaceshipCommands {
 			ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
 		}
 		if(ship == null) {
-			player.addChatComponentMessage(new ChatComponentText("move: Please initialize the Spaceship first"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("move: Please initialize the Spaceship first"));
 			return;
 		}
 		
@@ -109,7 +109,8 @@ public class SpaceshipCommands {
 		
 		//Process "move front, back, etc. commands depending on the direction the player looks"
 		//Taken from http://www.minecraftforge.net/forum/index.php?topic=6514.0
-		int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		//int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3; won't work when we don't have a player...
+		int playerRotation = 0;
 		if(ship.getFacing()==EnumFacing.NORTH){
 			playerRotation=2;
 		} else if(ship.getFacing()==EnumFacing.SOUTH){
@@ -155,10 +156,10 @@ public class SpaceshipCommands {
 			ship.setTarget(vec_move.add(ship.getOrigin()));
 			//commandBlock.setPos(commandBlock.getPos().add(vec_move));
 			
-			player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("Moved Spaceship by (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
 		} else {
-			player.addChatComponentMessage(new ChatComponentText("move: Error processing intput"));
-			player.addChatComponentMessage(new ChatComponentText("usage: move #;#;#"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("move: Error processing intput"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("usage: move #;#;#"));
 		}
 	}
 		
@@ -168,14 +169,14 @@ public class SpaceshipCommands {
 			ship = ((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).getShip();
 		}
 		if(ship == null) {
-			player.addChatComponentMessage(new ChatComponentText("status: Not initialized"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("status: Not initialized"));
 			return;
 		}
 
-		player.addChatComponentMessage(new ChatComponentText("status: Spaceship"));
-		player.addChatComponentMessage(new ChatComponentText(ship.toString()));
-		player.addChatComponentMessage(new ChatComponentText("status: TileEntity (remote)"));
-		player.addChatComponentMessage(new ChatComponentText(((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).toString()));
+		if(player != null)player.addChatComponentMessage(new ChatComponentText("status: Spaceship"));
+		if(player != null)player.addChatComponentMessage(new ChatComponentText(ship.toString()));
+		if(player != null)player.addChatComponentMessage(new ChatComponentText("status: TileEntity (remote)"));
+		if(player != null)player.addChatComponentMessage(new ChatComponentText(((ChatRegisterEntity)worldObj.getTileEntity(commandBlock.getPos())).toString()));
 	}
 	
 	public static String processDirectionMoveCommand(String command, int playerRotation) {
@@ -257,10 +258,10 @@ public class SpaceshipCommands {
 			Vec3 vec_dir = new Vec3(Double.valueOf(moffset.group(1)), Double.valueOf(moffset.group(2)), Double.valueOf(moffset.group(3)));
 			
 			PhaserUtils.shoot(commandBlock.getPos(), vec_dir, 10, 100, worldObj);
-			player.addChatComponentMessage(new ChatComponentText("Fired Phaser in direction (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("Fired Phaser in direction (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
 		} else {
-			player.addChatComponentMessage(new ChatComponentText("shoot: Error processing intput"));
-			player.addChatComponentMessage(new ChatComponentText("usage: shoot #;#;#"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("shoot: Error processing intput"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("usage: shoot #;#;#"));
 
 		}
 	}
@@ -286,7 +287,7 @@ public class SpaceshipCommands {
 		+'\n'
 		+EnumChatFormatting.RED+"\n   To get back in the parent menu, you can either\n"
 		+EnumChatFormatting.RED+"    enter 'm','up' or 'parent'.";
-		player.addChatComponentMessage(new ChatComponentText(out));
+		if(player != null)player.addChatComponentMessage(new ChatComponentText(out));
 		return out;
 	}
 	public static String activateCommand(boolean toActivate, EnergyType type){
