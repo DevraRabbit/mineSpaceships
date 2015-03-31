@@ -19,7 +19,7 @@ import com.minespaceships.mod.spaceship.Spaceship;
 /**
  * This class displays a menu structure.
  * @author ovae.
- * @version 20150302.
+ * @version 20150331.
  */
 public class MenuDisplay {
 
@@ -68,9 +68,11 @@ public class MenuDisplay {
 		ArrayList<Menu> list = menu.getChildrenList();
 		for(Menu child: list){
 			if(child instanceof FunctionalMenu || child instanceof FunctionalParamMenu){
-				out+= "    "+EnumChatFormatting.GREEN+"["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
+				//out+= "    "+EnumChatFormatting.GREEN+"["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
+				out+= "    "+EnumChatFormatting.GREEN+"["+position+"] "+child.getMenuName()+'\n';
 			}else{
-				out+= EnumChatFormatting.WHITE+"    ["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
+				//out+= EnumChatFormatting.WHITE+"    ["+position+"] "+child.getMenuName()+" ("+child.getMenuID()+")"+'\n';
+				out+= EnumChatFormatting.WHITE+"    ["+position+"] "+child.getMenuName()+'\n';
 			}
 			position++;
 		}

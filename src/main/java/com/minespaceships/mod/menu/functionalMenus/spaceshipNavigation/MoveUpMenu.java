@@ -19,13 +19,13 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  * @author ovae.
  * @version 20150323.
  */
-public class moveUpMenu extends Menu implements FunctionalParamMenu{
+public class MoveUpMenu extends Menu implements FunctionalParamMenu{
 
 	/**
 	 * Creates a new moveUpMenu.
 	 * @param name
 	 */
-	public moveUpMenu() {
+	public MoveUpMenu() {
 		super("Please type in how may blocks you want to move\n    up.    ");
 	}
 

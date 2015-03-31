@@ -21,13 +21,13 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  * @author ovae.
  * @version 20150323.
  */
-public class moveBackMenu extends Menu implements FunctionalParamMenu{
+public class MoveBackMenu extends Menu implements FunctionalParamMenu{
 
 	/**
 	 * Creates a new moveBackMenu.
 	 * @param name
 	 */
-	public moveBackMenu() {
+	public MoveBackMenu() {
 		super("Please type in how may blocks you want to move\n    back.    ");
 	}
 

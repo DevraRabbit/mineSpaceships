@@ -1,11 +1,8 @@
 package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
 
+import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -15,18 +12,18 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 
 /**
- * Move the spaceship position down.
+ * Move the spaceship position up.
  * @author ovae.
  * @version 20150323.
  */
-public class moveDownMenu extends Menu implements FunctionalParamMenu{
+public class LiftoffMenu extends Menu implements FunctionalMenu{
 
 	/**
-	 * Creates a new moveDownMenu.
+	 * Creates a new liftoffMenu.
 	 * @param name
 	 */
-	public moveDownMenu() {
-		super("Please type in how may blocks you want to move\n    down.    ");
+	public LiftoffMenu() {
+		super("Liftoff");
 	}
 
 	/**
@@ -36,15 +33,8 @@ public class moveDownMenu extends Menu implements FunctionalParamMenu{
 	 */
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		if(command.trim().isEmpty()){
-			return "command can not be empty.";
-		}
-		if(command.equals(null)){
-			return "command can not be null.";
-		}
-
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveDown+" "+command, terminal.getPlayerEntity());
-		return SpaceshipCommands.moveDown+" "+command;
+		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveUp+" 23", terminal.getPlayerEntity());
+		return SpaceshipCommands.liftoff+"\nPress m to get back.";
 	}
 
 }
