@@ -1,6 +1,7 @@
 package com.minespaceships.mod;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,11 +58,12 @@ public class CommandMessage implements IMessage {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
             System.out.println(String.format("Received %s from %s", message.getText(), ctx.getServerHandler().playerEntity.getDisplayName()));
             
-    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*)");
+    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*),(.*)");
     		Matcher moffset = poffset.matcher(message.getText());
             
             BlockPos pos = null;
             World world = null;
+            UUID uuid = null;
             String command = null;
             
             if(moffset.matches()) {
@@ -72,7 +74,10 @@ public class CommandMessage implements IMessage {
 	            	int dimension = Integer.parseInt(moffset.group(2));
 	            	world = MinecraftServer.getServer().worldServerForDimension(dimension);
 	            	
-	            	command = moffset.group(3);
+	            	String uuidString = moffset.group(3);
+	            	uuid = UUID.fromString(uuidString);
+	            	
+	            	command = moffset.group(4);
 	            	//send it first so not everyone has to wait for the Server
 	            	List players = ((WorldServer)world).playerEntities;
 	            	for(Object o : players){
@@ -103,11 +108,12 @@ public class CommandMessage implements IMessage {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
             System.out.println(String.format("Received %s from %s", message.getText(), Minecraft.getMinecraft().thePlayer.getDisplayName()));
             
-    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*)");
+    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*),(.*)");
     		Matcher moffset = poffset.matcher(message.getText());
             
             BlockPos pos = null;
             World world = null;
+            UUID uuid = null;
             String command = null;
             
             if(moffset.matches()) {
@@ -116,12 +122,20 @@ public class CommandMessage implements IMessage {
 	            	pos = BlockPos.fromLong(posLong);
 	            	
 	            	int dimension = Integer.parseInt(moffset.group(2));
-	            	if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() == dimension){		            	
-		            	command = moffset.group(3);
+	            	if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() == dimension){		 
+	            		String uuidString = moffset.group(3);
+		            	uuid = UUID.fromString(uuidString);
+		            	
+		            	command = moffset.group(4);
 		            	
 		            	ChatRegisterEntity ent = ((ChatRegisterEntity)Minecraft.getMinecraft().theWorld.getTileEntity(pos));
 		            	if(ent != null){
-	            			ent.executeCommand(command, Minecraft.getMinecraft().thePlayer);
+		            		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		            		if(p.getUniqueID().equals(uuid)){
+		            			ent.executeCommand(command, Minecraft.getMinecraft().thePlayer);
+		            		} else {
+		            			ent.executeCommand(command, null);
+		            		}
 		            	} else {
 		            		int i = 0;
 		            	}

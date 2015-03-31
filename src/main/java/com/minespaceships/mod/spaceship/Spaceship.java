@@ -57,6 +57,11 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @verison 20150331.
+ */
 public class Spaceship implements Serializable{
 	private World world;
 	private BlockMap blockMap;
@@ -75,7 +80,10 @@ public class Spaceship implements Serializable{
 	private boolean canBeRemoved = true;
 	
 	public static final int maxShipSize = 27000;
-	
+	//TODO
+	private Vector<BlockPos> removal;
+	private ArrayList<BlockPos> toRefill;
+
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
 		blockMap = SpaceshipMath.getConnectedPositions(initial, world, maxShipSize);
@@ -143,9 +151,7 @@ public class Spaceship implements Serializable{
 	public int getSize(){
 		return blockMap.getSize();
 	}
-	
-	
-	
+
 	public float getHardness(){
 		return blockMap.getHardnessSum(world);
 	}	
@@ -284,7 +290,7 @@ public class Spaceship implements Serializable{
 		{
 			length = getMaxPos().getX()-getMinPos().getX() + 1;
 		}
-		System.out.println("DIIIIIEEE LÄÄÄÄNGEEE IST :   " + length);
+		System.out.println("DIIIIIEEE Lï¿½ï¿½ï¿½ï¿½NGEEE IST :   " + length);
 		if (getFacing()==EnumFacing.EAST){
 			return new BlockPos (length,0,0);			
 		} else if (getFacing()==EnumFacing.WEST){
@@ -368,13 +374,13 @@ public class Spaceship implements Serializable{
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
 		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
-		Vector<BlockPos> removal = new Vector<BlockPos>();
+		this.removal = new Vector<BlockPos>();
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
 		ArrayList<BlockPos> positions = blockMap.getPositionsWithInnerBlocks();	
 		int i = 3;
-		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  
+		this.toRefill = blockMap.getBlocksToRefill(world);  
 		while(!positions.isEmpty() && i > 0){
 			Iterator<BlockPos> it = positions.iterator();
 			while(it.hasNext()){
@@ -421,6 +427,29 @@ public class Spaceship implements Serializable{
 				removal.insertElementAt(Pos, 0);
 			}
 		}
+
+		//TODO
+		removeOldSpaceship();
+
+		for(BlockPos p : harderBlocks){
+			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
+		}
+		for(BlockPos p : softerBlocks){
+			world.createExplosion(null, (float)p.getX(), (float)p.getY(), (float)p.getZ(), 0.5F, true);
+		}
+		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
+		if(side == Side.SERVER)moveEntities(addDirection, turn);
+		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
+		moveMeasurements(addDirection, turn);
+		canBeRemoved = true;
+	}
+
+	//Removes the ship at the old position and refills blocks like water.
+	private void removeOldSpaceship(){
+		//TODO
+		WorldMock startMock = new WorldMock(world);
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+
 		for(int j = 0; j < 3 && !removal.isEmpty(); j++){
 			//remove the Blocks in reversed order, so that the most fragile ones are removed last.
 			ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
@@ -431,6 +460,7 @@ public class Spaceship implements Serializable{
 				}
 			}
 		}
+
 		//remove the ones that didn't pass
 		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
 		while(reverseRemoval.hasPrevious()){
@@ -438,26 +468,11 @@ public class Spaceship implements Serializable{
 			BlockCopier.removeBlock(world, prev);
 		}
 
-		for(BlockPos pos : toRefill)
-		{
-			world.setBlockState(pos, Block.getStateById(8)); //************************************************************ADDED
-		}
-		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
-		if(side == Side.SERVER)moveEntities(addDirection, turn);
-		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
-		moveMeasurements(addDirection, turn);
-		canBeRemoved = true;
-		
-		for(BlockPos p : harderBlocks){
-			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
-		}
-		for(BlockPos p : softerBlocks){
-			world.createExplosion(null, (float)p.getX(), (float)p.getY(), (float)p.getZ(), 0.5F, true);
+		for(BlockPos pos : toRefill){
+			world.setBlockState(pos, Block.getStateById(8));
 		}
 	}
-	
 
-	
 	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
 		try{
 			BlockCopier.copyBlock(startWorld, start, end, turn);	
