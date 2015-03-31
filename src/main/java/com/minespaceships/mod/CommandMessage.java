@@ -108,7 +108,7 @@ public class CommandMessage implements IMessage {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
             System.out.println(String.format("Received %s from %s", message.getText(), Minecraft.getMinecraft().thePlayer.getDisplayName()));
             
-    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*)");
+    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*),(.*)");
     		Matcher moffset = poffset.matcher(message.getText());
             
             BlockPos pos = null;
