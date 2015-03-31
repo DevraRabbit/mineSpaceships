@@ -25,7 +25,7 @@ public class StopMenu extends Menu implements FunctionalMenu{
 	 * @param name
 	 */
 	public StopMenu() {
-		super("liftoff");
+		super("Stop movement");
 	}
 
 	/**
