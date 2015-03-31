@@ -72,7 +72,7 @@ public class CustomGuiChat extends GuiChat implements IMenuInterface{
 	 * @param clear boolean
 	 */
 	public void display(final String message, EntityPlayer player, final boolean clear){
-		if(player.equals(Minecraft.getMinecraft().thePlayer)){
+		if(player != null && player.equals(Minecraft.getMinecraft().thePlayer)){
 			if(clear){
 				this.clearChat();
 			}
