@@ -429,7 +429,10 @@ public class Spaceship implements Serializable{
 		}
 
 		//TODO
-		removeOldSpaceship();
+		if(side == Side.SERVER){
+			removeOldSpaceship();
+			//this.getBlockMapOrigin();
+		}
 
 		for(BlockPos p : harderBlocks){
 			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
@@ -445,7 +448,7 @@ public class Spaceship implements Serializable{
 	}
 
 	//Removes the ship at the old position and refills blocks like water.
-	private void removeOldSpaceship(){
+	public void removeOldSpaceship(){
 		//TODO
 		WorldMock startMock = new WorldMock(world);
 		Side side = FMLCommonHandler.instance().getEffectiveSide();

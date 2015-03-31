@@ -122,7 +122,7 @@ public class CommandMessage implements IMessage {
 	            	pos = BlockPos.fromLong(posLong);
 	            	
 	            	int dimension = Integer.parseInt(moffset.group(2));
-	            	if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() == dimension){		 
+	            	if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() == dimension){
 	            		String uuidString = moffset.group(3);
 		            	uuid = UUID.fromString(uuidString);
 		            	
