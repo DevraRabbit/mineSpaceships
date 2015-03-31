@@ -198,6 +198,7 @@ public class ChatRegisterEntity extends TileEntity {
 				spaceshipMenu.display(command, this.terminal, player);
 			}
 		}
+		terminalMenu.onCommand(command, player, this, this.terminal);
 		//SpaceshipCommands.debug(command, this);
 	}
 }
