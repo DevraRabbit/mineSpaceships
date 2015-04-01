@@ -3,6 +3,7 @@ package com.minespaceships.mod.spaceship;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -298,13 +299,12 @@ public class Spaceship implements Serializable{
 		int length = 0;
 		if(getMaxPos().getZ()-getMinPos().getZ() > getMaxPos().getX()-getMinPos().getX())
 		{
-			length = getMaxPos().getZ()-getMinPos().getZ() + 1;
+			length = getMaxPos().getZ()-getMinPos().getZ() + 2;
 		}
 		else
 		{
-			length = getMaxPos().getX()-getMinPos().getX() + 1;
+			length = getMaxPos().getX()-getMinPos().getX() + 2;
 		}
-		System.out.println("DIIIIIEEE L����NGEEE IST :   " + length);
 		if (getFacing()==EnumFacing.EAST){
 			return new BlockPos (length,0,0);			
 		} else if (getFacing()==EnumFacing.WEST){
@@ -378,9 +378,10 @@ public class Spaceship implements Serializable{
 		if(!canMove(addDirection, world, turn)){
 			return;
 		}
-		ArrayList<BlockPos> harderBlocks= new ArrayList(); //************Added collision
-		ArrayList<BlockPos> softerBlocks= new ArrayList(); //************* Added for collison		
-		blockMap.refreshVolumeBlocks(); //******************************ADDED
+		ArrayList<BlockPos> harderBlocks= new ArrayList(); 
+		ArrayList<BlockPos> softerBlocks= new ArrayList(); 
+		blockMap.refreshVolumeBlocks();
+		HashMap<BlockPos, Boolean> doNotExplodeBlocks = blockMap.getSpannedRectangle();
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		WorldMock startMock = new WorldMock(world);
 		//move the entities first to avoid long waiting times and weird bugs
@@ -413,7 +414,8 @@ public class Spaceship implements Serializable{
 //				}
 				if((facing == null || (facing != null && world.isSideSolid(neighbor, facing)))){
 					if(tryCopy(startMock, Pos, nextPos, turn)){
-						if(world.getBlockState(nextPos).getBlock().getMaterial() != Material.water && world.getBlockState(nextPos).getBlock().getMaterial() != Material.air){
+						if(i==3 &&
+								world.getBlockState(nextPos).getBlock().getMaterial() != Material.water && world.getBlockState(nextPos).getBlock().getMaterial() != Material.air){
 							if(world.getBlockState(nextPos).getBlock().getBlockHardness(world, nextPos) >= world.getBlockState(Pos).getBlock().getBlockHardness(world, Pos)){
 								harderBlocks.add(nextPos);
 							}
@@ -451,15 +453,15 @@ public class Spaceship implements Serializable{
 		}
 		canRemoveBlocks();
 
+		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
+		if(side == Side.SERVER)moveEntities(addDirection, turn);
+		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		for(BlockPos p : harderBlocks){
 			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
 		}
 		for(BlockPos p : softerBlocks){
 			world.createExplosion(null, (float)p.getX(), (float)p.getY(), (float)p.getZ(), 0.5F, true);
 		}
-		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
-		if(side == Side.SERVER)moveEntities(addDirection, turn);
-		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 		if(side == Side.SERVER)MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+oldOrigin+","+world.provider.getDimensionId()));

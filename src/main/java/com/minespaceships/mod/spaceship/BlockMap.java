@@ -203,11 +203,24 @@ public class BlockMap {
 		{
 			calculateOuterOutBlocks();  //initializes outerBlocks
 			spanRectangle();
+			HashMap<BlockPos, Boolean> toCheckBlocks = outerOutBlocks;
 			outerBlocks.clear();
-			for(BlockPos l : outerOutBlocks.keySet())
+			while(!toCheckBlocks.isEmpty())
 			{
-				checkRoom(l);
+				HashMap<BlockPos, Boolean> checkNowBlocks = toCheckBlocks;
+				toCheckBlocks.clear();
+				for(BlockPos l : checkNowBlocks.keySet())
+				{
+					while(!map.containsKey(l) && !outerBlocks.containsKey(l) && spannedRectangle.containsKey(l))
+					{
+						outerBlocks.put(l, true);
+						for(BlockPos p: getNeighbours(l)){
+							toCheckBlocks.put(p, true);
+						}
+					}
+				}
 			}
+			
 			innerBlocks.clear(); 	//initializes innerBlocks
 			for(BlockPos l : spannedRectangle.keySet())
 			{
@@ -560,6 +573,11 @@ public class BlockMap {
 			e.printStackTrace();
 			return 1;
 		}
+	}
+	
+	public HashMap<BlockPos, Boolean> getSpannedRectangle()
+	{
+		return this.spannedRectangle;
 	}
 	
 	public void showDebug(World world){

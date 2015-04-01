@@ -8,6 +8,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 
+import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.menu.functionalMenus.energyMenus.TerminalUtil;
@@ -23,7 +24,7 @@ import com.minespaceships.mod.spaceship.Turn;
  * @author ovae.
  * @version 20150323.
  */
-public class moveForwardTurn90Menu extends Menu implements FunctionalParamMenu {
+public class moveForwardTurn90Menu extends Menu implements FunctionalMenu {
 
 	/**
 	 * Creates a new moveForwardMenu.
