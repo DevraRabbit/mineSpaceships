@@ -1,23 +1,28 @@
 package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+
 import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
-import com.minespaceships.mod.spaceship.SpaceshipCommands;
+import com.minespaceships.mod.spaceship.Shipyard;
+import com.minespaceships.mod.spaceship.Spaceship;
 
 /**
  * Move the spaceship position to the right.
  * @author ovae.
  * @version 20150320.
  */
-public class moveRightMenu extends Menu implements FunctionalParamMenu{
+public class MoveRightMenu extends Menu implements FunctionalParamMenu{
 
 	/**
 	 * Creates a new moveRightMenu.
 	 * @param name
 	 */
-	public moveRightMenu() {
+	public MoveRightMenu() {
 		super("Please type in how may blocks you want to move\n    right.    ");
 	}
 
@@ -28,14 +33,30 @@ public class moveRightMenu extends Menu implements FunctionalParamMenu{
 	 */
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		if(command.trim().isEmpty()){
-			return "command can not be empty.";
+		int distance = Integer.parseInt(command);
+		double x,y,z;
+		World world = terminal.getChatRegisterEntity().getWorld();
+		Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
+		EnumFacing face = ship.getFacing();
+		x = terminal.getChatRegisterEntity().getPos().getX();
+		y = terminal.getChatRegisterEntity().getPos().getY();
+		z = terminal.getChatRegisterEntity().getPos().getZ();
+
+		BlockPos position;
+		if(face == EnumFacing.NORTH){
+			position = new BlockPos(x+distance, y,z);
 		}
-		if(command.equals(null)){
-			return "command can not be null.";
+		else if(face == EnumFacing.SOUTH){
+			position = new BlockPos(x-distance, y,z);
+		}
+		else if(face == EnumFacing.WEST){
+			position = new BlockPos(x, y,z-distance);
+		}
+		else{
+			position = new BlockPos(x, y,z+distance);
 		}
 
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveRight+" "+command, terminal.getPlayerEntity());
+		ship.move(position);
 		return "";
 	}
 
