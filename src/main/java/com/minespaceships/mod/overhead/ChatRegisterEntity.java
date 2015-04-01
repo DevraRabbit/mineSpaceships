@@ -189,7 +189,7 @@ public class ChatRegisterEntity extends TileEntity {
 		else if(command.startsWith(SpaceshipCommands.energy)) {
 			SpaceshipCommands.energy(command, worldObj, this, player, getShip());
 		} else {
-			//terminalMenu.onCommand(command, player, this, this.terminal);
+			terminalMenu.onCommand(command, player, this, this.terminal);
 			//display the menu and make the menu commands (also works on Server)
 			if(spaceshipMenu != null){
 				spaceshipMenu.display(command, this.terminal, player);
