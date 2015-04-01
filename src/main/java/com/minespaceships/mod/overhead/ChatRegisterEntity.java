@@ -147,7 +147,7 @@ public class ChatRegisterEntity extends TileEntity {
 			if(player != null){
 				MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+player.getUniqueID()+","+ command));
 			} else {
-				MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+0+","+ command));
+				MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+"0"+","+ command));
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class ChatRegisterEntity extends TileEntity {
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		
 		boolean isMenu = executeMenu(command);
-		if(!isMenu){}
+		if(isMenu){ return;}
 		else if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
 			if(player != null)player.addChatComponentMessage(new ChatComponentText("I love you!"));
@@ -211,13 +211,23 @@ public class ChatRegisterEntity extends TileEntity {
 		//SpaceshipCommands.debug(command, this);
 	}
 	public void sendFunctionalMenu(FunctionalMenu menu){
-		this.onCommand(menu.getClass().getName() + "\n" + menu.getData(), null);
+		String data = menu.getData();
+		if(data != null){
+			this.onCommand(menu.getClass().getName() + "#" + data, null);
+		} else {
+			this.onCommand(menu.getClass().getName() + "#" + "null", null);
+		}
 	}
 	public void sendFunctionalParamMenu(FunctionalParamMenu menu, String parameters){
-		this.onCommand(menu.getClass().getName() +"\n" +parameters+ "\n" + menu.getData(), null);
+		String data = menu.getData();
+		if(data != null){
+			this.onCommand(menu.getClass().getName() +"#" +parameters+ "#" + data, null);
+		} else {
+			this.onCommand(menu.getClass().getName() +"#" +parameters+ "#" + "null", null);
+		}
 	}
 	public boolean executeMenu(String menuCommand){
-		String[] parts = menuCommand.split("\n");
+		String[] parts = menuCommand.split("#");
 		Class c = null;
 		try {
 			c = Class.forName(parts[0]);

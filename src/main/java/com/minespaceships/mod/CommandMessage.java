@@ -58,8 +58,9 @@ public class CommandMessage implements IMessage {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
             System.out.println(String.format("Received %s from %s", message.getText(), ctx.getServerHandler().playerEntity.getDisplayName()));
             
-    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*),(.*)");
-    		Matcher moffset = poffset.matcher(message.getText());
+    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),([-0-9a-f]+),(.*)");
+    		String text = message.getText();
+    		Matcher moffset = poffset.matcher(text);
             
             BlockPos pos = null;
             World world = null;
@@ -94,6 +95,8 @@ public class CommandMessage implements IMessage {
 	            	e.printStackTrace();
 	            	return null;
 	            }
+            } else {
+            	int i = 0;
             }
             return null; // no response in this case
         }
@@ -106,7 +109,7 @@ public class CommandMessage implements IMessage {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
             System.out.println(String.format("Received %s from %s", message.getText(), Minecraft.getMinecraft().thePlayer.getDisplayName()));
             
-    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*),(.*)");
+    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),([-0-9a-f]+),(.*)");
     		Matcher moffset = poffset.matcher(message.getText());
             
             BlockPos pos = null;
@@ -114,7 +117,7 @@ public class CommandMessage implements IMessage {
             UUID uuid = null;
             String command = null;
             
-            Minecraft.getMinecraft().thePlayer.sendChatMessage("recieved: "+message.getText());
+            //Minecraft.getMinecraft().thePlayer.sendChatMessage("recieved: "+message.getText());
             
             if(moffset.matches()) {
 	            try{
@@ -138,15 +141,15 @@ public class CommandMessage implements IMessage {
 		            		} else {
 		            			ent.executeCommand(command, null);
 		            		}
-		            	} else {
-		            		int i = 0;
 		            	}
 	            	}
 	            } catch (Exception e) {
 	            	e.printStackTrace();
 	            	return null;
 	            }
-            }
+            } else {
+        		int i = 0;
+        	}
             return null; // no response in this case
         }
     }    
