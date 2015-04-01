@@ -1,6 +1,5 @@
 package com.minespaceships.mod.overhead;
 
-import java.util.ArrayList;
 import java.util.regex.*;
 
 import com.example.examplemod.ovae.terminalMenu;
@@ -51,12 +50,9 @@ public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
 
-	private static final String dimension = "dimension";
-	private static final String shipKey = "SpaceshipKey";
-	private static final String logKey = "CommandLog";
+	private static String dimension = "dimension";
+	private static String shipKey = "SpaceshipKey";
 	private IMenuInterface terminal;
-	
-	private ArrayList<String> executedCommands = new ArrayList<String>();
 
 	public ChatRegisterEntity() {
 		super();
@@ -73,10 +69,7 @@ public class ChatRegisterEntity extends TileEntity {
 	public MenuDisplay getNoSpaceshipMenu(){
 		return noSpaceshipMenu;
 	}
-	public void clearCommandLog(){
-		executedCommands.clear();
-	}
-	
+
 	@Override
 	public void setPos(BlockPos pos){
 		super.setPos(pos);
@@ -99,14 +92,6 @@ public class ChatRegisterEntity extends TileEntity {
 		} else {
 			par1.setBoolean(shipKey, false);
 		}
-		String commands = "";
-		for(int i = 0; i < executedCommands.size(); i++){
-			if(i != 0){
-				commands += "\n";
-			}
-			commands += executedCommands.get(i);
-		}
-		par1.setString(logKey, commands);
 		super.writeToNBT(par1); 
 		this.markDirty();
 	}
@@ -118,13 +103,6 @@ public class ChatRegisterEntity extends TileEntity {
 		if(hasShip){
 			System.out.println("Reading ship from NBT");
 			AllShipyards.putData(id, par1, shipKey);
-		}
-		String commandLine = par1.getString(logKey);
-		if(commandLine != null){
-			String[] commands = commandLine.split("\n");
-			for(String s : commands){
-				executeCommand(s, null, false);
-			}
 		}
 		super.readFromNBT(par1);
 		this.markDirty();
@@ -174,7 +152,7 @@ public class ChatRegisterEntity extends TileEntity {
 	/**
 	 * Executes a command unrelated if Server or client side.
 	 */
-	public void executeCommand(String command, EntityPlayer player, boolean executeFunctions){
+	public void executeCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		//define a very first command to see if it works.
 		if(command.equals("hello")){
@@ -214,14 +192,13 @@ public class ChatRegisterEntity extends TileEntity {
 			//terminalMenu.onCommand(command, player, this, this.terminal);
 			//display the menu and make the menu commands (also works on Server)
 			if(spaceshipMenu != null){
-				spaceshipMenu.display(command, this.terminal, player, executeFunctions);
+				spaceshipMenu.display(command, this.terminal, player);
 			} else {
 				MineSpaceships.proxy.makeTerminal(player, this);
-				spaceshipMenu.display(command, this.terminal, player, executeFunctions);
-			}			
+				spaceshipMenu.display(command, this.terminal, player);
+			}
 		}
 		terminalMenu.onCommand(command, player, this, this.terminal);
-		executedCommands.add(command);
 		//SpaceshipCommands.debug(command, this);
 	}
 }

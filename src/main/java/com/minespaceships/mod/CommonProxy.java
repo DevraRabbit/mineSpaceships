@@ -137,7 +137,6 @@ public abstract class CommonProxy {
     public void setupTerminal(EntityPlayer player, ChatRegisterEntity entity, IMenuInterface menu){
 		SpaceshipMenu.initMenu(menu);
 		NoSpaceshipEntityMenu.initMenu();
-		entity.clearCommandLog();
 
 		//initialise the menu display.
 		MenuDisplay spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), menu);

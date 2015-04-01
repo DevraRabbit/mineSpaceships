@@ -88,7 +88,7 @@ public class CommandMessage implements IMessage {
 	            	
 	            	ChatRegisterEntity ent = ((ChatRegisterEntity)world.getTileEntity(pos));
 	            	if(ent != null){
-            			ent.executeCommand(command, ctx.getServerHandler().playerEntity, true);
+            			ent.executeCommand(command, ctx.getServerHandler().playerEntity);
 	            	} else {
 	            		int i = 0;
 	            	}	            	
@@ -134,9 +134,9 @@ public class CommandMessage implements IMessage {
 		            	if(ent != null){
 		            		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 		            		if(p.getUniqueID().equals(uuid)){
-		            			ent.executeCommand(command, Minecraft.getMinecraft().thePlayer, true);
+		            			ent.executeCommand(command, Minecraft.getMinecraft().thePlayer);
 		            		} else {
-		            			ent.executeCommand(command, null, true);
+		            			ent.executeCommand(command, null);
 		            		}
 		            	} else {
 		            		int i = 0;

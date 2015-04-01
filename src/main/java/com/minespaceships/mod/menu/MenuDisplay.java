@@ -51,14 +51,13 @@ public class MenuDisplay {
 	 * @param menu
 	 * @param command
 	 */
-	private String preparingOutput(final Menu menu, final String command, boolean activateFunctions){
+	private String preparingOutput(final Menu menu, final String command){
 		String out = "";
 		if(menu == null){
 			return EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.";
 		}
 		if(menu instanceof FunctionalMenu){
-			if(activateFunctions){return ((FunctionalMenu)menu).activate(command, terminal);}
-			else { return "";}
+			return ((FunctionalMenu)menu).activate(command, terminal);
 		}
 
 		root = menu;
@@ -84,7 +83,7 @@ public class MenuDisplay {
 	 * Displays the current selected menu.
 	 * @param command
 	 */
-	public void display(final String command, IMenuInterface terminal, EntityPlayer player, boolean executeFunctions){
+	public void display(final String command, IMenuInterface terminal, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		if(side == Side.CLIENT){
 			try{
@@ -92,13 +91,13 @@ public class MenuDisplay {
 					terminal.display(EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.", player, true);
 					return;
 				}
-				String s = preparingOutput(root.switchMenu(command, terminal, executeFunctions),command, executeFunctions);
+				String s = preparingOutput(root.switchMenu(command, terminal),command);
 				terminal.display(s, player,true);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		} else if(side == Side.SERVER){
-			String s = preparingOutput(root.switchMenu(command, terminal, executeFunctions),command, executeFunctions);
+			String s = preparingOutput(root.switchMenu(command, terminal),command);
 		}
 	}
 
@@ -110,6 +109,6 @@ public class MenuDisplay {
 		if(menu.equals(null)){
 			throw new IllegalArgumentException("Menu can not be null.");
 		}
-		terminal.display(preparingOutput(menu, "", false), terminal.getPlayerEntity(),true);
+		terminal.display(preparingOutput(menu, ""), terminal.getPlayerEntity(),true);
 	}
 }
