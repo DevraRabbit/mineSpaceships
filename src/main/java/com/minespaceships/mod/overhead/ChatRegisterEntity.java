@@ -162,6 +162,10 @@ public class ChatRegisterEntity extends TileEntity {
 	public void executeCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		
+		if(terminal == null){
+			MineSpaceships.proxy.makeTerminal(player, this);			
+		}
+		
 		boolean isMenu = executeMenu(command);
 		if(isMenu){ return;}
 		else if(command.equals("hello")){
@@ -200,12 +204,7 @@ public class ChatRegisterEntity extends TileEntity {
 		} else {
 			terminalMenu.onCommand(command, player, this, this.terminal);
 			//display the menu and make the menu commands (also works on Server)
-			if(spaceshipMenu != null){
-				spaceshipMenu.display(command, this.terminal, player);
-			} else {
-				MineSpaceships.proxy.makeTerminal(player, this);
-				spaceshipMenu.display(command, this.terminal, player);
-			}
+			spaceshipMenu.display(command, this.terminal, player);			
 		}
 		terminalMenu.onCommand(command, player, this, this.terminal);
 		//SpaceshipCommands.debug(command, this);
