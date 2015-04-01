@@ -78,8 +78,8 @@ public class PhaserUtils {
 				}
 			}
 			
-        	double d0 = 2.0D;
-            List list = world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(current.getX() - d0, current.getY() - d0, current.getZ() - d0, current.getX() + d0, current.getY() + 6.0D + d0, current.getZ() + d0));
+        	double d0 = 1.0D;
+            List list = world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(current.getX(), current.getY(), current.getZ(), current.getX() + d0, current.getY() + d0, current.getZ() + d0));
 
             for (int i = 0; i < list.size(); ++i)
             {

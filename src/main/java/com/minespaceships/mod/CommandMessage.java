@@ -116,6 +116,8 @@ public class CommandMessage implements IMessage {
             UUID uuid = null;
             String command = null;
             
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("recieved: "+message.getText());
+            
             if(moffset.matches()) {
 	            try{
 	            	long posLong = Long.parseLong(moffset.group(1));

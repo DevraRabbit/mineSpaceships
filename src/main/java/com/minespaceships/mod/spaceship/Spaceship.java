@@ -86,6 +86,8 @@ public class Spaceship implements Serializable{
 	//TODO
 	private Vector<BlockPos> removal;
 	private ArrayList<BlockPos> toRefill;
+	private BlockPos oldMin;
+	private BlockPos oldMax;
 
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
@@ -440,6 +442,8 @@ public class Spaceship implements Serializable{
 
 		//TODO
 		long oldOrigin = this.getBlockMapOrigin().toLong();
+		oldMin = getMinPos();
+		oldMax = getMaxPos();
 		if(side == Side.SERVER || mayRemoveBlocks){
 			removeOldSpaceship();
 		}
@@ -453,7 +457,7 @@ public class Spaceship implements Serializable{
 		}
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
-		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
+		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
 		if(side == Side.SERVER)MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+oldOrigin+","+world.provider.getDimensionId()));
@@ -488,6 +492,7 @@ public class Spaceship implements Serializable{
 			world.setBlockState(pos, Block.getStateById(8));
 		}
 		mayRemoveBlocks = false;
+		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(oldMin, oldMax);
 	}
 
 	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
