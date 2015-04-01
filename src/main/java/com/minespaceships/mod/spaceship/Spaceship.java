@@ -15,6 +15,8 @@ import java.util.Vector;
 import javax.vecmath.Vector3d;
 
 import com.google.common.collect.ImmutableList;
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.blocks.EnergyBlock;
 import com.minespaceships.mod.blocks.EngineBlock;
 import com.minespaceships.mod.blocks.NavigatorBlock;
@@ -58,6 +60,11 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @verison 20150331.
+ */
 public class Spaceship implements Serializable{
 	private World world;
 	private BlockMap blockMap;
@@ -66,6 +73,8 @@ public class Spaceship implements Serializable{
 	private MovementTarget target;
 	private Vec3 position;
 	private boolean isResolved = true;
+	private boolean mayRemoveBlocks = false;
+	private long lastUpdatedTime;
 	
 	private static final String positionsKey = "Positions";
 	private static final String containsTargetKey = "containsTarget";
@@ -76,7 +85,12 @@ public class Spaceship implements Serializable{
 	private boolean canBeRemoved = true;
 	
 	public static final int maxShipSize = 27000;
-	
+	//TODO
+	private Vector<BlockPos> removal;
+	private ArrayList<BlockPos> toRefill;
+	private BlockPos oldMin;
+	private BlockPos oldMax;
+
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
 		blockMap = SpaceshipMath.getConnectedPositions(initial, world, maxShipSize);
@@ -106,6 +120,7 @@ public class Spaceship implements Serializable{
 		if(position == null){
 			position = blockMap.getMiddleVec();
 		}
+		lastUpdatedTime = world.getTotalWorldTime();
 		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
@@ -123,6 +138,13 @@ public class Spaceship implements Serializable{
 		float index = (float)(positions.size()-1)*rand.nextFloat();
 		return positions.get((int)(index));
 	}
+	public void canRemoveBlocks(){
+		if(!mayRemoveBlocks){
+			mayRemoveBlocks = true;
+		} else {
+			removeOldSpaceship();
+		}
+	}
 	
 	public BlockPos getMaxPos(){
 		return blockMap.getMaxPos();
@@ -130,7 +152,7 @@ public class Spaceship implements Serializable{
 	public BlockPos getMinPos(){
 		return blockMap.getMinPos();
 	}
-	public boolean canBeRemoved(){
+	public boolean canBeRemoved(){		
 		return canBeRemoved;
 	}
 	
@@ -144,9 +166,7 @@ public class Spaceship implements Serializable{
 	public int getSize(){
 		return blockMap.getSize();
 	}
-	
-	
-	
+
 	public float getHardness(){
 		return blockMap.getHardnessSum(world);
 	}	
@@ -275,7 +295,7 @@ public class Spaceship implements Serializable{
 	}
 	
 
-	public BlockPos getShipLengthToAdd(EntityPlayer player){
+	public BlockPos getShipLengthToAdd(){
 		int length = 0;
 		if(getMaxPos().getZ()-getMinPos().getZ() > getMaxPos().getX()-getMinPos().getX())
 		{
@@ -285,7 +305,6 @@ public class Spaceship implements Serializable{
 		{
 			length = getMaxPos().getX()-getMinPos().getX() + 2;
 		}
-	
 		if (getFacing()==EnumFacing.EAST){
 			return new BlockPos (length,0,0);			
 		} else if (getFacing()==EnumFacing.WEST){
@@ -294,18 +313,8 @@ public class Spaceship implements Serializable{
 			return new BlockPos (0,0,-(length));			
 		} else if (getFacing()==EnumFacing.SOUTH){
 			return new BlockPos (0,0,length);
-		}
-		else {
-			int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			if (playerRotation==EnumFacing.EAST.getHorizontalIndex()){
-				return new BlockPos (length,0,0);			
-			} else if (playerRotation==EnumFacing.WEST.getHorizontalIndex()){
-				return new BlockPos (-(length),0,0);			
-			} else if (playerRotation==EnumFacing.NORTH.getHorizontalIndex()){
-				return new BlockPos (0,0,-(length));			
-			} else{
-				return new BlockPos (0,0,length);
-			}
+		} else {
+			return new BlockPos (length,0,0);
 		}
 	}
 	
@@ -370,13 +379,13 @@ public class Spaceship implements Serializable{
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
 		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
-		Vector<BlockPos> removal = new Vector<BlockPos>();
+		this.removal = new Vector<BlockPos>();
 		
 		//get all positions that can't be placed right now
 		BlockPos add = new BlockPos(addDirection);
 		ArrayList<BlockPos> positions = blockMap.getPositionsWithInnerBlocks();	
 		int i = 3;
-		ArrayList<BlockPos> toRefill = blockMap.getBlocksToRefill(world);  
+		this.toRefill = blockMap.getBlocksToRefill(world);  
 		while(!positions.isEmpty() && i > 0){
 			Iterator<BlockPos> it = positions.iterator();
 			while(it.hasNext()){
@@ -424,27 +433,16 @@ public class Spaceship implements Serializable{
 				removal.insertElementAt(Pos, 0);
 			}
 		}
-		for(int j = 0; j < 3 && !removal.isEmpty(); j++){
-			//remove the Blocks in reversed order, so that the most fragile ones are removed last.
-			ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
-			while(reverseRemoval.hasPrevious()){
-				BlockPos prev = reverseRemoval.previous();
-				if(tryRemove(startMock, prev)){
-					BlockCopier.removeBlock(world, prev);
-				}
-			}
-		}
-		//remove the ones that didn't pass
-		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
-		while(reverseRemoval.hasPrevious()){
-			BlockPos prev = reverseRemoval.previous();
-			BlockCopier.removeBlock(world, prev);
-		}
 
-		for(BlockPos pos : toRefill)
-		{
-			world.setBlockState(pos, Block.getStateById(8)); 
+		//TODO
+		long oldOrigin = this.getBlockMapOrigin().toLong();
+		oldMin = getMinPos();
+		oldMax = getMaxPos();
+		if(side == Side.SERVER || mayRemoveBlocks){
+			removeOldSpaceship();
 		}
+		canRemoveBlocks();
+
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(addDirection, turn);
 		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
@@ -456,12 +454,41 @@ public class Spaceship implements Serializable{
 		}
 		moveMeasurements(addDirection, turn);
 		canBeRemoved = true;
-		
-		
+		if(side == Side.SERVER)MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+oldOrigin+","+world.provider.getDimensionId()));
 	}
-	
 
-	
+	//Removes the ship at the old position and refills blocks like water.
+	public void removeOldSpaceship(){
+		//TODO
+		WorldMock startMock = new WorldMock(world);
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+
+		for(int j = 0; j < 3 && !removal.isEmpty(); j++){
+			//remove the Blocks in reversed order, so that the most fragile ones are removed last.
+			ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+			while(reverseRemoval.hasPrevious()){
+				BlockPos prev = reverseRemoval.previous();
+				if(tryRemove(startMock, prev)){
+					BlockCopier.removeBlock(world, prev);
+					reverseRemoval.remove();
+				}
+			}
+		}
+
+		//remove the ones that didn't pass
+		ListIterator<BlockPos> reverseRemoval = removal.listIterator(removal.size());
+		while(reverseRemoval.hasPrevious()){
+			BlockPos prev = reverseRemoval.previous();
+			BlockCopier.removeBlock(world, prev);
+		}
+
+		for(BlockPos pos : toRefill){
+			world.setBlockState(pos, Block.getStateById(8));
+		}
+		mayRemoveBlocks = false;
+		if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(oldMin, oldMax);
+	}
+
 	private boolean tryCopy(WorldMock startWorld, BlockPos start, BlockPos end, int turn){
 		try{
 			BlockCopier.copyBlock(startWorld, start, end, turn);	
@@ -701,6 +728,7 @@ public class Spaceship implements Serializable{
 				}
 			}
 		}
+		lastUpdatedTime = world.getTotalWorldTime();
 	}
 	private Vector<BlockPos> move(){
 		if(target != null){
@@ -713,10 +741,12 @@ public class Spaceship implements Serializable{
 			float distance = (float) direction.lengthVector();			
 			float traveledDistance = 0;
 			float speed = ShipInformation.getShipSpeed(this);
+			long timeDistance = world.getTotalWorldTime() - lastUpdatedTime;
 			if(speed <= 0){
 				stop();
 				return null;
 			}
+			speed *= timeDistance;
 			float directionAbs = 1;
 			if(speed <= 1){
 				direction = Vec3Op.scale(direction.normalize(), speed);

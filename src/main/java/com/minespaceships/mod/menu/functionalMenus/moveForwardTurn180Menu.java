@@ -30,8 +30,8 @@ public class moveForwardTurn180Menu extends Menu implements FunctionalMenu {
 	 * Creates a new moveForwardMenu.
 	 * @param name
 	 */
-	public moveForwardTurn180Menu(String name) {
-		super(name);
+	public moveForwardTurn180Menu() {
+		super("Mad Evan");
 	}
 
 	/**
@@ -40,14 +40,20 @@ public class moveForwardTurn180Menu extends Menu implements FunctionalMenu {
 	 * @param terminal
 	 */
 	@Override
-	public String activate(final String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		
 		Spaceship ship=TerminalUtil.getShip(terminal);
 		if (ship!=null){
-			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd(terminal.getPlayerEntity())), Turn.AROUND);
+			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd()), Turn.AROUND);
 		
 		}
 		return "";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

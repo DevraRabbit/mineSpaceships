@@ -81,6 +81,7 @@ public abstract class CommonProxy {
     	MineSpaceships.network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
     	MineSpaceships.spaceshipNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("Spaceships");
     	MineSpaceships.blockChangeEvents = NetworkRegistry.INSTANCE.newSimpleChannel("BlockChanges");
+    	MineSpaceships.shipRemoval = NetworkRegistry.INSTANCE.newSimpleChannel("ShipRemoval");
     	//register our game objects so Minecraft knows how to use them.
     	GameRegistry.registerBlock(new NavigatorBlock(), "NavigatorBlock").setCreativeTab(GoldTab);
         GameRegistry.registerBlock(new EnergyBlock(), "EnergyBlock").setCreativeTab(GoldTab);

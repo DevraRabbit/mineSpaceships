@@ -32,7 +32,7 @@ public class MoveRightMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(String command, IMenuInterface terminal, String data) {
 		int distance = Integer.parseInt(command);
 		double x,y,z;
 		World world = terminal.getChatRegisterEntity().getWorld();
@@ -58,6 +58,12 @@ public class MoveRightMenu extends Menu implements FunctionalParamMenu{
 
 		ship.move(position);
 		return "";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

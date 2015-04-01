@@ -25,7 +25,7 @@ public class StopMenu extends Menu implements FunctionalMenu{
 	 * @param name
 	 */
 	public StopMenu() {
-		super("liftoff");
+		super("Stop movement");
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class StopMenu extends Menu implements FunctionalMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		Spaceship ship = TerminalUtil.getShip(terminal);
 		if(ship != null){
 			int distToGround = ship.getDistanceToGround();
@@ -42,6 +42,12 @@ public class StopMenu extends Menu implements FunctionalMenu{
 			return EnumChatFormatting.RED+"Braking!";
 		}
 		return "No Spaceship...";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

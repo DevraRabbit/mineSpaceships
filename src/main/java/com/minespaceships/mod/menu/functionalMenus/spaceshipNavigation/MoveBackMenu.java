@@ -37,7 +37,7 @@ public class MoveBackMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(String command, IMenuInterface terminal, String data) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}
@@ -45,8 +45,14 @@ public class MoveBackMenu extends Menu implements FunctionalParamMenu{
 			return "command can not be null.";
 		}
 
-		terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.moveBack+" "+command, terminal.getPlayerEntity());
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.moveBack+" "+command, terminal.getPlayerEntity());
 		return SpaceshipCommands.moveBack;
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

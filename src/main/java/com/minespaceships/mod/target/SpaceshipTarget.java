@@ -1,4 +1,4 @@
-package com.minespaceships.mod.menu.functionalMenus.targetMenus;
+package com.minespaceships.mod.target;
 
 import java.util.Random;
 
@@ -8,8 +8,6 @@ import net.minecraft.world.World;
 
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
-import com.minespaceships.mod.target.PositionTarget;
-import com.minespaceships.mod.target.Target;
 import com.minespaceships.util.Vec3Op;
 
 public class SpaceshipTarget extends PositionTarget{
@@ -37,6 +35,9 @@ public class SpaceshipTarget extends PositionTarget{
 			return super.lastTarget;
 		}
 		return position;
+	}
+	public BlockPos getBasePos(){
+		return super.getTarget(null);
 	}
 
 }

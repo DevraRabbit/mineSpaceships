@@ -8,7 +8,7 @@ public class EnergyManagementMenu extends Menu {
 
 	public EnergyManagementMenu() {
 		super("Energy Management");		
-		addSubMenu(new DisplayShipStatsMenu("Ship Stats"));
+		addSubMenu(new DisplayShipStatsMenu());
 		addSubMenu(new ActivateEnginesMenu());
 		addSubMenu(new DeactivateEnginesMenu());
 		addSubMenu(new ActivateShieldsMenu());

@@ -15,7 +15,7 @@ public class EntityTarget extends Target {
 		this.setEntity(entity);
 	}
 	public EntityTarget(NBTTagCompound c) {
-		entityID = c.getInteger(entityKey);
+		setEntityID(c.getInteger(entityKey));
 	}
 	@Override
 	public BlockPos getNewTarget(World world) {
@@ -28,15 +28,21 @@ public class EntityTarget extends Target {
 		}
 	}
 	public Entity getEntity(World world) {
-		return world.getEntityByID(entityID);
+		return world.getEntityByID(getEntityID());
 	}
 	public void setEntity(Entity entity) {
-		this.entityID = entity.getEntityId();
+		this.setEntityID(entity.getEntityId());
 	}
 	@Override
 	public void writeToNBT(NBTTagCompound c) {
-		c.setInteger(entityKey, entityID);	
+		c.setInteger(entityKey, getEntityID());	
 		c.setString(super.classKey, this.getClass().getName());
 		super.writeToNBT(c);
+	}
+	public int getEntityID() {
+		return entityID;
+	}
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
 	}	
 }

@@ -22,6 +22,7 @@ public class ClientProxy extends CommonProxy {
         super.preInit(e);
     	MineSpaceships.network.registerMessage(CommandMessage.HandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
     	MineSpaceships.blockChangeEvents.registerMessage(BlockHandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
+    	MineSpaceships.shipRemoval.registerMessage(RemoveHandler.class, CommandMessage.class, 0, Side.CLIENT);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ClientProxy extends CommonProxy {
 		super.setupTerminal(player, entity, gui);
 		
 		//open our console. 
-		if(Minecraft.getMinecraft().thePlayer.equals(player)){Minecraft.getMinecraft().displayGuiScreen(gui);}
+		if(player != null && Minecraft.getMinecraft().thePlayer.equals(player)){Minecraft.getMinecraft().displayGuiScreen(gui);}
 
 		if(Shipyard.getShipyard(gui.getChatRegisterEntity().getWorld()).getShip(gui.getChatRegisterEntity().getPos(), gui.getChatRegisterEntity().getWorld()) == null){
 			entity.getNoSpaceshipMenu().displayMain(NoSpaceshipEntityMenu.getRootMenu(), gui);

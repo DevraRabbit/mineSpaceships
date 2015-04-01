@@ -1,6 +1,7 @@
 package com.minespaceships.mod;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,8 +58,9 @@ public class CommandMessage implements IMessage {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
             System.out.println(String.format("Received %s from %s", message.getText(), ctx.getServerHandler().playerEntity.getDisplayName()));
             
-    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*)");
-    		Matcher moffset = poffset.matcher(message.getText());
+    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),([-0-9a-f]+),(.*)");
+    		String text = message.getText();
+    		Matcher moffset = poffset.matcher(text);
             
             BlockPos pos = null;
             World world = null;
@@ -72,7 +74,9 @@ public class CommandMessage implements IMessage {
 	            	int dimension = Integer.parseInt(moffset.group(2));
 	            	world = MinecraftServer.getServer().worldServerForDimension(dimension);
 	            	
-	            	command = moffset.group(3);
+	            	//group 3: uuid
+	            	
+	            	command = moffset.group(4);
 	            	//send it first so not everyone has to wait for the Server
 	            	List players = ((WorldServer)world).playerEntities;
 	            	for(Object o : players){
@@ -91,6 +95,8 @@ public class CommandMessage implements IMessage {
 	            	e.printStackTrace();
 	            	return null;
 	            }
+            } else {
+            	int i = 0;
             }
             return null; // no response in this case
         }
@@ -103,12 +109,15 @@ public class CommandMessage implements IMessage {
         	Side side = FMLCommonHandler.instance().getEffectiveSide();
             System.out.println(String.format("Received %s from %s", message.getText(), Minecraft.getMinecraft().thePlayer.getDisplayName()));
             
-    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),(.*)");
+    		Pattern poffset = Pattern.compile("([-+]?[0-9]+),([-+]?[0-9]+),([-0-9a-f]+),(.*)");
     		Matcher moffset = poffset.matcher(message.getText());
             
             BlockPos pos = null;
             World world = null;
+            UUID uuid = null;
             String command = null;
+            
+            //Minecraft.getMinecraft().thePlayer.sendChatMessage("recieved: "+message.getText());
             
             if(moffset.matches()) {
 	            try{
@@ -116,21 +125,31 @@ public class CommandMessage implements IMessage {
 	            	pos = BlockPos.fromLong(posLong);
 	            	
 	            	int dimension = Integer.parseInt(moffset.group(2));
-	            	if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() == dimension){		            	
-		            	command = moffset.group(3);
+	            	if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() == dimension){
+	            		String uuidString = moffset.group(3);
+	            		if(!uuidString.equals("0")){
+	            			uuid = UUID.fromString(uuidString);
+	            		}
+		            	
+		            	command = moffset.group(4);
 		            	
 		            	ChatRegisterEntity ent = ((ChatRegisterEntity)Minecraft.getMinecraft().theWorld.getTileEntity(pos));
 		            	if(ent != null){
-	            			ent.executeCommand(command, Minecraft.getMinecraft().thePlayer);
-		            	} else {
-		            		int i = 0;
+		            		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		            		if(uuid != null && p.getUniqueID().equals(uuid)){
+		            			ent.executeCommand(command, Minecraft.getMinecraft().thePlayer);
+		            		} else {
+		            			ent.executeCommand(command, null);
+		            		}
 		            	}
 	            	}
 	            } catch (Exception e) {
 	            	e.printStackTrace();
 	            	return null;
 	            }
-            }
+            } else {
+        		int i = 0;
+        	}
             return null; // no response in this case
         }
     }    

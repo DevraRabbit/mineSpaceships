@@ -18,25 +18,12 @@ public class PhaserShootMenu extends Menu {
 	public PhaserShootMenu(Spaceship ship) {
 		super("Shoot Phaser");
 		if(ship != null){
-			addSubMenu(new GetPlayerTargetMenu(new TargetHolder(ship)));
-			addSubMenu(new GetShipTargetMenu(new TargetHolder(ship)));
+			addSubMenu(new GetPlayerTargetMenu());
+			addSubMenu(new GetShipTargetMenu());
 		}
 	}
 	@Override
 	public Menu getMenu(IMenuInterface terminal){
 		return new PhaserShootMenu(TerminalUtil.getShip(terminal));		
-	}
-
-	public static class TargetHolder implements ITargetHolder{
-		private Spaceship ship;
-		public TargetHolder(Spaceship ship){
-			this.ship = ship;
-		}
-		@Override
-		public void onTarget(Target target) {
-			ship.shootPhaserAt(target);
-		}
-		
-	}
-	
+	}	
 }

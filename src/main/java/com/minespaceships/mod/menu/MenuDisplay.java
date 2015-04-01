@@ -57,7 +57,9 @@ public class MenuDisplay {
 			return EnumChatFormatting.RED+"unknown command.\nPress 'm' to get back.";
 		}
 		if(menu instanceof FunctionalMenu){
-			return ((FunctionalMenu)menu).activate(command, terminal);
+			FunctionalMenu fmenu = (FunctionalMenu)menu;
+			terminal.getChatRegisterEntity().sendFunctionalMenu(fmenu);
+			return "";
 		}
 
 		root = menu;

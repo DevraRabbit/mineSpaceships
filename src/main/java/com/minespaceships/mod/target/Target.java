@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.Random;
 
-import com.minespaceships.mod.menu.functionalMenus.targetMenus.SpaceshipTarget;
 import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.nbt.NBTTagCompound;

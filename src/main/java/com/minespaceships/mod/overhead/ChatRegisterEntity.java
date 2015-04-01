@@ -6,6 +6,9 @@ import com.example.examplemod.ovae.terminalMenu;
 import com.minespaceships.mod.CommandMessage;
 import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.events.PlayerTracker;
+import com.minespaceships.mod.menu.FunctionalMenu;
+import com.minespaceships.mod.menu.FunctionalParamMenu;
+import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
@@ -141,7 +144,11 @@ public class ChatRegisterEntity extends TileEntity {
 	public void onCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		if(side == Side.CLIENT) {
-			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+ command));
+			if(player != null){
+				MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+player.getUniqueID()+","+ command));
+			} else {
+				MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+"0"+","+ command));
+			}
 		}
 	}
 
@@ -154,10 +161,12 @@ public class ChatRegisterEntity extends TileEntity {
 	 */
 	public void executeCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		//define a very first command to see if it works.
-		if(command.equals("hello")){
+		
+		boolean isMenu = executeMenu(command);
+		if(isMenu){ return;}
+		else if(command.equals("hello")){
 			//send something to the player to see if we get a feedback from our command.
-			player.addChatComponentMessage(new ChatComponentText("I love you!"));
+			if(player != null)player.addChatComponentMessage(new ChatComponentText("I love you!"));
 		//Define the 'calc' command, which parses a math expression
 		} else if(command.startsWith("calc")) {
 			Calculator.calc(command, player);
@@ -177,7 +186,7 @@ public class ChatRegisterEntity extends TileEntity {
 			} else if (command.equals("around")) {
 				Turn.around(worldObj, pos);
 			} else {
-				player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
+				if(player != null)player.addChatComponentMessage(new ChatComponentText("Invalid direction! Only left, right or around!"));
 			}
 		} else if(command.equals("status")) {
 			SpaceshipCommands.status(worldObj, this, player, getShip());
@@ -198,6 +207,64 @@ public class ChatRegisterEntity extends TileEntity {
 				spaceshipMenu.display(command, this.terminal, player);
 			}
 		}
+		terminalMenu.onCommand(command, player, this, this.terminal);
 		//SpaceshipCommands.debug(command, this);
+	}
+	public void sendFunctionalMenu(FunctionalMenu menu){
+		String data = menu.getData();
+		if(data != null){
+			this.onCommand(menu.getClass().getName() + "#" + data, null);
+		} else {
+			this.onCommand(menu.getClass().getName() + "#" + "null", null);
+		}
+	}
+	public void sendFunctionalParamMenu(FunctionalParamMenu menu, String parameters){
+		String data = menu.getData();
+		if(data != null){
+			this.onCommand(menu.getClass().getName() +"#" +parameters+ "#" + data, null);
+		} else {
+			this.onCommand(menu.getClass().getName() +"#" +parameters+ "#" + "null", null);
+		}
+	}
+	public boolean executeMenu(String menuCommand){
+		String[] parts = menuCommand.split("#");
+		Class c = null;
+		try {
+			c = Class.forName(parts[0]);
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+		if(FunctionalMenu.class.isAssignableFrom(c)){
+			FunctionalMenu fmenu = null;
+			try {
+				fmenu = (FunctionalMenu) c.newInstance();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+			fmenu.activate(terminal, parts[1]);
+			return true;
+		} else if(FunctionalParamMenu.class.isAssignableFrom(c)) {
+			FunctionalParamMenu pmenu = null;
+			try {
+				pmenu = (FunctionalParamMenu) c.newInstance();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+			pmenu.activate(parts[1], terminal, parts[2]);
+			return true;
+		}
+		return false;
 	}
 }

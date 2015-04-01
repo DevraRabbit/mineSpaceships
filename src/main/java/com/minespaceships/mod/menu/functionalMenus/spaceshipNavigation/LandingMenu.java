@@ -43,7 +43,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		Spaceship ship = TerminalUtil.getShip(terminal);
 		if(ship != null){
 			int distToGround = ship.getDistanceToGround();
@@ -128,6 +128,12 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 		}catch(Exception e){
 			return "While trying to land an error occurred: "+e;
 		}
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

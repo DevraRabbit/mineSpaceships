@@ -8,12 +8,14 @@ import net.minecraft.util.ChatComponentText;
 
 public class Calculator {
 	public static void calc(String command, EntityPlayer player) {
-		//prepare the math expression
-		command = command.substring("calc".length()).replaceAll("\\s", ""); 
-		try {
-			player.addChatComponentMessage(new ChatComponentText(command + " = " + solve(command)));
-		} catch (Exception ex) {
-			player.addChatComponentMessage(new ChatComponentText("calc: Error processing intput"));
+		if(player != null){
+			//prepare the math expression
+			command = command.substring("calc".length()).replaceAll("\\s", ""); 
+			try {
+				player.addChatComponentMessage(new ChatComponentText(command + " = " + solve(command)));
+			} catch (Exception ex) {
+				player.addChatComponentMessage(new ChatComponentText("calc: Error processing intput"));
+			}
 		}
 	}
 	

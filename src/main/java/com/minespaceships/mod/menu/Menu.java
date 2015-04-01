@@ -79,7 +79,7 @@ public class Menu{
 			if(this.getChildrenList().get(0) instanceof FunctionalParamMenu){
 				//Get the selctedMenu
 				FunctionalParamMenu temp = (FunctionalParamMenu) this.getChildrenList().get(0);
-				temp.activate(name, terminal);
+				terminal.getChatRegisterEntity().sendFunctionalParamMenu(temp, name);
 				return this.getMother().getMenu(terminal);
 			}else{
 				//Changes the menu via sub menu position.
@@ -220,6 +220,10 @@ public class Menu{
 	 */
 	public String getMenuName(){
 		return menuName;
+	}
+	
+	public String getData(){
+		return null;
 	}
 
 }

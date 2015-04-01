@@ -75,8 +75,12 @@ public class Shipyard {
 	}
 	
 	public void update(){
-		for(Spaceship ship : ships){
-			ship.update();
+		try{
+			for(Spaceship ship : ships){
+				ship.update();
+			} 
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	

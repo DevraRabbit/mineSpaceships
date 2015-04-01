@@ -23,8 +23,8 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 	 * Creates a new menu, for the shield activate functionality.
 	 * @param name
 	 */
-	public ShieldActivateMenu(String name) {
-		super(name);
+	public ShieldActivateMenu() {
+		super("Make Glass Cage");
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		try{
 			World world = terminal.getChatRegisterEntity().getWorld();
 			Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
@@ -94,6 +94,12 @@ public class ShieldActivateMenu extends Menu implements FunctionalMenu{
 			System.err.println("ship is broken");
 		}
 		return "shield activate failed!\nPress 'm' to get back.";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

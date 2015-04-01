@@ -28,8 +28,8 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 	 * Creates new functional menu, for the 'to target' functionality.
 	 * @param name
 	 */
-	public ToTargetFunktionalMenu(String name) {
-		super(name);
+	public ToTargetFunktionalMenu() {
+		super("Move To..");
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal){
+	public String activate(String command, IMenuInterface terminal, String data){
 		if(command.equals(null)){
 			throw new IllegalArgumentException("Command can not be null.");
 		}
@@ -75,6 +75,12 @@ public class ToTargetFunktionalMenu extends Menu implements FunctionalParamMenu{
 		}
 
 		return "To target failed!";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
