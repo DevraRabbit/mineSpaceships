@@ -73,6 +73,7 @@ public class Spaceship implements Serializable{
 	private Vec3 position;
 	private boolean isResolved = true;
 	private boolean mayRemoveBlocks = false;
+	private long lastUpdatedTime;
 	
 	private static final String positionsKey = "Positions";
 	private static final String containsTargetKey = "containsTarget";
@@ -118,6 +119,7 @@ public class Spaceship implements Serializable{
 		if(position == null){
 			position = blockMap.getMiddleVec();
 		}
+		lastUpdatedTime = world.getTotalWorldTime();
 		//Shipyard.getShipyard(world).addShip(this);
 	}
 	
@@ -734,6 +736,7 @@ public class Spaceship implements Serializable{
 				}
 			}
 		}
+		lastUpdatedTime = world.getTotalWorldTime();
 	}
 	private Vector<BlockPos> move(){
 		if(target != null){
@@ -746,10 +749,12 @@ public class Spaceship implements Serializable{
 			float distance = (float) direction.lengthVector();			
 			float traveledDistance = 0;
 			float speed = ShipInformation.getShipSpeed(this);
+			long timeDistance = world.getTotalWorldTime() - lastUpdatedTime;
 			if(speed <= 0){
 				stop();
 				return null;
 			}
+			speed *= timeDistance;
 			float directionAbs = 1;
 			if(speed <= 1){
 				direction = Vec3Op.scale(direction.normalize(), speed);
