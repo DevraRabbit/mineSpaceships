@@ -313,18 +313,8 @@ public class Spaceship implements Serializable{
 			return new BlockPos (0,0,-(length));			
 		} else if (getFacing()==EnumFacing.SOUTH){
 			return new BlockPos (0,0,length);
-		}
-		else {
-			EnumFacing shipRotation = getFacing();
-			if (shipRotation==EnumFacing.EAST){
-				return new BlockPos (length,0,0);			
-			} else if (shipRotation==EnumFacing.WEST){
-				return new BlockPos (-(length),0,0);			
-			} else if (shipRotation==EnumFacing.NORTH){
-				return new BlockPos (0,0,-(length));			
-			} else{
-				return new BlockPos (0,0,length);
-			}
+		} else {
+			return new BlockPos (length,0,0);
 		}
 	}
 	
