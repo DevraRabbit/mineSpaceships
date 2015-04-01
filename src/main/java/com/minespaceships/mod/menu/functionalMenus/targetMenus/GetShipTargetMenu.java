@@ -17,22 +17,18 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.target.EntityTarget;
 import com.minespaceships.mod.target.ITargetHolder;
 import com.minespaceships.mod.target.PositionTarget;
+import com.minespaceships.mod.target.SpaceshipTarget;
 import com.minespaceships.mod.target.Target;
 
-public class GetShipTargetMenu extends Menu implements ITargetHolder{
+public class GetShipTargetMenu extends Menu {
 
-	ITargetHolder targeter;
 	public GetShipTargetMenu() {
 		super("Target Spaceship");
-	}
-	public GetShipTargetMenu(ITargetHolder holder){
-		super("Target Spaceship");
-		targeter = holder;
 	}
 
 	@Override
 	public Menu getMenu(IMenuInterface terminal) {
-		GetShipTargetMenu list = new GetShipTargetMenu(targeter);
+		GetShipTargetMenu list = new GetShipTargetMenu();
 		World world = terminal.getChatRegisterEntity().getWorld();
 		List<Spaceship> ships = Shipyard.getShipyard(world).getShipList();
 		ArrayList<SpaceshipTarget> targets = new ArrayList<SpaceshipTarget>();
@@ -49,14 +45,4 @@ public class GetShipTargetMenu extends Menu implements ITargetHolder{
 		}
 		return list;
 	}
-
-	@Override
-	public void onTarget(Target target) {
-		if(targeter != null){
-			targeter.onTarget(target);
-		}
-	}
-	
-	
-	
 }

@@ -14,6 +14,7 @@ public interface FunctionalMenu{
 	 * Activate the functionality of the menu.
 	 * @param paramlist
 	 */
-	public String activate(String command, IMenuInterface terminal);
+	public String activate(IMenuInterface terminal, String data);
+	public String getData();
 
 }

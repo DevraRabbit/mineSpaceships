@@ -18,9 +18,15 @@ public class DeactivateEnginesMenu extends Menu implements FunctionalMenu {
 	}
 
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(false, EnergyType.engines), terminal.getPlayerEntity());
 		return EnumChatFormatting.GREEN+"Shutting down engines!\n";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

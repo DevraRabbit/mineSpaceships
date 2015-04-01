@@ -35,7 +35,7 @@ public class MoveDownMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(String command, IMenuInterface terminal, String data) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}
@@ -45,6 +45,12 @@ public class MoveDownMenu extends Menu implements FunctionalParamMenu{
 
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.moveDown+" "+command, terminal.getPlayerEntity());
 		return SpaceshipCommands.moveDown+" "+command;
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

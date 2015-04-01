@@ -32,16 +32,16 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	 * @param command
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
-		if(command.trim().isEmpty()){
-			return "command can not be empty.";
-		}
-		if(command.equals(null)){
-			return "command can not be null.";
-		}
+	public String activate(IMenuInterface terminal, String data) {
 
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.initAuto, null);
 		return EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\nPress 'Esc' and reopen the menu.";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

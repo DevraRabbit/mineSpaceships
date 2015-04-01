@@ -37,7 +37,7 @@ public class MoveForwardMenu extends Menu implements FunctionalParamMenu {
 	 * @param terminal
 	 */
 	@Override
-	public String activate(final String command, IMenuInterface terminal) {
+	public String activate(final String command, IMenuInterface terminal, String data) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}
@@ -47,6 +47,12 @@ public class MoveForwardMenu extends Menu implements FunctionalParamMenu {
 
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.moveForward+" "+command, terminal.getPlayerEntity());
 		return "";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

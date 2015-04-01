@@ -33,8 +33,14 @@ public class HelpMenu extends Menu implements FunctionalMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		return SpaceshipCommands.help(terminal.getPlayerEntity());
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

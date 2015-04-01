@@ -29,8 +29,8 @@ public class moveForwardTurn90Menu extends Menu implements FunctionalParamMenu {
 	 * Creates a new moveForwardMenu.
 	 * @param name
 	 */
-	public moveForwardTurn90Menu(String name) {
-		super(name);
+	public moveForwardTurn90Menu() {
+		super("Turn Right");
 	}
 
 	/**
@@ -39,12 +39,18 @@ public class moveForwardTurn90Menu extends Menu implements FunctionalParamMenu {
 	 * @param terminal
 	 */
 	@Override
-	public String activate(final String command, IMenuInterface terminal) {
+	public String activate(final String command, IMenuInterface terminal, String data) {
 		Spaceship ship=TerminalUtil.getShip(terminal);
 		if (ship!=null){
 			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd(terminal.getPlayerEntity())), Turn.RIGHT);
 		}
 		return "";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

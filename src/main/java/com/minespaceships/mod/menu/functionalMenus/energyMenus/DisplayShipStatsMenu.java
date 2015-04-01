@@ -14,12 +14,12 @@ import com.minespaceships.mod.spaceship.Spaceship;
 
 public class DisplayShipStatsMenu extends Menu implements FunctionalMenu {
 
-	public DisplayShipStatsMenu(String name) {
-		super(name);
+	public DisplayShipStatsMenu() {
+		super("Ship Stats");
 	}
 
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		Spaceship ship = TerminalUtil.getShip(terminal);
 		if(ship != null){
 			float weight = ShipInformation.getShipWeight(ship);
@@ -40,6 +40,12 @@ public class DisplayShipStatsMenu extends Menu implements FunctionalMenu {
 		} else {
 			return EnumChatFormatting.RED+"No Spaceship\n";
 		}
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -22,13 +22,19 @@ public class BalanceEnergyMenu extends Menu implements FunctionalMenu {
 	}
 
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		//terminal.getChatRegisterEntity().onCommand(SpaceshipCommands.EnergyCommand(EnergyCommandType.balance), terminal.getPlayerEntity());
 		Spaceship ship = TerminalUtil.getShip(terminal);
 		if(ship != null){
 			ship.balanceEnergy();
 		}
 		return EnumChatFormatting.GREEN+"Using all available energy!\n";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

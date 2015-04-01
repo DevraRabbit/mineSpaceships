@@ -17,9 +17,9 @@ public class moveForwardTurnMenu extends Menu {
 	 */
 	public moveForwardTurnMenu() {
 		super("Move Rotated");
-		this.addSubMenu(new moveForwardTurn90Menu("move forward turn right"));
-		this.addSubMenu(new moveForwardTurn180Menu("move forward turn around"));
-		this.addSubMenu(new moveForwardTurn270Menu("move forward turn left"));	
+		this.addSubMenu(new moveForwardTurn90Menu());
+		this.addSubMenu(new moveForwardTurn180Menu());
+		this.addSubMenu(new moveForwardTurn270Menu());	
 		
 	}
 

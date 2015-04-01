@@ -63,7 +63,6 @@ public class CommandMessage implements IMessage {
             
             BlockPos pos = null;
             World world = null;
-            UUID uuid = null;
             String command = null;
             
             if(moffset.matches()) {
@@ -74,8 +73,7 @@ public class CommandMessage implements IMessage {
 	            	int dimension = Integer.parseInt(moffset.group(2));
 	            	world = MinecraftServer.getServer().worldServerForDimension(dimension);
 	            	
-	            	String uuidString = moffset.group(3);
-	            	uuid = UUID.fromString(uuidString);
+	            	//group 3: uuid
 	            	
 	            	command = moffset.group(4);
 	            	//send it first so not everyone has to wait for the Server
@@ -126,14 +124,16 @@ public class CommandMessage implements IMessage {
 	            	int dimension = Integer.parseInt(moffset.group(2));
 	            	if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() == dimension){
 	            		String uuidString = moffset.group(3);
-		            	uuid = UUID.fromString(uuidString);
+	            		if(!uuidString.equals("0")){
+	            			uuid = UUID.fromString(uuidString);
+	            		}
 		            	
 		            	command = moffset.group(4);
 		            	
 		            	ChatRegisterEntity ent = ((ChatRegisterEntity)Minecraft.getMinecraft().theWorld.getTileEntity(pos));
 		            	if(ent != null){
 		            		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		            		if(p.getUniqueID().equals(uuid)){
+		            		if(uuid != null && p.getUniqueID().equals(uuid)){
 		            			ent.executeCommand(command, Minecraft.getMinecraft().thePlayer);
 		            		} else {
 		            			ent.executeCommand(command, null);

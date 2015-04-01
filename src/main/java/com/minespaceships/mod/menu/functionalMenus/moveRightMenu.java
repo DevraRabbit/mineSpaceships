@@ -17,8 +17,8 @@ public class moveRightMenu extends Menu implements FunctionalParamMenu{
 	 * Creates a new moveRightMenu.
 	 * @param name
 	 */
-	public moveRightMenu(String name) {
-		super(name);
+	public moveRightMenu() {
+		super("Move Right");
 	}
 
 	/**
@@ -27,7 +27,7 @@ public class moveRightMenu extends Menu implements FunctionalParamMenu{
 	 * @param terminal
 	 */
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(String command, IMenuInterface terminal, String data) {
 		if(command.trim().isEmpty()){
 			return "command can not be empty.";
 		}
@@ -37,6 +37,12 @@ public class moveRightMenu extends Menu implements FunctionalParamMenu{
 
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.moveRight+" "+command, terminal.getPlayerEntity());
 		return "";
+	}
+
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

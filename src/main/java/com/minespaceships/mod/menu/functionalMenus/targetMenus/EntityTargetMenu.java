@@ -6,24 +6,35 @@ import net.minecraft.world.World;
 
 import com.minespaceships.mod.menu.FunctionalMenu;
 import com.minespaceships.mod.menu.Menu;
+import com.minespaceships.mod.menu.functionalMenus.energyMenus.TerminalUtil;
 import com.minespaceships.mod.overhead.IMenuInterface;
+import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.target.EntityTarget;
 import com.minespaceships.mod.target.ITargetHolder;
 
 public class EntityTargetMenu  extends Menu implements FunctionalMenu {
-	EntityTarget target;
+	int target;
+	public EntityTargetMenu(){
+		super("");
+	}
 	public EntityTargetMenu(EntityTarget entityTarget,World world) {
 		super(entityTarget.getEntity(world).getName());
-		this.target = entityTarget;
+		this.target = entityTarget.getEntityID();
 	}
 	@Override
-	public String activate(String command, IMenuInterface terminal) {
+	public String activate(IMenuInterface terminal, String data) {
 		Menu mother = this.getMother();
-		if(mother instanceof ITargetHolder){
-			((ITargetHolder)mother).onTarget(target);
-			return EnumChatFormatting.RED+"Locked "+target.getEntity(terminal.getChatRegisterEntity().getWorld()).getName()+".";
+		Spaceship ship = TerminalUtil.getShip(terminal);
+		int targetData = Integer.parseInt(data);
+		if(ship != null){
+			ship.shootPhaserAt(new EntityTarget(terminal.getChatRegisterEntity().getWorld().getEntityByID(targetData)));
 		}
 		return "";
+	}
+	@Override
+	public String getData() {
+		// TODO Auto-generated method stub
+		return target+"";
 	}
 
 }
