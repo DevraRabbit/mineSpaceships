@@ -146,9 +146,13 @@ public class ChatRegisterEntity extends TileEntity {
 		if(side == Side.CLIENT) {
 			if(player != null){
 				MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+player.getUniqueID()+","+ command));
-			} else {
-				MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+"0"+","+ command));
 			}
+		}
+	}
+	public void onCommandForced(String command){
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if(side == Side.CLIENT) {
+			MineSpaceships.network.sendToServer(new CommandMessage(this.pos.toLong()+","+worldObj.provider.getDimensionId()+","+"0"+","+ command));
 		}
 	}
 
@@ -163,7 +167,7 @@ public class ChatRegisterEntity extends TileEntity {
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		
 		if(terminal == null){
-			MineSpaceships.proxy.makeTerminal(player, this);			
+			terminal = MineSpaceships.proxy.makeTerminal(player, this);			
 		}
 		
 		boolean isMenu = executeMenu(command);
@@ -212,17 +216,17 @@ public class ChatRegisterEntity extends TileEntity {
 	public void sendFunctionalMenu(FunctionalMenu menu){
 		String data = menu.getData();
 		if(data != null){
-			this.onCommand(menu.getClass().getName() + "#" + data, null);
+			this.onCommandForced(menu.getClass().getName() + "#" + data);
 		} else {
-			this.onCommand(menu.getClass().getName() + "#" + "null", null);
+			this.onCommandForced(menu.getClass().getName() + "#" + "null");
 		}
 	}
 	public void sendFunctionalParamMenu(FunctionalParamMenu menu, String parameters){
 		String data = menu.getData();
 		if(data != null){
-			this.onCommand(menu.getClass().getName() +"#" +parameters+ "#" + data, null);
+			this.onCommandForced(menu.getClass().getName() +"#" +parameters+ "#" + data);
 		} else {
-			this.onCommand(menu.getClass().getName() +"#" +parameters+ "#" + "null", null);
+			this.onCommandForced(menu.getClass().getName() +"#" +parameters+ "#" + "null");
 		}
 	}
 	public boolean executeMenu(String menuCommand){
