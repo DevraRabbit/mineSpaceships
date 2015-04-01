@@ -295,7 +295,7 @@ public class Spaceship implements Serializable{
 	}
 	
 
-	public BlockPos getShipLengthToAdd(EntityPlayer player){
+	public BlockPos getShipLengthToAdd(){
 		int length = 0;
 		if(getMaxPos().getZ()-getMinPos().getZ() > getMaxPos().getX()-getMinPos().getX())
 		{
@@ -315,12 +315,12 @@ public class Spaceship implements Serializable{
 			return new BlockPos (0,0,length);
 		}
 		else {
-			int playerRotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			if (playerRotation==EnumFacing.EAST.getHorizontalIndex()){
+			EnumFacing shipRotation = getFacing();
+			if (shipRotation==EnumFacing.EAST){
 				return new BlockPos (length,0,0);			
-			} else if (playerRotation==EnumFacing.WEST.getHorizontalIndex()){
+			} else if (shipRotation==EnumFacing.WEST){
 				return new BlockPos (-(length),0,0);			
-			} else if (playerRotation==EnumFacing.NORTH.getHorizontalIndex()){
+			} else if (shipRotation==EnumFacing.NORTH){
 				return new BlockPos (0,0,-(length));			
 			} else{
 				return new BlockPos (0,0,length);
