@@ -40,7 +40,7 @@ public class moveForwardTurn180Menu extends Menu implements FunctionalMenu {
 	 * @param terminal
 	 */
 	@Override
-	public String activate(final String command, IMenuInterface terminal, String data) {
+	public String activate(IMenuInterface terminal, String data) {
 		
 		Spaceship ship=TerminalUtil.getShip(terminal);
 		if (ship!=null){
