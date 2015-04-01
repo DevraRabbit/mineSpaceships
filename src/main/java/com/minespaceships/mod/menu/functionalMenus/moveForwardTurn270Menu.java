@@ -43,7 +43,7 @@ public class moveForwardTurn270Menu extends Menu implements FunctionalMenu {
 	public String activate(IMenuInterface terminal, String data) {
 		Spaceship ship=TerminalUtil.getShip(terminal);
 		if (ship!=null){
-			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd(terminal.getPlayerEntity())), Turn.LEFT);
+			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd()), Turn.LEFT);
 		
 		}
 		return "";

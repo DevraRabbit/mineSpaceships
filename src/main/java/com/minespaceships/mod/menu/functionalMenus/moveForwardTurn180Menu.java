@@ -44,7 +44,7 @@ public class moveForwardTurn180Menu extends Menu implements FunctionalMenu {
 		
 		Spaceship ship=TerminalUtil.getShip(terminal);
 		if (ship!=null){
-			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd(terminal.getPlayerEntity())), Turn.AROUND);
+			ship.setTarget(ship.getOrigin().add(ship.getShipLengthToAdd()), Turn.AROUND);
 		
 		}
 		return "";
