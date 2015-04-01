@@ -162,7 +162,7 @@ public class ChatRegisterEntity extends TileEntity {
 	public void executeCommand(String command, EntityPlayer player){
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		
-		if(spaceshipMenu == null){
+		if(terminal == null){
 			MineSpaceships.proxy.makeTerminal(player, this);			
 		}
 		
