@@ -19,7 +19,7 @@ public class ActivatePhaserMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(true, EnergyType.phaser), terminal.getPlayerEntity());
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(true, EnergyType.phaser), terminal.getPlayerEntity(), true);
 		return EnumChatFormatting.GREEN+"Engaging phaser!\n";
 	}
 

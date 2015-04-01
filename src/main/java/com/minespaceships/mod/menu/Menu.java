@@ -60,12 +60,12 @@ public class Menu{
 	 * Returns the menu in where you are currently in.
 	 * Returns {@code null} if the input was not and id, menu position or the menu name.
 	 */
-	public Menu switchMenu(String name, final IMenuInterface terminal){
+	public Menu switchMenu(String name, final IMenuInterface terminal, boolean executeFunctionals){
 		if(name.equals(null)){
 			throw new IllegalArgumentException("The menu name can not he null");
 		}
 		if(name.trim().isEmpty()){
-			throw new IllegalArgumentException("The menu name can not be empty.");
+			return this;
 		}
 		name = name.trim();
 
@@ -79,7 +79,7 @@ public class Menu{
 			if(this.getChildrenList().get(0) instanceof FunctionalParamMenu){
 				//Get the selctedMenu
 				FunctionalParamMenu temp = (FunctionalParamMenu) this.getChildrenList().get(0);
-				temp.activate(name, terminal);
+				if(executeFunctionals){temp.activate(name, terminal);}
 				return this.getMother().getMenu(terminal);
 			}else{
 				//Changes the menu via sub menu position.

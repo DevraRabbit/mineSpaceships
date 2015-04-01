@@ -19,7 +19,7 @@ public class ActivateEnginesMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String activate(String command, IMenuInterface terminal) {
-		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(true, EnergyType.engines), terminal.getPlayerEntity());
+		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(true, EnergyType.engines), terminal.getPlayerEntity(), true);
 		return EnumChatFormatting.GREEN+"Turning up engines!\n";
 	}
 
