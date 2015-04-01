@@ -59,7 +59,7 @@ public class CustomGuiChat extends GuiChat implements IMenuInterface{
 			else if(keyCode == 28 || keyCode == 156) {
 				//to commit a command, we send it to the entity and clear the input
 				String command = this.inputField.getText().trim();
-				entity.onCommand(command, player);
+				entity.executeCommand(command, player);
 				this.inputField.setText("");
 			}
 		}
