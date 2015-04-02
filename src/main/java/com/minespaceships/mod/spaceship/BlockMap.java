@@ -65,7 +65,8 @@ public class BlockMap {
 	
 	
 	public ArrayList<BlockPos> getBlocksToRefill(World world)
-	{	HashMap<BlockPos, Boolean> nextToShipBlocks;
+	{	
+		HashMap<BlockPos, Boolean> nextToShipBlocks;
 		int y = minPos.getY() - 1;
 		boolean setToWater = false;
 		ArrayList<BlockPos> toWater = new ArrayList();
@@ -198,7 +199,7 @@ public class BlockMap {
 	 */
 	public void refreshVolumeBlocks()
 	{
-		if(hasToRefresh) 
+		if(hasToRefresh || !hasToRefresh)              //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 		{
 			calculateOuterOutBlocks();  //initializes outerBlocks
 			spanRectangle();
@@ -206,7 +207,10 @@ public class BlockMap {
 			outerBlocks.clear();
 			while(!toCheckBlocks.isEmpty())
 			{
-				HashMap<BlockPos, Boolean> checkNowBlocks = toCheckBlocks;
+				HashMap<BlockPos, Boolean> checkNowBlocks = new HashMap<BlockPos, Boolean>();
+				for(BlockPos pos : toCheckBlocks.keySet()){
+					checkNowBlocks.put(pos, true);
+				}
 				toCheckBlocks.clear();
 				for(BlockPos l : checkNowBlocks.keySet())
 				{
@@ -453,34 +457,41 @@ public class BlockMap {
 			minPos = new BlockPos(minPos.getX(), minPos.getY(), pos.getZ());
 		}
 	}
+	private void resizeAll(){
+		minPos = new BlockPos(0,0,0);
+		maxPos = new BlockPos(0,0,0);
+		for(BlockPos p : map.keySet()){
+			resize(p);
+		}
+	}
 	
 	private void impendEdges(BlockPos pos){
 		BlockPos span = Vec3Op.subtract(maxPos, minPos);
 		if(pos.getX() == maxPos.getX()){
 			if(!otherInYZPane(span.getX())){
-				maxPos = Vec3Op.subtract(maxPos, new BlockPos(1,0,0));
+				resizeAll();
 			}
 		} else if(pos.getX() == minPos.getX()){
 			if(!otherInYZPane(0)){
-				minPos = minPos.add(new BlockPos(1,0,0));
+				resizeAll();
 			}
 		}
 		if(pos.getY() == maxPos.getY()){
 			if(!otherInXZPane(span.getY())){
-				maxPos = Vec3Op.subtract(maxPos, new BlockPos(0,1,0));
+				resizeAll();
 			}
 		} else if(pos.getY() == minPos.getY()){
 			if(!otherInXZPane(0)){
-				minPos = minPos.add(new BlockPos(0,1,0));
+				resizeAll();
 			}
 		}
 		if(pos.getZ() == maxPos.getZ()){
 			if(!otherInXYPane(span.getZ())){
-				maxPos = Vec3Op.subtract(maxPos, new BlockPos(0,0,1));
+				resizeAll();
 			}
 		} else if(pos.getZ() == minPos.getZ()){
 			if(!otherInXYPane(0)){
-				minPos = minPos.add(new BlockPos(0,0,1));
+				resizeAll();
 			}
 		}
 	}

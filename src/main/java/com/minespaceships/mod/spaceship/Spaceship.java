@@ -377,6 +377,7 @@ public class Spaceship implements Serializable{
 		if(side == Side.CLIENT)moveEntities(moveOrigin, addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
+		mayRemoveBlocks = false;
 		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
 		this.removal = new Vector<BlockPos>();
 		
