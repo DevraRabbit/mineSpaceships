@@ -10,16 +10,14 @@
                 "north": { "uv": [ 1.0, 1.0, 15.0, 15.0 ], "texture": "#glass_orange", "rotation": 180 },
                 "east": { "uv": [ 1.0, 1.0, 15.0, 15.0 ], "texture": "#glass_orange", "rotation": 180 },
                 "south": { "uv": [ 1.0, 1.0, 15.0, 15.0 ], "texture": "#glass_orange", "rotation": 180 },
-                "down": { "uv": [ 10.0, 7.0, 14.0, 9.0 ], "texture": "#glass", "rotation": 90 },
+                "down": { "uv": [ 1.0, 1.0, 15.0, 15.0 ], "texture": "#glass_orange", "rotation": 90 },
                 "up": { "uv": [ 1.0, 1.0, 15.0, 15.0 ], "texture": "#glass_orange", "rotation": 270 }
             }
         }
     ],
     "textures": {
-        "colors": "minespaceships:blocks/colors",
         "glass_orange": "blocks/glass_orange",
-        "glass": "blocks/glass",
-        "particle": "minespaceships:blocks/plasma"
+        "particle": "blocks/glass_orange"
     },
     "display": {
         "firstperson": {
