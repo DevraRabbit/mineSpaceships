@@ -205,13 +205,15 @@ public class ChatRegisterEntity extends TileEntity {
 		}
 		else if(command.startsWith(SpaceshipCommands.energy)) {
 			SpaceshipCommands.energy(command, worldObj, this, player, getShip());
-		} else {
+		} else if(command.startsWith("debug")){
+			SpaceshipCommands.debug(command, this);
+		}else {
 			terminalMenu.onCommand(command, player, this, this.terminal);
 			//display the menu and make the menu commands (also works on Server)
 			spaceshipMenu.display(command, this.terminal, player);			
 		}
-		terminalMenu.onCommand(command, player, this, this.terminal);
-		//SpaceshipCommands.debug(command, this);
+		//terminalMenu.onCommand(command, player, this, this.terminal);
+		
 	}
 	public void sendFunctionalMenu(FunctionalMenu menu){
 		String data = menu.getData();

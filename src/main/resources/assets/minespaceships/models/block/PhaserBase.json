@@ -6,18 +6,18 @@
             "from": [ 3.0, 0.0, 3.0 ],
             "to": [ 13.0, 1.0, 13.0 ],
             "faces": {
-                "west": { "uv": [ 0.0, 0.0, 16.0, 16.0 ], "texture": "#iron_block", "rotation": 180 },
-                "north": { "uv": [ 0.0, 0.0, 16.0, 16.0 ], "texture": "#iron_block", "rotation": 180 },
-                "east": { "uv": [ 0.0, 0.0, 16.0, 16.0 ], "texture": "#iron_block", "rotation": 180 },
-                "south": { "uv": [ 0.0, 0.0, 16.0, 16.0 ], "texture": "#iron_block", "rotation": 180 },
-                "down": { "uv": [ 0.0, 0.0, 16.0, 16.0 ], "texture": "#iron_block", "rotation": 90 },
-                "up": { "uv": [ 0.0, 0.0, 16.0, 16.0 ], "texture": "#iron_block", "rotation": 270 }
+                "west": { "uv": [ 3.0, 0.0, 3.5, 1.0 ], "texture": "#colors", "rotation": 0 },
+                "north": { "uv": [ 3.0, 0.0, 3.5, 1.0 ], "texture": "#colors", "rotation": 0 },
+                "east": { "uv": [ 3.0, 0.0, 3.5, 1.0 ], "texture": "#colors", "rotation": 0 },
+                "south": { "uv": [ 3.0, 0.0, 3.5, 1.0 ], "texture": "#colors", "rotation": 0 },
+                "down": { "uv": [ 3.0, 0.0, 3.5, 1.0 ], "texture": "#colors", "rotation": 270 },
+                "up": { "uv": [ 3.0, 0.0, 3.5, 1.0 ], "texture": "#colors", "rotation": 90 }
             }
         }
     ],
     "textures": {
-        "iron_block": "blocks/iron_block",
-        "particle": "blocks/iron_block"
+        "colors": "minespaceships:blocks/colors",
+        "particle": "blocks/obsidian"
     },
     "display": {
         "firstperson": {

@@ -62,20 +62,20 @@ public class SpaceshipAssembler {
 		}
 		return instances;
 	}
-	public void rotate(BlockPos origin, int turn){
-		if(turn == 0) return;
-		BlockPos rotateOrigin = Vec3Op.subtract(origin, this.origin);
-		Set<Class> classSet = parts.keySet();
-		for(Class c : classSet){
-			ArrayList<BlockPos> nextPositions = new ArrayList<BlockPos>();
-			List<BlockPos> momPositions = parts.get(c);
-			for(BlockPos pos : momPositions){
-				nextPositions.add(Turn.getRotatedPos(pos, rotateOrigin, new BlockPos(0,0,0), turn));
-			}
-			parts.put(c,  nextPositions);
-		}
-		this.origin = Turn.getRotatedPos(this.origin, rotateOrigin, new BlockPos(0,0,0), turn);
-	}
+//	public void rotate(BlockPos origin, int turn){
+//		if(turn == 0) return;
+//		BlockPos rotateOrigin = Vec3Op.subtract(origin, this.origin);
+//		Set<Class> classSet = parts.keySet();
+//		for(Class c : classSet){
+//			ArrayList<BlockPos> nextPositions = new ArrayList<BlockPos>();
+//			List<BlockPos> momPositions = parts.get(c);
+//			for(BlockPos pos : momPositions){
+//				nextPositions.add(Turn.getRotatedPos(pos, rotateOrigin, new BlockPos(0,0,0), turn));
+//			}
+//			parts.put(c,  nextPositions);
+//		}
+//		this.origin = Turn.getRotatedPos(this.origin, rotateOrigin, new BlockPos(0,0,0), turn);
+//	}
 	public void clear(){
 		parts.clear();
 	}

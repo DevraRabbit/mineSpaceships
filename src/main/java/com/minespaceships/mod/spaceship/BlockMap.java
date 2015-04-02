@@ -65,7 +65,8 @@ public class BlockMap {
 	
 	
 	public ArrayList<BlockPos> getBlocksToRefill(World world)
-	{	HashMap<BlockPos, Boolean> nextToShipBlocks;
+	{	
+		HashMap<BlockPos, Boolean> nextToShipBlocks;
 		int y = minPos.getY() - 1;
 		boolean setToWater = false;
 		ArrayList<BlockPos> toWater = new ArrayList();
@@ -126,7 +127,6 @@ public class BlockMap {
 			hasToRefresh = true;
 		}		
 		refreshVolumeBlocks();
-
 	}
 	
 	public boolean contains(BlockPos pos){
@@ -199,7 +199,7 @@ public class BlockMap {
 	 */
 	public void refreshVolumeBlocks()
 	{
-		if(hasToRefresh) 
+		if(hasToRefresh || !hasToRefresh)              //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 		{
 			calculateOuterOutBlocks();  //initializes outerBlocks
 			spanRectangle();
@@ -207,7 +207,10 @@ public class BlockMap {
 			outerBlocks.clear();
 			while(!toCheckBlocks.isEmpty())
 			{
-				HashMap<BlockPos, Boolean> checkNowBlocks = toCheckBlocks;
+				HashMap<BlockPos, Boolean> checkNowBlocks = new HashMap<BlockPos, Boolean>();
+				for(BlockPos pos : toCheckBlocks.keySet()){
+					checkNowBlocks.put(pos, true);
+				}
 				toCheckBlocks.clear();
 				for(BlockPos l : checkNowBlocks.keySet())
 				{
@@ -454,34 +457,41 @@ public class BlockMap {
 			minPos = new BlockPos(minPos.getX(), minPos.getY(), pos.getZ());
 		}
 	}
+	private void resizeAll(){
+		minPos = new BlockPos(0,0,0);
+		maxPos = new BlockPos(0,0,0);
+		for(BlockPos p : map.keySet()){
+			resize(p);
+		}
+	}
 	
 	private void impendEdges(BlockPos pos){
 		BlockPos span = Vec3Op.subtract(maxPos, minPos);
 		if(pos.getX() == maxPos.getX()){
 			if(!otherInYZPane(span.getX())){
-				maxPos = Vec3Op.subtract(maxPos, new BlockPos(1,0,0));
+				resizeAll();
 			}
 		} else if(pos.getX() == minPos.getX()){
 			if(!otherInYZPane(0)){
-				minPos = minPos.add(new BlockPos(1,0,0));
+				resizeAll();
 			}
 		}
 		if(pos.getY() == maxPos.getY()){
 			if(!otherInXZPane(span.getY())){
-				maxPos = Vec3Op.subtract(maxPos, new BlockPos(0,1,0));
+				resizeAll();
 			}
 		} else if(pos.getY() == minPos.getY()){
 			if(!otherInXZPane(0)){
-				minPos = minPos.add(new BlockPos(0,1,0));
+				resizeAll();
 			}
 		}
 		if(pos.getZ() == maxPos.getZ()){
 			if(!otherInXYPane(span.getZ())){
-				maxPos = Vec3Op.subtract(maxPos, new BlockPos(0,0,1));
+				resizeAll();
 			}
 		} else if(pos.getZ() == minPos.getZ()){
 			if(!otherInXYPane(0)){
-				minPos = minPos.add(new BlockPos(0,0,1));
+				resizeAll();
 			}
 		}
 	}
@@ -545,20 +555,18 @@ public class BlockMap {
 		return false;
 	}
 	
-	public void rotate(BlockPos origin, int turn){
-		if(turn == 0) return;
-		BlockPos rotateOrigin = Vec3Op.subtract(origin, this.origin);
-		Set<BlockPos> posSet = map.keySet();
-		HashMap nextMap = new HashMap<BlockPos, Boolean>();
-		for(Iterator<BlockPos> it = posSet.iterator(); it.hasNext();){
-			BlockPos pos = it.next();
-			BlockPos nextPos = Turn.getRotatedPos(pos, rotateOrigin, new BlockPos(0,0,0), turn);
-			nextMap.put(nextPos, true);
+	public BlockMap getRotatedMap(BlockPos origin, BlockPos addDirection, int turn){
+		if(turn == 0){
+			this.origin = this.origin.add(addDirection);
+			return this;
 		}
-		map = nextMap;
-		this.origin = Turn.getRotatedPos(this.origin, rotateOrigin, new BlockPos(0,0,0), turn);
-		this.maxPos = Turn.getRotatedPos(this.maxPos, rotateOrigin, new BlockPos(0,0,0), turn);
-		this.minPos = Turn.getRotatedPos(this.minPos, rotateOrigin, new BlockPos(0,0,0), turn);
+		BlockMap nextMap = new BlockMap(this.origin);
+		ArrayList<BlockPos> positions = getPositions();
+		for(BlockPos pos : positions){
+			BlockPos nextPos = Turn.getRotatedPos(pos, origin, addDirection, turn);
+			nextMap.add(nextPos);
+		}
+		return nextMap;
 	}
 	public float getHardnessSum(World world){
 		try{
@@ -581,11 +589,8 @@ public class BlockMap {
 	}
 	
 	public void showDebug(World world){
-		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
-
-		for(BlockPos pos : calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()){
-			positions.add(pos.add(origin));
-		}
+		ArrayList<BlockPos> positions = getPositionsWithInnerBlocks();
+		//calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()
 		for(BlockPos po : positions)
 		{
 			world.setBlockState(po, Block.getStateById(4));

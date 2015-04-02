@@ -368,16 +368,16 @@ public class Spaceship implements Serializable{
 		if(!canMove(addDirection, world, turn)){
 			return;
 		}
+		BlockPos moveOrigin = getOrigin();
 		ArrayList<BlockPos> harderBlocks= new ArrayList(); 
 		ArrayList<BlockPos> softerBlocks= new ArrayList(); 
-		blockMap.refreshVolumeBlocks();
-		HashMap<BlockPos, Boolean> doNotExplodeBlocks = blockMap.getSpannedRectangle();
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		WorldMock startMock = new WorldMock(world);
 		//move the entities first to avoid long waiting times and weird bugs
-		if(side == Side.CLIENT)moveEntities(addDirection, turn);
+		if(side == Side.CLIENT)moveEntities(moveOrigin, addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
+		mayRemoveBlocks = false;
 		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
 		this.removal = new Vector<BlockPos>();
 		
@@ -392,7 +392,7 @@ public class Spaceship implements Serializable{
 				BlockPos Pos = it.next();
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
-				BlockPos nextPos = Turn.getRotatedPos(Pos, getOrigin(), add, turn);			
+				BlockPos nextPos = Turn.getRotatedPos(Pos, moveOrigin, add, turn);			
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
@@ -427,7 +427,7 @@ public class Spaceship implements Serializable{
 		if(!positions.isEmpty()){
 			for(BlockPos Pos : positions){
 				//force placement
-				BlockPos nextPos = Turn.getRotatedPos(Pos, getOrigin(), add, turn);	
+				BlockPos nextPos = Turn.getRotatedPos(Pos, moveOrigin, add, turn);	
 				BlockCopier.copyBlock(world, Pos, nextPos, turn);
 				//again: remember to remove the Block. Now we need to append these at the front as they make problems when deleted last. This is cause of some deep Minecraft thingy
 				removal.insertElementAt(Pos, 0);
@@ -444,7 +444,7 @@ public class Spaceship implements Serializable{
 		canRemoveBlocks();
 
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
-		if(side == Side.SERVER)moveEntities(addDirection, turn);
+		if(side == Side.SERVER)moveEntities(moveOrigin, addDirection, turn);
 		//if(side == Side.CLIENT)world.markBlockRangeForRenderUpdate(getMinPos(), getMaxPos());
 		for(BlockPos p : harderBlocks){
 			world.createExplosion(null, (float)p.getX(), (float) p.getY(), (float)p.getZ(), 1.0F, true);
@@ -452,7 +452,7 @@ public class Spaceship implements Serializable{
 		for(BlockPos p : softerBlocks){
 			world.createExplosion(null, (float)p.getX(), (float)p.getY(), (float)p.getZ(), 0.5F, true);
 		}
-		moveMeasurements(addDirection, turn);
+		moveMeasurements(moveOrigin, addDirection, turn);
 		canBeRemoved = true;
 		if(side == Side.SERVER)MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+oldOrigin+","+world.provider.getDimensionId()));
 	}
@@ -519,22 +519,19 @@ public class Spaceship implements Serializable{
 		}
 	}
 		
-	private void moveMeasurements(BlockPos addDirection, int turn){
-		blockMap.rotate(getOrigin(), turn);
-		blockMap.setOrigin(blockMap.getOrigin().add(addDirection));	
-		assembler.rotate(getOrigin(),  turn);
-		assembler.setOrigin(assembler.getOrigin().add(addDirection));
+	private void moveMeasurements(BlockPos moveOrigin, BlockPos addDirection, int turn){
+		blockMap = blockMap.getRotatedMap(moveOrigin, addDirection, turn);
+		refreshParts();
 	}
 	@Deprecated
-	private void moveEntities(BlockPos addDirection, int turn){
+	private void moveEntities(BlockPos moveOrigin, BlockPos addDirection, int turn){
 		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(blockMap.getMinPos(), blockMap.getMaxPos().add(1,1,1)));
 		for(Entity ent : entities){			
 			if(ent instanceof EntityPlayer){
 				((EntityPlayer)ent).addPotionEffect(new PotionEffect(Potion.blindness.getId(),10));
 			}
 			Vec3 addDir = new Vec3(addDirection.getX(), addDirection.getY(), addDirection.getZ());
-			BlockPos origin = getOrigin();
-			Vec3 orig = new Vec3(origin.getX(), origin.getY(), origin.getZ());
+			Vec3 orig = new Vec3(moveOrigin.getX(), moveOrigin.getY(), moveOrigin.getZ());
 			Vec3 newPos = Turn.getRotatedPos(ent.getPositionVector(), orig, addDir, turn);
 			switch(turn){
 			case Turn.LEFT:
