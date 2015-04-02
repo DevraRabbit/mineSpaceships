@@ -25,7 +25,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Lands the spaceship.
  * @author ovae.
- * @version 20150331.
+ * @version 20150402.
  */
 public class LandingMenu extends Menu implements FunctionalMenu{
 
@@ -121,6 +121,7 @@ public class LandingMenu extends Menu implements FunctionalMenu{
 					+""+ship.getOrigin()+" Origin \n"
 					+""+ship.getMinPos()+" Min \n"
 					+""+position+" Landing postion";
+			terminal.display(out, terminal.getPlayerEntity(), false);
 			return out;
 
 		}catch(ConcurrentModificationException f){

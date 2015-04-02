@@ -15,6 +15,11 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyCommandType;
 import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyType;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @version 20150402.
+ */
 public class BalanceEnergyMenu extends Menu implements FunctionalMenu {
 
 	public BalanceEnergyMenu() {
@@ -28,7 +33,8 @@ public class BalanceEnergyMenu extends Menu implements FunctionalMenu {
 		if(ship != null){
 			ship.balanceEnergy();
 		}
-		return EnumChatFormatting.GREEN+"Using all available energy!\n";
+		terminal.display(EnumChatFormatting.GREEN+"Using all available energy!\n", terminal.getPlayerEntity(), false);
+		return "";
 	}
 
 	@Override

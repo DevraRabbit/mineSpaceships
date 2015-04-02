@@ -1,4 +1,4 @@
-package com.minespaceships.mod.menu.functionalMenus;
+package com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,13 +24,13 @@ import com.minespaceships.mod.spaceship.Turn;
  * @author ovae.
  * @version 20150323.
  */
-public class moveForwardTurn90Menu extends Menu implements FunctionalMenu {
+public class MoveForwardTurn90Menu extends Menu implements FunctionalMenu {
 
 	/**
 	 * Creates a new moveForwardMenu.
 	 * @param name
 	 */
-	public moveForwardTurn90Menu() {
+	public MoveForwardTurn90Menu() {
 		super("Turn Right");
 	}
 

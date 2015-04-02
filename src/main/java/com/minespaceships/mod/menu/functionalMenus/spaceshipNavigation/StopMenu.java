@@ -41,6 +41,7 @@ public class StopMenu extends Menu implements FunctionalMenu{
 			ship.stop();
 			return EnumChatFormatting.RED+"Braking!";
 		}
+		terminal.display("No spaceship...", terminal.getPlayerEntity(), false);
 		return "No Spaceship...";
 	}
 

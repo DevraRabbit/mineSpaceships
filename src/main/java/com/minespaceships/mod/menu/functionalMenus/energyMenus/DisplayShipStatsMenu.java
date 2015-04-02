@@ -12,6 +12,11 @@ import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @version 20150402.
+ */
 public class DisplayShipStatsMenu extends Menu implements FunctionalMenu {
 
 	public DisplayShipStatsMenu() {

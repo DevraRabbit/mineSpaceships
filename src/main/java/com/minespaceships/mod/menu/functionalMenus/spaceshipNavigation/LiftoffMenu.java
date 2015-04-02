@@ -14,7 +14,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Move the spaceship position up.
  * @author ovae.
- * @version 20150323.
+ * @version 20150402.
  */
 public class LiftoffMenu extends Menu implements FunctionalMenu{
 
@@ -34,7 +34,8 @@ public class LiftoffMenu extends Menu implements FunctionalMenu{
 	@Override
 	public String activate(IMenuInterface terminal, String data) {
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.moveUp+" 23", terminal.getPlayerEntity());
-		return SpaceshipCommands.liftoff+"\nPress m to get back.";
+		terminal.display(SpaceshipCommands.liftoff+"\nPress m to get back.", terminal.getPlayerEntity(), false);
+		return "";
 	}
 
 	@Override

@@ -10,6 +10,11 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyType;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @version 20150402.
+ */
 public class DeactivateEnginesMenu extends Menu implements FunctionalMenu {
 
 	public DeactivateEnginesMenu() {
@@ -20,7 +25,8 @@ public class DeactivateEnginesMenu extends Menu implements FunctionalMenu {
 	@Override
 	public String activate(IMenuInterface terminal, String data) {
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(false, EnergyType.engines), terminal.getPlayerEntity());
-		return EnumChatFormatting.GREEN+"Shutting down engines!\n";
+		terminal.display(EnumChatFormatting.GREEN+"Shutting down engines!\n", terminal.getPlayerEntity(), false);
+		return "";
 	}
 
 	@Override
