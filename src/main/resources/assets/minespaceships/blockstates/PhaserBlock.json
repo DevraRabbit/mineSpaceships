@@ -1,7 +1,7 @@
 {
     "variants": {
         "activated=true,facing=up": { "model": "minespaceships:PhaserBlock" },
-        "activated=true,facing=down": { "model": "minespaceships:PhaserBlock", "x": 180 },
+        "activated=true,facing=down": { "model": "minespaceships:PhaserBlockBottom", "x": 180 },
         "activated=true,facing=north": { "model": "minespaceships:PhaserBlock" , "y": 270 },
         "activated=true,facing=east": { "model": "minespaceships:PhaserBlock" },
         "activated=true,facing=south": { "model": "minespaceships:PhaserBlock" , "y": 90 },
