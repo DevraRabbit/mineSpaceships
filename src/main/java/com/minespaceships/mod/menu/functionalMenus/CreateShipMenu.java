@@ -14,7 +14,7 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
 /**
  * Menu witch will create a new spaceship.
  * @author ovae.
- * @version 20150323.
+ * @version 20150402.
  */
 public class CreateShipMenu extends Menu implements FunctionalMenu{
 
@@ -24,7 +24,7 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	 * @param terminal
 	 */
 	public CreateShipMenu() {
-		super("Recreate spaceship");
+		super("Create spaceship");
 	}
 
 	/**
@@ -35,7 +35,8 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	public String activate(IMenuInterface terminal, String data) {
 
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.initAuto, null);
-		return EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\nPress 'Esc' and reopen the menu.";
+		terminal.display(EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\nPress 'Esc' and reopen the menu.", terminal.getPlayerEntity(), false);
+		return "";
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.minespaceships.mod.menu;
 import com.minespaceships.mod.menu.functionalMenus.energyMenus.EnergyManagementMenu;
 import com.minespaceships.mod.menu.functionalMenus.CreateShipMenu;
 import com.minespaceships.mod.menu.functionalMenus.HelpMenu;
-import com.minespaceships.mod.menu.functionalMenus.ToTargetFunktionalMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LandingMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.SpaceshipNavigation;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LiftoffMenu;
@@ -13,6 +12,7 @@ import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveForwa
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveLeftMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveRightMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.MoveUpMenu;
+import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.ToTargetFunktionalMenu;
 import com.minespaceships.mod.menu.functionalMenus.targetMenus.PhaserShootMenu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
