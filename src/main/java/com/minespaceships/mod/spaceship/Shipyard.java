@@ -47,13 +47,6 @@ public class Shipyard {
 	protected Shipyard(World world) {
 		this.world = world;
 		ships = new Vector<Spaceship>();
-//		MapStorage storage = world.getPerWorldStorage();
-//		saveCompound = (ShipyardSaveCompound) storage.loadData(ShipyardSaveCompound.class, COMPOUND_KEY);
-//		if(saveCompound == null){
-//			saveCompound = new ShipyardSaveCompound(COMPOUND_KEY);
-//		}
-//		saveCompound.setShipyard(this);
-//		storage.setData(COMPOUND_KEY, saveCompound);
 	}
 	public String getCompoundKey(){
 		return getCompoundKey(world.provider.getDimensionId());

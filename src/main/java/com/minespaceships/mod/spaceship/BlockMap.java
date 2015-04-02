@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockSponge;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.EnumFacing;
@@ -40,8 +41,8 @@ public class BlockMap {
 		outerOutBlocks = new HashMap<BlockPos, Boolean>();
 		innerBlocks = new HashMap<BlockPos, Boolean>();
 		spannedRectangle = new HashMap<BlockPos, Boolean>();
-	  	maxPos = new BlockPos(0,0,0);
-		minPos = new BlockPos(0,0,0);
+	  	maxPos = new BlockPos(Integer.MIN_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE);
+		minPos = new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE);
 		origin = originPoint;
 		middle = new Vec3(origin.getX(), origin.getY(), origin.getZ());
 	}
@@ -560,7 +561,7 @@ public class BlockMap {
 			this.origin = this.origin.add(addDirection);
 			return this;
 		}
-		BlockMap nextMap = new BlockMap(this.origin);
+		BlockMap nextMap = new BlockMap(this.origin.add(addDirection));
 		ArrayList<BlockPos> positions = getPositions();
 		for(BlockPos pos : positions){
 			BlockPos nextPos = Turn.getRotatedPos(pos, origin, addDirection, turn);
@@ -591,10 +592,12 @@ public class BlockMap {
 	public void showDebug(World world){
 		ArrayList<BlockPos> positions = getPositionsWithInnerBlocks();
 		//calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()
-		for(BlockPos po : positions)
+		for(BlockPos pos : positions)
 		{
-			world.setBlockState(po, Block.getStateById(4));
+			world.setBlockState(pos, Block.getStateById(4));
 		}		
+		world.setBlockState(minPos.add(origin), Blocks.sea_lantern.getDefaultState());
+		world.setBlockState(maxPos.add(origin), Blocks.sea_lantern.getDefaultState());
 	}
 	
 	public void showDebugOld(World world){

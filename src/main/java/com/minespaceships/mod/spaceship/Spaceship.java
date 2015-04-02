@@ -280,16 +280,16 @@ public class Spaceship implements Serializable{
 		this.position = getOriginVec();
 		target = new MovementTarget(position, turn, world);
 	}
-	public void moveTo(BlockPos addDirection) {
+	private void moveTo(BlockPos addDirection) {
 		moveTo(addDirection, world, 0);
 	}
-	public void moveTo(BlockPos addDirection, World world) {
+	private void moveTo(BlockPos addDirection, World world) {
 		moveTo(addDirection, world, 0);
 	}
-	public void moveTo(BlockPos addDirection, int turn, World world) {
+	private void moveTo(BlockPos addDirection, int turn, World world) {
 		moveTo(addDirection, world, turn);
 	}
-	public void moveToTarget(){
+	private void moveToTarget(){
 		moveTo(target.getTarget(), target.getWorld(), target.getTurn());
 		target = null;
 	}
@@ -297,14 +297,8 @@ public class Spaceship implements Serializable{
 
 	public BlockPos getShipLengthToAdd(){
 		int length = 0;
-		if(getMaxPos().getZ()-getMinPos().getZ() > getMaxPos().getX()-getMinPos().getX())
-		{
-			length = getMaxPos().getZ()-getMinPos().getZ() + 2;
-		}
-		else
-		{
-			length = getMaxPos().getX()-getMinPos().getX() + 2;
-		}
+		BlockPos span = Vec3Op.subtract(getMaxPos(), getMinPos());
+		length = Math.max(span.getX(), span.getY())+3;
 		if (getFacing()==EnumFacing.EAST){
 			return new BlockPos (length,0,0);			
 		} else if (getFacing()==EnumFacing.WEST){
@@ -366,6 +360,7 @@ public class Spaceship implements Serializable{
 	
 	private void moveTo(BlockPos addDirection, World world, final int turn){
 		if(!canMove(addDirection, world, turn)){
+			System.out.println("Coudn't move ship");
 			return;
 		}
 		BlockPos moveOrigin = getOrigin();
@@ -377,7 +372,6 @@ public class Spaceship implements Serializable{
 		if(side == Side.CLIENT)moveEntities(moveOrigin, addDirection, turn);
 		//prevent it from being removed from the shipyard
 		canBeRemoved = false;
-		mayRemoveBlocks = false;
 		//list of positions that need to be removed in reverse order to prevent other blocks from cracking
 		this.removal = new Vector<BlockPos>();
 		
@@ -438,10 +432,11 @@ public class Spaceship implements Serializable{
 		long oldOrigin = this.getBlockMapOrigin().toLong();
 		oldMin = getMinPos();
 		oldMax = getMaxPos();
-		if(side == Side.SERVER || mayRemoveBlocks){
+		if(side == Side.SERVER){
 			removeOldSpaceship();
+		} else {
+			canRemoveBlocks();
 		}
-		canRemoveBlocks();
 
 		//move the entities and move the ships measurements move serverside last as it is somehow faster than client side.
 		if(side == Side.SERVER)moveEntities(moveOrigin, addDirection, turn);
@@ -454,7 +449,9 @@ public class Spaceship implements Serializable{
 		}
 		moveMeasurements(moveOrigin, addDirection, turn);
 		canBeRemoved = true;
-		if(side == Side.SERVER)MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+oldOrigin+","+world.provider.getDimensionId()));
+		if(side == Side.SERVER){
+			MineSpaceships.shipRemoval.sendToAll(new CommandMessage(""+this.getBlockMapOrigin().toLong()+","+oldOrigin+","+world.provider.getDimensionId()));		
+		}
 	}
 
 	//Removes the ship at the old position and refills blocks like water.
@@ -634,18 +631,20 @@ public class Spaceship implements Serializable{
 		assembler = new SpaceshipAssembler(ori);
 		Class addedClass = null;
 		for(String s : lines){
-			if(addedClass == null){
-				try{
-					//need to press this directly into the block map. Otherwise minecraft tries to lead the chunk and ends up in an infinite loop.
-					this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
-				} catch(Exception e){
-					addedClass = Class.forName(s);
-				}
-			} else {
-				try{
-					assembler.put(addedClass, BlockPos.fromLong(Long.parseLong(s)));		
-				} catch(Exception e){
-					addedClass = Class.forName(s);
+			if(s != lines[0]){
+				if(addedClass == null){
+					try{
+						//need to press this directly into the block map. Otherwise minecraft tries to lead the chunk and ends up in an infinite loop.
+						this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+					} catch(Exception e){
+						addedClass = Class.forName(s);
+					}
+				} else {
+					try{
+						assembler.put(addedClass, BlockPos.fromLong(Long.parseLong(s)));		
+					} catch(Exception e){
+						addedClass = Class.forName(s);
+					}
 				}
 			}
 		}
@@ -697,6 +696,14 @@ public class Spaceship implements Serializable{
 		BlockPos minPos = getMinPos();
 		BlockPos nextMaxPos = Turn.getRotatedPos(maxPos, getOrigin(), addDirection, turn);
 		BlockPos nextMinPos = Turn.getRotatedPos(minPos, getOrigin(), addDirection, turn);
+		int nextMaxX = Math.max(nextMaxPos.getX(), nextMinPos.getX());
+		int nextMaxY = Math.max(nextMaxPos.getY(), nextMinPos.getY());
+		int nextMaxZ = Math.max(nextMaxPos.getZ(), nextMinPos.getZ());
+		int nextMinX = Math.min(nextMaxPos.getX(), nextMinPos.getX());
+		int nextMinY = Math.min(nextMaxPos.getY(), nextMinPos.getY());
+		int nextMinZ = Math.min(nextMaxPos.getZ(), nextMinPos.getZ());
+		nextMaxPos = new BlockPos(nextMaxX, nextMaxY, nextMaxZ);
+		nextMinPos = new BlockPos(nextMinX, nextMinY, nextMinZ);
 		if(nextMaxPos.getY() > maxWorldHeight || nextMinPos.getY() < 0){
 			return false;
 		}
@@ -726,6 +733,10 @@ public class Spaceship implements Serializable{
 			}
 		}
 		lastUpdatedTime = world.getTotalWorldTime();
+		
+		if(mayRemoveBlocks){
+			canRemoveBlocks();
+		}
 	}
 	private Vector<BlockPos> move(){
 		if(target != null){
