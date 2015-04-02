@@ -126,7 +126,6 @@ public class BlockMap {
 			hasToRefresh = true;
 		}		
 		refreshVolumeBlocks();
-
 	}
 	
 	public boolean contains(BlockPos pos){
@@ -545,20 +544,18 @@ public class BlockMap {
 		return false;
 	}
 	
-	public void rotate(BlockPos origin, int turn){
-		if(turn == 0) return;
-		BlockPos rotateOrigin = Vec3Op.subtract(origin, this.origin);
-		Set<BlockPos> posSet = map.keySet();
-		HashMap nextMap = new HashMap<BlockPos, Boolean>();
-		for(Iterator<BlockPos> it = posSet.iterator(); it.hasNext();){
-			BlockPos pos = it.next();
-			BlockPos nextPos = Turn.getRotatedPos(pos, rotateOrigin, new BlockPos(0,0,0), turn);
-			nextMap.put(nextPos, true);
+	public BlockMap getRotatedMap(BlockPos origin, BlockPos addDirection, int turn){
+		if(turn == 0){
+			this.origin = this.origin.add(addDirection);
+			return this;
 		}
-		map = nextMap;
-		this.origin = Turn.getRotatedPos(this.origin, rotateOrigin, new BlockPos(0,0,0), turn);
-		this.maxPos = Turn.getRotatedPos(this.maxPos, rotateOrigin, new BlockPos(0,0,0), turn);
-		this.minPos = Turn.getRotatedPos(this.minPos, rotateOrigin, new BlockPos(0,0,0), turn);
+		BlockMap nextMap = new BlockMap(this.origin);
+		ArrayList<BlockPos> positions = getPositions();
+		for(BlockPos pos : positions){
+			BlockPos nextPos = Turn.getRotatedPos(pos, origin, addDirection, turn);
+			nextMap.add(nextPos);
+		}
+		return nextMap;
 	}
 	public float getHardnessSum(World world){
 		try{
@@ -581,11 +578,8 @@ public class BlockMap {
 	}
 	
 	public void showDebug(World world){
-		ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
-
-		for(BlockPos pos : calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()){
-			positions.add(pos.add(origin));
-		}
+		ArrayList<BlockPos> positions = getPositionsWithInnerBlocks();
+		//calculateFrameBlocks(new BlockPos(minPos.getX()-1, minPos.getY()-1, minPos.getZ()-1),new BlockPos(minPos.getX()+1, minPos.getY()+1, minPos.getZ()+1)).keySet()
 		for(BlockPos po : positions)
 		{
 			world.setBlockState(po, Block.getStateById(4));
