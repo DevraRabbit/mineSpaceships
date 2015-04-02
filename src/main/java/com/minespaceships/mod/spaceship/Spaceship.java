@@ -358,7 +358,7 @@ public class Spaceship implements Serializable{
 		return EnumFacing.UP;		
 	}
 	
-	private void moveTo(BlockPos addDirection, World world, final int turn){
+	private synchronized void moveTo(BlockPos addDirection, World world, final int turn){
 		if(!canMove(addDirection, world, turn)){
 			System.out.println("Coudn't move ship");
 			return;
@@ -455,8 +455,7 @@ public class Spaceship implements Serializable{
 	}
 
 	//Removes the ship at the old position and refills blocks like water.
-	public void removeOldSpaceship(){
-		//TODO
+	public synchronized void removeOldSpaceship(){
 		WorldMock startMock = new WorldMock(world);
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 
