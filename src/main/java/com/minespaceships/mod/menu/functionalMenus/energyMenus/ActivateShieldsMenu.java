@@ -10,6 +10,11 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyType;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @version 20150402.
+ */
 public class ActivateShieldsMenu extends Menu implements FunctionalMenu {
 
 	public ActivateShieldsMenu() {
@@ -20,7 +25,8 @@ public class ActivateShieldsMenu extends Menu implements FunctionalMenu {
 	@Override
 	public String activate(IMenuInterface terminal, String data) {
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.activateCommand(true, EnergyType.shields), terminal.getPlayerEntity());
-		return EnumChatFormatting.GREEN+"Activating shields!\n";
+		terminal.display(EnumChatFormatting.GREEN+"Activating shields!\n", terminal.getPlayerEntity(), false);
+		return "";
 	}
 
 	@Override
