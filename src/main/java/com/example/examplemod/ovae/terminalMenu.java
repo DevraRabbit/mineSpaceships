@@ -73,7 +73,7 @@ public class terminalMenu {
 					//Place the wool blocks
 					if(!((x==0 && y==0) || (x==0 && y==size-1) || (x==size-1 && y==0) || (x==size-1 && y==4) || (x==0) && (y==2))){
 						BlockPos newPos = new BlockPos(pos.getX()+x, pos.getY()+3, pos.getZ()+y);
-						world.setBlockState(newPos, Blocks.iron_block.getDefaultState());
+						world.setBlockState(newPos, Blocks.wool.getDefaultState());
 					}
 
 					//Place the navigator block.

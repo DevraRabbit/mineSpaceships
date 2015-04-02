@@ -70,11 +70,11 @@ public class SpaceshipAssembler {
 			ArrayList<BlockPos> nextPositions = new ArrayList<BlockPos>();
 			List<BlockPos> momPositions = parts.get(c);
 			for(BlockPos pos : momPositions){
-				nextPositions.add(Turn.getRotatedPos(pos, origin, new BlockPos(0,0,0), turn));
+				nextPositions.add(Turn.getRotatedPos(pos, rotateOrigin, new BlockPos(0,0,0), turn));
 			}
 			parts.put(c,  nextPositions);
 		}
-		this.origin = Turn.getRotatedPos(this.origin, origin, new BlockPos(0,0,0), turn);
+		this.origin = Turn.getRotatedPos(this.origin, rotateOrigin, new BlockPos(0,0,0), turn);
 	}
 	public void clear(){
 		parts.clear();

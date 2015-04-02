@@ -556,9 +556,9 @@ public class BlockMap {
 			nextMap.put(nextPos, true);
 		}
 		map = nextMap;
-		this.origin = Turn.getRotatedPos(this.origin, origin, new BlockPos(0,0,0), turn);
-		this.maxPos = Turn.getRotatedPos(this.maxPos, origin, new BlockPos(0,0,0), turn);
-		this.minPos = Turn.getRotatedPos(this.minPos, origin, new BlockPos(0,0,0), turn);
+		this.origin = Turn.getRotatedPos(this.origin, rotateOrigin, new BlockPos(0,0,0), turn);
+		this.maxPos = Turn.getRotatedPos(this.maxPos, rotateOrigin, new BlockPos(0,0,0), turn);
+		this.minPos = Turn.getRotatedPos(this.minPos, rotateOrigin, new BlockPos(0,0,0), turn);
 	}
 	public float getHardnessSum(World world){
 		try{

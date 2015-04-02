@@ -12,6 +12,11 @@ import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
 import com.minespaceships.mod.spaceship.Spaceship;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @version 20150402.
+ */
 public class DisplayShipStatsMenu extends Menu implements FunctionalMenu {
 
 	public DisplayShipStatsMenu() {
@@ -32,11 +37,14 @@ public class DisplayShipStatsMenu extends Menu implements FunctionalMenu {
 			int activeShields = ship.getActiveShieldsCount();
 			int activePhaser = ship.getActivePhaserCount();
 			
-			return "Weight: "+weight +" tons\n"+
+			String out;
+			out = "Weight: "+weight +" tons\n"+
 					"Capacity: "+capacity+" EU ("+activeGenerators+" active generators)\n"+
 					"Speed: "+speed +" EU ("+activeEngines+" active engines)\n"+
 					"Shields: "+shields+" SU ("+activeShields+" active shields)\n"+
 					"Strength: "+strength+" PU ("+activePhaser+" active phaser)\n";
+			terminal.display(out, terminal.getPlayerEntity(), false);
+			return out;
 		} else {
 			return EnumChatFormatting.RED+"No Spaceship\n";
 		}

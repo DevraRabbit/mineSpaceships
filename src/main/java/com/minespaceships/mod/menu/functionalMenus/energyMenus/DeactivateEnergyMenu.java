@@ -14,6 +14,11 @@ import com.minespaceships.mod.spaceship.Spaceship;
 import com.minespaceships.mod.spaceship.SpaceshipCommands;
 import com.minespaceships.mod.spaceship.SpaceshipCommands.EnergyCommandType;
 
+/**
+ * 
+ * @author ..., ovae.
+ * @version 20150402.
+ */
 public class DeactivateEnergyMenu extends Menu implements FunctionalMenu {
 
 	public DeactivateEnergyMenu() {
@@ -23,7 +28,8 @@ public class DeactivateEnergyMenu extends Menu implements FunctionalMenu {
 	@Override
 	public String activate(IMenuInterface terminal, String data) {
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.EnergyCommand(EnergyCommandType.shutdown), terminal.getPlayerEntity());
-		return EnumChatFormatting.GREEN+"Shutting down.\n";
+		terminal.display(EnumChatFormatting.GREEN+"Shutting down.\n", terminal.getPlayerEntity(), false);
+		return "";
 	}
 
 	@Override
