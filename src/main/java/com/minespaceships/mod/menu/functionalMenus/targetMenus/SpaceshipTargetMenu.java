@@ -16,14 +16,18 @@ import com.minespaceships.mod.target.PositionTarget;
 import com.minespaceships.mod.target.SpaceshipTarget;
 
 public class SpaceshipTargetMenu extends Menu implements FunctionalMenu {
+
 	SpaceshipTarget target;
+
 	public SpaceshipTargetMenu(){
-		super("");
+		super("placeholder");
 	}
+
 	public SpaceshipTargetMenu(SpaceshipTarget target, World world) {
 		super(target.getTarget(world)+"");
 		this.target = target;
 	}
+
 	@Override
 	public String activate(IMenuInterface terminal, String data) {
 		Menu mother = this.getMother();
@@ -31,11 +35,15 @@ public class SpaceshipTargetMenu extends Menu implements FunctionalMenu {
 		BlockPos basePos = BlockPos.fromLong(Long.parseLong(data));
 		Spaceship targetShip = Shipyard.getShipyard(world).getShipByBlockMapOrigin(basePos, world);
 		Spaceship ship = TerminalUtil.getShip(terminal);
-		if(ship != null){
-			ship.shootPhaserAt(new SpaceshipTarget(basePos, ship));
+		if(ship != null && targetShip !=null){
+			ship.shootPhaserAt(new SpaceshipTarget(basePos, targetShip));
+			terminal.display("shoot at" +basePos, terminal.getPlayerEntity(), false);
+			return "";
 		}
+		terminal.display("miss", terminal.getPlayerEntity(), false);
 		return "";
 	}
+
 	@Override
 	public String getData() {
 		return target.getBasePos().toLong()+"";

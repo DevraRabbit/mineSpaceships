@@ -48,6 +48,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IStringSerializable;
@@ -265,6 +266,12 @@ public class Spaceship implements Serializable{
 				((PhaserBlock)block).stopShooting(pos, world);
 				if(!hasShot){
 					hasShot = ((PhaserBlock)block).shoot(pos, world, ShipInformation.getShipStrength(this), target);
+					if(hasShot){
+						System.out.println("######SHOT::"+hasShot);
+					}else{
+						System.out.println("######MISS::"+hasShot);
+					}
+					
 				}
 			}
 		}

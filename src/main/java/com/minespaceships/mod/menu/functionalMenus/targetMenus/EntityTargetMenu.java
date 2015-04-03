@@ -13,17 +13,21 @@ import com.minespaceships.mod.target.EntityTarget;
 import com.minespaceships.mod.target.ITargetHolder;
 
 public class EntityTargetMenu  extends Menu implements FunctionalMenu {
+
 	int target;
+
 	public EntityTargetMenu(){
-		super("");
+		super("placeholder");
 	}
+
 	public EntityTargetMenu(EntityTarget entityTarget,World world) {
 		super(entityTarget.getEntity(world).getName());
 		this.target = entityTarget.getEntityID();
 	}
+
 	@Override
 	public String activate(IMenuInterface terminal, String data) {
-		Menu mother = this.getMother();
+		//Menu mother = this.getMother();
 		Spaceship ship = TerminalUtil.getShip(terminal);
 		int targetData = Integer.parseInt(data);
 		if(ship != null){
@@ -31,6 +35,7 @@ public class EntityTargetMenu  extends Menu implements FunctionalMenu {
 		}
 		return "";
 	}
+
 	@Override
 	public String getData() {
 		// TODO Auto-generated method stub

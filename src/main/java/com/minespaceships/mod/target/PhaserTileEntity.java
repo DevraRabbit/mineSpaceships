@@ -38,8 +38,8 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 		target = null;
 		delay = 0;
 	}
-	
-	public boolean shoot(Target futureTarget, float strength, Spaceship ship){		
+
+	public boolean shoot(Target futureTarget, float strength, Spaceship ship){
 		if(canShoot(futureTarget, ship)){
 			this.target = futureTarget;
 			delay = phaserDelay;
@@ -48,6 +48,7 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 		}
 		return false;
 	}
+
 	public boolean canShoot(Target futureTarget, Spaceship ship){
 		if(ship != null && futureTarget != null){
 			BlockPos targetPos = futureTarget.getTarget(ship.getWorld());
@@ -62,6 +63,7 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 			return false;
 		}
 	}
+
 	public void stopShooting(){
 		target = null;
 		strength = 0;
