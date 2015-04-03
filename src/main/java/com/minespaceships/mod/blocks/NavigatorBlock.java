@@ -67,7 +67,15 @@ public class NavigatorBlock extends BlockStairs implements ITileEntityProvider, 
     }
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
+    	worldIn.removeTileEntity(pos);
+    	Shipyard.getShipyard(worldIn).removeBlock(pos, worldIn);
     	super.breakBlock(worldIn, pos, state);
+    }
+    @Override
+    public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest){
+    	world.removeTileEntity(pos);
+    	Shipyard.getShipyard(world).removeBlock(pos, world);
+    	return super.removedByPlayer(world, pos, player, willHarvest);
     }
 
     /**
