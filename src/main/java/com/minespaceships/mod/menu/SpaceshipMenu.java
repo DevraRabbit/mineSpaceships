@@ -1,8 +1,11 @@
 package com.minespaceships.mod.menu;
 
+import net.minecraft.world.World;
+
+import com.minespaceships.mod.menu.functionalMenus.createShip.CreateSpaceshipMenu;
 import com.minespaceships.mod.menu.functionalMenus.energyMenus.EnergyManagementMenu;
-import com.minespaceships.mod.menu.functionalMenus.CreateShipMenu;
 import com.minespaceships.mod.menu.functionalMenus.HelpMenu;
+import com.minespaceships.mod.menu.functionalMenus.LoginMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LandingMenu;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.SpaceshipNavigation;
 import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.LiftoffMenu;
@@ -16,6 +19,7 @@ import com.minespaceships.mod.menu.functionalMenus.spaceshipNavigation.ToTargetF
 import com.minespaceships.mod.menu.functionalMenus.targetMenus.PhaserShootMenu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
+import com.minespaceships.mod.spaceship.Shipyard;
 
 /**
  * A default menu structure.
@@ -30,6 +34,8 @@ public class SpaceshipMenu {
 	//The root menu.
 	private static Menu root;
 
+	//LoggedIn
+	private static boolean loggedIn = false;
 	/**
 	 * Initialise the menu structure.
 	 * @param terminal
@@ -41,14 +47,21 @@ public class SpaceshipMenu {
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
+		/*if(!loggedIn){
+			root.addSubMenu(new LoginMenu());
+			initMenu(terminal);
+		}else{
+		*/
+			//Create the menu structure.
+			root.addSubMenu(new CreateSpaceshipMenu());
+			root.addSubMenu(new SpaceshipNavigation());
+			root.addSubMenu(new EnergyManagementMenu());
+			root.addSubMenu(new PhaserShootMenu());
+			root.addSubMenu(new HelpMenu());
+			root.addSubMenu(new LoginMenu());
+		//}
 
-		//Create the menu structure.
-		root.addSubMenu(new CreateShipMenu());
-		root.addSubMenu(new SpaceshipNavigation());
-		root.addSubMenu(new EnergyManagementMenu());
-		root.addSubMenu(new PhaserShootMenu());
-		root.addSubMenu(new HelpMenu());
-
+		loggedIn = false;
 		runBefore = true;
 	}
 
@@ -68,4 +81,7 @@ public class SpaceshipMenu {
 		return runBefore;
 	}
 
+	public static void setLoggedIn(boolean bool){
+		loggedIn = bool;
+	}
 }

@@ -2,8 +2,8 @@ package com.minespaceships.mod;
 
 import com.minespaceships.mod.events.PlayerTracker;
 import com.minespaceships.mod.menu.MenuDisplay;
-import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
 import com.minespaceships.mod.menu.SpaceshipMenu;
+import com.minespaceships.mod.menu.functionalMenus.createShip.NoSpaceshipEntityMenu;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;

@@ -1,8 +1,9 @@
-package com.minespaceships.mod.menu.functionalMenus;
+package com.minespaceships.mod.menu.functionalMenus.createShip;
 
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 
-import com.minespaceships.mod.menu.FunctionalMenu;
+import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -16,15 +17,15 @@ import com.minespaceships.mod.spaceship.SpaceshipCommands;
  * @author ovae.
  * @version 20150402.
  */
-public class CreateShipMenu extends Menu implements FunctionalMenu{
+public class InitSpaceshipMenu extends Menu implements FunctionalParamMenu{
 
 	/**
 	 * The constructor creates a new spaceship.
 	 * @param name
 	 * @param terminal
 	 */
-	public CreateShipMenu() {
-		super("Create spaceship");
+	public InitSpaceshipMenu() {
+		super("Enter a password for your new spaceship:");
 	}
 
 	/**
@@ -32,10 +33,14 @@ public class CreateShipMenu extends Menu implements FunctionalMenu{
 	 * @param command
 	 */
 	@Override
-	public String activate(IMenuInterface terminal, String data) {
+	public String activate(String password, IMenuInterface terminal, String data) {
+		World world = terminal.getChatRegisterEntity().getWorld();
 
 		terminal.getChatRegisterEntity().executeCommand(SpaceshipCommands.initAuto, null);
+		Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
+		ship.setPassword(password);
 		terminal.display(EnumChatFormatting.GREEN+">> Initialise spaceship successful<<\nPress 'Esc' and reopen the menu.", terminal.getPlayerEntity(), false);
+		
 		return "";
 	}
 

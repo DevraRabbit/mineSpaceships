@@ -12,7 +12,7 @@ import com.minespaceships.mod.overhead.IMenuInterface;
 public class LoginMenu extends Menu {
 
 	public LoginMenu() {
-		super("Login: enter your password:");
+		super("Login");
 		this.addSubMenu(new CheckLoginMenu());
 	}
 

@@ -11,7 +11,7 @@ import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
-import com.minespaceships.mod.menu.NoSpaceshipEntityMenu;
+import com.minespaceships.mod.menu.functionalMenus.createShip.NoSpaceshipEntityMenu;
 import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.ISpaceshipPart;
 import com.minespaceships.mod.spaceship.Shipyard;

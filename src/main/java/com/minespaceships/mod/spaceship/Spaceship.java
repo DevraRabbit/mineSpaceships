@@ -91,6 +91,8 @@ public class Spaceship implements Serializable{
 	private BlockPos oldMin;
 	private BlockPos oldMax;
 
+	private String password;
+
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
 		blockMap = SpaceshipMath.getConnectedPositions(initial, world, maxShipSize);
@@ -827,6 +829,21 @@ public class Spaceship implements Serializable{
 			c.setBoolean(firstKey+containsTargetKey, false);
 		}
 	}
-	
-	
+
+	//Set a password.
+	public void setPassword(final String password){
+		if(password == null){
+			throw new IllegalArgumentException("password can not be null.");
+		}
+		if(password.trim().isEmpty()){
+			throw new IllegalArgumentException("password can not be empty.");
+		}
+		this.password = password;
+	}
+
+	//Get the password
+	public String getPassword() {
+		return password;
+	}
+
 }
