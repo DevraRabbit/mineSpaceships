@@ -18,5 +18,5 @@ public class EnergyManagementMenu extends Menu {
 		addSubMenu(new BalanceEnergyMenu());
 		addSubMenu(new DeactivateEnergyMenu());
 	}
-	
+
 }

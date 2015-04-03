@@ -47,7 +47,6 @@ public class StopMenu extends Menu implements FunctionalMenu{
 
 	@Override
 	public String getData() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

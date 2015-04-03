@@ -19,7 +19,6 @@ public class DeactivatePhaserMenu extends Menu implements FunctionalMenu {
 
 	public DeactivatePhaserMenu() {
 		super("Deactivate Phasers");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -31,7 +30,6 @@ public class DeactivatePhaserMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String getData() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

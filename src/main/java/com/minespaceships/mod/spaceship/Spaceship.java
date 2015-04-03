@@ -86,7 +86,6 @@ public class Spaceship implements Serializable{
 	private boolean canBeRemoved = true;
 	
 	public static final int maxShipSize = 27000;
-	//TODO
 	private Vector<BlockPos> removal;
 	private ArrayList<BlockPos> toRefill;
 	private BlockPos oldMin;
@@ -435,7 +434,6 @@ public class Spaceship implements Serializable{
 			}
 		}
 
-		//TODO
 		long oldOrigin = this.getBlockMapOrigin().toLong();
 		oldMin = getMinPos();
 		oldMax = getMaxPos();

@@ -62,7 +62,6 @@ public class MoveRightMenu extends Menu implements FunctionalParamMenu{
 
 	@Override
 	public String getData() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

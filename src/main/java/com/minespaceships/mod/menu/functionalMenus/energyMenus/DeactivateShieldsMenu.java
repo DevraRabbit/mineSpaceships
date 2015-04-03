@@ -19,7 +19,6 @@ public class DeactivateShieldsMenu extends Menu implements FunctionalMenu {
 
 	public DeactivateShieldsMenu() {
 		super("Deactivate Shields");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -31,7 +30,6 @@ public class DeactivateShieldsMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String getData() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

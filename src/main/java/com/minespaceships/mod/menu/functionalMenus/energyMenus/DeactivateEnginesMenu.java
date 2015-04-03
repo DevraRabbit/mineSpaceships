@@ -19,7 +19,6 @@ public class DeactivateEnginesMenu extends Menu implements FunctionalMenu {
 
 	public DeactivateEnginesMenu() {
 		super("Deactivate Engines");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -31,7 +30,6 @@ public class DeactivateEnginesMenu extends Menu implements FunctionalMenu {
 
 	@Override
 	public String getData() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

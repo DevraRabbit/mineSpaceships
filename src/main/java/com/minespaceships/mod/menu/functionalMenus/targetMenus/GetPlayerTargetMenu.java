@@ -37,7 +37,5 @@ public class GetPlayerTargetMenu extends Menu{
 		}
 		return list;
 	}
-	
-	
-	
+
 }
