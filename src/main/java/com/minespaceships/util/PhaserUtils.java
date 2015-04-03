@@ -3,6 +3,8 @@ package com.minespaceships.util;
 import java.util.List;
 import java.util.Random;
 
+import akka.japi.Effect;
+
 import com.minespaceships.mod.overhead.PhaserEffect;
 import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
@@ -51,12 +53,20 @@ public class PhaserUtils {
 						.getBlockHardness(world, current);
 				Spaceship ship = Shipyard.getShipyard(world).getShip(current, world);
 				if(ship != null){
-					strength -= ShipInformation.getShipShields(ship);
+					float shields = ShipInformation.getShipShields(ship);
+					strength -= shields;
+					if(shields > 0){
+						for(int i = 0; i < 10 ; i++){
+							world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, current.getX()+0.5f, current.getY()+0.5f, current.getZ()+0.5f, 0, 0, 0, new int[]{Block.getStateId(Blocks.water.getDefaultState())});
+						}
+						world.playSoundEffect(current.getX(), current.getY(), current.getZ(), "fireworks.twinkle", 1000, 0);
+					}
 				}
 				if (strength >= 0) {
 					syard.removeBlock(current, world);
 					world.destroyBlock(current, false);
-					world.setBlockState(current, Blocks.fire.getDefaultState());		
+					world.setBlockState(current, Blocks.fire.getDefaultState());	
+					world.playSoundEffect(current.getX(), current.getY(), current.getZ(), "fireworks.launch", 1000, 0);
 	            
 		            if(world.isAirBlock(current.down()))
 		            world.setBlockState(current.down(), Blocks.fire.getDefaultState());
