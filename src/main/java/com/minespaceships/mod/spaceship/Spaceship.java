@@ -82,6 +82,7 @@ public class Spaceship implements Serializable{
 	private static final String targetPositionKey = "TargetPos";
 	private static final String targetTurnKey = "TargetTurn";
 	private static final String actualPositionKey = "APK";
+	private static final String passwordKey = "password";
 	
 	private boolean canBeRemoved = true;
 	
@@ -91,7 +92,7 @@ public class Spaceship implements Serializable{
 	private BlockPos oldMin;
 	private BlockPos oldMax;
 
-	private String password;
+	private String password;	
 
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
@@ -804,6 +805,7 @@ public class Spaceship implements Serializable{
 	
 	public void readFromNBT(NBTTagCompound c, String firstKey){
 		String data = c.getString(firstKey+positionsKey);
+		password = c.getString(firstKey+passwordKey);
 		BlockPos pos = BlockPos.fromLong(c.getLong(firstKey+actualPositionKey));
 		position = new Vec3(pos.getX(), pos.getY(), pos.getZ());
 		if(c.getBoolean(firstKey+containsTargetKey)){
@@ -819,6 +821,7 @@ public class Spaceship implements Serializable{
 	}
 	public void writeToNBT(NBTTagCompound c, String firstKey){
 		c.setString(firstKey+positionsKey, positionsToString());
+		c.setString(firstKey+passwordKey, password);
 		BlockPos pos = new BlockPos(position);
 		c.setLong(firstKey+actualPositionKey, pos.toLong());
 		if(target != null){
@@ -834,9 +837,6 @@ public class Spaceship implements Serializable{
 	public void setPassword(final String password){
 		if(password == null){
 			throw new IllegalArgumentException("password can not be null.");
-		}
-		if(password.trim().isEmpty()){
-			throw new IllegalArgumentException("password can not be empty.");
 		}
 		this.password = password;
 	}
