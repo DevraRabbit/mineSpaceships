@@ -1,6 +1,6 @@
-package com.minespaceships.mod.menu;
+package com.minespaceships.mod.menu.functionalMenus.createShip;
 
-import com.minespaceships.mod.menu.functionalMenus.CreateShipMenu;
+import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 
 
@@ -21,7 +21,7 @@ public class NoSpaceshipEntityMenu{
 
 	public static void initMenu(){
 		rootMenu = new Menu("root");
-		rootMenu.addSubMenu(new CreateShipMenu());
+		rootMenu.addSubMenu(new CreateSpaceshipMenu());
 		runBefore = true;
 	}
 
