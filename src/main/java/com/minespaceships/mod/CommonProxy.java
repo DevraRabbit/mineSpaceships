@@ -35,6 +35,7 @@ import com.minespaceships.mod.items.ItemPhaser;
 import com.minespaceships.mod.items.ItemTest;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.SpaceshipMenu;
+import com.minespaceships.mod.menu.functionalMenus.LoginMenu;
 import com.minespaceships.mod.menu.functionalMenus.createShip.NoSpaceshipEntityMenu;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.IMenuInterface;
@@ -140,8 +141,10 @@ public abstract class CommonProxy {
 
 		//initialise the menu display.
 		MenuDisplay spaceshipMenu = new MenuDisplay(SpaceshipMenu.getRootMenu(), menu);
+		MenuDisplay loginMenu = new MenuDisplay(LoginMenu.getRootMenu(), menu);
 		MenuDisplay noSpaceshipMenu = new MenuDisplay(NoSpaceshipEntityMenu.getRootMenu(), menu);
 		entity.setSpaceshipMenu(spaceshipMenu);
+		entity.setLoginMenu(loginMenu);
 		entity.setNoSpaceshipMenu(noSpaceshipMenu);
     }
     

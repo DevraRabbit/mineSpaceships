@@ -3,6 +3,7 @@ package com.minespaceships.mod;
 import com.minespaceships.mod.events.PlayerTracker;
 import com.minespaceships.mod.menu.MenuDisplay;
 import com.minespaceships.mod.menu.SpaceshipMenu;
+import com.minespaceships.mod.menu.functionalMenus.LoginMenu;
 import com.minespaceships.mod.menu.functionalMenus.createShip.NoSpaceshipEntityMenu;
 import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
@@ -47,7 +48,11 @@ public class ClientProxy extends CommonProxy {
 			entity.getNoSpaceshipMenu().displayMain(NoSpaceshipEntityMenu.getRootMenu(), gui);
 		}else{
 			//Print out the menu in the console.
-			entity.getSpaceshipMenu().displayMain(SpaceshipMenu.getRootMenu(), gui);
+			if(LoginMenu.getLoggedIn()){
+				entity.getSpaceshipMenu().displayMain(SpaceshipMenu.getRootMenu(), gui);
+			}else{
+				entity.getLoginMenu().displayMain(LoginMenu.getRootMenu(), gui);
+			}
 		}
 		return gui;
 	}

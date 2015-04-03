@@ -25,10 +25,10 @@ public class CheckLoginMenu extends Menu implements FunctionalParamMenu{
 		World world = terminal.getChatRegisterEntity().getWorld();
 		Spaceship ship = Shipyard.getShipyard(world).getShip(terminal.getChatRegisterEntity().getPos(), terminal.getChatRegisterEntity().getWorld());
 		if(command.trim().equals(ship.getPassword())){
-			SpaceshipMenu.setLoggedIn(true);
+			LoginMenu.setLoggedIn(true);
 			terminal.display("Logged in", terminal.getPlayerEntity(), false);
 		}else{
-			SpaceshipMenu.setLoggedIn(false);
+			LoginMenu.setLoggedIn(false);
 			terminal.display("Logged in failed", terminal.getPlayerEntity(), false);
 		}
 		return "";

@@ -34,8 +34,6 @@ public class SpaceshipMenu {
 	//The root menu.
 	private static Menu root;
 
-	//LoggedIn
-	private static boolean loggedIn = false;
 	/**
 	 * Initialise the menu structure.
 	 * @param terminal
@@ -47,21 +45,14 @@ public class SpaceshipMenu {
 
 		//Initialise all menus.
 		root = new Menu("Spaceship console");
-		/*if(!loggedIn){
-			root.addSubMenu(new LoginMenu());
-			initMenu(terminal);
-		}else{
-		*/
-			//Create the menu structure.
-			root.addSubMenu(new CreateSpaceshipMenu());
-			root.addSubMenu(new SpaceshipNavigation());
-			root.addSubMenu(new EnergyManagementMenu());
-			root.addSubMenu(new PhaserShootMenu());
-			root.addSubMenu(new HelpMenu());
-			root.addSubMenu(new LoginMenu());
-		//}
 
-		loggedIn = false;
+		//Create the menu structure.
+		root.addSubMenu(new CreateSpaceshipMenu());
+		root.addSubMenu(new SpaceshipNavigation());
+		root.addSubMenu(new EnergyManagementMenu());
+		root.addSubMenu(new PhaserShootMenu());
+		root.addSubMenu(new HelpMenu());
+
 		runBefore = true;
 	}
 
@@ -81,7 +72,4 @@ public class SpaceshipMenu {
 		return runBefore;
 	}
 
-	public static void setLoggedIn(boolean bool){
-		loggedIn = bool;
-	}
 }

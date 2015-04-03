@@ -52,6 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ChatRegisterEntity extends TileEntity {
 	private MenuDisplay spaceshipMenu;
 	private MenuDisplay noSpaceshipMenu;
+	private MenuDisplay loginMenu;
 
 	private static String dimension = "dimension";
 	private static String shipKey = "SpaceshipKey";
@@ -63,11 +64,17 @@ public class ChatRegisterEntity extends TileEntity {
 	public void setSpaceshipMenu(MenuDisplay display){
 		spaceshipMenu = display;
 	}
+	public void setLoginMenu(MenuDisplay display){
+		loginMenu = display;
+	}
 	public void setNoSpaceshipMenu(MenuDisplay display){
 		noSpaceshipMenu = display;
 	}
 	public MenuDisplay getSpaceshipMenu(){
 		return spaceshipMenu;
+	}
+	public MenuDisplay getLoginMenu(){
+		return loginMenu;
 	}
 	public MenuDisplay getNoSpaceshipMenu(){
 		return noSpaceshipMenu;
