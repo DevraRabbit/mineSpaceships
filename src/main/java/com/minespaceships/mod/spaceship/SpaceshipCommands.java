@@ -233,9 +233,9 @@ public class SpaceshipCommands {
 				}
 			} else if(parts[2].equals(shields)){
 				if(toActivate){
-					ship.activateEngines();
-				} else {
-					ship.deactivateEngines();
+					ship.activateShields();
+				} else { 
+					ship.deactivateShields();
 				}
 			} else if(parts[2].equals(engines)){
 				if(toActivate){
