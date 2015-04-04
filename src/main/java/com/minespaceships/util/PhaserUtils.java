@@ -50,7 +50,7 @@ public class PhaserUtils {
 	public static void shootDirect(BlockPos source, Vec3 direction, double strength, int maxrange, World world) {
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		BlockPos current;
-		
+		world.playSoundEffect(source.getX(), source.getY(), source.getZ(), "fireworks.launch", 1000, 0);
 		//Normalize vector, so no block is safe!11!!
 		Vec3 ray = direction.normalize();
 		
@@ -71,7 +71,7 @@ public class PhaserUtils {
 						for(int i = 0; i < 20 ; i++){
 							world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, current.getX()+0.5f, current.getY()+0.5f, current.getZ()+0.5f, 0, 0, 0, new int[]{Block.getStateId(Blocks.water.getDefaultState())});
 						}
-						world.playSoundEffect(current.getX(), current.getY(), current.getZ(), "fireworks.twinkle", 1000, 0);
+						if((int)(maxrange) % 10 == 0){world.playSoundEffect(current.getX(), current.getY(), current.getZ(), "fireworks.twinkle", 1000, 0);}
 					}
 				}
 				if (strength >= 0) {

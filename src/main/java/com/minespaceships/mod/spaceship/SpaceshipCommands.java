@@ -214,6 +214,9 @@ public class SpaceshipCommands {
 		if(command.startsWith(energy)){
 			String[] parts = command.split(" ");
 			boolean toActivate = false;
+			if(parts.length < 2){
+				return;
+			}
 			if(parts[1].equals(activate)){
 				toActivate = true;
 			} else if (parts[1].equals(deactivate)){
@@ -223,6 +226,9 @@ public class SpaceshipCommands {
 			} else if(parts[1].equals(shutdown)){
 				ship.deactivateEverything();
 			} else {
+				return;
+			}
+			if(parts.length < 3){
 				return;
 			}
 			if(parts[2].equals(phaser)){

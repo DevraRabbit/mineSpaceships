@@ -69,7 +69,7 @@ public class EngineBlock extends ActivatableBlock {
             if ((worldIn.getTotalWorldTime()+posRand.nextInt(50)) % 50 == 0)
             {
             	sound = 0;
-                worldIn.playSound(d0, d1, d2, engineSound, engineSoundVolume, engineSoundPitch, true);
+                //worldIn.playSound(d0, d1, d2, engineSound, engineSoundVolume, engineSoundPitch, true);
             }
             sound++;
         }
