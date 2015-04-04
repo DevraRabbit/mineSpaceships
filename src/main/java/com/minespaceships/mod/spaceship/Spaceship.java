@@ -835,9 +835,6 @@ public class Spaceship implements Serializable{
 		if(password == null){
 			throw new IllegalArgumentException("password can not be null.");
 		}
-		if(password.trim().isEmpty()){
-			throw new IllegalArgumentException("password can not be empty.");
-		}
 		this.password = password;
 	}
 
