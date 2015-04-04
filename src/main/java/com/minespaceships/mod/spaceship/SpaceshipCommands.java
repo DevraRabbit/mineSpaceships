@@ -11,6 +11,7 @@ import com.minespaceships.mod.overhead.ChatRegisterEntity;
 import com.minespaceships.mod.overhead.CustomGuiChat;
 import com.minespaceships.mod.overhead.IMenuInterface;
 import com.minespaceships.util.PhaserUtils;
+import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -257,7 +258,7 @@ public class SpaceshipCommands {
 		if(moffset.matches()) {
 			Vec3 vec_dir = new Vec3(Double.valueOf(moffset.group(1)), Double.valueOf(moffset.group(2)), Double.valueOf(moffset.group(3)));
 			
-			PhaserUtils.shoot(commandBlock.getPos(), vec_dir, 10, 100, worldObj);
+			PhaserUtils.shoot(commandBlock.getPos(), new BlockPos(Vec3Op.scale(vec_dir, 100)), 10, 100, worldObj);
 			if(player != null)player.addChatComponentMessage(new ChatComponentText("Fired Phaser in direction (" + moffset.group(1) + "; " + moffset.group(2) + "; " + moffset.group(3) + ")"));
 		} else {
 			if(player != null)player.addChatComponentMessage(new ChatComponentText("shoot: Error processing intput"));

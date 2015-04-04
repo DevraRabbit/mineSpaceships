@@ -23,6 +23,7 @@ public class ClientProxy extends CommonProxy {
     	MineSpaceships.network.registerMessage(CommandMessage.HandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
     	MineSpaceships.blockChangeEvents.registerMessage(BlockHandlerClient.class, CommandMessage.class, 0, Side.CLIENT);
     	MineSpaceships.shipRemoval.registerMessage(RemoveHandler.class, CommandMessage.class, 0, Side.CLIENT);
+    	MineSpaceships.phaserShooting.registerMessage(PhaserHandler.class, CommandMessage.class, 0, Side.CLIENT);
     }
 
     @Override

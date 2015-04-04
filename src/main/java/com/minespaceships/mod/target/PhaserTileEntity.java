@@ -51,7 +51,7 @@ public class PhaserTileEntity extends TileEntity implements IUpdatePlayerListBox
 
 	public boolean canShoot(Target futureTarget, Spaceship ship){
 		if(ship != null && futureTarget != null){
-			BlockPos targetPos = futureTarget.getTarget(ship.getWorld());
+			BlockPos targetPos = futureTarget.getNewTarget(ship.getWorld());
 			if(targetPos != null){
 				BlockPos direction = Vec3Op.subtract(targetPos, pos);
 				Vec3 dirVec = new Vec3(direction.getX(), direction.getY(), direction.getZ());

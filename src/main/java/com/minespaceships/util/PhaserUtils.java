@@ -5,6 +5,8 @@ import java.util.Random;
 
 import akka.japi.Effect;
 
+import com.minespaceships.mod.CommandMessage;
+import com.minespaceships.mod.MineSpaceships;
 import com.minespaceships.mod.overhead.PhaserEffect;
 import com.minespaceships.mod.spaceship.ShipInformation;
 import com.minespaceships.mod.spaceship.Shipyard;
@@ -30,12 +32,22 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class PhaserUtils {
 	public static void shoot(BlockPos source, BlockPos target, double strength, int maxrange, World world) {
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if(side == Side.CLIENT){
+			
+		} else if(side == Side.SERVER){
+			MineSpaceships.phaserShooting.sendToAll(new CommandMessage(source.toLong()+","+target.toLong()+","+strength+","+maxrange+","+world.provider.getDimensionId()));
+			Vec3 direction = new Vec3(target.getX() - source.getX(), target.getY()
+					- source.getY(), target.getZ() - source.getZ());
+			shootDirect(source, direction, strength, maxrange, world);
+		}
+	}
+	public static void shootClient(BlockPos source, BlockPos target, double strength, int maxrange, World world) {
 		Vec3 direction = new Vec3(target.getX() - source.getX(), target.getY()
 				- source.getY(), target.getZ() - source.getZ());
-		shoot(source, direction, strength, maxrange, world);
+		shootDirect(source, direction, strength, maxrange, world);
 	}
-
-	public static void shoot(BlockPos source, Vec3 direction, double strength, int maxrange, World world) {
+	public static void shootDirect(BlockPos source, Vec3 direction, double strength, int maxrange, World world) {
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		BlockPos current;
 		
@@ -56,7 +68,7 @@ public class PhaserUtils {
 					float shields = ShipInformation.getShipShields(ship);
 					strength -= shields;
 					if(shields > 0){
-						for(int i = 0; i < 10 ; i++){
+						for(int i = 0; i < 20 ; i++){
 							world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, current.getX()+0.5f, current.getY()+0.5f, current.getZ()+0.5f, 0, 0, 0, new int[]{Block.getStateId(Blocks.water.getDefaultState())});
 						}
 						world.playSoundEffect(current.getX(), current.getY(), current.getZ(), "fireworks.twinkle", 1000, 0);

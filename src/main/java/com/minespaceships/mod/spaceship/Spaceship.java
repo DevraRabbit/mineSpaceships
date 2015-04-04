@@ -92,7 +92,7 @@ public class Spaceship implements Serializable{
 	private BlockPos oldMin;
 	private BlockPos oldMax;
 
-	private String password;	
+	private String password;
 
 	public Spaceship(BlockPos initial, World world) throws Exception{
 		blockMap = new BlockMap(initial);
@@ -136,8 +136,9 @@ public class Spaceship implements Serializable{
 	public BlockPos getBlockMapOrigin(){
 		return blockMap.getOrigin();
 	}
-	public BlockPos getRandomPos(Random rand){
+	public BlockPos getRandomPos(){		
 		ArrayList<BlockPos> positions = getPositions();
+		Random rand = new Random(positions.size());
 		float index = (float)(positions.size()-1)*rand.nextFloat();
 		return positions.get((int)(index));
 	}

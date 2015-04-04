@@ -31,7 +31,7 @@ public class SpaceshipTarget extends PositionTarget{
 	public BlockPos getNewTarget(World world) {
 		Spaceship ship = Shipyard.getShipyard(world).getShipByBlockMapOrigin(super.position, world);
 		if(ship != null){
-			super.lastTarget = ship.getRandomPos(world.rand);
+			super.lastTarget = ship.getRandomPos();
 			return super.lastTarget;
 		}
 		return position;

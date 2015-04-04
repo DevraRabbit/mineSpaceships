@@ -2,6 +2,7 @@ package com.minespaceships.mod.items;
 
 import com.minespaceships.mod.target.Pointer;
 import com.minespaceships.util.PhaserUtils;
+import com.minespaceships.util.Vec3Op;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.stats.StatList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
@@ -48,7 +50,7 @@ public static int maxHandPhaserRange = 20;
         	
         	
         	worldIn.spawnParticle(EnumParticleTypes.FLAME,playerIn.posX, playerIn.posY+1, playerIn.posZ, playerIn.getLookVec().xCoord, playerIn.getLookVec().yCoord, playerIn.getLookVec().zCoord,3);
-            PhaserUtils.shoot(playerIn.getPosition().add(0, 1, 0), playerIn.getLookVec(), 0.2f+2*j/75, maxHandPhaserRange, worldIn);
+            PhaserUtils.shoot(playerIn.getPosition().add(0, 1, 0), new BlockPos(Vec3Op.scale(playerIn.getLookVec(), 100)), 0.2f+2*j/75, maxHandPhaserRange, worldIn);
 
             stack.damageItem(1, playerIn);
             worldIn.playSoundAtEntity(playerIn, "random.bow", 20.0F, 5.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 4 * 0.5F);

@@ -38,6 +38,7 @@ public class MineSpaceships
     public static SimpleNetworkWrapper spaceshipNetwork;
     public static SimpleNetworkWrapper blockChangeEvents;
     public static SimpleNetworkWrapper shipRemoval;
+    public static SimpleNetworkWrapper phaserShooting;
     
     private static int navigatorBlockId = 1000;
     
