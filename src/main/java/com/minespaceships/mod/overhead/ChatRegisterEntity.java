@@ -177,6 +177,13 @@ public class ChatRegisterEntity extends TileEntity {
 			terminal = MineSpaceships.proxy.makeTerminal(player, this);
 		}
 
+		/**This prevents the navigation in the normal menu, if no spaceship has 
+		 * created or you are not logged in.
+		 */
+		if(command.equals("m") && !(terminal instanceof NoSpaceshipEntityMenu) ){
+			return;
+		}
+
 		boolean isMenu = executeMenu(command);
 		if(isMenu){ return;}
 		else if(command.equals("hello")){

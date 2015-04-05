@@ -154,7 +154,7 @@ public class Spaceship implements Serializable{
 	public BlockPos getMinPos(){
 		return blockMap.getMinPos();
 	}
-	public boolean canBeRemoved(){		
+	public boolean canBeRemoved(){
 		return canBeRemoved;
 	}
 	
@@ -308,11 +308,11 @@ public class Spaceship implements Serializable{
 		BlockPos span = Vec3Op.subtract(getMaxPos(), getMinPos());
 		length = Math.max(span.getX(), span.getY())+3;
 		if (getFacing()==EnumFacing.EAST){
-			return new BlockPos (length,0,0);			
+			return new BlockPos (length,0,0);
 		} else if (getFacing()==EnumFacing.WEST){
-			return new BlockPos (-(length),0,0);			
+			return new BlockPos (-(length),0,0);
 		} else if (getFacing()==EnumFacing.NORTH){
-			return new BlockPos (0,0,-(length));			
+			return new BlockPos (0,0,-(length));
 		} else if (getFacing()==EnumFacing.SOUTH){
 			return new BlockPos (0,0,length);
 		} else {
@@ -327,7 +327,7 @@ public class Spaceship implements Serializable{
 		int west=0;
 		ArrayList<BlockPos> facingListActive= energySystem.getActive(EngineBlock.class, true);
 		ArrayList<BlockPos> facingListDeactive= energySystem.getActive(EngineBlock.class, false);
-		for (BlockPos p: facingListActive){			
+		for (BlockPos p: facingListActive){
 			EnumFacing e=Turn.getEnumFacing(world.getBlockState(p));
 			if(e==EnumFacing.NORTH){
 				north+=1;
@@ -338,9 +338,9 @@ public class Spaceship implements Serializable{
 			}
 			else if( e==EnumFacing.WEST){
 				west+=1;
-			}		
+			}
 		}
-		for (BlockPos p: facingListDeactive){			
+		for (BlockPos p: facingListDeactive){
 			EnumFacing e=Turn.getEnumFacing(world.getBlockState(p));
 			if(e==EnumFacing.NORTH){
 				north+=1;
@@ -351,7 +351,7 @@ public class Spaceship implements Serializable{
 			}
 			else if( e==EnumFacing.WEST){
 				west+=1;
-			}		
+			}
 		}
 		if(north>south&& north>west&& north> east){
 			return EnumFacing.NORTH.getOpposite();
@@ -361,9 +361,9 @@ public class Spaceship implements Serializable{
 			return EnumFacing.EAST.getOpposite();
 		} else if (west>north&&west>south&&west>east){
 			return EnumFacing.WEST.getOpposite();
-		}		
+		}
 		
-		return EnumFacing.UP;		
+		return EnumFacing.UP;
 	}
 	
 	private synchronized void moveTo(BlockPos addDirection, World world, final int turn){
@@ -394,7 +394,7 @@ public class Spaceship implements Serializable{
 				BlockPos Pos = it.next();
 				IBlockState state = world.getBlockState(Pos);
 				Block block = state.getBlock();
-				BlockPos nextPos = Turn.getRotatedPos(Pos, moveOrigin, add, turn);			
+				BlockPos nextPos = Turn.getRotatedPos(Pos, moveOrigin, add, turn);
 				EnumFacing facing = Turn.getEnumFacing(state);
 				BlockPos neighbor = null;
 				IBlockState neighborState = null;
@@ -416,7 +416,7 @@ public class Spaceship implements Serializable{
 							}
 						}
 						//build the buildable block
-						BlockCopier.copyBlock(world, Pos, nextPos, turn);					
+						BlockCopier.copyBlock(world, Pos, nextPos, turn);
 						it.remove();
 						//remember to remove it
 						removal.add(Pos);
@@ -507,7 +507,7 @@ public class Spaceship implements Serializable{
 //			if(startWorld.getBlockState(end).getBlock() instanceof BlockWallSign){
 //				int i = 0;
 //			}
-			BlockCopier.removeBlock(startWorld, end);			
+			BlockCopier.removeBlock(startWorld, end);
 			startWorld.notifyNeighborsOfStateChange(end, Block.getStateById(0).getBlock());
 		} catch (Exception e){
 			System.out.println("An Error occured during Block Check. Moving anyway");
@@ -631,7 +631,7 @@ public class Spaceship implements Serializable{
 		return data;
 	}
 	public void positionsFromString(String data) throws Exception{
-		String[] lines = data.split("\n");		
+		String[] lines = data.split("\n");
 		BlockPos ori = BlockPos.fromLong(Long.parseLong(lines[0]));
 		blockMap = new BlockMap(ori);
 		assembler = new SpaceshipAssembler(ori);
@@ -641,13 +641,13 @@ public class Spaceship implements Serializable{
 				if(addedClass == null){
 					try{
 						//need to press this directly into the block map. Otherwise minecraft tries to lead the chunk and ends up in an infinite loop.
-						this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));		
+						this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));
 					} catch(Exception e){
 						addedClass = Class.forName(s);
 					}
 				} else {
 					try{
-						assembler.put(addedClass, BlockPos.fromLong(Long.parseLong(s)));		
+						assembler.put(addedClass, BlockPos.fromLong(Long.parseLong(s)));
 					} catch(Exception e){
 						addedClass = Class.forName(s);
 					}
@@ -732,7 +732,7 @@ public class Spaceship implements Serializable{
 		if(side == Side.CLIENT){
 			if(movedPositions != null){
 				Random rand = new Random();
-				for(BlockPos pos : movedPositions){					
+				for(BlockPos pos : movedPositions){
 					world.spawnParticle(EnumParticleTypes.PORTAL, pos.getX()+rand.nextFloat(), pos.getY()+rand.nextFloat(), pos.getZ()+rand.nextFloat(), 0, 0, 0, new int[0]);
 					world.playSound(pos.getX(), pos.getY(), pos.getZ(), EngineBlock.engineSound, EngineBlock.engineSoundVolume, EngineBlock.engineSoundPitch, true);
 				}
@@ -752,7 +752,7 @@ public class Spaceship implements Serializable{
 			}
 			Vec3 targetVec = new Vec3(target.getTarget().getX(), target.getTarget().getY(), target.getTarget().getZ());
 			Vec3 direction = targetVec.subtract(position);
-			float distance = (float) direction.lengthVector();			
+			float distance = (float) direction.lengthVector();
 			float traveledDistance = 0;
 			float speed = ShipInformation.getShipSpeed(this);
 			long timeDistance = world.getTotalWorldTime() - lastUpdatedTime;
@@ -783,7 +783,7 @@ public class Spaceship implements Serializable{
 						!block.getMaterial().isLiquid()){
 					stop();
 					return movedPositions;
-				}				
+				}
 			}
 			if(distance <= 0){
 				stop();
