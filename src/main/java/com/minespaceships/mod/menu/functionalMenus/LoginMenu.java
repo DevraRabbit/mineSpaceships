@@ -14,13 +14,28 @@ public class LoginMenu {
 	//The root menu.
 	private static Menu root;
 
+	private static boolean loggedIn;
+
 	public static void initMenu(){
 		root = new Menu("Login");
 		root.addSubMenu(new CheckLoginMenu());
+		loggedIn = false;
 	}
 
 	public static Menu getRootMenu() {
 		return root;
+	}
+
+	public static void login(){
+		loggedIn = true;
+	}
+
+	public static void logout(){
+		loggedIn = false;
+	}
+
+	public static boolean getLoggedIn() {
+		return loggedIn;
 	}
 
 }

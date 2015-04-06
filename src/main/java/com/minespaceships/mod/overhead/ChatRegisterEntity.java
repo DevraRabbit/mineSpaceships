@@ -11,6 +11,7 @@ import com.minespaceships.mod.menu.FunctionalParamMenu;
 import com.minespaceships.mod.menu.Menu;
 import com.minespaceships.mod.menu.SpaceshipMenu;
 import com.minespaceships.mod.menu.MenuDisplay;
+import com.minespaceships.mod.menu.functionalMenus.LoginMenu;
 import com.minespaceships.mod.menu.functionalMenus.createShip.NoSpaceshipEntityMenu;
 import com.minespaceships.mod.spaceship.AllShipyards;
 import com.minespaceships.mod.spaceship.ISpaceshipPart;
@@ -180,7 +181,7 @@ public class ChatRegisterEntity extends TileEntity {
 		/**This prevents the navigation in the normal menu, if no spaceship has 
 		 * created or you are not logged in.
 		 */
-		if(command.equals("m") && !(terminal instanceof NoSpaceshipEntityMenu) ){
+		if(command.equals("m") && !LoginMenu.getLoggedIn() ){
 			return;
 		}
 
@@ -229,6 +230,7 @@ public class ChatRegisterEntity extends TileEntity {
 		//terminalMenu.onCommand(command, player, this, this.terminal);
 		
 	}
+
 	public void sendFunctionalMenu(FunctionalMenu menu){
 		String data = menu.getData();
 		if(data != null){
@@ -237,6 +239,7 @@ public class ChatRegisterEntity extends TileEntity {
 			this.onCommandForced(menu.getClass().getName() + "#" + "null");
 		}
 	}
+
 	public void sendFunctionalParamMenu(FunctionalParamMenu menu, String parameters){
 		String data = menu.getData();
 		if(data != null){
@@ -245,6 +248,7 @@ public class ChatRegisterEntity extends TileEntity {
 			this.onCommandForced(menu.getClass().getName() +"#" +parameters+ "#" + "null");
 		}
 	}
+
 	public boolean executeMenu(String menuCommand){
 		String[] parts = menuCommand.split("#");
 		Class c = null;
