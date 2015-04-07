@@ -9,11 +9,35 @@ import com.minespaceships.mod.overhead.IMenuInterface;
  * @author ovae.
  * @version 20150403.
  */
-public class LoginMenu extends Menu {
+public class LoginMenu {
 
-	public LoginMenu() {
-		super("Login");
-		this.addSubMenu(new CheckLoginMenu());
+	//The root menu.
+	private static Menu root;
+
+	private static boolean loggedIn;
+
+	public static void initMenu(){
+		root = new Menu("Login");
+		//Menu login = new Menu("login");
+		//login.addSubMenu(new CheckLoginMenu());
+		root.addSubMenu(new CheckLoginMenu());
+		loggedIn = false;
+	}
+
+	public static Menu getRootMenu() {
+		return root;
+	}
+
+	public static void login(){
+		loggedIn = true;
+	}
+
+	public static void logout(){
+		loggedIn = false;
+	}
+
+	public static boolean getLoggedIn() {
+		return loggedIn;
 	}
 
 }

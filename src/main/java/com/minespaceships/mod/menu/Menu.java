@@ -69,6 +69,12 @@ public class Menu{
 		}
 		name = name.trim();
 
+		if(this instanceof FunctionalParamMenu){
+			((FunctionalParamMenu)this).activate(name, terminal, this.getData());
+			//terminal.getChatRegisterEntity().sendFunctionalParamMenu((FunctionalParamMenu) this, name);
+			return this.getMother().getMenu(terminal);
+		}
+
 		int n;
 		try{
 			//parent menu
