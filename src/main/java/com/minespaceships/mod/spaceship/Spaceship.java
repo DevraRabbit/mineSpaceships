@@ -86,7 +86,7 @@ public class Spaceship implements Serializable{
 	
 	private boolean canBeRemoved = true;
 	
-	public static final int maxShipSize = 27000;
+	public static final int maxShipSize = 8000;
 	private Vector<BlockPos> removal;
 	private ArrayList<BlockPos> toRefill;
 	private BlockPos oldMin;
