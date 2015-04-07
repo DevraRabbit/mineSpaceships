@@ -47,17 +47,11 @@ public class ClientProxy extends CommonProxy {
 		if(Shipyard.getShipyard(gui.getChatRegisterEntity().getWorld()).getShip(gui.getChatRegisterEntity().getPos(), gui.getChatRegisterEntity().getWorld()) == null){
 			entity.getNoSpaceshipMenu().displayMain(NoSpaceshipEntityMenu.getRootMenu(), gui);
 		}else{
-			//entity.getLoginMenu().displayMain(LoginMenu.getRootMenu(), gui);
+			entity.getLoginMenu().displayMain(LoginMenu.getRootMenu(), gui);
 			//entity.getSpaceshipMenu().displayMain(SpaceshipMenu.getRootMenu(), gui);
 			//entity.getLoginMenu().displayMain(LoginMenu.getRootMenu(), gui);
 			//Print out the menu in the console.
-			if(LoginMenu.getLoggedIn()){
-				entity.getSpaceshipMenu().displayMain(SpaceshipMenu.getRootMenu(), gui);
-				LoginMenu.logout();
-			}else{
-				entity.getLoginMenu().displayMain(LoginMenu.getRootMenu(), gui);
-				LoginMenu.login();
-			}
+
 		}
 		return gui;
 	}

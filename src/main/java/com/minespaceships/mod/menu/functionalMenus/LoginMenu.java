@@ -18,6 +18,8 @@ public class LoginMenu {
 
 	public static void initMenu(){
 		root = new Menu("Login");
+		//Menu login = new Menu("login");
+		//login.addSubMenu(new CheckLoginMenu());
 		root.addSubMenu(new CheckLoginMenu());
 		loggedIn = false;
 	}
