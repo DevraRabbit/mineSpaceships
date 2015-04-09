@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 public class ShipInformation {
 	public static float speedFactor = 0.1f;
 	public static float shieldFactor = 30;
-	public static float strengthFactor = 1;
+	public static float strengthFactor = 0.5f;
 	private static float meanHardness = 3.11f;
 	private static float maxHardness = 100;
 	private static float middlePoint = 0.05f;
@@ -19,20 +19,10 @@ public class ShipInformation {
 		}
 	}
 	public static float getShipShields(Spaceship ship){
-		int blockCount = ship.getSize();
-		if(blockCount != 0){
-			return ((float)(ship.getActiveShieldsCount())/(float)(blockCount))*maxHardness;
-		} else {
-			return 0;
-		}
+		return (float)(ship.getActiveShieldsCount())*strengthFactor;
 	}
 	public static float getShipStrength(Spaceship ship){
-		int blockCount = ship.getSize();
-		if(blockCount != 0){
-			return ((float)(ship.getActivePhaserCount())/(float)(blockCount))*maxHardness;
-		} else {
-			return 0;
-		}
+		return (float)(ship.getActivePhaserCount())*strengthFactor;
 	}
 	public static float getShipWeight(Spaceship ship){
 		return ship.getHardness();

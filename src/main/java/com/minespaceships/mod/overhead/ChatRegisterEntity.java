@@ -227,13 +227,10 @@ public class ChatRegisterEntity extends TileEntity {
 			//display the menu and make the menu commands (also works on Server)
 
 			if(getShip() != null){
-				if(command.equals(getShip().getPassword())){
-					spaceshipMenu.display(command, this.terminal, player);
-				}else{
-					loginMenu.display(command, this.terminal, player);
-				}
+				spaceshipMenu.display(command, this.terminal, player);
 			}else{
-				loginMenu.display(command, this.terminal, player);
+				noSpaceshipMenu.display(command, this.terminal, player);
+				//loginMenu.display(command, this.terminal, player);
 			}
 			//loginMenu.display(command, this.terminal, player);
 			//spaceshipMenu.display(command, this.terminal, player);			

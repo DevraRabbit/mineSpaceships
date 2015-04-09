@@ -124,7 +124,10 @@ public class Spaceship implements Serializable{
 			position = blockMap.getMiddleVec();
 		}
 		lastUpdatedTime = world.getTotalWorldTime();
-		//Shipyard.getShipyard(world).addShip(this);
+		ArrayList<BlockPos> positions = blockMap.getPositions();
+		for(BlockPos pos : positions){
+			Shipyard.getShipyard(world).removeBlock(pos, world);
+		}
 	}
 	
 	public BlockPos getOrigin(){

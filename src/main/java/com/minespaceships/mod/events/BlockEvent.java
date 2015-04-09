@@ -2,11 +2,22 @@ package com.minespaceships.mod.events;
 
 import java.util.List;
 
+import org.apache.logging.log4j.core.filter.BurstFilter;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemCoal;
+import net.minecraft.item.ItemGlassBottle;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
@@ -50,6 +61,15 @@ public class BlockEvent {
 			event.getPlayer().addChatComponentMessage(new ChatComponentText("Block removed"));
 		} else if (removeBlock(pos, world) == BlockChangeStatus.SHIP_REMOVED){
 			event.getPlayer().addChatComponentMessage(new ChatComponentText("Ship removed"));
+		}
+	}
+	@SubscribeEvent
+	public void onHarvestEvent(HarvestDropsEvent event){
+		Block b = event.state.getBlock();
+		if(b == Blocks.coal_block){
+			event.drops.add(new ItemStack(Items.gunpowder, 10));
+		} else if(b == Blocks.coal_ore){
+			event.drops.add(new ItemStack(Items.coal, 10));
 		}
 	}
 	public static BlockChangeStatus removeBlock(BlockPos pos, World world){
