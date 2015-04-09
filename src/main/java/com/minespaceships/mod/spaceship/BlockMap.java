@@ -102,8 +102,10 @@ public class BlockMap {
 		}
 		return toWater;
 	}
-	
 	public void add(BlockPos pos){
+		add(pos, true);
+	}
+	public void add(BlockPos pos, boolean refresh){
 		BlockPos coordPos = Vec3Op.subtract(pos, origin);
 		if(!contains(pos)){
 			blockCount++;
@@ -127,7 +129,7 @@ public class BlockMap {
 		if(hasOuterBlock || outerOutBlocks.containsKey(coordPos)){
 			hasToRefresh = true;
 		}		
-		refreshVolumeBlocks();
+		if(refresh)refreshVolumeBlocks();
 	}
 	
 	public boolean contains(BlockPos pos){

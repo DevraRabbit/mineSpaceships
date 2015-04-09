@@ -26,6 +26,7 @@ public class SpaceshipMath {
 		if(safety[0] < 0){
 			return null;
 		} else {
+			blockMap.refreshVolumeBlocks();
 			return blockMap;
 		}
 		
@@ -40,7 +41,7 @@ public class SpaceshipMath {
 							BlockPos neighbor = pos.add(x,y,z);
 							if(!blockMap.contains(neighbor)){
 								if(!worldIn.isAirBlock(neighbor)){
-									blockMap.add(neighbor);
+									blockMap.add(neighbor, false);
 									neighbors.addElement(neighbor);
 								}
 							} else {

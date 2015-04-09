@@ -128,6 +128,9 @@ public class Spaceship implements Serializable{
 		for(BlockPos pos : positions){
 			Shipyard.getShipyard(world).removeBlock(pos, world);
 		}
+		if(password == null || password.isEmpty()){
+			password = "1234";
+		}
 	}
 	
 	public BlockPos getOrigin(){
@@ -272,11 +275,6 @@ public class Spaceship implements Serializable{
 				((PhaserBlock)block).stopShooting(pos, world);
 				if(!hasShot){
 					hasShot = ((PhaserBlock)block).shoot(pos, world, ShipInformation.getShipStrength(this), target);
-					if(hasShot){
-						System.out.println("######SHOT::"+hasShot);
-					}else{
-						System.out.println("######MISS::"+hasShot);
-					}
 					
 				}
 			}

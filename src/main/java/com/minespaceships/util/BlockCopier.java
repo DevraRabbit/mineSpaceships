@@ -36,6 +36,7 @@ public class BlockCopier {
 				ent.validate();
 				//moveEntityInformationByReference(ent, worldIn.getTileEntity(target));
 				worldIn.setTileEntity(target, ent);
+				//ent.setPos(target);
 				int i = 0;
 			}
 		}
