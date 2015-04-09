@@ -19,20 +19,34 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class BlockMap {
+	/**
+	 * blocks of the spaceship without blocks in inner room
+	 */
 	private HashMap<BlockPos, Boolean> map;
 	private BlockPos maxPos;
 	private BlockPos minPos;
 	private BlockPos origin;
 	private int blockCount;
 	private Vec3 middle;
+	/**
+	 * all blocks which are not part of the spaceship or the room in the spaceship, but in the rectangular of the ship
+	 */
 	private HashMap<BlockPos, Boolean> outerBlocks; 
+	/**
+	 * all blocks at the edge of the rectangular
+	 */
 	private HashMap<BlockPos, Boolean> outerOutBlocks;
+	/**
+	 * all blocks in the rectangle, outerblocks and spaceshipblocks
+	 */
 	private HashMap<BlockPos, Boolean> spannedRectangle;
-	
-	
+	/**
+	 * blocks in inner room of spaceship
+	 */
 	private HashMap<BlockPos, Boolean> innerBlocks;
-	private boolean rekHelper = true;
-	private static int ff = 0;   //*****************REMOVE
+	/**
+	 * if this variable is true, the hastoRefresh-method becomes active
+	 */
 	private boolean hasToRefresh = true;
 			
 	public BlockMap(BlockPos originPoint){
@@ -46,7 +60,10 @@ public class BlockMap {
 		origin = originPoint;
 		middle = new Vec3(origin.getX(), origin.getY(), origin.getZ());
 	}
-	
+	/**
+	 * 
+	 * @return absolute position of origin
+	 */
 	public BlockPos getOrigin(){
 		return origin;
 	}
@@ -64,7 +81,13 @@ public class BlockMap {
 		return map.size();
 	}
 	
-	
+	/**
+	 * before spaceship is diving into water, this method stores blocks, which must be filled with water. 
+	 * finds out which is the waterblock with the highest y-coordinate and safes all blocks of spaceship and 
+	 * innerromm with lower y-coordinates
+	 * @param world
+	 * @return arraList of blocks
+	 */
 	public ArrayList<BlockPos> getBlocksToRefill(World world)
 	{	
 		HashMap<BlockPos, Boolean> nextToShipBlocks;
@@ -117,13 +140,14 @@ public class BlockMap {
 		outerBlocks.remove(coordPos);
 		innerBlocks.remove(coordPos);
 		calculateOuterOutBlocks();
-		boolean hasOuterBlock=false;
+		boolean hasOuterBlock=false; 
 		for(BlockPos p: getNeighbours(coordPos)){
 			if(outerBlocks.containsKey(p)){
 				hasOuterBlock=true;
 				break;
 			}
 		}
+		//checks if it is necessary to refresh all blocks
 		if(hasOuterBlock || outerOutBlocks.containsKey(coordPos)){
 			hasToRefresh = true;
 		}		
@@ -159,6 +183,7 @@ public class BlockMap {
 				innerNeighbour=p;
 			}
 		}		
+		//checks if it is necessary to refresh all blocks
 		if(hasOuterNeighbour && hasInnerNeighbour || outerOutBlocks.containsKey(pos)){
 			hasToRefresh = true;
 		}		
@@ -171,11 +196,18 @@ public class BlockMap {
 		refreshVolumeBlocks();
 	}
 
-	
+	/**
+	 * 
+	 * @return absolute maxPos
+	 */
 	public BlockPos getMaxPos(){
 		return maxPos.add(origin);
 	}
 	
+	/**
+	 * 
+	 * @return absolute MinPos
+	 */
 	public BlockPos getMinPos(){
 		return minPos.add(origin);
 	}
@@ -238,18 +270,18 @@ public class BlockMap {
 	}
 	
 
-	
-	private void checkRoom(BlockPos aktPos)
-	{
-		if(!map.containsKey(aktPos) && !outerBlocks.containsKey(aktPos) && spannedRectangle.containsKey(aktPos))
-		{
-			outerBlocks.put(aktPos, true);
-			for(BlockPos p: getNeighbours(aktPos)){
-				checkRoom(p);
-			}
-		}
-	}
-	
+//	
+//	private void checkRoom(BlockPos aktPos)
+//	{
+//		if(!map.containsKey(aktPos) && !outerBlocks.containsKey(aktPos) && spannedRectangle.containsKey(aktPos))
+//		{
+//			outerBlocks.put(aktPos, true);
+//			for(BlockPos p: getNeighbours(aktPos)){
+//				checkRoom(p);
+//			}
+//		}
+//	}
+//	
 	private void recalculateOuterBlocks()
 	{
 		for(BlockPos p : spannedRectangle.keySet()){
@@ -260,60 +292,65 @@ public class BlockMap {
 		}
 	}
 	
-	private void checkInnerRoom(BlockPos aktPos){
-		ArrayList<BlockPos> juniorInnerBlocks= new ArrayList();
-		recCheckInnerRoom(aktPos, juniorInnerBlocks);
-		for(BlockPos p: juniorInnerBlocks){
-			innerBlocks.remove(p);
-			outerBlocks.put(p, true);
-		}
-	}
+//	private void checkInnerRoom(BlockPos aktPos){
+//		ArrayList<BlockPos> juniorInnerBlocks= new ArrayList();
+//		recCheckInnerRoom(aktPos, juniorInnerBlocks);
+//		for(BlockPos p: juniorInnerBlocks){
+//			innerBlocks.remove(p);
+//			outerBlocks.put(p, true);
+//		}
+//	}
+//	
+//	private void recCheckInnerRoom(BlockPos aktPos, ArrayList<BlockPos> list){
+//		if(!map.containsKey(aktPos)){
+//			list.add(aktPos);
+//			for(BlockPos p: getNeighbours(aktPos)){
+//				recCheckInnerRoom(p, list);
+//			}
+//			 
+//		}
+//	}
 	
-	private void recCheckInnerRoom(BlockPos aktPos, ArrayList<BlockPos> list){
-		if(!map.containsKey(aktPos)){
-			list.add(aktPos);
-			for(BlockPos p: getNeighbours(aktPos)){
-				recCheckInnerRoom(p, list);
-			}
-			 
-		}
-	}
+//	private void checkAfterAdding(BlockPos pos){
+//		  HashMap<BlockPos, Boolean> neighbours= new HashMap();
+//		  for(BlockPos p: getNeighbours(pos)){
+//			  neighbours.put(p, true);			  
+//		  }
+//		  HashMap<BlockPos, Boolean> possibleInnerRoom= new HashMap();
+//		  for(BlockPos p: neighbours.keySet()){
+//			recCheckAfterAdding(p, possibleInnerRoom);
+//		  	for(BlockPos o: possibleInnerRoom.keySet()){
+//		  		innerBlocks.put(o, true);
+//		  	}
+//		  }
+//		  
+//		   
+//	}
 	
-	private void checkAfterAdding(BlockPos pos){
-		  HashMap<BlockPos, Boolean> neighbours= new HashMap();
-		  for(BlockPos p: getNeighbours(pos)){
-			  neighbours.put(p, true);			  
-		  }
-		  HashMap<BlockPos, Boolean> possibleInnerRoom= new HashMap();
-		  for(BlockPos p: neighbours.keySet()){
-			recCheckAfterAdding(p, possibleInnerRoom);
-		  	for(BlockPos o: possibleInnerRoom.keySet()){
-		  		innerBlocks.put(o, true);
-		  	}
-		  }
-		  
-		   
-	}
-	
-	private void recCheckAfterAdding(BlockPos pos, HashMap possibleInnerRoom){
-		if(!map.containsKey(pos)&& !possibleInnerRoom.containsKey(pos)){
-			if(outerOutBlocks.containsKey(pos)){
-				rekHelper = false;
-				possibleInnerRoom.clear();
-				return;
-			}
-			possibleInnerRoom.put(pos, true);
-			for(BlockPos p: getNeighbours(pos)){
-				if(rekHelper){
-					recCheckAfterAdding(p, possibleInnerRoom);
-				}
-			}
-			
-		}
-		
-		
-	}
-	
+//	private void recCheckAfterAdding(BlockPos pos, HashMap possibleInnerRoom){
+//		if(!map.containsKey(pos)&& !possibleInnerRoom.containsKey(pos)){
+//			if(outerOutBlocks.containsKey(pos)){
+//				rekHelper = false;
+//				possibleInnerRoom.clear();
+//				return;
+//			}
+//			possibleInnerRoom.put(pos, true);
+//			for(BlockPos p: getNeighbours(pos)){
+//				if(rekHelper){
+//					recCheckAfterAdding(p, possibleInnerRoom);
+//				}
+//			}
+//			
+//		}
+//		
+//		
+//	}
+
+	/**
+	 * needs an absolute or relative blockpos and calculates neighbourblocks
+	 * @param aktPos
+	 * @return arrayList of Blockpos 
+	 */
 	private ArrayList<BlockPos> getNeighbours(BlockPos aktPos){
 		ArrayList<BlockPos> toReturn= new ArrayList();
 		toReturn.add(new BlockPos(aktPos.getX()-1, aktPos.getY(), aktPos.getZ()));
