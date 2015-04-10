@@ -164,7 +164,7 @@
         "colors": "minespaceships:blocks/colors",
         "glass_light_blue": "blocks/glass_light_blue",
         "glass": "blocks/glass",
-        "particle": "blocks/shield"
+        "particle": "minespaceships:blocks/shield"
     },
     "display": {
         "firstperson": {
