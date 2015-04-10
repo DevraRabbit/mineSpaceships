@@ -124,10 +124,10 @@ public class Spaceship implements Serializable{
 			position = blockMap.getMiddleVec();
 		}
 		lastUpdatedTime = world.getTotalWorldTime();
-		ArrayList<BlockPos> positions = blockMap.getPositions();
-		for(BlockPos pos : positions){
-			Shipyard.getShipyard(world).removeBlock(pos, world);
-		}
+//		ArrayList<BlockPos> positions = blockMap.getPositions();
+//		for(BlockPos pos : positions){
+//			Shipyard.getShipyard(world).removeBlock(pos, world);
+//		}
 		if(password == null || password.isEmpty()){
 			password = "1234";
 		}
