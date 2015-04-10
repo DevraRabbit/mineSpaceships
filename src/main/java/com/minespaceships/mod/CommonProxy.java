@@ -108,19 +108,14 @@ public abstract class CommonProxy {
     	MinecraftForge.EVENT_BUS.register(new PlayerTracker());
     	FMLCommonHandler.instance().bus().register(new AllShipyards());    	
     	
-    	 GameRegistry.addShapelessRecipe(new ItemStack (new NavigatorBlock(),1), Blocks.iron_block,Blocks.stone_button,Items.clock,Items.redstone);
-
-         GameRegistry.addShapelessRecipe(new ItemStack (new EnergyBlock(),1), Blocks.coal_block,Blocks.redstone_block,Items.blaze_rod);
-
-         GameRegistry.addShapelessRecipe(new ItemStack (new ItemTest(),1), Blocks.ice,Blocks.fire,Items.blaze_rod);
-
-         GameRegistry.addShapelessRecipe(new ItemStack (new PhaserBlock(),1), Blocks.dispenser,Items.blaze_rod,Items.iron_ingot,Items.iron_ingot);
-
-         GameRegistry.addShapelessRecipe(new ItemStack (new EngineBlock(),1), new EnergyBlock(),Items.emerald,Blocks.hopper);
+    	 GameRegistry.addShapelessRecipe(new ItemStack (new NavigatorBlock(),1), Items.iron_ingot, Items.iron_ingot, Items.iron_ingot,Blocks.stone_button,Blocks.stone_button,Blocks.stone_button,Blocks.stone_button);
+         GameRegistry.addShapelessRecipe(new ItemStack (new EnergyBlock(),1), Blocks.coal_block,Items.redstone, Items.redstone, Items.redstone);
+         GameRegistry.addShapelessRecipe(new ItemStack (new PhaserBlock(),1), new EnergyBlock(), Blocks.redstone_block);
+         GameRegistry.addShapelessRecipe(new ItemStack (new EngineBlock(),1), new EnergyBlock(),Items.iron_ingot,Items.iron_ingot,Items.iron_ingot,Items.iron_ingot);
      
-//         GameRegistry.addShapedRecipe(new ItemStack(new ShieldBlock(),1) , "ggg",
-//        		 														     "g#g",
-//        		 														     "ggg",Blocks.glass,"g",Blocks.prismarine,"#");
+         GameRegistry.addShapedRecipe(new ItemStack(new ShieldBlock(),1) ,   "ggg",
+																			 "g#g",
+																			 "ggg",'g',Blocks.glass, '#', new EnergyBlock());
     
     }
     
