@@ -644,7 +644,7 @@ public class Spaceship implements Serializable{
 				if(addedClass == null){
 					try{
 						//need to press this directly into the block map. Otherwise minecraft tries to lead the chunk and ends up in an infinite loop.
-						this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)));
+						this.blockMap.add(BlockPos.fromLong(Long.parseLong(s)), false);
 					} catch(Exception e){
 						addedClass = Class.forName(s);
 					}
@@ -657,6 +657,7 @@ public class Spaceship implements Serializable{
 				}
 			}
 		}
+		blockMap.refreshVolumeBlocks();
 	}
 	public boolean measuresEquals(Spaceship ship){
 		return ship.blockMap.getMaxPos().equals(blockMap.getMaxPos()) &&
