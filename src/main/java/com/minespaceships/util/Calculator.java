@@ -20,7 +20,7 @@ public class Calculator {
 	}
 	
 	//Attributes for math parser
-	private static Pattern brackets = Pattern.compile("\\(.*?\\)");
+	private static Pattern brackets = Pattern.compile("\\([^\\(]*?\\)");
 	private static Pattern times = Pattern.compile("(\\-?[0-9\\.]+)\\*(\\-?[0-9\\.]+)");
 	private static Pattern div = Pattern.compile("(\\-?[0-9\\.]+)/(\\-?[0-9\\.]+)");
 	private static Pattern plus = Pattern.compile("(\\-?[0-9\\.]+)\\+(\\-?[0-9\\.]+)");
